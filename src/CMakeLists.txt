@@ -7,10 +7,13 @@ set(CMAKE_CXX_STANDARD 17)
 # Sources (*.cpp)
 set(SOURCE_FILES
 	main.cpp
+	scene.cpp
 )
 
 # Headers (*.h)
-set(HEADER_FILES )
+set(HEADER_FILES
+	scene.h
+)
 
 # Create the executable in the repo root directory
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../../)
