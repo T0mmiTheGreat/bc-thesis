@@ -19,6 +19,9 @@ void Scene::paint()
 	if (is_invalid) {
 		renderer.SetDrawColor();
 		renderer.Clear();
+		for (auto sprite : sprites) {
+			sprite->render();
+		}
 		renderer.Present();
 	}
 }

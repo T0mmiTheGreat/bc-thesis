@@ -8,12 +8,14 @@ set(CMAKE_CXX_STANDARD 17)
 set(SOURCE_FILES
 	main.cpp
 	scene.cpp
+	sprite.cpp
 	SDL2_gfxPrimitives.cpp
 )
 
 # Headers (*.h)
 set(HEADER_FILES
 	scene.h
+	sprite.h
 	SDL2_gfxPrimitives.h
 )
 
