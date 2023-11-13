@@ -1363,7 +1363,7 @@ Management}{\@fit@EN}%
 %\usepackage[colorinlistoftodos,prependcaption,textsize=tiny, disable]{todonotes}
 %\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
 
-\newcommand{\phony}[1]{\textcolor{gray}{#1}}
+\newcommand{\phony}[1]{\textcolor{lightgray}{#1}}
 \newcommand{\blind}[1]{\textcolor{gray}{\Blindtext[#1]}}
 
 
