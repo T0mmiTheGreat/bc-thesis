@@ -25,7 +25,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../../)
 set(SDL2PP_WITH_IMAGE OFF)
 set(SDL2PP_WITH_MIXER OFF)
 set(SDL2PP_WITH_TTF OFF)
-add_subdirectory(../libSDL2pp/ ../libSDL2pp/build/)
+add_subdirectory(../libSDL2pp/ ../libSDL2pp/)
 
 # Include packages
 find_package(SDL2 REQUIRED)
