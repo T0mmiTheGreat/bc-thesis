@@ -15,19 +15,31 @@
 
 void Sprite::setX(int value)
 {
+	// Invalidate the area where the sprite was
 	SDL_Rect bounds;
 	getBounds(&bounds);
 	parent.invalidate(&bounds);
+
+	// Move
 	x = value;
+	
+	// Invalidate the area where the sprite is now
+	// FIXME
 	parent.invalidate(&bounds);
 }
 
 void Sprite::setY(int value)
 {
+	// Invalidate the area where the sprite was
 	SDL_Rect bounds;
 	getBounds(&bounds);
 	parent.invalidate(&bounds);
+
+	// Move
 	y = value;
+	
+	// Invalidate the area where the sprite is now
+	// FIXME
 	parent.invalidate(&bounds);
 }
 

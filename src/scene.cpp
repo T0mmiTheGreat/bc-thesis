@@ -24,11 +24,15 @@ void Scene::invalidate(SDL_Rect *invalid_rect)
 void Scene::paint()
 {
 	if (is_invalid) {
+		// Fill with black
 		renderer.SetDrawColor();
 		renderer.Clear();
+
+		// Render sprites
 		for (auto sprite : sprites) {
 			sprite->render();
 		}
+		
 		renderer.Present();
 	}
 }
@@ -36,6 +40,8 @@ void Scene::paint()
 void Scene::add_sprite(std::shared_ptr<SceneSprite> sprite)
 {
 	sprites.push_back(sprite);
+
+	// Paint the sprite onto the scene immediatelly
 	SDL_Rect invalid_rect;
 	sprite->getBounds(&invalid_rect);
 	invalidate(&invalid_rect);

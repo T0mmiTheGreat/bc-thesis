@@ -12,6 +12,9 @@
 
 #include "scene.h"
 
+/**
+ * @brief Base class for sprites.
+ */
 class Sprite : public Scene::SceneSprite {
 protected:
 	Scene &parent;
@@ -27,6 +30,9 @@ public:
 	virtual void setY(int value);
 };
 
+/**
+ * @brief An ellipse-shaped sprite.
+ */
 class SpriteEllipsis : public Sprite {
 private:
 	static constexpr int W = 16;
@@ -38,6 +44,9 @@ public:
 	void getBounds(SDL_Rect *out_bounds) override;
 };
 
+/**
+ * @brief A circle-shaped sprite.
+ */
 class SpriteCircle : public Sprite {
 private:
 	static constexpr int R = 36;
