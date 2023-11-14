@@ -1,5 +1,9 @@
 /* 
 
+Modified by Tomáš Ludrovan for the needs of this project.
+
+--------------------------------------------------------------------------------
+
 SDL2_gfxPrimitives.h: graphics primitives for SDL
 
 Copyright (C) 2012-2014  Andreas Schiffler
@@ -24,10 +28,6 @@ misrepresented as being the original software.
 distribution.
 
 Andreas Schiffler -- aschiffler at ferzkopp dot net
-
---------------------------------------------------------------------------------
-
-Modified by Tomáš Ludrovan for the needs of this project.
 
 */
 
