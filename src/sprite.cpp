@@ -24,7 +24,7 @@ void Sprite::setX(int value)
 	x = value;
 	
 	// Invalidate the area where the sprite is now
-	// FIXME
+	bounds.x = value;
 	parent.invalidate(&bounds);
 }
 
@@ -39,7 +39,7 @@ void Sprite::setY(int value)
 	y = value;
 	
 	// Invalidate the area where the sprite is now
-	// FIXME
+	bounds.y = value;
 	parent.invalidate(&bounds);
 }
 

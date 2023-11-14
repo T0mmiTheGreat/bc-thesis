@@ -50,16 +50,8 @@ public:
 	Scene() : is_invalid{false} {}
 	virtual ~Scene() {}
 
-	static int getW() {
-		int w;
-		SDL_GetWindowSize(win.Get(), &w, nullptr);
-		return w;
-	};
-	static int getH() {
-		int h;
-		SDL_GetWindowSize(win.Get(), nullptr, &h);
-		return h;
-	}
+	static int getW() { return win.GetWidth(); }
+	static int getH() { return win.GetHeight(); }
 	
 	/**
 	 * @brief Mark an areain the scene that needs to be repainted.
