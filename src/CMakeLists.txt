@@ -1,3 +1,9 @@
+#
+# file: CMakeLists.txt
+# author: Tomáš Ludrovan
+# version: 0.1
+# date: 2023-11-14
+#
 cmake_minimum_required(VERSION 3.25)
 
 project(krpole LANGUAGES CXX)

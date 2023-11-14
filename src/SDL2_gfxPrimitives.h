@@ -25,7 +25,13 @@ distribution.
 
 Andreas Schiffler -- aschiffler at ferzkopp dot net
 
+--------------------------------------------------------------------------------
+
+Modified by Tomáš Ludrovan for the needs of this project.
+
 */
+
+// Tomáš Ludrovan - We don't need any other functionality that this library offers
 #define PRIMITIVES_ONLY
 
 #ifndef _SDL2_gfxPrimitives_h
@@ -36,6 +42,7 @@ Andreas Schiffler -- aschiffler at ferzkopp dot net
 #define M_PI	3.1415926535897932384626433832795
 #endif
 
+// Tomáš Ludrovan - Fixed
 #include <SDL2/SDL.h>
 
 /* Set up for C function definitions, even when using C++ */
@@ -225,6 +232,8 @@ extern "C" {
 	SDL2_GFXPRIMITIVES_SCOPE int bezierRGBA(SDL_Renderer * renderer, const Sint16 * vx, const Sint16 * vy,
 		int n, int s, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
 
+
+// Tomáš Ludrovan - We won't be using these
 #ifndef PRIMITIVES_ONLY
 	/* Characters/Strings */
 

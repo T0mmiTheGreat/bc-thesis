@@ -1,3 +1,10 @@
+/**
+ * @file scene.cpp
+ * @author Tomáš Ludrovan
+ * @brief Scene class implementation
+ * @version 0.1
+ * @date 2023-11-14
+ */
 #include "scene.h"
 
 #include <SDL2/SDL.h>

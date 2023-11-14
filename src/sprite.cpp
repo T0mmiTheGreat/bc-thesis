@@ -1,3 +1,10 @@
+/**
+ * @file sprite.cpp
+ * @author Tomáš Ludrovan
+ * @brief Sprite class implementation
+ * @version 0.1
+ * @date 2023-11-14
+ */
 #include "sprite.h"
 
 #include <SDL2/SDL.h>

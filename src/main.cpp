@@ -1,3 +1,9 @@
+/**
+ * @file main.cpp
+ * @author Tomáš Ludrovan
+ * @version 0.1
+ * @date 2023-11-14
+ */
 #include <memory>
 
 #include <SDL2/SDL.h> // SDL_main

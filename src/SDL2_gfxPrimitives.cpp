@@ -25,6 +25,10 @@ distribution.
 
 Andreas Schiffler -- aschiffler at ferzkopp dot net
 
+--------------------------------------------------------------------------------
+
+Modified by Tomáš Ludrovan for the needs of this project.
+
 */
 
 #include <stdio.h>
@@ -32,11 +36,13 @@ Andreas Schiffler -- aschiffler at ferzkopp dot net
 #include <math.h>
 #include <string.h>
 
-#include <SDL2/SDL.h>
-
 #include "SDL2_gfxPrimitives.h"
-//#include "SDL2_rotozoom.h"
-//#include "SDL2_gfxPrimitives_font.h"
+
+// Tomáš Ludrovan - These files won't be necessary
+#ifndef PRIMITIVES_ONLY
+#include "SDL2_rotozoom.h"
+#include "SDL2_gfxPrimitives_font.h"
+#endif
 
 /* ---- Structures */
 
@@ -3219,6 +3225,7 @@ int texturedPolygon(SDL_Renderer *renderer, const Sint16 * vx, const Sint16 * vy
 	return (texturedPolygonMT(renderer, vx, vy, n, texture, texture_dx, texture_dy, NULL, NULL));
 }
 
+// Tomáš Ludrovan - We won't be using these
 #ifndef PRIMITIVES_ONLY
 /* ---- Character */
 
@@ -3564,7 +3571,7 @@ int stringRGBA(SDL_Renderer * renderer, Sint16 x, Sint16 y, const char *s, Uint8
 
 	return (result);
 }
-#endif
+#endif // !defined(PRIMITIVES_ONLY)
 
 /* ---- Bezier curve */
 

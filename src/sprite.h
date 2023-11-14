@@ -1,3 +1,10 @@
+/**
+ * @file sprite.h
+ * @author Tomáš Ludrovan
+ * @brief Sprite class declarations
+ * @version 0.1
+ * @date 2023-11-14
+ */
 #ifndef SPRITE_H
 #define SPRITE_H
 

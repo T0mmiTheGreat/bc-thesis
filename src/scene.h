@@ -1,3 +1,10 @@
+/**
+ * @file scene.h
+ * @author Tomáš Ludrovan
+ * @brief Scene class declaration
+ * @version 0.1
+ * @date 2023-11-14
+ */
 #ifndef SCENE_H
 #define SCENE_H
 
