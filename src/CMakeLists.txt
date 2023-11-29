@@ -16,6 +16,8 @@ set(SOURCE_FILES
 	scene.cpp
 	sprite.cpp
 	SDL2_gfxPrimitives.cpp
+	sysevent/SysEventPublisherBase.cpp
+	sysevent/SDLSysEventPublisher.cpp
 )
 
 # Headers (*.h)
@@ -23,6 +25,9 @@ set(HEADER_FILES
 	scene.h
 	sprite.h
 	SDL2_gfxPrimitives.h
+	sysevent/ISysEventPublisherSubscriber.hpp
+	sysevent/SysEventPublisherBase.hpp
+	sysevent/SDLSysEventPublisher.hpp
 )
 
 # Create the executable in the repo root directory
