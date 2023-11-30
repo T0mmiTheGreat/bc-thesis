@@ -16,8 +16,9 @@
 template<typename... Args>
 inline void SysEventPublisherBase::notifySubscriber(void(ISysEventSubscriber::* method)(Args...), Args... args)
 {
-	auto subscriberLock = this->subscriber.lock();
-	((*subscriberLock).*method)(args...);
+	if (auto subscriberLock = this->subscriber.lock()) {
+		((*subscriberLock).*method)(args...);
+	}
 }
 
 void SysEventPublisherBase::keyDownEvent(KeyCode key)
