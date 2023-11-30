@@ -13,6 +13,8 @@
 
 #include <SDL2pp/SDL2pp.hh>
 
+#include "SDLConfig.hpp"
+
 
 /**
  * @brief Takes care of screen output.
@@ -44,14 +46,11 @@ private:
 	std::vector<std::shared_ptr<SceneSprite>> sprites;
 	bool is_invalid; // If so, it should be painted
 public:
-	static SDL2pp::SDL sdl;
-	static SDL2pp::Window win; // Global window
-	static SDL2pp::Renderer renderer; // Global renderer
 	Scene() : is_invalid{false} {}
 	virtual ~Scene() {}
 
-	static int getW() { return win.GetWidth(); }
-	static int getH() { return win.GetHeight(); }
+	static int getW() { return g_window.GetWidth(); }
+	static int getH() { return g_window.GetHeight(); }
 	
 	/**
 	 * @brief Mark an areain the scene that needs to be repainted.

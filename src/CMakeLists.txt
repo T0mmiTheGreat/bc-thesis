@@ -19,6 +19,7 @@ set(SOURCE_FILES
 	sysevent/SysEventPublisherBase.cpp
 	sysevent/SDLSysEventPublisher.cpp
 	sysevent/SysEventPublisherFactory.cpp
+	SDLConfig.cpp
 )
 
 # Headers (*.h)
@@ -31,6 +32,7 @@ set(HEADER_FILES
 	sysevent/SysEventPublisherBase.hpp
 	sysevent/SDLSysEventPublisher.hpp
 	sysevent/SysEventPublisherFactory.hpp
+	SDLConfig.hpp
 )
 
 # Create the executable in the repo root directory

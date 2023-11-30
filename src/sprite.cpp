@@ -45,8 +45,8 @@ void Sprite::setY(int value)
 
 void SpriteEllipsis::render()
 {
-	filledEllipseRGBA(Scene::renderer.Get(), x, y, W, H, 0xff, 0, 0, 0xff);
-	aaellipseRGBA(Scene::renderer.Get(), x, y, W, H, 0xff, 0, 0, 0xff);
+	filledEllipseRGBA(g_renderer.Get(), x, y, W, H, 0xff, 0, 0, 0xff);
+	aaellipseRGBA(g_renderer.Get(), x, y, W, H, 0xff, 0, 0, 0xff);
 }
 
 void SpriteEllipsis::getBounds(SDL_Rect *out_bounds)
@@ -61,8 +61,8 @@ void SpriteEllipsis::getBounds(SDL_Rect *out_bounds)
 
 void SpriteCircle::render()
 {
-	filledCircleRGBA(Scene::renderer.Get(), x, y, R, 0xff, 0, 0, 0xff);
-	aacircleRGBA(Scene::renderer.Get(), x, y, R, 0xff, 0, 0, 0xff);
+	filledCircleRGBA(g_renderer.Get(), x, y, R, 0xff, 0, 0, 0xff);
+	aacircleRGBA(g_renderer.Get(), x, y, R, 0xff, 0, 0, 0xff);
 }
 
 void SpriteCircle::getBounds(SDL_Rect *out_bounds)
