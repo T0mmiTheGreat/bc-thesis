@@ -11,6 +11,7 @@
 
 #include "sysevent/SysEventPublisherBase.hpp"
 #include "sysevent/ISysEventSubscriber.hpp"
+#include "SysEventPublisherBase.hpp"
 
 template<typename... Args>
 inline void SysEventPublisherBase::notifySubscriber(void(ISysEventSubscriber::* method)(Args...), Args... args)
@@ -34,6 +35,11 @@ void SysEventPublisherBase::mouseMoveEvent(int x, int y)
 	notifySubscriber(&ISysEventSubscriber::mouseMoveEvent, x, y);
 }
 
+void SysEventPublisherBase::startEvent()
+{
+	notifySubscriber(&ISysEventSubscriber::startEvent);
+}
+
 void SysEventPublisherBase::quitEvent()
 {
 	notifySubscriber(&ISysEventSubscriber::quitEvent);
@@ -42,4 +48,5 @@ void SysEventPublisherBase::quitEvent()
 void SysEventPublisherBase::run(std::weak_ptr<ISysEventSubscriber> subscriber)
 {
 	this->subscriber = subscriber;
+	startEvent();
 }

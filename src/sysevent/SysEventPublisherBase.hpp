@@ -45,10 +45,11 @@ protected:
 	 */
 	std::weak_ptr<ISysEventSubscriber> subscriber;
 
+	void startEvent();
+	void quitEvent();
 	void keyDownEvent(KeyCode key);
 	void mouseBtnDownEvent(MouseBtn btn);
 	void mouseMoveEvent(int x, int y);
-	void quitEvent();
 public:
 	virtual void run(std::weak_ptr<ISysEventSubscriber> subscriber) override;
 };

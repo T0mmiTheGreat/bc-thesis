@@ -47,6 +47,7 @@ public:
 	}
 	void mouseBtnDownEvent(MouseBtn btn) {}
 	void mouseMoveEvent(int x, int y) {}
+	void startEvent() {}
 	void quitEvent() {}
 };
 

@@ -27,6 +27,17 @@ class ISysEventSubscriber {
 public:
 	virtual ~ISysEventSubscriber() {}
 	/**
+	 * @brief The event loop has started.
+	 */
+	virtual void startEvent() = 0;
+	/**
+	 * @brief The user quit the application.
+	 * 
+	 * @details This is the last event to happen during the run time of the
+	 *          application.
+	 */
+	virtual void quitEvent() = 0;
+	/**
 	 * @brief A key was pressed.
 	 * 
 	 * @details Only keys on the keyboard are observed. For mouse buttons use
@@ -50,13 +61,6 @@ public:
 	 *          coordinate increases downwards.
 	 */
 	virtual void mouseMoveEvent(int x, int y) = 0;
-	/**
-	 * @brief The user quit the application.
-	 * 
-	 * @details This is the last event to happen during the run time of the
-	 *          application.
-	 */
-	virtual void quitEvent() = 0;
 };
 
 

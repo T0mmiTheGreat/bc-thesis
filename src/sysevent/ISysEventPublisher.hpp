@@ -31,6 +31,8 @@ public:
 	 * @details Runs synchronusly and ends when the application closes (QUIT
 	 *          event is received).
 	 * 
+	 *          Upon calling it immediatelly sends startEvent to the subscriber.
+	 * 
 	 *          This method may be executed at most once across all instances
 	 *          of ISysEventPublisher.
 	 * 
