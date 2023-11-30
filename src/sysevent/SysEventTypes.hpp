@@ -8,6 +8,7 @@
  * @copyright Copyright (c) 2023
  * 
  */
+
 #ifndef SYSEVENTTYPES_HPP
 #define SYSEVENTTYPES_HPP
 

@@ -8,6 +8,7 @@
  * @copyright Copyright (c) 2023
  * 
  */
+
 #ifndef ISYSEVENTPUBLISHERLISTENER_HPP
 #define ISYSEVENTPUBLISHERLISTENER_HPP
 
@@ -24,6 +25,18 @@
 class ISysEventPublisher {
 public:
 	virtual ~ISysEventPublisher() {}
+	/**
+	 * @brief Runs the event loop.
+	 * 
+	 * @details Runs synchronusly and ends when the application closes (QUIT
+	 *          event is received).
+	 * 
+	 *          This method may be executed at most once across all instances
+	 *          of ISysEventPublisher.
+	 * 
+	 * @param subscriber The object that will subscribe the events published
+	 *                   during the event loop.
+	 */
 	virtual void run(std::weak_ptr<ISysEventSubscriber> subscriber) = 0;
 };
 

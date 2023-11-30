@@ -8,7 +8,6 @@
  * 
  */
 #include <memory>
-#include <mutex>
 
 #include <SDL2/SDL.h> // SDL_main
 

@@ -1,3 +1,14 @@
+/**
+ * @file SDLSysEventPublisher.cpp
+ * @author Tomáš Ludrovan
+ * @brief SDLSysEventPublisher class
+ * @version 0.1
+ * @date 2023-11-30
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #include "SDLSysEventPublisher.hpp"
 
 #include <SDL2/SDL.h>
@@ -27,7 +38,10 @@ MouseBtn SDLSysEventPublisher::sdlMouseBtnToEnum(Uint8 btn)
 
 void SDLSysEventPublisher::run(std::weak_ptr<ISysEventSubscriber> subscriber)
 {
+	// Call overriden method
 	SysEventPublisherBase::run(subscriber);
+
+	// Classic SDL event loop
 	SDL_Event ev;
 	bool isRunning = true;
 	while (isRunning) {
