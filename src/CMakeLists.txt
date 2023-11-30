@@ -25,7 +25,8 @@ set(HEADER_FILES
 	scene.h
 	sprite.h
 	SDL2_gfxPrimitives.h
-	sysevent/ISysEventPublisherSubscriber.hpp
+	sysevent/ISysEventPublisher.hpp
+	sysevent/ISysEventSubscriber.hpp
 	sysevent/SysEventPublisherBase.hpp
 	sysevent/SDLSysEventPublisher.hpp
 )
