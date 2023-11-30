@@ -14,7 +14,7 @@
 #include "scene.h"
 #include "sprite.h"
 #include "sysevent/ISysEventPublisher.hpp"
-#include "sysevent/SDLSysEventPublisher.hpp"
+#include "sysevent/SysEventPublisherFactory.hpp"
 
 class MySubscriber : public ISysEventSubscriber {
 private:
@@ -54,7 +54,8 @@ extern "C"
 int main(int argc, char *argv[])
 {
 	auto subs = std::make_shared<MySubscriber>();
-	SDLSysEventPublisher pubs;
-	pubs.run(subs);
+	SysEventPublisherFactory factory;
+	auto pubs = factory.createPublisher();
+	pubs->run(subs);
 	return 0;
 }
