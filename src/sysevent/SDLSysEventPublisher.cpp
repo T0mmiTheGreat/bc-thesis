@@ -9,7 +9,7 @@
  * 
  */
 
-#include "SDLSysEventPublisher.hpp"
+#include "sysevent/SDLSysEventPublisher.hpp"
 
 #include <SDL2/SDL.h>
 

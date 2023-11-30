@@ -12,7 +12,7 @@
 #ifndef ISYSEVENTSUBSCRIBER_HPP
 #define ISYSEVENTSUBSCRIBER_HPP
 
-#include "SysEventTypes.hpp"
+#include "sysevent/SysEventTypes.hpp"
 
 /**
  * @brief Interface for an object that will subscribe to events published by ISysEventPublisher.

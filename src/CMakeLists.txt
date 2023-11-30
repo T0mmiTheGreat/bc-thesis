@@ -10,6 +10,8 @@ project(krpole LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
+include_directories(.)
+
 # Sources (*.cpp)
 set(SOURCE_FILES
 	main.cpp
@@ -33,6 +35,7 @@ set(HEADER_FILES
 	sysevent/SDLSysEventPublisher.hpp
 	sysevent/SysEventPublisherFactory.hpp
 	SDLConfig.hpp
+	controllers/IController.hpp
 )
 
 # Create the executable in the repo root directory

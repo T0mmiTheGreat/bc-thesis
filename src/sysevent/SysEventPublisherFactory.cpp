@@ -12,7 +12,7 @@
 
 #include <memory>
 
-#include "SDLSysEventPublisher.hpp"
+#include "sysevent/SDLSysEventPublisher.hpp"
 
 std::shared_ptr<ISysEventPublisher> SysEventPublisherFactory::createPublisher() const
 {

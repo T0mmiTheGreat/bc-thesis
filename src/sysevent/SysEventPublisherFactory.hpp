@@ -14,7 +14,7 @@
 
 #include <memory>
 
-#include "ISysEventPublisher.hpp"
+#include "sysevent/ISysEventPublisher.hpp"
 
 /**
  * @brief Class for constructing the default implementation of ISysEventPublisher.

@@ -9,8 +9,8 @@
  * 
  */
 
-#include "SysEventPublisherBase.hpp"
-#include "ISysEventSubscriber.hpp"
+#include "sysevent/SysEventPublisherBase.hpp"
+#include "sysevent/ISysEventSubscriber.hpp"
 
 template<typename... Args>
 inline void SysEventPublisherBase::notifySubscriber(void(ISysEventSubscriber::* method)(Args...), Args... args)

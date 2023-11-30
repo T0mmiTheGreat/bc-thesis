@@ -16,8 +16,8 @@
 #include <set>
 #include <thread>
 
-#include "ISysEventPublisher.hpp"
-#include "ISysEventSubscriber.hpp"
+#include "sysevent/ISysEventPublisher.hpp"
+#include "sysevent/ISysEventSubscriber.hpp"
 
 /**
  * @brief Base class for all Sys Event Publishers.

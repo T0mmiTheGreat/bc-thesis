@@ -14,8 +14,8 @@
 
 #include <SDL2/SDL.h>
 
-#include "SysEventTypes.hpp"
-#include "SysEventPublisherBase.hpp"
+#include "sysevent/SysEventTypes.hpp"
+#include "sysevent/SysEventPublisherBase.hpp"
 
 class SDLSysEventPublisher : public SysEventPublisherBase {
 protected:

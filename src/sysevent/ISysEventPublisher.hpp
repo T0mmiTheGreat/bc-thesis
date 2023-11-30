@@ -9,12 +9,12 @@
  * 
  */
 
-#ifndef ISYSEVENTPUBLISHERLISTENER_HPP
-#define ISYSEVENTPUBLISHERLISTENER_HPP
+#ifndef ISYSEVENTPUBLISHER_HPP
+#define ISYSEVENTPUBLISHER_HPP
 
 #include <memory>
 
-#include "ISysEventSubscriber.hpp"
+#include "sysevent/ISysEventSubscriber.hpp"
 
 /**
  * @brief Interface for simple system even publisher.
@@ -40,4 +40,4 @@ public:
 	virtual void run(std::weak_ptr<ISysEventSubscriber> subscriber) = 0;
 };
 
-#endif // ISYSEVENTPUBLISHERLISTENER_HPP
+#endif // ISYSEVENTPUBLISHER_HPP
