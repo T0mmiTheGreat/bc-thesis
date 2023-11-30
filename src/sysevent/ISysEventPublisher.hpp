@@ -39,7 +39,7 @@ public:
 	 * @param subscriber The object that will subscribe the events published
 	 *                   during the event loop.
 	 */
-	virtual void run(std::weak_ptr<ISysEventSubscriber> subscriber) = 0;
+	virtual void runPublisher(std::weak_ptr<ISysEventSubscriber> subscriber) = 0;
 };
 
 #endif // ISYSEVENTPUBLISHER_HPP

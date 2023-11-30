@@ -45,7 +45,7 @@ void SysEventPublisherBase::quitEvent()
 	notifySubscriber(&ISysEventSubscriber::quitEvent);
 }
 
-void SysEventPublisherBase::run(std::weak_ptr<ISysEventSubscriber> subscriber)
+void SysEventPublisherBase::runPublisher(std::weak_ptr<ISysEventSubscriber> subscriber)
 {
 	this->subscriber = subscriber;
 	startEvent();

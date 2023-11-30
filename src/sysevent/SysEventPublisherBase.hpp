@@ -51,7 +51,7 @@ protected:
 	void mouseBtnDownEvent(MouseBtn btn);
 	void mouseMoveEvent(int x, int y);
 public:
-	virtual void run(std::weak_ptr<ISysEventSubscriber> subscriber) override;
+	virtual void runPublisher(std::weak_ptr<ISysEventSubscriber> subscriber) override;
 };
 
 #endif // SYSEVENTPUBLISHERBASE_HPP

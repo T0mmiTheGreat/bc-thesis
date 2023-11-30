@@ -28,7 +28,7 @@ protected:
 	 */
 	MouseBtn sdlMouseBtnToEnum(Uint8 btn);
 public:
-	virtual void run(std::weak_ptr<ISysEventSubscriber> subscriber) override;
+	virtual void runPublisher(std::weak_ptr<ISysEventSubscriber> subscriber) override;
 };
 
 #endif // SDLSYSEVENTPUBLISHER_HPP

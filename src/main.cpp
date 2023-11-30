@@ -57,6 +57,6 @@ int main(int argc, char *argv[])
 	auto subs = std::make_shared<MySubscriber>();
 	SysEventPublisherFactory factory;
 	auto pubs = factory.createPublisher();
-	pubs->run(subs);
+	pubs->runPublisher(subs);
 	return 0;
 }

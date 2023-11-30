@@ -36,10 +36,10 @@ MouseBtn SDLSysEventPublisher::sdlMouseBtnToEnum(Uint8 btn)
 	}
 }
 
-void SDLSysEventPublisher::run(std::weak_ptr<ISysEventSubscriber> subscriber)
+void SDLSysEventPublisher::runPublisher(std::weak_ptr<ISysEventSubscriber> subscriber)
 {
 	// Call overriden method
-	SysEventPublisherBase::run(subscriber);
+	SysEventPublisherBase::runPublisher(subscriber);
 
 	// Classic SDL event loop
 	SDL_Event ev;
