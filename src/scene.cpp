@@ -10,7 +10,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2pp/SDL2pp.hh>
 
-#include "SDLManager.hpp"
+#include "sdlmanager/SDLManager.hpp"
 
 void Scene::invalidate(SDL_Rect *invalid_rect)
 {

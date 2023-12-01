@@ -12,7 +12,7 @@
 #include "SDL2_gfxPrimitives.h"
 
 #include "scene.h"
-#include "SDLManager.hpp"
+#include "sdlmanager/SDLManager.hpp"
 
 void Sprite::setX(int value)
 {

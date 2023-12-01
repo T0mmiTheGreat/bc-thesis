@@ -13,7 +13,7 @@
 
 #include <SDL2pp/SDL2pp.hh>
 
-#include "SDLManager.hpp"
+#include "sdlmanager/SDLManager.hpp"
 
 
 /**

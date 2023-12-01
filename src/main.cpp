@@ -13,10 +13,11 @@
 
 #include "scene.h"
 #include "sprite.h"
-#include "sysevent/ISysEventPublisher.hpp"
-#include "sysevent/SysEventPublisherFactory.hpp"
+#include "syssubscriber/ISysSubscriber.hpp"
+#include "sdlmanager/SDLManager.hpp"
+#include "sdlsubscriber/SDLSubscriber.hpp"
 
-class MySubscriber : public ISysEventSubscriber {
+class MySubscriber : public ISysSubscriber {
 private:
 	Scene scene;
 	std::shared_ptr<SpriteCircle> sprite;
@@ -28,7 +29,7 @@ public:
 		scene.paint();
 	}
 
-	void keyDownEvent(KeyCode key) {
+	void keyDownEvent(KeyCode key) override {
 		switch (key) {
 			case KEY_LEFT_ARROW:
 				sprite->setX(sprite->getX() - 3);
@@ -45,18 +46,19 @@ public:
 		}
 		scene.paint();
 	}
-	void mouseBtnDownEvent(MouseBtn btn) {}
-	void mouseMoveEvent(int x, int y) {}
-	void startEvent() {}
-	void quitEvent() {}
+	void mouseBtnDownEvent(MouseBtn btn) override {}
+	void mouseMoveEvent(int x, int y) override {}
+	void startEvent() override {}
+	void quitEvent() override {}
+	void frameEvent() override {}
 };
 
 extern "C"
 int main(int argc, char *argv[])
 {
 	auto subs = std::make_shared<MySubscriber>();
-	SysEventPublisherFactory factory;
-	auto pubs = factory.createPublisher();
-	pubs->runPublisher(subs);
+	auto pubs = std::make_shared<SDLSubscriber>(subs);
+	SDLManager::get().assignSubscriber(pubs);
+	SDLManager::get().runEventLoop();
 	return 0;
 }

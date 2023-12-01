@@ -9,25 +9,28 @@
  * 
  */
 
-#include "SDLManager.hpp"
+#include "sdlmanager/SDLManager.hpp"
 
-#include <SDL2/SDL.h>
+#include <cassert>
 
-bool SDLManager::needsRepaint() const
+void SDLManager::runEventLoop()
 {
-	return !SDL_RectEmpty(&m_invalidRect);
-}
+	assert(m_subscriber != nullptr);
 
-void SDLManager::runEventLoop(void (*eventCapturer)(SDL_Event& ev), void (*paintEventCapturer)(SDL_Rect& invalidRect))
-{
+	this->m_state = MSTATE_RUNNING;
+
 	SDL_Event ev;
 	bool isRunning = true;
 	while (isRunning) {
 		while (SDL_PollEvent(&ev)) {
-			eventCapturer(ev);
-			if (this->needsRepaint()) {
-				paintEventCapturer(this->m_invalidRect);
+			if (ev.type == SDL_QUIT) {
+				isRunning = false;
 			}
+			m_subscriber->generalEvent(ev);
+		}
+		m_subscriber->frameEvent();
+		if (this->needsRepaint()) {
+			m_subscriber->paintEvent(this->m_invalidRect);
 		}
 	}
 }
