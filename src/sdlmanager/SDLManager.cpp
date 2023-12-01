@@ -52,6 +52,30 @@ MouseBtn SDLManager::sdlMouseBtnToEnum(Uint8 btn)
 	}
 }
 
+SDL_Rect SDLManager::rectToSdlRect(Rect& rect)
+{
+	return SDL_Rect{
+		.x = rect.x,
+		.y = rect.y,
+		.w = rect.w,
+		.h = rect.h
+	};
+}
+
+SDL_Keycode SDLManager::enumToSdlKeycode(KeyCode keyCode)
+{
+	switch (keyCode) {
+		case KEY_RETURN: return SDLK_RETURN;
+		case KEY_LEFT_ARROW: return SDLK_LEFT;
+		case KEY_UP_ARROW: return SDLK_UP;
+		case KEY_RIGHT_ARROW: return SDLK_RIGHT;
+		case KEY_DOWN_ARROW: return SDLK_DOWN;
+		case KEY_UNKNOWN:
+		default:
+			return SDLK_UNKNOWN;
+	}
+}
+
 KeyCode SDLManager::sdlKeycodeToEnum(SDL_Keycode sdlk)
 {
 	switch (sdlk) {
