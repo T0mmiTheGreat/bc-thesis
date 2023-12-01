@@ -77,8 +77,8 @@ public:
 	 * @brief Converts SDL mouse button code to MouseBtn enum.
 	 */
 	static MouseBtn sdlMouseBtnToEnum(Uint8 btn);
-	static SDL_Keycode enumToSdlKeycode(KeyCode keyCode);
-	static SDL_Rect rectToSdlRect(Rect& rect);
+	static SDL_Scancode enumToSdlScancode(KeyCode keyCode);
+	static SDL_Rect rectToSdlRect(const Rect& rect);
 };
 
 #endif // SDLMANAGER_HPP
