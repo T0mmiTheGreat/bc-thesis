@@ -37,6 +37,7 @@ set(HEADER_FILES
 	sysproxy/ISysProxy.hpp
 	sysproxy/SysProxyBase.hpp
 	sysproxy/SDLSysProxy.hpp
+	types.hpp
 )
 
 # Create the executable in the repo root directory
