@@ -12,6 +12,7 @@
 #include "SDL2_gfxPrimitives.h"
 
 #include "scene.h"
+#include "SDLManager.hpp"
 
 void Sprite::setX(int value)
 {
@@ -45,8 +46,8 @@ void Sprite::setY(int value)
 
 void SpriteEllipsis::render()
 {
-	filledEllipseRGBA(g_renderer.Get(), x, y, W, H, 0xff, 0, 0, 0xff);
-	aaellipseRGBA(g_renderer.Get(), x, y, W, H, 0xff, 0, 0, 0xff);
+	filledEllipseRGBA(SDLManager::get().renderer.Get(), x, y, W, H, 0xff, 0, 0, 0xff);
+	aaellipseRGBA(SDLManager::get().renderer.Get(), x, y, W, H, 0xff, 0, 0, 0xff);
 }
 
 void SpriteEllipsis::getBounds(SDL_Rect *out_bounds)
@@ -61,8 +62,8 @@ void SpriteEllipsis::getBounds(SDL_Rect *out_bounds)
 
 void SpriteCircle::render()
 {
-	filledCircleRGBA(g_renderer.Get(), x, y, R, 0xff, 0, 0, 0xff);
-	aacircleRGBA(g_renderer.Get(), x, y, R, 0xff, 0, 0, 0xff);
+	filledCircleRGBA(SDLManager::get().renderer.Get(), x, y, R, 0xff, 0, 0, 0xff);
+	aacircleRGBA(SDLManager::get().renderer.Get(), x, y, R, 0xff, 0, 0, 0xff);
 }
 
 void SpriteCircle::getBounds(SDL_Rect *out_bounds)

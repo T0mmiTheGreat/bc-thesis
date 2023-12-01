@@ -18,10 +18,11 @@ set(SOURCE_FILES
 	scene.cpp
 	sprite.cpp
 	SDL2_gfxPrimitives.cpp
+	SDLManager.cpp
 	sysevent/SysEventPublisherBase.cpp
 	sysevent/SDLSysEventPublisher.cpp
 	sysevent/SysEventPublisherFactory.cpp
-	SDLConfig.cpp
+	controllers/ControllerBase.cpp
 )
 
 # Headers (*.h)
@@ -34,8 +35,10 @@ set(HEADER_FILES
 	sysevent/SysEventPublisherBase.hpp
 	sysevent/SDLSysEventPublisher.hpp
 	sysevent/SysEventPublisherFactory.hpp
-	SDLConfig.hpp
+	SDLManager.hpp
 	controllers/IController.hpp
+	controllers/ControllerBase.hpp
+	controllers/IControllerEventSubscriber.hpp
 )
 
 # Create the executable in the repo root directory

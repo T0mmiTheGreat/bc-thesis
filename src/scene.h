@@ -13,7 +13,7 @@
 
 #include <SDL2pp/SDL2pp.hh>
 
-#include "SDLConfig.hpp"
+#include "SDLManager.hpp"
 
 
 /**
@@ -49,8 +49,8 @@ public:
 	Scene() : is_invalid{false} {}
 	virtual ~Scene() {}
 
-	static int getW() { return g_window.GetWidth(); }
-	static int getH() { return g_window.GetHeight(); }
+	static int getW() { return SDLManager::get().window.GetWidth(); }
+	static int getH() { return SDLManager::get().window.GetHeight(); }
 	
 	/**
 	 * @brief Mark an areain the scene that needs to be repainted.

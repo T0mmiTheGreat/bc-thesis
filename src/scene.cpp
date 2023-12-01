@@ -10,7 +10,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2pp/SDL2pp.hh>
 
-#include "SDLConfig.hpp"
+#include "SDLManager.hpp"
 
 void Scene::invalidate(SDL_Rect *invalid_rect)
 {
@@ -22,15 +22,15 @@ void Scene::paint()
 {
 	if (is_invalid) {
 		// Fill with black
-		g_renderer.SetDrawColor();
-		g_renderer.Clear();
+		SDLManager::get().renderer.SetDrawColor();
+		SDLManager::get().renderer.Clear();
 
 		// Render sprites
 		for (auto sprite : sprites) {
 			sprite->render();
 		}
 		
-		g_renderer.Present();
+		SDLManager::get().renderer.Present();
 	}
 }
 
