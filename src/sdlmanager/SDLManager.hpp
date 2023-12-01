@@ -18,6 +18,7 @@
 #include <SDL2pp/SDL2pp.hh>
 
 #include "sdlsubscriber/ISDLSubscriber.hpp"
+#include "types.hpp"
 
 enum SDLManagerState {
 	// Can run event loop
@@ -67,6 +68,15 @@ public:
 	void assignSubscriber(std::shared_ptr<ISDLSubscriber> subscriber) { m_subscriber = subscriber; }
 	void runEventLoop();
 	void invalidateRect(SDL_Rect& rect);
+	
+	/**
+	 * @brief Converts SDL key code to KeyCode enum.
+	 */
+	static KeyCode sdlKeycodeToEnum(SDL_Keycode sdlk);
+	/**
+	 * @brief Converts SDL mouse button code to MouseBtn enum.
+	 */
+	static MouseBtn sdlMouseBtnToEnum(Uint8 btn);
 };
 
 #endif // SDLMANAGER_HPP

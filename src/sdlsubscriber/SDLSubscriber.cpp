@@ -9,40 +9,18 @@
  * 
  */
 
-#include "SDLSubscriber.hpp"
-
-KeyCode SDLSubscriber::sdlKeycodeToEnum(SDL_Keycode sdlk)
-{
-	switch (sdlk) {
-		case SDLK_RETURN: return KEY_RETURN;
-		case SDLK_LEFT: return KEY_LEFT_ARROW;
-		case SDLK_UP: return KEY_UP_ARROW;
-		case SDLK_RIGHT: return KEY_RIGHT_ARROW;
-		case SDLK_DOWN: return KEY_DOWN_ARROW;
-		// TODO: more keys
-		default: return KEY_UNKNOWN;
-	}
-}
-
-MouseBtn SDLSubscriber::sdlMouseBtnToEnum(Uint8 btn)
-{
-	switch (btn) {
-		case SDL_BUTTON_LEFT: return BTN_LEFT;
-		case SDL_BUTTON_MIDDLE: return BTN_MIDDLE;
-		case SDL_BUTTON_RIGHT: return BTN_RIGHT;
-		default: return BTN_UNKNOWN;
-	}
-}
+#include "sdlsubscriber/SDLSubscriber.hpp"
+#include "sdlmanager/SDLManager.hpp"
 
 void SDLSubscriber::generalEvent(SDL_Event& ev)
 {
 	if (auto lockedSubscriber = m_subscriber.lock()) {
 		switch (ev.type) {
 			case SDL_KEYDOWN:
-				lockedSubscriber->keyDownEvent(sdlKeycodeToEnum(ev.key.keysym.sym));
+				lockedSubscriber->keyDownEvent(SDLManager::sdlKeycodeToEnum(ev.key.keysym.sym));
 				break;
 			case SDL_MOUSEBUTTONDOWN:
-				lockedSubscriber->mouseBtnDownEvent(sdlMouseBtnToEnum(ev.button.button));
+				lockedSubscriber->mouseBtnDownEvent(SDLManager::sdlMouseBtnToEnum(ev.button.button));
 				break;
 			case SDL_MOUSEMOTION:
 				lockedSubscriber->mouseMoveEvent(ev.motion.x, ev.motion.y);

@@ -20,15 +20,6 @@
 class SDLSubscriber : public ISDLSubscriber {
 private:
 	std::weak_ptr<ISysSubscriber> m_subscriber;
-	
-	/**
-	 * @brief Converts SDL key code to KeyCode enum.
-	 */
-	KeyCode sdlKeycodeToEnum(SDL_Keycode sdlk);
-	/**
-	 * @brief Converts SDL mouse button code to MouseBtn enum.
-	 */
-	MouseBtn sdlMouseBtnToEnum(Uint8 btn);
 public:
 	SDLSubscriber(std::weak_ptr<ISysSubscriber> subscriber) :
 		m_subscriber{subscriber}
