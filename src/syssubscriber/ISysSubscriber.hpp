@@ -12,7 +12,7 @@
 #ifndef ISYSSUBSCRIBER_HPP
 #define ISYSSUBSCRIBER_HPP
 
-#include "syssubscriber/SysTypes.hpp"
+#include "types.hpp"
 
 class ISysSubscriber {
 public:

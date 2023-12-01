@@ -33,7 +33,6 @@ set(HEADER_FILES
 	sdlsubscriber/ISDLSubscriber.hpp
 	sdlsubscriber/SDLSubscriber.hpp
 	syssubscriber/ISysSubscriber.hpp
-	syssubscriber/SysTypes.hpp
 	sysproxy/ISysProxy.hpp
 	sysproxy/SysProxyBase.hpp
 	sysproxy/SDLSysProxy.hpp
