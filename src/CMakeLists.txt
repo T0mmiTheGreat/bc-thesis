@@ -23,6 +23,9 @@ set(SOURCE_FILES
 	sysproxy/SysProxyBase.cpp
 	sysproxy/SDLSysProxy.cpp
 	sysproxy/SysProxyFactory.cpp
+	canvas/CanvasBase.cpp
+	canvas/SDLCanvas.cpp
+	canvas/CanvasFactory.cpp
 )
 
 # Headers (*.h)
@@ -39,6 +42,10 @@ set(HEADER_FILES
 	sysproxy/SDLSysProxy.hpp
 	types.hpp
 	sysproxy/SysProxyFactory.hpp
+	canvas/ICanvas.hpp
+	canvas/CanvasBase.hpp
+	canvas/SDLCanvas.hpp
+	canvas/CanvasFactory.hpp
 )
 
 # Create the executable in the repo root directory
