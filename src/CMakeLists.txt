@@ -22,6 +22,7 @@ set(SOURCE_FILES
 	sdlsubscriber/SDLSubscriber.cpp
 	sysproxy/SysProxyBase.cpp
 	sysproxy/SDLSysProxy.cpp
+	sysproxy/SysProxyFactory.cpp
 )
 
 # Headers (*.h)
@@ -37,6 +38,7 @@ set(HEADER_FILES
 	sysproxy/SysProxyBase.hpp
 	sysproxy/SDLSysProxy.hpp
 	types.hpp
+	sysproxy/SysProxyFactory.hpp
 )
 
 # Create the executable in the repo root directory

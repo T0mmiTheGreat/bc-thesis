@@ -16,6 +16,7 @@
 #include "syssubscriber/ISysSubscriber.hpp"
 #include "sdlmanager/SDLManager.hpp"
 #include "sdlsubscriber/SDLSubscriber.hpp"
+#include "sysproxy/SysProxyFactory.hpp"
 
 class MySubscriber : public ISysSubscriber {
 private:
@@ -45,6 +46,8 @@ public:
 				break;
 		}
 		scene.paint();
+		Rect r;
+		SysProxyFactory::createDefault()->invalidateRect(r);
 	}
 	void mouseBtnDownEvent(MouseBtn btn) override {}
 	void mouseMoveEvent(int x, int y) override {}

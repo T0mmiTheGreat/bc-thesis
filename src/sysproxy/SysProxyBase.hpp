@@ -16,9 +16,6 @@
 
 #include "sysproxy/ISysProxy.hpp"
 
-class SysProxyBase : public ISysProxy {
-public:
-	static std::shared_ptr<ISysProxy> createDefault();
-};
+class SysProxyBase : public ISysProxy {};
 
 #endif // SYSPROXYBASE_HPP

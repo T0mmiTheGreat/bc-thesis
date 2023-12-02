@@ -10,13 +10,3 @@
  */
 
 #include "sysproxy/SysProxyBase.hpp"
-
-#include <memory>
-
-#include "sysproxy/SDLSysProxy.hpp"
-
-std::shared_ptr<ISysProxy> SysProxyBase::createDefault()
-{
-	return std::make_shared<SDLSysProxy>();
-}
-
