@@ -21,6 +21,7 @@ void SDLManager::runEventLoop()
 
 	this->m_state = MSTATE_RUNNING;
 
+	window.Show();
 	SDL_Event ev;
 	bool isRunning = true;
 	while (isRunning) {
@@ -32,7 +33,13 @@ void SDLManager::runEventLoop()
 		}
 		m_subscriber->frameEvent();
 		if (this->needsRepaint()) {
+			renderer.SetTarget();
+			renderer.SetDrawColor();
+			renderer.Clear();
 			m_subscriber->paintEvent(this->m_invalidRect);
+			renderer.Present();
+			m_invalidRect.w = 0;
+			m_invalidRect.h = 0;
 		}
 	}
 }
