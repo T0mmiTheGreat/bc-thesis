@@ -22,6 +22,7 @@ void SDLManager::runEventLoop()
 	this->m_state = MSTATE_RUNNING;
 
 	window.Show();
+	m_subscriber->startEvent();
 	SDL_Event ev;
 	bool isRunning = true;
 	while (isRunning) {

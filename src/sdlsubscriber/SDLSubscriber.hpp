@@ -24,9 +24,10 @@ public:
 	SDLSubscriber(std::weak_ptr<ISysSubscriber> subscriber) :
 		m_subscriber{subscriber}
 	{}
-	void generalEvent(SDL_Event& ev);
-	void paintEvent(SDL_Rect& invalidRect);
-	void frameEvent();
+	virtual void generalEvent(SDL_Event& ev) override;
+	virtual void paintEvent(SDL_Rect& invalidRect) override;
+	virtual void frameEvent() override;
+	virtual void startEvent() override;
 };
 
 #endif // SDLSUBSCRIBER_HPP

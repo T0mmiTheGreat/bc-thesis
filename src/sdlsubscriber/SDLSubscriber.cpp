@@ -12,6 +12,7 @@
 #include "sdlsubscriber/SDLSubscriber.hpp"
 #include "sdlmanager/SDLManager.hpp"
 #include "canvas/CanvasFactory.hpp"
+#include "SDLSubscriber.hpp"
 
 void SDLSubscriber::generalEvent(SDL_Event& ev)
 {
@@ -47,3 +48,10 @@ void SDLSubscriber::frameEvent()
 		lockedSubscriber->frameEvent();
 	}
 }
+void SDLSubscriber::startEvent()
+{
+	if (auto lockedSubscriber = m_subscriber.lock()) {
+		lockedSubscriber->startEvent();
+	}
+}
+

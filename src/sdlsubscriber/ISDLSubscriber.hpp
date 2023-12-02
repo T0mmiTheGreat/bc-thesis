@@ -20,6 +20,7 @@ public:
 	virtual void generalEvent(SDL_Event& ev) = 0;
 	virtual void paintEvent(SDL_Rect& invalidRect) = 0;
 	virtual void frameEvent() = 0;
+	virtual void startEvent() = 0;
 };
 
 #endif // ISDLSUBSCRIBER_HPP
