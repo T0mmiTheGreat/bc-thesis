@@ -11,6 +11,7 @@
 
 #include "sdlsubscriber/SDLSubscriber.hpp"
 #include "sdlmanager/SDLManager.hpp"
+#include "canvas/CanvasFactory.hpp"
 
 void SDLSubscriber::generalEvent(SDL_Event& ev)
 {
@@ -35,7 +36,8 @@ void SDLSubscriber::generalEvent(SDL_Event& ev)
 void SDLSubscriber::paintEvent(SDL_Rect& invalidRect)
 {
 	if (auto lockedSubscriber = m_subscriber.lock()) {
-		// TODO
+		Rect r = SDLManager::sdlRectToRect(invalidRect);
+		lockedSubscriber->paintEvent(CanvasFactory::createSdlCanvas(), r);
 	}
 }
 

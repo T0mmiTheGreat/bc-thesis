@@ -20,40 +20,40 @@
 
 class MySubscriber : public ISysSubscriber {
 private:
-	Scene scene;
-	std::shared_ptr<SpriteCircle> sprite;
+	int spriteX;
+	int spriteY;
+	int spriteR;
 public:
-	MySubscriber() : scene(), sprite{std::make_shared<SpriteCircle>(scene)} {
-		sprite->setX(120);
-		sprite->setY(140);
-		scene.add_sprite(sprite);
-		scene.paint();
-	}
+	MySubscriber() : spriteX{120}, spriteY{140}, spriteR{36} {}
 
 	void keyDownEvent(KeyCode key) override {
 		switch (key) {
 			case KEY_LEFT_ARROW:
-				sprite->setX(sprite->getX() - 3);
+				spriteX -= 3;
 				break;
 			case KEY_UP_ARROW:
-				sprite->setY(sprite->getY() - 3);
+				spriteY -= 3;
 				break;
 			case KEY_RIGHT_ARROW:
-				sprite->setX(sprite->getX() + 3);
+				spriteX += 3;
 				break;
 			case KEY_DOWN_ARROW:
-				sprite->setY(sprite->getY() + 3);
+				spriteY += 3;
 				break;
 		}
-		scene.paint();
-		Rect r;
-		SysProxyFactory::createDefault()->invalidateRect(r);
+		SysProxyFactory::createDefault()->invalidateRect();
 	}
 	void mouseBtnDownEvent(MouseBtn btn) override {}
 	void mouseMoveEvent(int x, int y) override {}
-	void startEvent() override {}
+	void startEvent() override {
+		SysProxyFactory::createDefault()->invalidateRect();
+	}
 	void quitEvent() override {}
 	void frameEvent() override {}
+	void paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override {
+		canvas->setFillingColor(Color(0xff, 0, 0, 0xff));
+		canvas->drawCircle(spriteX, spriteY, spriteR);
+	}
 };
 
 extern "C"

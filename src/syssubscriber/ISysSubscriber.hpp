@@ -12,7 +12,10 @@
 #ifndef ISYSSUBSCRIBER_HPP
 #define ISYSSUBSCRIBER_HPP
 
+#include <memory>
+
 #include "types.hpp"
+#include "canvas/ICanvas.hpp"
 
 class ISysSubscriber {
 public:
@@ -53,7 +56,7 @@ public:
 	 */
 	virtual void mouseMoveEvent(int x, int y) = 0;
 	virtual void frameEvent() = 0;
-	// virtual void paintEvent() = 0;  -- TODO - parameter?
+	virtual void paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) = 0;
 };
 
 #endif // ISYSSUBSCRIBER_HPP
