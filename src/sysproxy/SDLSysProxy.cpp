@@ -14,6 +14,14 @@
 #include <SDL2/SDL.h>
 
 #include "sdlmanager/SDLManager.hpp"
+#include "SDLSysProxy.hpp"
+
+void SDLSysProxy::invalidateRect()
+{
+	Rect r = {.x = 0, .y = 0};
+	SDL_GetWindowSize(SDLManager::get().window.Get(), &r.w, &r.h);
+	invalidateRect(r);
+}
 
 void SDLSysProxy::invalidateRect(const Rect& rect)
 {
