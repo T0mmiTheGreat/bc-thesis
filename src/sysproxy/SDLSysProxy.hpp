@@ -16,8 +16,8 @@
 
 class SDLSysProxy : public SysProxyBase {
 public:
-	void invalidateRect(const Rect& rect);
-	bool isKeyPressed(KeyCode keyCode);
+	void invalidateRect(const Rect& rect) override;
+	bool isKeyPressed(KeyCode keyCode) override;
 };
 
 #endif // SDLSYSPROXY_HPP
