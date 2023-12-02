@@ -17,7 +17,7 @@
 class ISysProxy {
 public:
 	virtual ~ISysProxy() {}
-	virtual void invalidateRect(Rect& rect) = 0;
+	virtual void invalidateRect(const Rect& rect) = 0;
 	virtual bool isKeyPressed(KeyCode keyCode) = 0;
 };
 
