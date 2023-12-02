@@ -12,6 +12,8 @@
 #ifndef TYPES_HPP
 #define TYPES_HPP
 
+#include <cstdint>
+
 typedef enum KeyCode {
 	KEY_UNKNOWN,
 	KEY_RETURN,
@@ -59,6 +61,21 @@ struct Rect {
 	Rect operator+= (const Rect& rhs) {
 		return (*this = this->unionRect(rhs));
 	}
+};
+
+struct Color {
+	uint8_t r;
+	uint8_t g;
+	uint8_t b;
+	uint8_t a;
+
+	Color() : Color(0, 0, 0, 0) {}
+	Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) :
+		r{r},
+		g{g},
+		b{b},
+		a{a}
+	{}
 };
 
 
