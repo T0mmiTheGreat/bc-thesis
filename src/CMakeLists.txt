@@ -15,8 +15,6 @@ include_directories(.)
 # Sources (*.cpp)
 set(SOURCE_FILES
 	main.cpp
-	scene.cpp
-	sprite.cpp
 	SDL2_gfxPrimitives.cpp
 	sdlmanager/SDLManager.cpp
 	sdlsubscriber/SDLSubscriber.cpp
@@ -35,8 +33,6 @@ set(SOURCE_FILES
 
 # Headers (*.h)
 set(HEADER_FILES
-	scene.h
-	sprite.h
 	SDL2_gfxPrimitives.h
 	sdlmanager/SDLManager.hpp
 	sdlsubscriber/ISDLSubscriber.hpp
