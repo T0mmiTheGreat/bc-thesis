@@ -15,7 +15,6 @@
 #include <thread>
 
 #include "sysproxy/SysProxyFactory.hpp"
-#include "controller/ControllerFactory.hpp"
 
 void RootController::runChildren()
 {
@@ -29,7 +28,6 @@ void RootController::runChildren()
 std::unique_ptr<IController> RootController::runController()
 {
 	// ControllerBase::runController();  -- Would it work for PVF?
-	m_childController = ControllerFactory::createInitialController();
 	std::thread childrenLoop(&RootController::runChildren, this);
 	SysProxyFactory::createDefault()->runEventLoop();
 	childrenLoop.join();

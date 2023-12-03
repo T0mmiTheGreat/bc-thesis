@@ -17,6 +17,7 @@
 
 #include "controller/ControllerBase.hpp"
 #include "controller/IController.hpp"
+#include "controller/ControllerFactory.hpp"
 
 class RootController : public ControllerBase {
 private:
@@ -25,7 +26,11 @@ private:
 
 	void runChildren();
 public:
-	RootController() : ControllerBase(), m_isQuit{false} {}
+	RootController() :
+		ControllerBase(),
+		m_childController{ControllerFactory::createInitialController()},
+		m_isQuit{false}
+	{}
 
 	std::unique_ptr<IController> runController() override;
 	void startEvent() override;
