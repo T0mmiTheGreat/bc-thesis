@@ -69,7 +69,7 @@ struct Color {
 	uint8_t b;
 	uint8_t a;
 
-	Color() : Color(0, 0, 0, 0) {}
+	Color() : Color(0, 0, 0, 0xff) {}
 	Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) :
 		r{r},
 		g{g},
