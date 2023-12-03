@@ -44,6 +44,8 @@ void SDLManager::runEventLoop()
 			m_invalidRect.h = 0;
 		}
 	}
+
+	this->m_state = MSTATE_POSTRUN;
 }
 
 void SDLManager::invalidateRect(SDL_Rect& rect)
