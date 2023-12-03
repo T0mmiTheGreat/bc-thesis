@@ -16,6 +16,7 @@
 
 class IControllerEventSubscriber : public ISysSubscriber {
 public:
+	virtual ~IControllerEventSubscriber() {}
 	virtual void finishedEvent() = 0;
 	virtual void abortEvent() = 0;
 	// TODO: more events
