@@ -20,6 +20,7 @@ public:
 	void invalidateRect() override;
 	void invalidateRect(const Rect& rect) override;
 	bool isKeyPressed(KeyCode keyCode) override;
+	bool isEventLoopRunning() override;
 };
 
 #endif // SDLSYSPROXY_HPP

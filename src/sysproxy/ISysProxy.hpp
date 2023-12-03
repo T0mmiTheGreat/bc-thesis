@@ -21,6 +21,7 @@ public:
 	virtual void invalidateRect() = 0;
 	virtual void invalidateRect(const Rect& rect) = 0;
 	virtual bool isKeyPressed(KeyCode keyCode) = 0;
+	virtual bool isEventLoopRunning() = 0;
 };
 
 #endif // ISYSPROXY_HPP

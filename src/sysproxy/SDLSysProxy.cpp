@@ -38,3 +38,8 @@ bool SDLSysProxy::isKeyPressed(KeyCode keyCode)
 {
 	return SDL_GetKeyboardState(NULL)[SDLManager::enumToSdlScancode(keyCode)];
 }
+
+bool SDLSysProxy::isEventLoopRunning()
+{
+	return (SDLManager::get().getState() == MSTATE_RUNNING);
+}
