@@ -58,7 +58,7 @@ struct Rect {
 		return unionRect(rhs);
 	}
 
-	Rect operator+= (const Rect& rhs) {
+	Rect& operator+= (const Rect& rhs) {
 		return (*this = this->unionRect(rhs));
 	}
 };
