@@ -27,10 +27,11 @@ void SDLManager::runEventLoop()
 	bool isRunning = true;
 	while (isRunning) {
 		while (SDL_PollEvent(&ev)) {
+			m_subscriber->generalEvent(ev);
 			if (ev.type == SDL_QUIT) {
 				isRunning = false;
+				break;
 			}
-			m_subscriber->generalEvent(ev);
 		}
 		m_subscriber->frameEvent();
 		if (this->needsRepaint()) {
