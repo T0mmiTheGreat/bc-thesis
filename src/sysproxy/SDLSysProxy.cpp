@@ -16,6 +16,11 @@
 #include "sdlmanager/SDLManager.hpp"
 #include "SDLSysProxy.hpp"
 
+void SDLSysProxy::runEventLoop()
+{
+	SDLManager::get().runEventLoop();
+}
+
 void SDLSysProxy::invalidateRect()
 {
 	Rect r = {.x = 0, .y = 0};
