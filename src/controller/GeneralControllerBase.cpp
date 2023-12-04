@@ -47,6 +47,11 @@ void GeneralControllerBase::quitEvent()
 	abortEvent();
 }
 
+void GeneralControllerBase::startedEvent()
+{
+	isRunning = true;
+}
+
 void GeneralControllerBase::finishedEvent()
 {
 	{
@@ -60,6 +65,8 @@ void GeneralControllerBase::finishedEvent()
 
 	// Notify `runController()` that the value has changed
 	cvIsControllerFinished.notify_one();
+
+	isRunning = false;
 }
 
 void GeneralControllerBase::abortEvent()

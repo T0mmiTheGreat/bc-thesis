@@ -55,10 +55,14 @@ protected:
 	 * @brief For system requests.
 	 */
 	std::shared_ptr<ISysProxy> sysProxy;
+
+	// FIXME: Not thread safe
+	bool isRunning;
 public:
 	GeneralControllerBase():
 		isControllerFinished{false},
-		sysProxy{SysProxyFactory::createDefault()}
+		sysProxy{SysProxyFactory::createDefault()},
+		isRunning{false}
 	{}
 
 	virtual std::unique_ptr<IController> runController() override;
@@ -67,7 +71,7 @@ public:
 	virtual void keyDownEvent(KeyCode key) override {}
 	virtual void mouseBtnDownEvent(MouseBtn btn) override {}
 	virtual void mouseMoveEvent(int x, int y) override {}
-	virtual void startedEvent() override {}
+	virtual void startedEvent() override;
 	virtual void finishedEvent() override;
 	virtual void abortEvent() override;
 	virtual void frameEvent() override {}
