@@ -32,8 +32,6 @@ void RootController::runChildren()
 
 std::unique_ptr<IController> RootController::runController()
 {
-	startedEvent();
-
 	// Execute the controller run loop in another thread
 	std::thread childrenLoop(&RootController::runChildren, this);
 
