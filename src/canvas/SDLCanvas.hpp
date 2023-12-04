@@ -19,19 +19,20 @@
  */
 class SDLCanvas : public CanvasBase {
 public:
-	virtual int getWidth() override;
-	virtual int getHeight() override;
+	int getWidth() override;
+	int getHeight() override;
+	Rect getRect() override;
 
-	virtual void setFillingColor(Color color) override;
-	virtual void setStrokingColor(Color color) override;
+	void setFillingColor(Color color) override;
+	void setStrokingColor(Color color) override;
 
-	virtual void fillEllipse(int x, int y, int rx, int ry) override;
-	virtual void strokeEllipse(int x, int y, int rx, int ry) override;
-	virtual void drawEllipse(int x, int y, int rx, int ry) override;
+	void fillEllipse(int x, int y, int rx, int ry) override;
+	void strokeEllipse(int x, int y, int rx, int ry) override;
+	void drawEllipse(int x, int y, int rx, int ry) override;
 
-	virtual void fillCircle(int x, int y, int r) override;
-	virtual void strokeCircle(int x, int y, int r) override;
-	virtual void drawCircle(int x, int y, int r) override;
+	void fillCircle(int x, int y, int r) override;
+	void strokeCircle(int x, int y, int r) override;
+	void drawCircle(int x, int y, int r) override;
 };
 
 #endif // SDLCANVAS_HPP

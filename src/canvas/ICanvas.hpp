@@ -24,13 +24,17 @@ class ICanvas {
 public:
 	virtual ~ICanvas() {}
 	/**
-	 * @brief Get width of the window in screen coordinates.
+	 * @brief Get width of the canvas in screen coordinates.
 	 */
 	virtual int getWidth() = 0;
 	/**
-	 * @brief Get height of the window in screen coordinates.
+	 * @brief Get height of the canvas in screen coordinates.
 	 */
 	virtual int getHeight() = 0;
+	/**
+	 * @brief Get the canvas bounds.
+	 */
+	virtual Rect getRect() = 0;
 
 	/**
 	 * @brief Get the current color used for filling operations.
