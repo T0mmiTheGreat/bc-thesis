@@ -22,10 +22,13 @@ void SDLManager::runEventLoop()
 	this->m_state = MSTATE_RUNNING;
 
 	window.Show();
+
 	m_subscriber->startEvent();
+
 	SDL_Event ev;
 	bool isRunning = true;
 	while (isRunning) {
+		// Poll all events
 		while (SDL_PollEvent(&ev)) {
 			m_subscriber->generalEvent(ev);
 			if (ev.type == SDL_QUIT) {
@@ -33,13 +36,23 @@ void SDLManager::runEventLoop()
 				break;
 			}
 		}
+
 		m_subscriber->frameEvent();
+
+		// Painting
 		if (this->needsRepaint()) {
+			// Clear
 			renderer.SetTarget();
 			renderer.SetDrawColor();
 			renderer.Clear();
+
+			// Paint
 			m_subscriber->paintEvent(this->m_invalidRect);
+
+			// Present
 			renderer.Present();
+
+			// The screen is now valid - set invalid rect area to 0
 			m_invalidRect.w = 0;
 			m_invalidRect.h = 0;
 		}

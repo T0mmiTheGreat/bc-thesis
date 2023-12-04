@@ -17,11 +17,16 @@
 #include "types.hpp"
 #include "canvas/ICanvas.hpp"
 
+/**
+ * @brief Subscriber of system events.
+ * 
+ * @details Currently, the only system event publisher is SDL Subscriber.
+ */
 class ISysSubscriber {
 public:
 	virtual ~ISysSubscriber() {}
 	/**
-	 * @brief The event loop has started.
+	 * @brief The event loop started.
 	 */
 	virtual void startEvent() = 0;
 	/**
@@ -47,7 +52,7 @@ public:
 	 */
 	virtual void mouseBtnDownEvent(MouseBtn btn) = 0;
 	/**
-	 * @brief A mouse cursor has moved.
+	 * @brief A mouse cursor moved.
 	 * 
 	 * @param x The x coordinate. 0 is the left border of the window. The
 	 *          coordinate increases to the right.
@@ -55,7 +60,22 @@ public:
 	 *          coordinate increases downwards.
 	 */
 	virtual void mouseMoveEvent(int x, int y) = 0;
+	/**
+	 * @brief Event that happens every frame.
+	 * 
+	 * @details Frame = iteration of event loop after all non-painting events.
+	 */
 	virtual void frameEvent() = 0;
+	/**
+	 * @brief Request to paint.
+	 * 
+	 * @param canvas Canvas to paint onto.
+	 * @param invalidRect Area to repaint.
+	 * 
+	 * @remark The recipent may choose to repaint area larger than invalidRect,
+	 *         but they must modify the invalidRect value to mach the area they
+	 *         painted.
+	 */
 	virtual void paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) = 0;
 };
 

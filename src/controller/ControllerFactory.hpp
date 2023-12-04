@@ -16,6 +16,9 @@
 
 #include "controller/IController.hpp"
 
+/**
+ * @brief Factory for the IController interface.
+ */
 class ControllerFactory {
 public:
 	static std::shared_ptr<IController> createRootController();

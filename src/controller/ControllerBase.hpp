@@ -17,6 +17,12 @@
 
 #include "controller/IController.hpp"
 
+/**
+ * @brief Base class for all controllers.
+ * 
+ * @details In future, there might be some definitions common to all controllers,
+ *          so it is better for all controllers to inherit from this one.
+ */
 class ControllerBase : public IController {};
 
 #endif // CONTROLLERBASE_HPP

@@ -24,9 +24,15 @@ std::unique_ptr<IController> GeneralControllerBase::runController()
 {
 	sendStartEventIfEventLoopRunning();
 
+	// Acquire lock for the isControllerFinished variable
 	std::unique_lock<std::mutex> lk(mutexIsControllerFinished);
+
+	// Unlock the variable, wait until it's `true`
 	cvIsControllerFinished.wait(lk, [this]() { return this->isControllerFinished; });
+
 	return nullptr;
+
+	// Release the lock for the isControllerFinished variable
 }
 
 void GeneralControllerBase::quitEvent()
@@ -37,9 +43,15 @@ void GeneralControllerBase::quitEvent()
 void GeneralControllerBase::finishedEvent()
 {
 	{
+		// Acquire lock for the isControllerFinished variable
 		std::lock_guard<std::mutex> lk(mutexIsControllerFinished);
+
+		// Modify its value
 		isControllerFinished = true;
 	}
+	// Release the lock for the isControllerFinished variable
+
+	// Notify `runController()` that the value has changed
 	cvIsControllerFinished.notify_one();
 }
 

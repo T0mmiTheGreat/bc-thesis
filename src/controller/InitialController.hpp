@@ -16,6 +16,13 @@
 
 #include "controller/GeneralControllerBase.hpp"
 
+/**
+ * @brief The first child controller of the Root.
+ * 
+ * @details Its purpose is to merely choose its successor and don't do anything
+ *          else. This is done to follow the Single Responsibility Principle of
+ *          SOLID.
+ */
 class InitialController : public GeneralControllerBase {
 private:
 	int spriteX;

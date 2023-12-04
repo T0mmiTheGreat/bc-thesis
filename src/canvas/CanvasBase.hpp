@@ -15,10 +15,33 @@
 #include "canvas/ICanvas.hpp"
 #include "types.hpp"
 
+/**
+ * @brief The base class for canvases.
+ * 
+ * @details Provides some convenient definitions for descendants.
+ * 
+ *          The filling color, stroking color and stroke width variables are
+ *          defined, along with the definitions of getters and setters for
+ *          them.
+ * 
+ *          If the descendants don't have a specific way of filling and
+ *          stroking shapes at the same time, this class defines the drawSth()
+ *          methods to call fillSth() and then strokeSth() so the descendants
+ *          don't have to.
+ */
 class CanvasBase : public ICanvas {
 protected:
+	/**
+	 * @brief Color used for filling operations.
+	 */
 	Color fColor;
+	/**
+	 * @brief Color used for stroking operations.
+	 */
 	Color sColor;
+	/**
+	 * @brief Stroke width.
+	 */
 	double sWidth;
 public:
 	virtual Color getFillingColor() override;

@@ -16,6 +16,9 @@
 
 #include "sysproxy/ISysProxy.hpp"
 
+/**
+ * @brief Factory for ISysProxy interface.
+ */
 class SysProxyFactory {
 public:
 	static std::shared_ptr<ISysProxy> createDefault();

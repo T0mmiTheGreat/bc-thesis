@@ -19,18 +19,30 @@
 void RootController::runChildren()
 {
 	while (!m_isQuit) {
+		// Run controller + get replacement
 		auto replacementController = m_childController->runController();
+		
+		// Unless we are going to quit, we need the replacement for the current
+		// child controller
 		assert(m_isQuit || replacementController != nullptr);
+
 		m_childController = std::move(replacementController);
 	}
 }
 
 std::unique_ptr<IController> RootController::runController()
 {
-	// ControllerBase::runController();  -- Would it work for PVF?
+	//ControllerBase::runController();  -- Would it work for PVF?
+
+	// Execute the controller run loop in another thread
 	std::thread childrenLoop(&RootController::runChildren, this);
+
+	// Run the event loop
 	SysProxyFactory::createDefault()->runEventLoop();
+
+	// After the event loop finishes synchronize with the controller run loop
 	childrenLoop.join();
+	
 	return nullptr;
 }
 

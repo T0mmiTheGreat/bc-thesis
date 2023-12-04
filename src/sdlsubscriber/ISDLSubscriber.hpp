@@ -14,12 +14,36 @@
 
 #include <SDL2/SDL.h>
 
+/**
+ * @brief Defines events created by event loop.
+ */
 class ISDLSubscriber {
 public:
 	virtual ~ISDLSubscriber() {}
+	/**
+	 * @brief Event acquired by polling events.
+	 */
 	virtual void generalEvent(SDL_Event& ev) = 0;
+	/**
+	 * @brief Request to paint.
+	 * 
+	 * @details This event happens after SDLManager received invalidateRect()
+	 *          request.
+	 * 
+	 * @param invalidRect Area to repaint.
+	 */
 	virtual void paintEvent(SDL_Rect& invalidRect) = 0;
+	/**
+	 * @brief Event that happens every frame.
+	 * 
+	 * @details Frame = iteration of event loop after all non-painting events.
+	 */
 	virtual void frameEvent() = 0;
+	/**
+	 * @brief The event loop has started.
+	 * 
+	 * @details This is the first event of the event loop and happens only once.
+	 */
 	virtual void startEvent() = 0;
 };
 

@@ -14,6 +14,9 @@
 
 #include "canvas/CanvasBase.hpp"
 
+/**
+ * @brief Concrete implementation of ICanvas for the SDL library.
+ */
 class SDLCanvas : public CanvasBase {
 public:
 	virtual int getWidth() override;

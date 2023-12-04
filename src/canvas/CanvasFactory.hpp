@@ -16,8 +16,14 @@
 
 #include "canvas/ICanvas.hpp"
 
+/**
+ * @brief Factory for ICanvas interface.
+ */
 class CanvasFactory {
 public:
+	/**
+	 * @brief Creates an instance of SDLCanvas.
+	 */
 	static std::shared_ptr<ICanvas> createSdlCanvas();
 };
 

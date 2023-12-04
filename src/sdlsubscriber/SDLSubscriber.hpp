@@ -17,6 +17,9 @@
 #include "sdlsubscriber/ISDLSubscriber.hpp"
 #include "syssubscriber/ISysSubscriber.hpp"
 
+/**
+ * @brief Implementation of ISDLSubscriber.
+ */
 class SDLSubscriber : public ISDLSubscriber {
 private:
 	std::weak_ptr<ISysSubscriber> m_subscriber;

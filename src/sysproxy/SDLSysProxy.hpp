@@ -14,6 +14,9 @@
 
 #include "sysproxy/SysProxyBase.hpp"
 
+/**
+ * @brief Concrete implementation of ISysProxy for the SDL library.
+ */
 class SDLSysProxy : public SysProxyBase {
 public:
 	void runEventLoop() override;
