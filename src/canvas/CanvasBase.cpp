@@ -11,6 +11,16 @@
 
 #include "canvas/CanvasBase.hpp"
 
+int CanvasBase::getWidth()
+{
+	return getRect().w;
+}
+
+int CanvasBase::getHeight()
+{
+	return getRect().h;
+}
+
 Color CanvasBase::getFillingColor()
 {
 	return fColor;
