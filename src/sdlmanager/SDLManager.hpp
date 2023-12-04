@@ -21,21 +21,6 @@
 #include "types.hpp"
 
 /**
- * @brief State of the event loop execution.
- */
-enum SDLManagerState {
-	// Can run event loop
-	// Cannot call invalidateRect() and similar methods
-	MSTATE_PRERUN,
-	// Event loop is running, but cannot run another event loop
-	// Can call invalidateRect() and similar methods
-	MSTATE_RUNNING,
-	// Event loop is finished and cannot start a new one
-	// Cannot call invalidateRect() and similar methods
-	MSTATE_POSTRUN,
-};
-
-/**
  * @brief Singleton class for the SDL-related operations.
  */
 class SDLManager {
@@ -46,7 +31,7 @@ private:
 		sdl(SDL_INIT_VIDEO),
 		window("Caption", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 480, 360, 0), // FIXME
 		renderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC),
-		m_state{MSTATE_PRERUN}
+		m_eventLoopstate{EVENTLOOP_PRERUN}
 	{}
 	~SDLManager() {}
 public:
@@ -71,7 +56,7 @@ private:
 	/**
 	 * @brief State of the event loop.
 	 */
-	SDLManagerState m_state;
+	EventLoopState m_eventLoopstate;
 	/**
 	 * @brief The area which needs to be repainted.
 	 */
@@ -96,9 +81,9 @@ public:
 	SDL2pp::Renderer renderer;
 
 	/**
-	 * @brief Getter for the `state` (`m_state`) variable.
+	 * @brief Getter for the `m_eventLoopstate` variable.
 	 */
-	SDLManagerState getState() const { return m_state; }
+	EventLoopState getEventLoopState() const { return m_eventLoopstate; }
 
 	/**
 	 * @brief Assigns a SDL event subscriber.

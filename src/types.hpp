@@ -15,6 +15,24 @@
 #include <cstdint>
 
 /**
+ * @brief State of the event loop execution.
+ */
+enum EventLoopState {
+	// Can run event loop
+	// Cannot call invalidateRect() and similar methods
+	EVENTLOOP_PRERUN,
+	// Event loop is running, but start event hasn't been sent yet
+	// Can call invalidateRect() and similar methods
+	EVENTLOOP_PRESTARTEVENT,
+	// Event loop is running, but cannot run another event loop
+	// Can call invalidateRect() and similar methods
+	EVENTLOOP_RUNNING,
+	// Event loop is finished and cannot start a new one
+	// Cannot call invalidateRect() and similar methods
+	EVENTLOOP_POSTRUN,
+};
+
+/**
  * @brief Library-independent key codes.
  * 
  * @details These key codes are recognized by the application. The mapping

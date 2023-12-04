@@ -32,7 +32,7 @@ void RootController::runChildren()
 
 std::unique_ptr<IController> RootController::runController()
 {
-	//ControllerBase::runController();  -- Would it work for PVF?
+	startedEvent();
 
 	// Execute the controller run loop in another thread
 	std::thread childrenLoop(&RootController::runChildren, this);
@@ -49,6 +49,7 @@ std::unique_ptr<IController> RootController::runController()
 void RootController::startEvent()
 {
 	m_childController->startEvent();
+	startedEvent();
 }
 
 void RootController::quitEvent()
@@ -57,6 +58,7 @@ void RootController::quitEvent()
 	// the child. When the child deactivates, the quit flag must already be set
 	m_isQuit = true;
 	m_childController->quitEvent();
+	abortEvent();
 }
 
 void RootController::keyDownEvent(KeyCode key)
@@ -74,14 +76,18 @@ void RootController::mouseMoveEvent(int x, int y)
 	m_childController->mouseMoveEvent(x, y);
 }
 
+void RootController::startedEvent()
+{
+}
+
 void RootController::finishedEvent()
 {
-	m_childController->finishedEvent();
 }
 
 void RootController::abortEvent()
 {
 	m_childController->abortEvent();
+	finishedEvent();
 }
 
 void RootController::frameEvent()

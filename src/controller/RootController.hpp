@@ -57,6 +57,7 @@ public:
 	void keyDownEvent(KeyCode key) override;
 	void mouseBtnDownEvent(MouseBtn btn) override;
 	void mouseMoveEvent(int x, int y) override;
+	void startedEvent() override;
 	void finishedEvent() override;
 	void abortEvent() override;
 	void frameEvent() override;

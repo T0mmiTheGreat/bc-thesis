@@ -47,9 +47,9 @@ public:
 	 */
 	virtual bool isKeyPressed(KeyCode keyCode) = 0;
 	/**
-	 * @brief Returns true if the event loop is in the running state.
+	 * @brief Returns the current event loop state.
 	 */
-	virtual bool isEventLoopRunning() = 0;
+	virtual EventLoopState getEventLoopState() = 0;
 };
 
 #endif // ISYSPROXY_HPP

@@ -21,13 +21,20 @@ class IControllerEventSubscriber : public ISysSubscriber {
 public:
 	virtual ~IControllerEventSubscriber() {}
 	/**
-	 * @brief The thread should finish its execution.
+	 * @brief The controller started.
+	 * 
+	 * @details This happens either when the runController() is called or when
+	 *          the event loop starts.
+	 */
+	virtual void startedEvent() = 0;
+	/**
+	 * @brief The controller should finish its execution.
 	 * 
 	 * @details This event usually sends a controller to itself.
 	 */
 	virtual void finishedEvent() = 0;
 	/**
-	 * @brief The thread should stop its execution.
+	 * @brief The controller should stop its execution.
 	 * 
 	 * @details In most scenarios this event may be considered the same as
 	 *          finishedEvent. It is used to emphasize that the controller

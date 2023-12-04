@@ -13,16 +13,18 @@
 
 #include <mutex>
 
-void GeneralControllerBase::sendStartEventIfEventLoopRunning()
+#include "types.hpp"
+
+void GeneralControllerBase::sendStartedEventIfEventLoopRunning()
 {
-	if (sysProxy->isEventLoopRunning()) {
-		startEvent();
+	if (sysProxy->getEventLoopState() == EVENTLOOP_RUNNING) {
+		startedEvent();
 	}
 }
 
 std::unique_ptr<IController> GeneralControllerBase::runController()
 {
-	sendStartEventIfEventLoopRunning();
+	sendStartedEventIfEventLoopRunning();
 
 	// Acquire lock for the isControllerFinished variable
 	std::unique_lock<std::mutex> lk(mutexIsControllerFinished);
@@ -33,6 +35,11 @@ std::unique_ptr<IController> GeneralControllerBase::runController()
 	return nullptr;
 
 	// Release the lock for the isControllerFinished variable
+}
+
+void GeneralControllerBase::startEvent()
+{
+	startedEvent();
 }
 
 void GeneralControllerBase::quitEvent()

@@ -35,7 +35,7 @@ void InitialController::keyDownEvent(KeyCode key)
 	sysProxy->invalidateRect();
 }
 
-void InitialController::startEvent()
+void InitialController::startedEvent()
 {
 	sysProxy->invalidateRect();
 }

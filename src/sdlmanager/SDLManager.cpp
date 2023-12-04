@@ -19,11 +19,11 @@ void SDLManager::runEventLoop()
 {
 	assert(m_subscriber != nullptr);
 
-	this->m_state = MSTATE_RUNNING;
+	this->m_eventLoopstate = EVENTLOOP_PRESTARTEVENT;
+	m_subscriber->startEvent();
+	this->m_eventLoopstate = EVENTLOOP_RUNNING;
 
 	window.Show();
-
-	m_subscriber->startEvent();
 
 	SDL_Event ev;
 	bool isRunning = true;
@@ -58,7 +58,7 @@ void SDLManager::runEventLoop()
 		}
 	}
 
-	this->m_state = MSTATE_POSTRUN;
+	this->m_eventLoopstate = EVENTLOOP_POSTRUN;
 }
 
 void SDLManager::invalidateRect(SDL_Rect& rect)

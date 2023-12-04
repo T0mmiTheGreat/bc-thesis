@@ -34,7 +34,7 @@ public:
 	std::unique_ptr<IController> runController() override;
 
 	void keyDownEvent(KeyCode key) override;
-	void startEvent() override;
+	void startedEvent() override;
 	void paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
 };
 

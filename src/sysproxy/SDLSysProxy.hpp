@@ -13,6 +13,7 @@
 #define SDLSYSPROXY_HPP
 
 #include "sysproxy/SysProxyBase.hpp"
+#include "types.hpp"
 
 /**
  * @brief Concrete implementation of ISysProxy for the SDL library.
@@ -23,7 +24,7 @@ public:
 	void invalidateRect() override;
 	void invalidateRect(const Rect& rect) override;
 	bool isKeyPressed(KeyCode keyCode) override;
-	bool isEventLoopRunning() override;
+	EventLoopState getEventLoopState() override;
 };
 
 #endif // SDLSYSPROXY_HPP
