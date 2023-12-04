@@ -13,6 +13,7 @@
 #define TYPES_HPP
 
 #include <cstdint>
+#include <ctime>
 
 /**
  * @brief State of the event loop execution.
@@ -165,5 +166,56 @@ struct Color {
 	{}
 };
 
+/**
+ * @brief Simple timer implementation.
+ * 
+ * @details The timer doesn't produce events. Instead, it must be queried when
+ *          needed.
+ * 
+ * @remark The timer may overflow.
+ */
+class Timer {
+private:
+	std::clock_t m_interval;
+	std::clock_t m_nextTimestamp;
+
+	std::clock_t msToClocks(std::clock_t ms) {
+		// ms / 1000 * CPS -> convert ms to s, then convert s to clocks.
+		// The operands are swapped here to avoid unnecessary FP conversions
+		// but keep precision
+		return ms * CLOCKS_PER_SEC / 1000;
+	}
+public:
+	/**
+	 * @brief Construct a new Timer object.
+	 * 
+	 * @param interval Timer interval in milliseconds.
+	 */
+	Timer(std::clock_t interval) :
+		m_interval{msToClocks(interval)}
+	{
+		reset();
+	}
+	/**
+	 * @brief Starts the timer again.
+	 */
+	void reset() {
+		m_nextTimestamp = std::clock() + m_interval;
+	}
+	/**
+	 * @brief Checks whether the timer interval has elapsed.
+	 * 
+	 * @details If multiple timer intervals elapse between function calls they
+	 *          won't be skipped.
+	 */
+	bool isLap() {
+		std::clock_t now = std::clock();
+		bool res = (now >= m_nextTimestamp);
+		if (res) {
+			m_nextTimestamp += m_interval;
+		}
+		return res;
+	}
+};
 
 #endif // TYPES_HPP
