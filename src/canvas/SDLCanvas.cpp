@@ -18,12 +18,12 @@
 
 int SDLCanvas::getWidth()
 {
-	return SDLManager::get().window.GetSize().GetX();
+	return SDLManager::get().window.GetDrawableWidth();
 }
 
 int SDLCanvas::getHeight()
 {
-	return SDLManager::get().window.GetSize().GetY();
+	return SDLManager::get().window.GetDrawableHeight();
 }
 
 void SDLCanvas::setFillingColor(Color color)
