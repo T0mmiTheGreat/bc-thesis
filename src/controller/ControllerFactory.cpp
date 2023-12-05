@@ -13,6 +13,8 @@
 
 #include "controller/RootController.hpp"
 #include "controller/InitialController.hpp"
+#include "controller/LogoController.hpp"
+#include "controller/InGameController.hpp"
 
 std::shared_ptr<IController> ControllerFactory::createRootController()
 {
@@ -22,4 +24,14 @@ std::shared_ptr<IController> ControllerFactory::createRootController()
 std::unique_ptr<IController> ControllerFactory::createInitialController()
 {
 	return std::make_unique<InitialController>();
+}
+
+std::unique_ptr<IController> ControllerFactory::createLogoController()
+{
+	return std::make_unique<LogoController>();
+}
+
+std::unique_ptr<IController> ControllerFactory::createInGameController()
+{
+	return std::make_unique<InGameController>();
 }

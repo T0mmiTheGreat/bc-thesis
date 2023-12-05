@@ -23,6 +23,8 @@ class ControllerFactory {
 public:
 	static std::shared_ptr<IController> createRootController();
 	static std::unique_ptr<IController> createInitialController();
+	static std::unique_ptr<IController> createLogoController();
+	static std::unique_ptr<IController> createInGameController();
 };
 
 #endif // CONTROLLERFACTORY_HPP

@@ -24,18 +24,10 @@
  *          SOLID.
  */
 class InitialController : public GeneralControllerBase {
-private:
-	int spriteX;
-	int spriteY;
-	int spriteR;
 public:
-	InitialController() : GeneralControllerBase(), spriteX{120}, spriteY{140}, spriteR{36} {}
-
 	std::unique_ptr<IController> runController() override;
 
-	void keyDownEvent(KeyCode key) override;
 	void startedEvent() override;
-	void paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
 };
 
 #endif // INITIALCONTROLLER_HPP

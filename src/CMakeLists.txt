@@ -29,6 +29,8 @@ set(SOURCE_FILES
 	controller/RootController.cpp
 	controller/GeneralControllerBase.cpp
 	controller/InitialController.cpp
+	controller/LogoController.cpp
+	controller/InGameController.cpp
 )
 
 # Headers (*.h)
@@ -54,6 +56,8 @@ set(HEADER_FILES
 	controller/RootController.hpp
 	controller/GeneralControllerBase.hpp
 	controller/InitialController.hpp
+	controller/LogoController.hpp
+	controller/InGameController.hpp
 )
 
 # Create the executable in the repo root directory
