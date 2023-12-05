@@ -62,3 +62,9 @@ void CanvasBase::drawCircle(int x, int y, int r)
 	fillCircle(x, y, r);
 	strokeCircle(x, y, r);
 }
+
+void CanvasBase::drawRectangle(int x, int y, int w, int h)
+{
+	fillRectangle(x, y, w, h);
+	strokeRectangle(x, y, w, h);
+}

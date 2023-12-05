@@ -93,3 +93,15 @@ void SDLCanvas::drawCircle(int x, int y, int r)
 	CanvasBase::drawCircle(x, y, r);
 }
 
+void SDLCanvas::fillRectangle(int x, int y, int w, int h)
+{
+	SDLManager::get().renderer.SetDrawColor(SDL2pp::Color(fColor.r, fColor.g, fColor.b, fColor.a));
+	SDLManager::get().renderer.FillRect(SDL2pp::Rect(x, y, w, h));
+}
+
+void SDLCanvas::strokeRectangle(int x, int y, int w, int h)
+{
+	SDLManager::get().renderer.SetDrawColor(SDL2pp::Color(sColor.r, sColor.g, sColor.b, sColor.a));
+	SDLManager::get().renderer.DrawRect(SDL2pp::Rect(x, y, w, h));
+}
+

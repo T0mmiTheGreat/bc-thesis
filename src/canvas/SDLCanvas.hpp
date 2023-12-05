@@ -33,6 +33,9 @@ public:
 	void fillCircle(int x, int y, int r) override;
 	void strokeCircle(int x, int y, int r) override;
 	void drawCircle(int x, int y, int r) override;
+
+	void fillRectangle(int x, int y, int w, int h) override;
+	void strokeRectangle(int x, int y, int w, int h) override;
 };
 
 #endif // SDLCANVAS_HPP

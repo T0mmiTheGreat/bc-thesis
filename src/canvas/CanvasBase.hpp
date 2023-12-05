@@ -60,6 +60,7 @@ public:
 
 	virtual void drawEllipse(int x, int y, int rx, int ry) override;
 	virtual void drawCircle(int x, int y, int r) override;
+	virtual void drawRectangle(int x, int y, int w, int h) override;
 };
 
 #endif // CANVASBASE_HPP

@@ -114,6 +114,34 @@ public:
 	 * @param r Radius of the circle.
 	 */
 	virtual void drawCircle(int x, int y, int r) = 0;
+	
+	/**
+	 * @brief Fill a rectangular area.
+	 * 
+	 * @param x X coordinate of the rectangle's top left corner.
+	 * @param y Y coordinate of the rectangle's top left corner.
+	 * @param w Width of the rectangle.
+	 * @param h Height of the rectangle.
+	 */
+	virtual void fillRectangle(int x, int y, int w, int h) = 0;
+	/**
+	 * @brief Stroke a rectangular area.
+	 * 
+	 * @param x X coordinate of the rectangle's top left corner.
+	 * @param y Y coordinate of the rectangle's top left corner.
+	 * @param w Width of the rectangle.
+	 * @param h Height of the rectangle.
+	 */
+	virtual void strokeRectangle(int x, int y, int w, int h) = 0;
+	/**
+	 * @brief Fill and stroke a rectangular area.
+	 * 
+	 * @param x X coordinate of the rectangle's top left corner.
+	 * @param y Y coordinate of the rectangle's top left corner.
+	 * @param w Width of the rectangle.
+	 * @param h Height of the rectangle.
+	 */
+	virtual void drawRectangle(int x, int y, int w, int h) = 0;
 };
 
 #endif // ICANVAS_HPP
