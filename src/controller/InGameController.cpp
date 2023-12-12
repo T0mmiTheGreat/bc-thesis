@@ -21,15 +21,35 @@ void InGameController::frameEvent()
 {
 	if (m_timer.isLap()) {
 		if (sysProxy->isKeyPressed(KEY_LEFT_ARROW)) {
-			spriteX -= 3;
+			if (sysProxy->isKeyPressed(KEY_UP_ARROW)) {
+				spriteX -= 2;
+				spriteY -= 2;
+			}
+			else if (sysProxy->isKeyPressed(KEY_DOWN_ARROW)) {
+				spriteX -= 2;
+				spriteY += 2;
+			}
+			else {
+				spriteX -= 3;
+			}
+			sysProxy->invalidateRect();
+		}
+		else if (sysProxy->isKeyPressed(KEY_RIGHT_ARROW)) {
+			if (sysProxy->isKeyPressed(KEY_UP_ARROW)) {
+				spriteX += 2;
+				spriteY -= 2;
+			}
+			else if (sysProxy->isKeyPressed(KEY_DOWN_ARROW)) {
+				spriteX += 2;
+				spriteY += 2;
+			}
+			else {
+				spriteX += 3;
+			}
 			sysProxy->invalidateRect();
 		}
 		else if (sysProxy->isKeyPressed(KEY_UP_ARROW)) {
 			spriteY -= 3;
-			sysProxy->invalidateRect();
-		}
-		else if (sysProxy->isKeyPressed(KEY_RIGHT_ARROW)) {
-			spriteX += 3;
 			sysProxy->invalidateRect();
 		}
 		else if (sysProxy->isKeyPressed(KEY_DOWN_ARROW)) {
