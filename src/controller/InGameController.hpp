@@ -23,7 +23,7 @@ private:
 
 	Timer m_timer;
 public:
-	InGameController() : GeneralControllerBase(), spriteX{120}, spriteY{140}, spriteR{36}, m_timer(17) {}
+	InGameController() : GeneralControllerBase(), spriteX{120}, spriteY{140}, spriteR{36}, m_timer(30) {}
 
 	void startedEvent() override;
 	void frameEvent() override;
