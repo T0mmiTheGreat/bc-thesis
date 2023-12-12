@@ -15,6 +15,10 @@
 #include "types.hpp"
 #include "controller/GeneralControllerBase.hpp"
 
+/**
+ * @brief Controller for the game.
+ * 
+ */
 class InGameController : public GeneralControllerBase {
 private:
 	int spriteX;

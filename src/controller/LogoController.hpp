@@ -16,6 +16,10 @@
 
 #include "controller/GeneralControllerBase.hpp"
 
+/**
+ * @brief Controller that displays logo.
+ * 
+ */
 class LogoController : public GeneralControllerBase {
 private:
 	Timer m_timer;
