@@ -26,11 +26,10 @@ set(SOURCE_FILES
 	canvas/CanvasFactory.cpp
 	controller/ControllerBase.cpp
 	controller/ControllerFactory.cpp
-	controller/RootController.cpp
 	controller/GeneralControllerBase.cpp
+	controller/RootController.cpp
 	controller/InitialController.cpp
 	controller/LogoController.cpp
-	controller/InGameController.cpp
 )
 
 # Headers (*.h)
@@ -49,15 +48,15 @@ set(HEADER_FILES
 	canvas/CanvasBase.hpp
 	canvas/SDLCanvas.hpp
 	canvas/CanvasFactory.hpp
-	controller/IController.hpp
 	controller/IControllerEventSubscriber.hpp
+	controller/IControllerChild.hpp
+	controller/IRootController.hpp
 	controller/ControllerBase.hpp
 	controller/ControllerFactory.hpp
-	controller/RootController.hpp
 	controller/GeneralControllerBase.hpp
+	controller/RootController.hpp
 	controller/InitialController.hpp
 	controller/LogoController.hpp
-	controller/InGameController.hpp
 )
 
 # Create the executable in the repo root directory

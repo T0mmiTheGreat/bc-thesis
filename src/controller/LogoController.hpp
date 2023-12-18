@@ -3,7 +3,7 @@
  * @author Tomáš Ludrovan
  * @brief LogoController class
  * @version 0.1
- * @date 2023-12-04
+ * @date 2023-12-18
  * 
  * @copyright Copyright (c) 2023
  * 

@@ -3,7 +3,7 @@
  * @author Tomáš Ludrovan
  * @brief GeneralControllerBase class
  * @version 0.1
- * @date 2023-12-03
+ * @date 2023-12-18
  * 
  * @copyright Copyright (c) 2023
  * 
@@ -11,65 +11,60 @@
 
 #include "controller/GeneralControllerBase.hpp"
 
-#include <mutex>
+#include "sysproxy/SysProxyFactory.hpp"
 
-#include "types.hpp"
-
-void GeneralControllerBase::sendStartedEventIfEventLoopRunning()
+std::unique_ptr<IControllerChild> GeneralControllerBase::createReplacement()
 {
-	if (sysProxy->getEventLoopState() == EVENTLOOP_RUNNING) {
-		startedEvent();
-	}
-}
-
-std::unique_ptr<IController> GeneralControllerBase::runController()
-{
-	sendStartedEventIfEventLoopRunning();
-
-	// Acquire lock for the isControllerFinished variable
-	std::unique_lock<std::mutex> lk(mutexIsControllerFinished);
-
-	// Unlock the variable, wait until it's `true`
-	cvIsControllerFinished.wait(lk, [this]() { return this->isControllerFinished; });
-
 	return nullptr;
-
-	// Release the lock for the isControllerFinished variable
 }
 
-void GeneralControllerBase::startEvent()
-{
-	startedEvent();
-}
-
-void GeneralControllerBase::quitEvent()
-{
-	abortEvent();
-}
+GeneralControllerBase::GeneralControllerBase() :
+	swapCallback{nullptr},
+	sysProxy{SysProxyFactory::createDefault()}
+{}
 
 void GeneralControllerBase::startedEvent()
 {
-	isRunning = true;
 }
 
 void GeneralControllerBase::finishedEvent()
 {
-	{
-		// Acquire lock for the isControllerFinished variable
-		std::lock_guard<std::mutex> lk(mutexIsControllerFinished);
-
-		// Modify its value
-		isControllerFinished = true;
+	if (swapCallback != nullptr) {
+		swapCallback(createReplacement());
 	}
-	// Release the lock for the isControllerFinished variable
-
-	// Notify `runController()` that the value has changed
-	cvIsControllerFinished.notify_one();
-
-	isRunning = false;
 }
 
-void GeneralControllerBase::abortEvent()
+void GeneralControllerBase::stoppedEvent()
 {
 	finishedEvent();
+}
+
+void GeneralControllerBase::abortedEvent()
+{
+	finishedEvent();
+}
+
+void GeneralControllerBase::keyDownEvent(KeyCode key)
+{
+}
+
+void GeneralControllerBase::mouseBtnDownEvent(MouseBtn btn)
+{
+}
+
+void GeneralControllerBase::mouseMoveEvent(int x, int y)
+{
+}
+
+void GeneralControllerBase::frameEvent()
+{
+}
+
+void GeneralControllerBase::paintEvent(std::shared_ptr<ICanvas> canvas, Rect & invalidRect)
+{
+}
+
+void GeneralControllerBase::setSwapCallback(SwapCallback f)
+{
+	swapCallback = f;
 }

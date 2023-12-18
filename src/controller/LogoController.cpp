@@ -3,7 +3,7 @@
  * @author Tomáš Ludrovan
  * @brief LogoController class
  * @version 0.1
- * @date 2023-12-04
+ * @date 2023-12-18
  * 
  * @copyright Copyright (c) 2023
  * 
@@ -21,7 +21,6 @@ void LogoController::startedEvent()
 
 void LogoController::frameEvent()
 {
-	if (!isRunning) return;
 	GeneralControllerBase::frameEvent();
 	if (m_timer.isLap()) {
 		m_frameNumber++;
@@ -44,7 +43,6 @@ void LogoController::frameEvent()
 
 void LogoController::paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)
 {
-	if (!isRunning) return;
 	GeneralControllerBase::paintEvent(canvas, invalidRect);
 	canvas->setFillingColor(Color(m_opacity, m_opacity, m_opacity, 0xff));
 	canvas->fillCircle(195, 100, 25);

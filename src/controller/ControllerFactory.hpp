@@ -3,7 +3,7 @@
  * @author Tomáš Ludrovan
  * @brief ControllerFactory class
  * @version 0.1
- * @date 2023-12-03
+ * @date 2023-12-18
  * 
  * @copyright Copyright (c) 2023
  * 
@@ -14,17 +14,14 @@
 
 #include <memory>
 
-#include "controller/IController.hpp"
+#include "controller/IRootController.hpp"
+#include "controller/IControllerChild.hpp"
 
-/**
- * @brief Factory for the IController interface.
- */
 class ControllerFactory {
 public:
-	static std::shared_ptr<IController> createRootController();
-	static std::unique_ptr<IController> createInitialController();
-	static std::unique_ptr<IController> createLogoController();
-	static std::unique_ptr<IController> createInGameController();
+	static std::shared_ptr<IRootController> createRootController();
+	static std::unique_ptr<IControllerChild> createInitialController();
+	static std::unique_ptr<IControllerChild> createLogoController();
 };
 
 #endif // CONTROLLERFACTORY_HPP

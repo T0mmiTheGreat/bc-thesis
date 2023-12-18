@@ -3,7 +3,7 @@
  * @author Tomáš Ludrovan
  * @brief RootController class
  * @version 0.1
- * @date 2023-12-03
+ * @date 2023-12-18
  * 
  * @copyright Copyright (c) 2023
  * 
@@ -11,52 +11,23 @@
 
 #include "controller/RootController.hpp"
 
-#include <cassert>
-#include <thread>
-
+#include "controller/ControllerFactory.hpp"
 #include "sysproxy/SysProxyFactory.hpp"
 
-void RootController::runChildren()
+RootController::RootController() :
+	ControllerBase()
 {
-	while (!m_isQuit) {
-		// Run controller + get replacement
-		auto replacementController = m_childController->runController();
-		
-		// Unless we are going to quit, we need the replacement for the current
-		// child controller
-		assert(m_isQuit || replacementController != nullptr);
-
-		m_childController = std::move(replacementController);
-	}
-}
-
-std::unique_ptr<IController> RootController::runController()
-{
-	// Execute the controller run loop in another thread
-	std::thread childrenLoop(&RootController::runChildren, this);
-
-	// Run the event loop
-	SysProxyFactory::createDefault()->runEventLoop();
-
-	// After the event loop finishes synchronize with the controller run loop
-	childrenLoop.join();
-	
-	return nullptr;
+	setChildController(ControllerFactory::createInitialController());
 }
 
 void RootController::startEvent()
 {
-	m_childController->startEvent();
-	startedEvent();
+	m_childController->startedEvent();
 }
 
 void RootController::quitEvent()
 {
-	// The order is important. First set the quit flag, then send the event to
-	// the child. When the child deactivates, the quit flag must already be set
-	m_isQuit = true;
-	m_childController->quitEvent();
-	abortEvent();
+	m_childController->stoppedEvent();
 }
 
 void RootController::keyDownEvent(KeyCode key)
@@ -74,20 +45,6 @@ void RootController::mouseMoveEvent(int x, int y)
 	m_childController->mouseMoveEvent(x, y);
 }
 
-void RootController::startedEvent()
-{
-}
-
-void RootController::finishedEvent()
-{
-}
-
-void RootController::abortEvent()
-{
-	m_childController->abortEvent();
-	finishedEvent();
-}
-
 void RootController::frameEvent()
 {
 	m_childController->frameEvent();
@@ -96,4 +53,25 @@ void RootController::frameEvent()
 void RootController::paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)
 {
 	m_childController->paintEvent(canvas, invalidRect);
+}
+
+void RootController::run()
+{
+	SysProxyFactory::createDefault()->runEventLoop();
+}
+
+void RootController::setChildController(std::unique_ptr<IControllerChild> value)
+{
+	if (value != nullptr) {
+		m_childController = std::move(value);
+		m_childController->setSwapCallback([this](std::unique_ptr<IControllerChild> newValue) {
+			this->setChildController(std::move(newValue));
+		});
+		if (SysProxyFactory::createDefault()->getEventLoopState() == EVENTLOOP_RUNNING) {
+			m_childController->startedEvent();
+		}
+	}
+	else {
+		m_childController = nullptr;
+	}
 }

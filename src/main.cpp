@@ -7,6 +7,7 @@
  * @copyright Copyright (c) 2023
  * 
  */
+
 #include <memory>
 
 #include <SDL2/SDL.h> // SDL_main
@@ -21,6 +22,6 @@ int main(int argc, char *argv[])
 	auto rootCntl = ControllerFactory::createRootController();
 	auto sdlSubs = std::make_shared<SDLSubscriber>(rootCntl);
 	SDLManager::get().assignSubscriber(sdlSubs);
-	rootCntl->runController();
+	rootCntl->run();
 	return 0;
 }

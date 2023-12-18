@@ -36,6 +36,7 @@ void SDLManager::runEventLoop()
 				break;
 			}
 		}
+		if (!isRunning) break;
 
 		m_subscriber->frameEvent();
 
