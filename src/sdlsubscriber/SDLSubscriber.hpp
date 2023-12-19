@@ -24,8 +24,8 @@ class SDLSubscriber : public ISDLSubscriber {
 private:
 	std::weak_ptr<ISysSubscriber> m_subscriber;
 public:
-	SDLSubscriber(std::weak_ptr<ISysSubscriber> subscriber) :
-		m_subscriber{subscriber}
+	SDLSubscriber(std::weak_ptr<ISysSubscriber> subscriber)
+		: m_subscriber{subscriber}
 	{}
 	virtual void generalEvent(SDL_Event& ev) override;
 	virtual void paintEvent(SDL_Rect& invalidRect) override;

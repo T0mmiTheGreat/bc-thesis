@@ -11,9 +11,9 @@
 
 #include "sprite/LogoSprite.hpp"
 
-LogoSprite::LogoSprite():
-	SpriteBase(),
-	m_timer(17)
+LogoSprite::LogoSprite()
+	: SpriteBase()
+	, m_timer(17)
 {}
 
 int LogoSprite::getW()

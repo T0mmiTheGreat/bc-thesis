@@ -19,11 +19,11 @@ void SpriteBase::invalidateBounds()
 	sysProxy->invalidateRect(invalidRect);
 }
 
-SpriteBase::SpriteBase():
-	x{0},
-	y{0},
-	isAnimationRunningFlag{false},
-	sysProxy{SysProxyFactory::createDefault()}
+SpriteBase::SpriteBase()
+	: x{0}
+	, y{0}
+	, isAnimationRunningFlag{false}
+	, sysProxy{SysProxyFactory::createDefault()}
 {}
 
 int SpriteBase::getX()

@@ -14,8 +14,8 @@
 #include "controller/ControllerFactory.hpp"
 #include "sysproxy/SysProxyFactory.hpp"
 
-RootController::RootController() :
-	ControllerBase()
+RootController::RootController()
+	: ControllerBase()
 {
 	setChildController(ControllerFactory::createInitialController());
 }

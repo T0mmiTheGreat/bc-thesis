@@ -94,12 +94,14 @@ struct Rect {
 	 */
 	int h;
 
-	Rect() : Rect(0, 0, 0, 0) {}
-	Rect(int x, int y, int w, int h) :
-		x{x},
-		y{y},
-		w{w},
-		h{h}
+	Rect()
+		: Rect(0, 0, 0, 0)
+	{}
+	Rect(int x, int y, int w, int h)
+		: x{x}
+		, y{y}
+		, w{w}
+		, h{h}
 	{}
 	Rect createEmpty() { return Rect(); }
 
@@ -159,13 +161,13 @@ struct Size2d {
 	size_t w;
 	size_t h;
 
-	Size2d(size_t w, size_t h) :
-		w{w},
-		h{h}
+	Size2d(size_t w, size_t h)
+		: w{w}
+		, h{h}
 	{}
 
-	Size2d() :
-		Size2d(0, 0)
+	Size2d()
+		: Size2d(0, 0)
 	{}
 };
 
@@ -181,7 +183,9 @@ struct Color {
 	/**
 	 * @brief Constructs a black color.
 	 */
-	Color() : Color(0, 0, 0, 0xff) {}
+	Color()
+		: Color(0, 0, 0, 0xff)
+	{}
 	/**
 	 * @brief Construct a color.
 	 * 
@@ -190,11 +194,11 @@ struct Color {
 	 * @param b Intensity of blue channel.
 	 * @param a Intensity of alpha channel.
 	 */
-	Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) :
-		r{r},
-		g{g},
-		b{b},
-		a{a}
+	Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+		: r{r}
+		, g{g}
+		, b{b}
+		, a{a}
 	{}
 };
 

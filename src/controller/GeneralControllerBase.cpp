@@ -18,9 +18,9 @@ std::unique_ptr<IControllerChild> GeneralControllerBase::createReplacement()
 	return nullptr;
 }
 
-GeneralControllerBase::GeneralControllerBase() :
-	swapCallback{nullptr},
-	sysProxy{SysProxyFactory::createDefault()}
+GeneralControllerBase::GeneralControllerBase()
+	: swapCallback{nullptr}
+	, sysProxy{SysProxyFactory::createDefault()}
 {}
 
 void GeneralControllerBase::startedEvent()

@@ -15,13 +15,13 @@
 #include "SDLManager.hpp"
 #include "SDLManager.hpp"
 
-SDLManager::SDLManager() :
-	sdl(SDL_INIT_VIDEO),
-	sdlTtf(),
-	window("Caption", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 480, 360, 0), // FIXME
-	renderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC),
-	m_eventLoopstate{EVENTLOOP_PRERUN},
-	m_fonts{
+SDLManager::SDLManager()
+	: sdl(SDL_INIT_VIDEO)
+	, sdlTtf()
+	, window("Caption", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 480, 360, 0) // FIXME
+	, renderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)
+	, m_eventLoopstate{EVENTLOOP_PRERUN}
+	, m_fonts{
 		SDL2pp::Font("OLDENGL.ttf", 72),
 	}
 {}
