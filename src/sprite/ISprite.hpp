@@ -52,6 +52,7 @@ public:
 	 *          be possible.
 	 */
 	virtual void setPos(int x, int y) = 0;
+	virtual Size2d getSize() = 0;
 	/**
 	 * @brief Returns the rectangle that represents the bounds of the sprite.
 	 * 

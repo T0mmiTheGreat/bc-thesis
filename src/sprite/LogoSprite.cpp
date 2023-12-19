@@ -16,14 +16,9 @@ LogoSprite::LogoSprite()
 	, m_timer(17)
 {}
 
-int LogoSprite::getW()
+Size2d LogoSprite::getSize()
 {
-	return sysProxy->getTextSize(LOGO_TEXT, LOGO_FONT).w;
-}
-
-int LogoSprite::getH()
-{
-	return sysProxy->getTextSize(LOGO_TEXT, LOGO_FONT).h;
+	return sysProxy->getTextSize(LOGO_TEXT, LOGO_FONT);
 }
 
 void LogoSprite::startAnimation()

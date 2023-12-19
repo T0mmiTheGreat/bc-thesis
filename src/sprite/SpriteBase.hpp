@@ -29,6 +29,8 @@ public:
 	SpriteBase();
 	virtual int getX() override;
 	virtual int getY() override;
+	virtual int getW() override;
+	virtual int getH() override;
 	virtual void setX(int value) override;
 	virtual void setY(int value) override;
 	virtual void setPos(int x, int y) override;

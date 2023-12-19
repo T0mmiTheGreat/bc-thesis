@@ -28,8 +28,7 @@ private:
 public:
 	LogoSprite();
 
-	int getW() override;
-	int getH() override;
+	Size2d getSize() override;
 	void repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
 
 	void startAnimation() override;

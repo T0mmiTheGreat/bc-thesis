@@ -36,6 +36,16 @@ int SpriteBase::getY()
 	return this->y;
 }
 
+int SpriteBase::getW()
+{
+	return getSize().w;
+}
+
+int SpriteBase::getH()
+{
+	return getSize().h;
+}
+
 void SpriteBase::setX(int value)
 {
 	setPos(value, getY());
@@ -58,7 +68,8 @@ void SpriteBase::setPos(int x, int y)
 
 Rect SpriteBase::getBounds()
 {
-	return Rect(getX(), getY(), getW(), getH());
+	Size2d size = getSize();
+	return Rect(getX(), getY(), size.w, size.h);
 }
 
 void SpriteBase::startAnimation()
