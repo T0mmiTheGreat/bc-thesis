@@ -1,0 +1,62 @@
+/**
+ * @file LogoSprite.cpp
+ * @author Tomáš Ludrovan
+ * @brief LogoSprite class
+ * @version 0.1
+ * @date 2023-12-19
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
+#include "sprite/LogoSprite.hpp"
+
+LogoSprite::LogoSprite():
+	SpriteBase(),
+	m_timer(17),
+	m_opacity{0},
+	m_frameNumber{0}
+{}
+
+int LogoSprite::getW()
+{
+	return 480;
+}
+
+int LogoSprite::getH()
+{
+	return 360;
+}
+
+void LogoSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)
+{
+	canvas->setFillingColor(Color(m_opacity, m_opacity, m_opacity, 0xff));
+	canvas->fillCircle(x + 195, y + 100, 25);
+	canvas->fillCircle(x + 480 - 195, y + 100, 25);
+	invalidRect += getBounds();
+}
+
+void LogoSprite::frameEvent()
+{
+	if (m_timer.isLap()) {
+		m_frameNumber++;
+		if (m_frameNumber <= 0x3f) {
+			m_opacity = m_frameNumber * 4;
+		}
+		else if (m_frameNumber <= 100) {
+			m_opacity = 0xff;
+		}
+		else if (m_frameNumber <= 100 + 0x3f) {
+			m_opacity = 0xff - ((m_frameNumber - 100) * 4);
+		}
+		else {
+			m_opacity = 0;
+		}
+		sysProxy->invalidateRect();
+	}
+}
+
+bool LogoSprite::isFinished()
+{
+	return (m_frameNumber > 100 + 0x3f);
+}

@@ -12,9 +12,12 @@
 #ifndef LOGOCONTROLLER_HPP
 #define LOGOCONTROLLER_HPP
 
+#include <memory>
+
 #include "types.hpp"
 
 #include "controller/GeneralControllerBase.hpp"
+#include "sprite/LogoSprite.hpp"
 
 /**
  * @brief Controller that displays logo.
@@ -22,15 +25,8 @@
  */
 class LogoController : public GeneralControllerBase {
 private:
-	Timer m_timer;
-	uint8_t m_opacity;
-	int m_frameNumber;
+	std::unique_ptr<LogoSprite> m_sprite;
 public:
-	LogoController() :
-		GeneralControllerBase(),
-		m_timer(17)
-	{}
-
 	virtual void startedEvent() override;
 	virtual void frameEvent() override;
 	virtual void paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;

@@ -30,9 +30,11 @@ set(SOURCE_FILES
 	controller/RootController.cpp
 	controller/InitialController.cpp
 	controller/LogoController.cpp
+	sprite/SpriteBase.cpp
+	sprite/LogoSprite.cpp
 )
 
-# Headers (*.h)
+# Headers (*.hpp)
 set(HEADER_FILES
 	SDL2_gfxPrimitives.h
 	sdlmanager/SDLManager.hpp
@@ -57,6 +59,9 @@ set(HEADER_FILES
 	controller/RootController.hpp
 	controller/InitialController.hpp
 	controller/LogoController.hpp
+	sprite/ISprite.hpp
+	sprite/SpriteBase.hpp
+	sprite/LogoSprite.hpp
 )
 
 # Create the executable in the repo root directory
