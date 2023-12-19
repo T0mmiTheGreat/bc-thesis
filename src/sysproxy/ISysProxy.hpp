@@ -53,6 +53,7 @@ public:
 	 */
 	virtual EventLoopState getEventLoopState() = 0;
 	virtual Size2d getTextSize(const std::string& text, FontId font) = 0;
+	virtual Size2d getPaintAreaSize() = 0;
 };
 
 #endif // ISYSPROXY_HPP
