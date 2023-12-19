@@ -122,6 +122,7 @@ public:
 	 * @brief Converts SDL rectangle to Rect type.
 	 */
 	static Rect sdlRectToRect(const SDL_Rect& rect);
+	static Size2d sdlPointToSize(const SDL2pp::Point& point);
 	/**
 	 * @brief Converts KeyCode enum to SDL key scancode.
 	 */

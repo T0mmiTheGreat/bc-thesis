@@ -106,6 +106,11 @@ Rect SDLManager::sdlRectToRect(const SDL_Rect& rect)
 	return Rect(rect.x, rect.y, rect.w, rect.h);
 }
 
+Size2d SDLManager::sdlPointToSize(const SDL2pp::Point& point)
+{
+	return Size2d(point.GetX(), point.GetY());
+}
+
 SDL_Scancode SDLManager::enumToSdlScancode(KeyCode keyCode)
 {
 	switch (keyCode) {
