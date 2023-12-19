@@ -13,9 +13,7 @@
 
 LogoSprite::LogoSprite():
 	SpriteBase(),
-	m_timer(17),
-	m_opacity{0},
-	m_frameNumber{0}
+	m_timer(17)
 {}
 
 int LogoSprite::getW()
@@ -28,16 +26,25 @@ int LogoSprite::getH()
 	return 360;
 }
 
-void LogoSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)
+void LogoSprite::startAnimation()
 {
-	canvas->setFillingColor(Color(m_opacity, m_opacity, m_opacity, 0xff));
-	canvas->fillCircle(x + 195, y + 100, 25);
-	canvas->fillCircle(x + 480 - 195, y + 100, 25);
-	invalidRect += getBounds();
+	SpriteBase::startAnimation();
+	m_timer.reset();
+	m_opacity = 0;
+	m_frameNumber = 0;
+}
+
+void LogoSprite::stopAnimation()
+{
+	SpriteBase::stopAnimation();
+	m_opacity = 0;
+	invalidateBounds();
 }
 
 void LogoSprite::frameEvent()
 {
+	if (!isAnimationRunning()) return;
+
 	if (m_timer.isLap()) {
 		m_frameNumber++;
 		if (m_frameNumber <= 0x3f) {
@@ -51,12 +58,16 @@ void LogoSprite::frameEvent()
 		}
 		else {
 			m_opacity = 0;
+			stopAnimation();
 		}
-		sysProxy->invalidateRect();
+		invalidateBounds();
 	}
 }
 
-bool LogoSprite::isFinished()
+void LogoSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)
 {
-	return (m_frameNumber > 100 + 0x3f);
+	canvas->setFillingColor(Color(m_opacity, m_opacity, m_opacity, 0xff));
+	canvas->fillCircle(x + 195, y + 100, 25);
+	canvas->fillCircle(x + 480 - 195, y + 100, 25);
+	invalidRect += getBounds();
 }

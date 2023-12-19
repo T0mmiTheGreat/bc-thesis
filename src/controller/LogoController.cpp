@@ -17,6 +17,7 @@ void LogoController::startedEvent()
 {
 	GeneralControllerBase::startedEvent();
 	m_sprite = std::make_unique<LogoSprite>();
+	m_sprite->startAnimation();
 }
 
 void LogoController::frameEvent()

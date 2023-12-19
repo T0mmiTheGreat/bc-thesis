@@ -62,7 +62,46 @@ public:
 	 */
 	virtual Rect getBounds() = 0;
 	/**
-	 * @brief Repaint an area of sprite.
+	 * @brief Starts a sprite animation.
+	 * 
+	 * @remarks If a sprite doesn't have an animation, this should be no-op.
+	 * 
+	 *          If a sprite has multiple animations, they might provide methods
+	 *          to select which animation to start. The caller then should first
+	 *          call the method which selects the animation and then call this
+	 *          method.
+	 * 
+	 * @note If the method is called while an animation is running, the running
+	 *       animation is stopped.
+	 */
+	virtual void startAnimation() = 0;
+	/**
+	 * @brief Stops an animation if one is running.
+	 * 
+	 * @remarks This should be no-op if a sprite doesn't have an animation or
+	 *          if animation is not running.
+	 * 
+	 *          It is NOT necessary to call this method after the animation
+	 *          finishes. If it would be, the object itself should call it.
+	 */
+	virtual void stopAnimation() = 0;
+	/**
+	 * @brief Checks whether an animation is running.
+	 * 
+	 * @remark Mainly used for checking whether the animation has finished.
+	 */
+	virtual bool isAnimationRunning() = 0;
+	/**
+	 * @brief Event that happens every frame.
+	 * 
+	 * @details This method is mainly used to progress any running animations,
+	 *          but in the future there might be more functionality to this, so
+	 *          it is better to call it every frame no matter the sprite does
+	 *          or does not have an animation.
+	 */
+	virtual void frameEvent() = 0;
+	/**
+	 * @brief Repaints an area of sprite.
 	 * 
 	 * @param canvas Canvas to paint onto.
 	 * @param invalidRect Area to repaint.

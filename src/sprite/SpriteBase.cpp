@@ -22,6 +22,7 @@ void SpriteBase::invalidateBounds()
 SpriteBase::SpriteBase():
 	x{0},
 	y{0},
+	isAnimationRunningFlag{false},
 	sysProxy{SysProxyFactory::createDefault()}
 {}
 
@@ -58,4 +59,22 @@ void SpriteBase::setPos(int x, int y)
 Rect SpriteBase::getBounds()
 {
 	return Rect(getX(), getY(), getW(), getH());
+}
+
+void SpriteBase::startAnimation()
+{
+	if (isAnimationRunning()) {
+		stopAnimation();
+	}
+	isAnimationRunningFlag = true;
+}
+
+void SpriteBase::stopAnimation()
+{
+	isAnimationRunningFlag = false;
+}
+
+bool SpriteBase::isAnimationRunning()
+{
+	return isAnimationRunningFlag;
 }

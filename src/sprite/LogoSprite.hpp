@@ -26,8 +26,9 @@ public:
 	int getH() override;
 	void repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
 
-	void frameEvent();
-	bool isFinished();
+	void startAnimation() override;
+	void stopAnimation() override;
+	void frameEvent() override;
 };
 
 #endif // LOGOSPRITE_HPP

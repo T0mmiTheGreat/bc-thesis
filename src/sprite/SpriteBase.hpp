@@ -22,6 +22,7 @@ protected:
 	int x;
 	int y;
 	std::shared_ptr<ISysProxy> sysProxy;
+	bool isAnimationRunningFlag;
 
 	void invalidateBounds();
 public:
@@ -32,6 +33,9 @@ public:
 	virtual void setY(int value) override;
 	virtual void setPos(int x, int y) override;
 	virtual Rect getBounds() override;
+	virtual void startAnimation() override;
+	virtual void stopAnimation() override;
+	virtual bool isAnimationRunning() override;
 };
 
 #endif // SPRITEBASE_HPP
