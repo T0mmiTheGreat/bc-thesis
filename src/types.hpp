@@ -138,6 +138,23 @@ struct Rect {
 };
 
 /**
+ * @brief Width and height structure.
+ */
+struct Size2d {
+	size_t w;
+	size_t h;
+
+	Size2d(size_t w, size_t h) :
+		w{w},
+		h{h}
+	{}
+
+	Size2d() :
+		Size2d(0, 0)
+	{}
+};
+
+/**
  * @brief RGBA color.
  */
 struct Color {
