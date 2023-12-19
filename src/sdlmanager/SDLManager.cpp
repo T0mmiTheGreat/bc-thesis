@@ -18,11 +18,13 @@
 SDLManager::SDLManager()
 	: sdl(SDL_INIT_VIDEO)
 	, sdlTtf()
-	, window("Caption", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 480, 360, 0) // FIXME
+	, window("Caption", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 480, 360, SDL_WINDOW_FULLSCREEN_DESKTOP)
 	, renderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)
 	, m_eventLoopstate{EVENTLOOP_PRERUN}
 	, m_fonts{
-		SDL2pp::Font("OLDENGL.ttf", 72),
+		SDL2pp::Font("oldengl.ttf", 72),
+		SDL2pp::Font("segoepr.ttf", 36),
+		SDL2pp::Font("brlnstr.ttf", 20),
 	}
 {}
 
