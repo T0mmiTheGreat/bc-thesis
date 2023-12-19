@@ -12,9 +12,20 @@
 #include "canvas/SDLCanvas.hpp"
 
 #include <SDL2/SDL.h>
+#include <SDL2pp/SDL.hh>
 #include "SDL2_gfxPrimitives.h"
 
 #include "sdlmanager/SDLManager.hpp"
+
+SDL2pp::Color SDLCanvas::fillToColor()
+{
+	return SDL2pp::Color(fColor.r, fColor.g, fColor.b, fColor.a);
+}
+
+SDL2pp::Color SDLCanvas::strokeToColor()
+{
+	return SDL2pp::Color(sColor.r, sColor.g, sColor.b, sColor.a);
+}
 
 int SDLCanvas::getWidth()
 {
@@ -90,13 +101,21 @@ void SDLCanvas::drawCircle(int x, int y, int r)
 
 void SDLCanvas::fillRectangle(int x, int y, int w, int h)
 {
-	SDLManager::get().renderer.SetDrawColor(SDL2pp::Color(fColor.r, fColor.g, fColor.b, fColor.a));
+	SDLManager::get().renderer.SetDrawColor(fillToColor());
 	SDLManager::get().renderer.FillRect(SDL2pp::Rect(x, y, w, h));
 }
 
 void SDLCanvas::strokeRectangle(int x, int y, int w, int h)
 {
-	SDLManager::get().renderer.SetDrawColor(SDL2pp::Color(sColor.r, sColor.g, sColor.b, sColor.a));
+	SDLManager::get().renderer.SetDrawColor(strokeToColor());
 	SDLManager::get().renderer.DrawRect(SDL2pp::Rect(x, y, w, h));
+}
+
+void SDLCanvas::fillText(int x, int y, const std::string& text, FontId font)
+{
+	SDL2pp::Font& fontObj = SDLManager::get().getFont(font);
+	auto textSurf = fontObj.RenderUTF8_Solid(text, fillToColor());
+	SDL2pp::Texture textTex(SDLManager::get().renderer, textSurf);
+	SDLManager::get().renderer.Copy(textTex, SDL2pp::NullOpt, SDL2pp::Point(x, y));
 }
 

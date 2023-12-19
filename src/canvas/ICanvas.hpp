@@ -12,6 +12,8 @@
 #ifndef ICANVAS_HPP
 #define ICANVAS_HPP
 
+#include <string>
+
 #include "types.hpp"
 
 /**
@@ -142,6 +144,7 @@ public:
 	 * @param h Height of the rectangle.
 	 */
 	virtual void drawRectangle(int x, int y, int w, int h) = 0;
+	virtual void fillText(int x, int y, const std::string& text, FontId font) = 0;
 };
 
 #endif // ICANVAS_HPP

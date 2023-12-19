@@ -67,6 +67,12 @@ typedef enum MouseBtn {
 	BTN_RIGHT,
 } MouseBtn;
 
+enum FontId {
+	FONT_OLDENGL_72 = 0,
+	COUNT_FONTID
+};
+const size_t fontIdCount = (size_t)COUNT_FONTID;
+
 /**
  * @brief The axis-aligned rectangle type.
  */

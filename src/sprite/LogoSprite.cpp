@@ -18,12 +18,12 @@ LogoSprite::LogoSprite():
 
 int LogoSprite::getW()
 {
-	return 480;
+	return sysProxy->getTextSize(LOGO_TEXT, LOGO_FONT).w;
 }
 
 int LogoSprite::getH()
 {
-	return 360;
+	return sysProxy->getTextSize(LOGO_TEXT, LOGO_FONT).h;
 }
 
 void LogoSprite::startAnimation()
@@ -67,7 +67,6 @@ void LogoSprite::frameEvent()
 void LogoSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)
 {
 	canvas->setFillingColor(Color(m_opacity, m_opacity, m_opacity, 0xff));
-	canvas->fillCircle(x + 195, y + 100, 25);
-	canvas->fillCircle(x + 480 - 195, y + 100, 25);
+	canvas->fillText(getX(), getY(), LOGO_TEXT, LOGO_FONT);
 	invalidRect += getBounds();
 }

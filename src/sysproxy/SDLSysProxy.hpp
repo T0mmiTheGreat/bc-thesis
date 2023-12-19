@@ -25,6 +25,7 @@ public:
 	void invalidateRect(const Rect& rect) override;
 	bool isKeyPressed(KeyCode keyCode) override;
 	EventLoopState getEventLoopState() override;
+	Size2d getTextSize(const std::string& text, FontId font) override;
 };
 
 #endif // SDLSYSPROXY_HPP

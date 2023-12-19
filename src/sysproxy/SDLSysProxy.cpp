@@ -43,3 +43,10 @@ EventLoopState SDLSysProxy::getEventLoopState()
 {
 	return SDLManager::get().getEventLoopState();
 }
+
+Size2d SDLSysProxy::getTextSize(const std::string& text, FontId font)
+{
+	SDL2pp::Font& fontObj = SDLManager::get().getFont(font);
+	auto size = fontObj.GetSizeUTF8(text);
+	return Size2d(size.x, size.y);
+}

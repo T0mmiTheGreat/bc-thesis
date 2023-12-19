@@ -12,10 +12,16 @@
 #ifndef LOGOSPRITE_HPP
 #define LOGOSPRITE_HPP
 
+#include <string>
+
+#include "types.hpp"
 #include "sprite/SpriteBase.hpp"
 
 class LogoSprite : public SpriteBase {
 private:
+	const std::string LOGO_TEXT = "Awesome Logo";
+	const FontId LOGO_FONT = FONT_OLDENGL_72;
+
 	Timer m_timer;
 	uint8_t m_opacity;
 	int m_frameNumber;

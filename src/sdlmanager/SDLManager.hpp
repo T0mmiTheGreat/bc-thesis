@@ -12,10 +12,13 @@
 #ifndef SDLMANAGER_HPP
 #define SDLMANAGER_HPP
 
+#include <array>
 #include <memory>
 
 #include <SDL2/SDL.h>
 #include <SDL2pp/SDL2pp.hh>
+#include <SDL2pp/SDLTTF.hh>
+#include <SDL2pp/Font.hh>
 
 #include "sdlsubscriber/ISDLSubscriber.hpp"
 #include "types.hpp"
@@ -27,12 +30,7 @@ class SDLManager {
 private:
 	// It's singleton; constructor and destructor are private
 
-	SDLManager() :
-		sdl(SDL_INIT_VIDEO),
-		window("Caption", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 480, 360, 0), // FIXME
-		renderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC),
-		m_eventLoopstate{EVENTLOOP_PRERUN}
-	{}
+	SDLManager();
 	~SDLManager() {}
 public:
 	/**
@@ -48,6 +46,19 @@ public:
 	// Copy assignment operator - disable
 	SDLManager& operator=(SDLManager& other) = delete;
 
+	/**
+	 * @brief Global SDL object instance.
+	 */
+	SDL2pp::SDL sdl;
+	SDL2pp::SDLTTF sdlTtf;
+	/**
+	 * @brief Global window instance.
+	 */
+	SDL2pp::Window window;
+	/**
+	 * @brief Global renderer instance.
+	 */
+	SDL2pp::Renderer renderer;
 private:
 	/**
 	 * @brief The assigned SDL event subscriber.
@@ -61,29 +72,19 @@ private:
 	 * @brief The area which needs to be repainted.
 	 */
 	SDL_Rect m_invalidRect;
+	std::array<SDL2pp::Font, fontIdCount> m_fonts;
 
 	/**
 	 * @brief Returns true if the window needs to be repainted.
 	 */
 	bool needsRepaint() const { return !SDL_RectEmpty(&m_invalidRect); }
 public:
-	/**
-	 * @brief Global SDL object instance.
-	 */
-	SDL2pp::SDL sdl;
-	/**
-	 * @brief Global window instance.
-	 */
-	SDL2pp::Window window;
-	/**
-	 * @brief Global renderer instance.
-	 */
-	SDL2pp::Renderer renderer;
 
 	/**
 	 * @brief Getter for the `m_eventLoopstate` variable.
 	 */
 	EventLoopState getEventLoopState() const { return m_eventLoopstate; }
+	SDL2pp::Font& getFont(FontId id) { return m_fonts[id]; }
 
 	/**
 	 * @brief Assigns a SDL event subscriber.

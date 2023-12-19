@@ -12,12 +12,18 @@
 #ifndef SDLCANVAS_HPP
 #define SDLCANVAS_HPP
 
+#include <SDL2pp/SDL.hh>
+#include <SDL2pp/Color.hh>
+
 #include "canvas/CanvasBase.hpp"
 
 /**
  * @brief Concrete implementation of ICanvas for the SDL library.
  */
 class SDLCanvas : public CanvasBase {
+public:
+	SDL2pp::Color fillToColor();
+	SDL2pp::Color strokeToColor();
 public:
 	int getWidth() override;
 	int getHeight() override;
@@ -36,6 +42,8 @@ public:
 
 	void fillRectangle(int x, int y, int w, int h) override;
 	void strokeRectangle(int x, int y, int w, int h) override;
+
+	void fillText(int x, int y, const std::string& text, FontId font) override;
 };
 
 #endif // SDLCANVAS_HPP

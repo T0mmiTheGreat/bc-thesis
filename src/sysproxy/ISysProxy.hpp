@@ -12,6 +12,8 @@
 #ifndef ISYSPROXY_HPP
 #define ISYSPROXY_HPP
 
+#include <string>
+
 #include "types.hpp"
 
 /**
@@ -50,6 +52,7 @@ public:
 	 * @brief Returns the current event loop state.
 	 */
 	virtual EventLoopState getEventLoopState() = 0;
+	virtual Size2d getTextSize(const std::string& text, FontId font) = 0;
 };
 
 #endif // ISYSPROXY_HPP
