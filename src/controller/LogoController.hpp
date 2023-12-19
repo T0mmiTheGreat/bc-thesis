@@ -26,6 +26,8 @@
 class LogoController : public GeneralControllerBase {
 private:
 	std::unique_ptr<LogoSprite> m_sprite;
+protected:
+	std::unique_ptr<IControllerChild> createReplacement() override;
 public:
 	virtual void startedEvent() override;
 	virtual void frameEvent() override;

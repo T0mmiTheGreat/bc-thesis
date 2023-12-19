@@ -13,6 +13,13 @@
 
 #include <memory>
 
+#include "controller/ControllerFactory.hpp"
+
+std::unique_ptr<IControllerChild> LogoController::createReplacement()
+{
+	return ControllerFactory::createMainMenuController();
+}
+
 void LogoController::startedEvent()
 {
 	GeneralControllerBase::startedEvent();
@@ -30,6 +37,9 @@ void LogoController::frameEvent()
 {
 	GeneralControllerBase::frameEvent();
 	m_sprite->frameEvent();
+	if (!m_sprite->isAnimationRunning()) {
+		finishedEvent();
+	}
 }
 
 void LogoController::paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)

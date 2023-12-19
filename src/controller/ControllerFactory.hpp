@@ -22,6 +22,7 @@ public:
 	static std::shared_ptr<IRootController> createRootController();
 	static std::unique_ptr<IControllerChild> createInitialController();
 	static std::unique_ptr<IControllerChild> createLogoController();
+	static std::unique_ptr<IControllerChild> createMainMenuController();
 };
 
 #endif // CONTROLLERFACTORY_HPP

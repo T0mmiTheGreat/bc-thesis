@@ -16,6 +16,7 @@
 #include "controller/RootController.hpp"
 #include "controller/InitialController.hpp"
 #include "controller/LogoController.hpp"
+#include "controller/MainMenuController.hpp"
 
 std::shared_ptr<IRootController> ControllerFactory::createRootController()
 {
@@ -30,4 +31,9 @@ std::unique_ptr<IControllerChild> ControllerFactory::createInitialController()
 std::unique_ptr<IControllerChild> ControllerFactory::createLogoController()
 {
 	return std::make_unique<LogoController>();
+}
+
+std::unique_ptr<IControllerChild> ControllerFactory::createMainMenuController()
+{
+	return std::make_unique<MainMenuController>();
 }

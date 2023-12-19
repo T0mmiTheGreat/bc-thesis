@@ -30,8 +30,10 @@ set(SOURCE_FILES
 	controller/RootController.cpp
 	controller/InitialController.cpp
 	controller/LogoController.cpp
+	controller/MainMenuController.cpp
 	sprite/SpriteBase.cpp
 	sprite/LogoSprite.cpp
+	sprite/MainMenuItemSprite.cpp
 )
 
 # Headers (*.hpp)
@@ -59,9 +61,11 @@ set(HEADER_FILES
 	controller/RootController.hpp
 	controller/InitialController.hpp
 	controller/LogoController.hpp
+	controller/MainMenuController.hpp
 	sprite/ISprite.hpp
 	sprite/SpriteBase.hpp
 	sprite/LogoSprite.hpp
+	sprite/MainMenuItemSprite.hpp
 )
 
 # Create the executable in the repo root directory
