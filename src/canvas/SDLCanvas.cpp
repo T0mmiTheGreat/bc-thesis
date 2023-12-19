@@ -29,12 +29,7 @@ int SDLCanvas::getHeight()
 Rect SDLCanvas::getRect()
 {
 	SDL2pp::Point canvSize = SDLManager::get().window.GetDrawableSize();
-	return Rect{
-		.x = 0,
-		.y = 0,
-		.w = canvSize.GetX(),
-		.h = canvSize.GetY()
-	};
+	return Rect(0, 0, canvSize.GetX(), canvSize.GetY());
 }
 
 void SDLCanvas::setFillingColor(Color color)

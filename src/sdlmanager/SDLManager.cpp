@@ -92,12 +92,7 @@ MouseBtn SDLManager::sdlMouseBtnToEnum(Uint8 btn)
 
 Rect SDLManager::sdlRectToRect(const SDL_Rect& rect)
 {
-	return Rect{
-		.x = rect.x,
-		.y = rect.y,
-		.w = rect.w,
-		.h = rect.h
-	};
+	return Rect(rect.x, rect.y, rect.w, rect.h);
 }
 
 SDL_Scancode SDLManager::enumToSdlScancode(KeyCode keyCode)

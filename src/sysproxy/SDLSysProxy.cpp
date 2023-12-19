@@ -23,7 +23,7 @@ void SDLSysProxy::runEventLoop()
 
 void SDLSysProxy::invalidateRect()
 {
-	Rect r = {.x = 0, .y = 0};
+	Rect r;
 	SDL_GetWindowSize(SDLManager::get().window.Get(), &r.w, &r.h);
 	invalidateRect(r);
 }
