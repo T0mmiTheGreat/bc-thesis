@@ -169,6 +169,22 @@ struct Size2d {
 	Size2d()
 		: Size2d(0, 0)
 	{}
+
+	Size2d operator+ (const Size2d& rhs) const {
+		return Size2d(this->w + rhs.w, this->h + rhs.h);
+	}
+	Size2d operator- () const {
+		return Size2d(-w, -h);
+	}
+	Size2d operator- (const Size2d& rhs) const {
+		return *this + (-rhs);
+	}
+	Size2d& operator+= (const Size2d& rhs) {
+		return (*this = *this + rhs);
+	}
+	Size2d& operator-= (const Size2d& rhs) {
+		return (*this = *this - rhs);
+	}
 };
 
 /**
