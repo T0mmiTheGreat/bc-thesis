@@ -17,6 +17,12 @@ void LogoController::startedEvent()
 {
 	GeneralControllerBase::startedEvent();
 	m_sprite = std::make_unique<LogoSprite>();
+
+	Size2d winSize = sysProxy->getPaintAreaSize();
+	Size2d spriteSize = m_sprite->getSize();
+	Size2d remSize = winSize - spriteSize;
+
+	m_sprite->setPos(remSize.w / 2, remSize.h / 2);
 	m_sprite->startAnimation();
 }
 
