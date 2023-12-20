@@ -275,6 +275,62 @@ public:
 	std::clock_t getInterval() const { return m_interval; }
 };
 
+/**
+ * @brief Continuous animation class.
+ * 
+ * @details This class may be used for animations like transformations, color
+ *          changing, etc. It uses "relative time" for time measurement, meaning
+ *          it measures the running time relative to its duration.
+ * 
+ *          Example: An animation is 16 ms long. If the measured time is equal
+ *          to 0.5, the animation has been running for 8 ms. 0.25 means it's
+ *          been running for 4 ms, etc.
+ * 
+ *          Example usage: Circle radius should grow from 20 px to 45 px for
+ *          10 ms. Construct the object using `AnimationContinuous(10)`. To
+ *          calculate the immediate radius use the equation:
+ *              `r(t) = r(0) + t * delta(r)`
+ *          that is:
+ *              `r(t) = 20 + t * 25`
+ *          At t=0 the radius will be 20 px, at t=1 the radius will be 45 px.
+ */
+class AnimationContinuous {
+private:
+	std::clock_t m_start;
+	double m_duration;
+public:
+	/**
+	 * @brief Constructs a new AnimationContinuous object.
+	 * 
+	 * @param duration Animation duration in milliseconds.
+	 */
+	AnimationContinuous(double duration)
+		: m_duration{msToClocks(duration)}
+	{
+		reset();
+	}
+
+	/**
+	 * @brief Resets the animation.
+	 */
+	void reset() {
+		m_start = std::clock();
+	}
+	/**
+	 * @brief Get the relative running time.
+	 */
+	double getTime() const {
+		std::clock_t runTime = std::clock() - m_start;
+		return static_cast<double>(runTime) / m_duration;
+	}
+	/**
+	 * @brief Check if the animation has finished.
+	 */
+	bool isCompleted() const {
+		return (getTime() >= 1.0);
+	}
+};
+
 
 template <typename T>
 constexpr T msToClocks(T ms) {
