@@ -130,8 +130,8 @@ struct Rect {
 		Rect r;
 		r.x = (this->x < rhs.x ? this->x : rhs.x);
 		r.y = (this->y < rhs.y ? this->y : rhs.y);
-		r.w = (this->getRight() < r.getRight() ? this->getRight() : r.getRight()) - r.x;
-		r.h = (this->getBottom() < r.getBottom() ? this->getBottom() : r.getBottom()) - r.y;
+		r.w = (this->getRight() > rhs.getRight() ? this->getRight() : rhs.getRight()) - r.x;
+		r.h = (this->getBottom() > rhs.getBottom() ? this->getBottom() : rhs.getBottom()) - r.y;
 		return r;
 	}
 
