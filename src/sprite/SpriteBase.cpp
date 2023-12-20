@@ -18,6 +18,13 @@ void SpriteBase::invalidateBounds()
 	sysProxy->invalidateRect(getBounds());
 }
 
+void SpriteBase::posChangedEvent(int oldX, int oldY, int newX, int newY)
+{
+	Size2d spriteSize = getSize();
+	sysProxy->invalidateRect(Rect(oldX, oldY, spriteSize.w, spriteSize.h));
+	sysProxy->invalidateRect(Rect(newX, newY, spriteSize.w, spriteSize.h));
+}
+
 SpriteBase::SpriteBase()
 	: x{0}
 	, y{0}
@@ -58,10 +65,11 @@ void SpriteBase::setY(int value)
 void SpriteBase::setPos(int x, int y)
 {
 	if (getX() != x || getY() != y) {
-		invalidateBounds();
+		int oldX = this->x;
+		int oldY = this->y;
 		this->x = x;
 		this->y = y;
-		invalidateBounds();
+		posChangedEvent(oldX, oldY, x, y);
 	}
 }
 

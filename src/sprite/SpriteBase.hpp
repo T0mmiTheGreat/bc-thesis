@@ -42,6 +42,11 @@ protected:
 	static constexpr double getAnimProgress(int frameNumber, unsigned frameCount) {
 		return static_cast<double>(frameNumber) / static_cast<double>(frameCount - 1);
 	}
+
+	/**
+	 * @brief The sprite position has changed.
+	 */
+	virtual void posChangedEvent(int oldX, int oldY, int newX, int newY);
 public:
 	SpriteBase();
 	/**
