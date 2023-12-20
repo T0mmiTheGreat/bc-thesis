@@ -14,6 +14,9 @@
 
 #include "syssubscriber/ISysSubscriber.hpp"
 
+/**
+ * @brief Root of the controller tree.
+ */
 class IRootController : public ISysSubscriber {
 public:
 	virtual ~IRootController() {}

@@ -28,12 +28,44 @@ private:
 public:
 	LogoSprite();
 
+	/**
+	 * @brief Returns the size (width and height) of the sprite.
+	 * 
+	 * @details This should always yield the same result as calling the Size2d
+	 *          constructor as `Size2d(getW(), getH())`. However, calling this
+	 *          method should be preferred, because this object may optimize it
+	 *          to gain performance.
+	 */
 	Size2d getSize() override;
-	void repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
-
+	/**
+	 * @brief Starts a sprite animation.
+	 * 
+	 * @note If the method is called while an animation is running, the running
+	 *       animation is stopped.
+	 */
 	void startAnimation() override;
+	/**
+	 * @brief Stops an animation if one is running.
+	 * 
+	 * @remarks No-op if animation is not running.
+	 * 
+	 *          It is NOT necessary to call this method after the animation
+	 *          finishes. If it would be, the object itself should call it.
+	 */
 	void stopAnimation() override;
+	/**
+	 * @brief Event that happens every frame.
+	 * 
+	 * @details This method is mainly used to progress any running animations.
+	 */
 	void frameEvent() override;
+	/**
+	 * @brief Repaints an area of sprite.
+	 * 
+	 * @param canvas Canvas to paint onto.
+	 * @param invalidRect Area to repaint.
+	 */
+	void repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
 };
 
 #endif // LOGOSPRITE_HPP

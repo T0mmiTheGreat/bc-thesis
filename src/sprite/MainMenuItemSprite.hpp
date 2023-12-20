@@ -16,6 +16,11 @@
 
 #include "sprite/SpriteBase.hpp"
 
+/**
+ * @brief Sprite for main menu items.
+ * 
+ * @details On hover logic is also implemented here.
+ */
 class MainMenuItemSprite : public SpriteBase {
 public:
 	enum AnimationType {
@@ -40,16 +45,69 @@ private:
 public:
 	MainMenuItemSprite();
 
+	/**
+	 * @brief Returns the size (width and height) of the sprite.
+	 * 
+	 * @details This should always yield the same result as calling the Size2d
+	 *          constructor as `Size2d(getW(), getH())`. However, calling this
+	 *          method should be preferred, because this object may optimize it
+	 *          to gain performance.
+	 */
 	Size2d getSize() override;
-	void repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
+	/**
+	 * @brief Starts a sprite animation.
+	 * 
+	 * @note If the method is called while an animation is running, the running
+	 *       animation is stopped.
+	 */
 	void startAnimation() override;
+	/**
+	 * @brief Stops an animation if one is running.
+	 * 
+	 * @remarks No-op if animation is not running.
+	 * 
+	 *          It is NOT necessary to call this method after the animation
+	 *          finishes. If it would be, the object itself should call it.
+	 */
 	void stopAnimation() override;
+	/**
+	 * @brief Event that happens every frame.
+	 * 
+	 * @details This method is mainly used to progress any running animations.
+	 */
 	void frameEvent() override;
+	/**
+	 * @brief Repaints an area of sprite.
+	 * 
+	 * @param canvas Canvas to paint onto.
+	 * @param invalidRect Area to repaint.
+	 */
+	void repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
 
+	/**
+	 * @brief Getter for the `m_text`.
+	 */
 	const std::string& getText() const;
+	/**
+	 * @brief Setter for the `m_text`.
+	 */
 	void setText(const std::string& value);
+	/**
+	 * @brief Getter for the `m_animationType`.
+	 */
 	AnimationType getAnimationType() const;
+	/**
+	 * @brief Setter for the `m_animationType`.
+	 */
 	void setAnimationType(AnimationType value);
+	/**
+	 * @brief A mouse cursor moved.
+	 * 
+	 * @param x The x coordinate. 0 is the left border of the window. The
+	 *          coordinate increases to the right.
+	 * @param y The y coordinate. 0 is the top border of the window. The
+	 *          coordinate increases downwards.
+	 */
 	void mouseMoveEvent(int x, int y);
 };
 

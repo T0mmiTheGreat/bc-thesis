@@ -17,6 +17,9 @@
 #include "types.hpp"
 #include "canvas/ICanvas.hpp"
 
+/**
+ * @brief Sprite.
+ */
 class ISprite {
 public:
 	virtual ~ISprite() {}
@@ -52,6 +55,14 @@ public:
 	 *          be possible.
 	 */
 	virtual void setPos(int x, int y) = 0;
+	/**
+	 * @brief Returns the size (width and height) of the sprite.
+	 * 
+	 * @details This should always yield the same result as calling the Size2d
+	 *          constructor as `Size2d(getW(), getH())`. However, calling this
+	 *          method should be preferred, because descendants may optimize it
+	 *          to gain performance.
+	 */
 	virtual Size2d getSize() = 0;
 	/**
 	 * @brief Returns the rectangle that represents the bounds of the sprite.

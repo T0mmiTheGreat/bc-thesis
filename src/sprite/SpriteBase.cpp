@@ -15,8 +15,7 @@
 
 void SpriteBase::invalidateBounds()
 {
-	Rect invalidRect(getBounds());
-	sysProxy->invalidateRect(invalidRect);
+	sysProxy->invalidateRect(getBounds());
 }
 
 SpriteBase::SpriteBase()

@@ -17,6 +17,9 @@
 #include "controller/IRootController.hpp"
 #include "controller/IControllerChild.hpp"
 
+/**
+ * @brief Factory for the IRootController and IControllerChild interfaces.
+ */
 class ControllerFactory {
 public:
 	static std::shared_ptr<IRootController> createRootController();

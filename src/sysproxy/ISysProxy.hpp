@@ -52,7 +52,16 @@ public:
 	 * @brief Returns the current event loop state.
 	 */
 	virtual EventLoopState getEventLoopState() = 0;
+	/**
+	 * @brief Calculates the size that would be taken by text.
+	 * 
+	 * @param text Text to measure.
+	 * @param font Font to use for the text.
+	 */
 	virtual Size2d getTextSize(const std::string& text, FontId font) = 0;
+	/**
+	 * @brief Returns the current size of the screen area in pixels.
+	 */
 	virtual Size2d getPaintAreaSize() = 0;
 };
 

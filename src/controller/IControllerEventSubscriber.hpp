@@ -17,6 +17,9 @@
 #include "types.hpp"
 #include "canvas/ICanvas.hpp"
 
+/**
+ * @brief Controller that receives events from another controller.
+ */
 class IControllerEventSubscriber {
 public:
 	virtual ~IControllerEventSubscriber() {}

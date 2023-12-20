@@ -50,6 +50,10 @@ public:
 	 * @brief Global SDL object instance.
 	 */
 	SDL2pp::SDL sdl;
+	/**
+	 * @brief Global SDLTTF object instance.
+	 * 
+	 */
 	SDL2pp::SDLTTF sdlTtf;
 	/**
 	 * @brief Global window instance.
@@ -72,6 +76,9 @@ private:
 	 * @brief The area which needs to be repainted.
 	 */
 	SDL_Rect m_invalidRect;
+	/**
+	 * @brief Array of font objects.
+	 */
 	std::array<SDL2pp::Font, fontIdCount> m_fonts;
 
 	/**
@@ -84,6 +91,9 @@ public:
 	 * @brief Getter for the `m_eventLoopstate` variable.
 	 */
 	EventLoopState getEventLoopState() const { return m_eventLoopstate; }
+	/**
+	 * @brief Returns font object by its ID.
+	 */
 	SDL2pp::Font& getFont(FontId id) { return m_fonts[id]; }
 
 	/**
@@ -122,6 +132,9 @@ public:
 	 * @brief Converts SDL rectangle to Rect type.
 	 */
 	static Rect sdlRectToRect(const SDL_Rect& rect);
+	/**
+	 * @brief Converts SDL2pp::Point to Size2d type.
+	 */
 	static Size2d sdlPointToSize(const SDL2pp::Point& point);
 	/**
 	 * @brief Converts KeyCode enum to SDL key scancode.

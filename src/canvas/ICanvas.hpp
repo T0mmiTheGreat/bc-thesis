@@ -144,6 +144,17 @@ public:
 	 * @param h Height of the rectangle.
 	 */
 	virtual void drawRectangle(int x, int y, int w, int h) = 0;
+	
+	/**
+	 * @brief Paint text.
+	 * 
+	 * @note The operation uses fill color.
+	 * 
+	 * @param x X coordinate of the text area rectangle.
+	 * @param y Y coordinate of the text area rectangle.
+	 * @param text The text.
+	 * @param font The font to use.
+	 */
 	virtual void fillText(int x, int y, const std::string& text, FontId font) = 0;
 };
 
