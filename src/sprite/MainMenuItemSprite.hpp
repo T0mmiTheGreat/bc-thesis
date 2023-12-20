@@ -12,6 +12,7 @@
 #ifndef MAINMENUITEMSPRITE_HPP
 #define MAINMENUITEMSPRITE_HPP
 
+#include <ctime>
 #include <string>
 
 #include "sprite/SpriteBase.hpp"
@@ -22,26 +23,22 @@
  * @details On hover logic is also implemented here.
  */
 class MainMenuItemSprite : public SpriteBase {
-public:
-	enum AnimationType {
-		ANIM_GROW,
-		ANIM_SHRINK,
-	};
 private:
+	// Non-scaled rectangle width
 	const int RECT_WIDTH_NORMAL = 165;
+	// Non-scaled rectangle height
 	const int RECT_HEIGHT_NORMAL = 35;
-	const double MAX_SCALE = 1.1;
-	const int RECT_WIDTH_MAX = static_cast<int>(RECT_WIDTH_NORMAL * MAX_SCALE);
-	const int RECT_HEIGHT_MAX = static_cast<int>(RECT_HEIGHT_NORMAL * MAX_SCALE);
-	const unsigned GROWTH_FRAME_COUNT = 4;
-	const unsigned SHRINK_FRAME_COUNT = GROWTH_FRAME_COUNT;
+	// Scaled rectangle width
+	const int RECT_WIDTH_SCALED = 198;
+	// Scaled rectangle height
+	const int RECT_HEIGHT_SCALED = 42;
+
 	const FontId FONT = FONT_BRLNSTR_20;
 
-	Timer m_timer;
-	double m_scale;
-	int m_frameNumber;
 	std::string m_text;
-	AnimationType m_animationType;
+	bool m_isScaled;
+
+	void setIsScaled(bool value);
 public:
 	MainMenuItemSprite();
 
@@ -54,28 +51,6 @@ public:
 	 *          to gain performance.
 	 */
 	Size2d getSize() override;
-	/**
-	 * @brief Starts a sprite animation.
-	 * 
-	 * @note If the method is called while an animation is running, the running
-	 *       animation is stopped.
-	 */
-	void startAnimation() override;
-	/**
-	 * @brief Stops an animation if one is running.
-	 * 
-	 * @remarks No-op if animation is not running.
-	 * 
-	 *          It is NOT necessary to call this method after the animation
-	 *          finishes. If it would be, the object itself should call it.
-	 */
-	void stopAnimation() override;
-	/**
-	 * @brief Event that happens every frame.
-	 * 
-	 * @details This method is mainly used to progress any running animations.
-	 */
-	void frameEvent() override;
 	/**
 	 * @brief Repaints an area of sprite.
 	 * 
@@ -92,14 +67,6 @@ public:
 	 * @brief Setter for the `m_text`.
 	 */
 	void setText(const std::string& value);
-	/**
-	 * @brief Getter for the `m_animationType`.
-	 */
-	AnimationType getAnimationType() const;
-	/**
-	 * @brief Setter for the `m_animationType`.
-	 */
-	void setAnimationType(AnimationType value);
 	/**
 	 * @brief A mouse cursor moved.
 	 * 
