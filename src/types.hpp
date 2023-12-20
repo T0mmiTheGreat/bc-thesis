@@ -75,6 +75,9 @@ enum FontId {
 };
 const size_t fontIdCount = (size_t)COUNT_FONTID;
 
+template <typename T>
+inline constexpr T msToClocks(T ms);
+
 /**
  * @brief The axis-aligned rectangle type.
  */
@@ -235,13 +238,6 @@ class Timer {
 private:
 	std::clock_t m_interval;
 	std::clock_t m_nextTimestamp;
-
-	std::clock_t msToClocks(std::clock_t ms) {
-		// ms / 1000 * CPS -> convert ms to s, then convert s to clocks.
-		// The operands are swapped here to avoid unnecessary FP conversions
-		// but keep precision
-		return ms * CLOCKS_PER_SEC / 1000;
-	}
 public:
 	/**
 	 * @brief Construct a new Timer object.
@@ -278,5 +274,14 @@ public:
 	 */
 	std::clock_t getInterval() const { return m_interval; }
 };
+
+
+template <typename T>
+constexpr T msToClocks(T ms) {
+	// ms / 1000 * CPS -> convert ms to s, then convert s to clocks.
+	// The operands are swapped here to avoid unnecessary FP conversions
+	// but keep precision
+	return ms * CLOCKS_PER_SEC / 1000;
+}
 
 #endif // TYPES_HPP
