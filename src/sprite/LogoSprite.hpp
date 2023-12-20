@@ -19,12 +19,33 @@
 
 class LogoSprite : public SpriteBase {
 private:
+	enum AnimationPhase {
+		ANIM_FADEIN,
+		ANIM_FULLBRIGHT,
+		ANIM_FADEOUT,
+	};
+private:
 	const std::string LOGO_TEXT = "Awesome Logo";
 	const FontId LOGO_FONT = FONT_OLDENGL_72;
 
+	const std::clock_t TIMER_INTERVAL = 17;
+
+	const double FADEIN_TIME = 1088.0;
+	const double FULLBRIGHT_TIME = 612.0;
+	const double FADEOUT_TIME = FADEIN_TIME;
+
 	Timer m_timer;
+	AnimationContinuous m_anim;
+	AnimationPhase m_animPhase;
+
 	uint8_t m_opacity;
-	int m_frameNumber;
+
+	void startAnimationPhase(AnimationPhase phase);
+	void nextAnimationPhase();
+	void frameEventAnimation();
+	void frameEventAnimFadein();
+	void frameEventAnimFullbright();
+	void frameEventAnimFadeout();
 public:
 	LogoSprite();
 
