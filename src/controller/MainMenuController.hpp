@@ -17,10 +17,12 @@
 #include "types.hpp"
 #include "controller/GeneralControllerBase.hpp"
 #include "sprite/MainMenuItemSprite.hpp"
+#include "sprite/MainMenuTitleSprite.hpp"
 
 class MainMenuController : public GeneralControllerBase {
 private:
 	std::unique_ptr<MainMenuItemSprite> m_playBtn;
+	std::unique_ptr<MainMenuTitleSprite> m_title;
 public:
 	void startedEvent() override;
 	void mouseMoveEvent(int x, int y) override;

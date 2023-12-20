@@ -69,7 +69,7 @@ typedef enum MouseBtn {
 
 enum FontId {
 	FONT_OLDENGL_72 = 0,
-	FONT_SEGOEPR_36,
+	FONT_SEGOEPR_66,
 	FONT_BRLNSTR_20,
 	COUNT_FONTID
 };

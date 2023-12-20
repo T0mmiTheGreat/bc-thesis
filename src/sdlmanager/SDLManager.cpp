@@ -23,7 +23,7 @@ SDLManager::SDLManager()
 	, m_eventLoopstate{EVENTLOOP_PRERUN}
 	, m_fonts{
 		SDL2pp::Font("oldengl.ttf", 72),
-		SDL2pp::Font("segoepr.ttf", 36),
+		SDL2pp::Font("segoepr.ttf", 66),
 		SDL2pp::Font("brlnstr.ttf", 20),
 	}
 {}

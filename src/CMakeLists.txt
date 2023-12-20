@@ -34,6 +34,7 @@ set(SOURCE_FILES
 	sprite/SpriteBase.cpp
 	sprite/LogoSprite.cpp
 	sprite/MainMenuItemSprite.cpp
+	sprite/MainMenuTitleSprite.cpp
 )
 
 # Headers (*.hpp)
@@ -66,6 +67,7 @@ set(HEADER_FILES
 	sprite/SpriteBase.hpp
 	sprite/LogoSprite.hpp
 	sprite/MainMenuItemSprite.hpp
+	sprite/MainMenuTitleSprite.hpp
 )
 
 # Create the executable in the repo root directory
