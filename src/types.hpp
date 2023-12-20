@@ -226,6 +226,9 @@ struct Color {
  * @details The timer doesn't produce events. Instead, it must be queried when
  *          needed.
  * 
+ *          The timer's interval may not be modified. Instead, a new timer
+ *          instance must be created.
+ * 
  * @remark The timer may overflow.
  */
 class Timer {
@@ -270,6 +273,10 @@ public:
 		}
 		return res;
 	}
+	/**
+	 * @brief Returns the timer interval.
+	 */
+	std::clock_t getInterval() const { return m_interval; }
 };
 
 #endif // TYPES_HPP
