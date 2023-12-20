@@ -33,6 +33,15 @@ protected:
 	 * @details `sysProxy->invalidateRect(getBounds())`.
 	 */
 	void invalidateBounds();
+	/**
+	 * @brief Represent the animation progress as a number in interval <0,1>.
+	 * 
+	 * @param frameNumber Current frame number.
+	 * @param frameCount Maximum frame number.
+	 */
+	static constexpr double getAnimProgress(int frameNumber, unsigned frameCount) {
+		return static_cast<double>(frameNumber) / static_cast<double>(frameCount - 1);
+	}
 public:
 	SpriteBase();
 	/**
