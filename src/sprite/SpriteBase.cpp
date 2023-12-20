@@ -88,3 +88,7 @@ bool SpriteBase::isAnimationRunning()
 {
 	return isAnimationRunningFlag;
 }
+
+void SpriteBase::frameEvent()
+{
+}

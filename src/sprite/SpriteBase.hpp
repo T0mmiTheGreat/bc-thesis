@@ -128,6 +128,17 @@ public:
 	 * @remark Mainly used for checking whether the animation has finished.
 	 */
 	virtual bool isAnimationRunning() override;
+	/**
+	 * @brief Event that happens every frame.
+	 * 
+	 * @details This method is mainly used to progress any running animations,
+	 *          but in the future there might be more functionality to this, so
+	 *          it is better to call it every frame no matter the sprite does
+	 *          or does not have an animation.
+	 * 
+	 *          No-op.
+	 */
+	virtual void frameEvent() override;
 };
 
 #endif // SPRITEBASE_HPP
