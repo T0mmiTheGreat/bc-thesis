@@ -79,6 +79,39 @@ template <typename T>
 inline constexpr T msToClocks(T ms);
 
 /**
+ * @brief Width and height structure.
+ */
+struct Size2d {
+	size_t w;
+	size_t h;
+
+	Size2d(size_t w, size_t h)
+		: w{w}
+		, h{h}
+	{}
+
+	Size2d()
+		: Size2d(0, 0)
+	{}
+
+	Size2d operator+ (const Size2d& rhs) const {
+		return Size2d(this->w + rhs.w, this->h + rhs.h);
+	}
+	Size2d operator- () const {
+		return Size2d(-w, -h);
+	}
+	Size2d operator- (const Size2d& rhs) const {
+		return *this + (-rhs);
+	}
+	Size2d& operator+= (const Size2d& rhs) {
+		return (*this = *this + rhs);
+	}
+	Size2d& operator-= (const Size2d& rhs) {
+		return (*this = *this - rhs);
+	}
+};
+
+/**
  * @brief The axis-aligned rectangle type.
  */
 struct Rect {
@@ -118,6 +151,7 @@ struct Rect {
 	 * @brief Get Y coordinate of the bottom side of the rectangle.
 	 */
 	int getBottom() const { return y + h; }
+	Size2d getSize() const { return Size2d(w, h); }
 
 	/**
 	 * @brief Get the union of two rectangles.
@@ -156,39 +190,6 @@ struct Rect {
 	 */
 	Rect& operator+= (const Rect& rhs) {
 		return (*this = this->unionRect(rhs));
-	}
-};
-
-/**
- * @brief Width and height structure.
- */
-struct Size2d {
-	size_t w;
-	size_t h;
-
-	Size2d(size_t w, size_t h)
-		: w{w}
-		, h{h}
-	{}
-
-	Size2d()
-		: Size2d(0, 0)
-	{}
-
-	Size2d operator+ (const Size2d& rhs) const {
-		return Size2d(this->w + rhs.w, this->h + rhs.h);
-	}
-	Size2d operator- () const {
-		return Size2d(-w, -h);
-	}
-	Size2d operator- (const Size2d& rhs) const {
-		return *this + (-rhs);
-	}
-	Size2d& operator+= (const Size2d& rhs) {
-		return (*this = *this + rhs);
-	}
-	Size2d& operator-= (const Size2d& rhs) {
-		return (*this = *this - rhs);
 	}
 };
 
