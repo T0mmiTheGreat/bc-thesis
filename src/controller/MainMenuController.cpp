@@ -16,32 +16,34 @@
 void MainMenuController::startedEvent()
 {
 	GeneralControllerBase::startedEvent();
-	m_playBtn = std::make_unique<MainMenuItemSprite>();
+
+	Size2d paintareaSize = sysProxy->getPaintAreaSize();
+
+	m_mainMenu = std::make_unique<MainMenuSprite>();
 	m_title = std::make_unique<MainMenuTitleSprite>();
 
-	m_playBtn->setPos(50, 50);
-	m_playBtn->setText("Play");
+	Size2d menuSize = m_mainMenu->getSize();
+	m_mainMenu->setPos((paintareaSize.w - menuSize.w) / 2, 230);
 
 	Size2d titleSize = m_title->getSize();
-	Size2d paintareaSize = sysProxy->getPaintAreaSize();
 	m_title->setPos((paintareaSize.w - titleSize.w) / 2, 70);
 }
 
 void MainMenuController::mouseMoveEvent(int x, int y)
 {
-	m_playBtn->mouseMoveEvent(x, y);
+	m_mainMenu->mouseMoveEvent(x, y);
 }
 
 void MainMenuController::frameEvent()
 {
 	GeneralControllerBase::frameEvent();
-	m_playBtn->frameEvent();
+	m_mainMenu->frameEvent();
 	m_title->frameEvent();
 }
 
 void MainMenuController::paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)
 {
 	GeneralControllerBase::paintEvent(canvas, invalidRect);
-	m_playBtn->repaint(canvas, invalidRect);
+	m_mainMenu->repaint(canvas, invalidRect);
 	m_title->repaint(canvas, invalidRect);
 }
