@@ -252,6 +252,16 @@ struct Color {
 		, b{b}
 		, a{a}
 	{}
+	/**
+	 * @brief Constructs an opaque color.
+	 * 
+	 * @param r Intensity of red channel.
+	 * @param g Intensity of green channel.
+	 * @param b Intensity of blue channel.
+	 */
+	Color(uint8_t r, uint8_t g, uint8_t b)
+		: Color(r, g, b, 0xff)
+	{}
 };
 
 /**
