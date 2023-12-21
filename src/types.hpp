@@ -163,7 +163,7 @@ struct Rect {
 	Rect(const Point& topLeft, const Point& bottomRight)
 		: Rect(topLeft.x, topLeft.y, bottomRight.x - topLeft.x, bottomRight.y - topLeft.y)
 	{}
-	Rect createEmpty() { return Rect(); }
+	static Rect createEmpty() { return Rect(); }
 
 	/**
 	 * @brief Get X coordinate of the right side of the rectangle.
