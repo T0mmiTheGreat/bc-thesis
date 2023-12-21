@@ -11,6 +11,8 @@
 
 #include "playerstate/PlayerStateBase.hpp"
 
+#include <cassert>
+
 PlayerStateBase::PlayerStateBase(double startX, double startY, double startHp,
 	std::shared_ptr<IPlayerInput> playerInput)
 	: x{startX}
@@ -56,5 +58,6 @@ std::shared_ptr<IPlayerInput> PlayerStateBase::getPlayerInputObject()
 
 void PlayerStateBase::setPlayerInputObject(std::shared_ptr<IPlayerInput> value)
 {
+	assert(value != nullptr);
 	playerInput = value;
 }
