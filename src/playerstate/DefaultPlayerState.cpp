@@ -11,7 +11,8 @@
 
 #include "playerstate/DefaultPlayerState.hpp"
 
-#include "functions.hpp"
+#include <cmath>
+
 #include "playerinput/PlayerInputFactory.hpp"
 
 DefaultPlayerState::DefaultPlayerState(double startX, double startY,
@@ -41,7 +42,8 @@ double DefaultPlayerState::getSize()
 	// 0 HP -> 0.0
 	// 2x Full HP -> 70.0 ...? (Or less?)
 	// Would probably apply this: `hp^x * 35.0`, where x -> (0, 1)
-	return powOptimized(hp, sizePower) * 35.0;
+	return std::pow(hp, sizePower) * 35.0;
+	//return hp * 35.0;
 }
 
 double DefaultPlayerState::getSpeed()
@@ -50,5 +52,6 @@ double DefaultPlayerState::getSpeed()
 	// 1/2 full HP -> 6.0 ...?
 	// 2x Full HP -> 1.5 ...?
 	// `hp^x * 35.0`, where x -> (0, 1)
-	return 3.0 / powOptimized(hp, speedPower);
+	return 3.0 / std::pow(hp, speedPower);
+	//return 3.0 / hp;
 }
