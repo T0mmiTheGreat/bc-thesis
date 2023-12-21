@@ -154,6 +154,15 @@ struct Rect {
 		, w{w}
 		, h{h}
 	{}
+	Rect(int x, int y, const Size2d& size)
+		: Rect(x, y, size.w, size.h)
+	{}
+	Rect(const Point& topLeft, const Size2d& size)
+		: Rect(topLeft.x, topLeft.y, size.w, size.h)
+	{}
+	Rect(const Point& topLeft, const Point& bottomRight)
+		: Rect(topLeft.x, topLeft.y, bottomRight.x - topLeft.x, bottomRight.y - topLeft.y)
+	{}
 	Rect createEmpty() { return Rect(); }
 
 	/**
