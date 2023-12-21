@@ -41,6 +41,8 @@ set(SOURCE_FILES
 # Headers (*.hpp)
 set(HEADER_FILES
 	SDL2_gfxPrimitives.h
+	types.hpp
+	functions.hpp
 	sdlmanager/SDLManager.hpp
 	sdlsubscriber/ISDLSubscriber.hpp
 	sdlsubscriber/SDLSubscriber.hpp
@@ -48,7 +50,6 @@ set(HEADER_FILES
 	sysproxy/ISysProxy.hpp
 	sysproxy/SysProxyBase.hpp
 	sysproxy/SDLSysProxy.hpp
-	types.hpp
 	sysproxy/SysProxyFactory.hpp
 	canvas/ICanvas.hpp
 	canvas/CanvasBase.hpp
