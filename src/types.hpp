@@ -78,6 +78,19 @@ const size_t fontIdCount = (size_t)COUNT_FONTID;
 template <typename T>
 inline constexpr T msToClocks(T ms);
 
+struct Point {
+	int x;
+	int y;
+
+	Point(int x, int y)
+		: x{x}
+		, y{y}
+	{}
+	Point()
+		: Point(0, 0)
+	{}
+};
+
 /**
  * @brief Width and height structure.
  */
