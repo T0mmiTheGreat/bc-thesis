@@ -88,6 +88,10 @@ KeyCode SDLManager::sdlKeycodeToEnum(SDL_Keycode sdlk)
 		case SDLK_UP: return KEY_UP_ARROW;
 		case SDLK_RIGHT: return KEY_RIGHT_ARROW;
 		case SDLK_DOWN: return KEY_DOWN_ARROW;
+		case SDLK_a: return KEY_A;
+		case SDLK_w: return KEY_W;
+		case SDLK_d: return KEY_D;
+		case SDLK_s: return KEY_S;
 		// TODO: more keys
 		default: return KEY_UNKNOWN;
 	}
