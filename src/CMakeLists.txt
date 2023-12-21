@@ -36,6 +36,7 @@ set(SOURCE_FILES
 	sprite/MainMenuItemSprite.cpp
 	sprite/MainMenuTitleSprite.cpp
 	sprite/MainMenuSprite.cpp
+	core/Core.cpp
 	playerinput/PlayerInputFactory.cpp
 	playerinput/PlayerInputBase.cpp
 	playerinput/ImmobilePlayerInput.cpp
@@ -78,6 +79,8 @@ set(HEADER_FILES
 	sprite/MainMenuItemSprite.hpp
 	sprite/MainMenuTitleSprite.hpp
 	sprite/MainMenuSprite.hpp
+	core/ICore.hpp
+	core/Core.hpp
 	playerinput/IPlayerInput.hpp
 	playerinput/PlayerInputFactory.hpp
 	playerinput/PlayerInputBase.hpp
