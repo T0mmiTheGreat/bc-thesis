@@ -38,10 +38,11 @@ set(SOURCE_FILES
 	sprite/MainMenuSprite.cpp
 	playerinput/PlayerInputFactory.cpp
 	playerinput/PlayerInputBase.cpp
+	playerinput/ImmobilePlayerInput.cpp
+	playerinput/KeyboardPlayerInput.cpp
 	playerstate/PlayerStateFactory.cpp
 	playerstate/PlayerStateBase.cpp
 	playerstate/DefaultPlayerState.cpp
-	playerinput/KeyboardPlayerInput.cpp
 )
 
 # Headers (*.hpp)
@@ -81,6 +82,7 @@ set(HEADER_FILES
 	playerinput/PlayerInputFactory.hpp
 	playerinput/PlayerInputBase.hpp
 	playerinput/KeyboardPlayerInput.hpp
+	playerinput/ImmobilePlayerInput.hpp
 	playerstate/IPlayerState.hpp
 	playerstate/PlayerStateFactory.hpp
 	playerstate/PlayerStateBase.hpp
