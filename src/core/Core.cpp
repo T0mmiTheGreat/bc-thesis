@@ -11,6 +11,8 @@
 
 #include "core/Core.hpp"
 
+#include "functions.hpp"
+
 void Core::playerTick(std::shared_ptr<IPlayerState> player)
 {
 	auto playerInput = player->getPlayerInputObject()->readInput();
@@ -52,6 +54,17 @@ void Core::tick()
 {
 	for (auto player : m_players) {
 		playerTick(player);
+	}
+
+	for (int i = 0; i < m_players.size(); i++) {
+		for (int j = i + 1; j < m_players.size(); j++) {
+			auto plA = m_players[i];
+			auto plB = m_players[j];
+			if (distance(plA->getX(), plA->getY(), plB->getX(), plB->getY()) <= plA->getSize() + plB->getSize()) {
+				plA->setHp(plA->getHp() - 0.01);
+				plB->setHp(plB->getHp() - 0.01);
+			}
+		}
 	}
 }
 
