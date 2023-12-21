@@ -12,8 +12,18 @@
 #ifndef PLAYERINPUTFACTORY_HPP
 #define PLAYERINPUTFACTORY_HPP
 
+#include <memory>
+
+#include "types.hpp"
 #include "playerinput/IPlayerInput.hpp"
 
-class PlayerInputFactory {};
+class PlayerInputFactory {
+public:
+	static std::shared_ptr<IPlayerInput> createKeyboardPlayerInput(
+		KeyCode keyLeft, KeyCode keyUp, KeyCode keyRight, KeyCode keyDown);
+	static std::shared_ptr<IPlayerInput> createKeyboardPlayerInputWSAD();
+	static std::shared_ptr<IPlayerInput> createKeyboardPlayerInputArrows();
+	static std::shared_ptr<IPlayerInput> createImmobilePlayerInput();
+};
 
 #endif // PLAYERINPUTFACTORY_HPP
