@@ -67,7 +67,6 @@ void MainMenuItemSprite::setText(const std::string& value)
 void MainMenuItemSprite::mouseMoveEvent(int x, int y)
 {
 	Rect spriteBounds = getBounds();
-	bool inBounds = (spriteBounds.x <= x && x <= spriteBounds.getRight()) && 
-	                (spriteBounds.y <= y && y <= spriteBounds.getBottom());
-	setIsScaled(inBounds);
+	bool isMouseHover = spriteBounds.containsPoint(Point(x, y));
+	setIsScaled(isMouseHover);
 }

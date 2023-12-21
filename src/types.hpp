@@ -191,6 +191,10 @@ struct Rect {
 		return r;
 	}
 
+	bool containsPoint(const Point& pt) const {
+		return (x <= pt.x && pt.x <= getRight()) && (y <= pt.y && pt.y <= getBottom());
+	}
+
 	/**
 	 * @brief Returns true if the rectangle has no area.
 	 */
