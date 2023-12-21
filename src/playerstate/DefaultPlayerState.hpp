@@ -16,10 +16,10 @@
 
 class DefaultPlayerState : public PlayerStateBase {
 public:
-	const double DEFAULT_BASE_SIZE = 35.0;
-	const double DEFAULT_SIZE_POWER = 1.0;
-	const double DEFAULT_BASE_SPEED = 3.0;
-	const double DEFAULT_SPEED_POWER = 1.0;
+	static constexpr double DEFAULT_BASE_SIZE = 35.0;
+	static constexpr double DEFAULT_SIZE_POWER = 1.0;
+	static constexpr double DEFAULT_BASE_SPEED = 3.0;
+	static constexpr double DEFAULT_SPEED_POWER = 1.0;
 
 	const double baseSize;
 	const double sizePower;
