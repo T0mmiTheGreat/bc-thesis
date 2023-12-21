@@ -28,4 +28,12 @@ inline double powOptimized(double base, double exp) {
 	}
 }
 
+inline double sqr(double x) {
+	return x*x;
+}
+
+inline double distance(double x1, double y1, double x2, double y2) {
+	return std::sqrt(sqr(x2 - x1) + sqr(y2 - y1));
+}
+
 #endif // FUNCTIONS_HPP
