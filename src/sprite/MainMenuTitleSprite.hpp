@@ -19,7 +19,7 @@
 
 class MainMenuTitleSprite : public SpriteBase {
 private:
-	const std::string TITLE_TEXT = "PROJECT KRPOLE";
+	const std::string TITLE_TEXT = "MAIN TITLE";
 	const FontId TITLE_FONT = FONT_SEGOEPR_66;
 public:
 	MainMenuTitleSprite();
