@@ -36,6 +36,8 @@ set(SOURCE_FILES
 	sprite/MainMenuItemSprite.cpp
 	sprite/MainMenuTitleSprite.cpp
 	sprite/MainMenuSprite.cpp
+	playerinput/PlayerInputFactory.cpp
+	playerinput/PlayerInputBase.cpp
 )
 
 # Headers (*.hpp)
@@ -71,6 +73,10 @@ set(HEADER_FILES
 	sprite/MainMenuItemSprite.hpp
 	sprite/MainMenuTitleSprite.hpp
 	sprite/MainMenuSprite.hpp
+	playerinput/IPlayerInput.hpp
+	playerinput/PlayerInputFactory.hpp
+	playerinput/PlayerInputBase.hpp
+	playerinput/KeyboardPlayerInput.hpp
 )
 
 # Create the executable in the repo root directory
