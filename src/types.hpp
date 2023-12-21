@@ -82,10 +82,10 @@ inline constexpr T msToClocks(T ms);
  * @brief Width and height structure.
  */
 struct Size2d {
-	size_t w;
-	size_t h;
+	int w;
+	int h;
 
-	Size2d(size_t w, size_t h)
+	Size2d(int w, int h)
 		: w{w}
 		, h{h}
 	{}
