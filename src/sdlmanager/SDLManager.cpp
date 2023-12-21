@@ -120,11 +120,15 @@ Size2d SDLManager::sdlPointToSize(const SDL2pp::Point& point)
 SDL_Scancode SDLManager::enumToSdlScancode(KeyCode keyCode)
 {
 	switch (keyCode) {
-		case KEY_RETURN: return SDL_SCANCODE_RETURN;
-		case KEY_LEFT_ARROW: return SDL_SCANCODE_LEFT;
-		case KEY_UP_ARROW: return SDL_SCANCODE_UP;
+		case KEY_RETURN:      return SDL_SCANCODE_RETURN;
+		case KEY_LEFT_ARROW:  return SDL_SCANCODE_LEFT;
+		case KEY_UP_ARROW:    return SDL_SCANCODE_UP;
 		case KEY_RIGHT_ARROW: return SDL_SCANCODE_RIGHT;
-		case KEY_DOWN_ARROW: return SDL_SCANCODE_DOWN;
+		case KEY_DOWN_ARROW:  return SDL_SCANCODE_DOWN;
+		case KEY_A:           return SDL_SCANCODE_A;
+		case KEY_D:           return SDL_SCANCODE_D;
+		case KEY_S:           return SDL_SCANCODE_S;
+		case KEY_W:           return SDL_SCANCODE_W;
 		case KEY_UNKNOWN:
 		default:
 			return SDL_SCANCODE_UNKNOWN;
