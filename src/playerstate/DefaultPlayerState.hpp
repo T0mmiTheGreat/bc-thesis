@@ -45,8 +45,10 @@ public:
 	 *                   (1, INF) causes the opposite.
 	 */
 	DefaultPlayerState(double startX, double startY, double startHp,
-		double baseSize, double sizePower, double baseSpeed, double speedPower);
-	DefaultPlayerState(double startX, double startY);
+		std::shared_ptr<IPlayerInput> playerInput, double baseSize,
+		double sizePower, double baseSpeed, double speedPower);
+	DefaultPlayerState(double startX, double startY,
+		std::shared_ptr<IPlayerInput> playerInput);
 	DefaultPlayerState();
 	
 	double getSize() override;

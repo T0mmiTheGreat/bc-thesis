@@ -11,10 +11,12 @@
 
 #include "playerstate/PlayerStateBase.hpp"
 
-PlayerStateBase::PlayerStateBase(double startX, double startY, double startHp)
+PlayerStateBase::PlayerStateBase(double startX, double startY, double startHp,
+	std::shared_ptr<IPlayerInput> playerInput)
 	: x{startX}
 	, y{startY}
 	, hp{startHp}
+	, playerInput{playerInput}
 {}
 
 double PlayerStateBase::getX()

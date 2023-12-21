@@ -25,7 +25,8 @@ protected:
 	double hp;
 	std::shared_ptr<IPlayerInput> playerInput;
 public:
-	PlayerStateBase(double startX, double startY, double startHp);
+	PlayerStateBase(double startX, double startY, double startHp,
+		std::shared_ptr<IPlayerInput> playerInput);
 	virtual double getX() override;
 	virtual void setX(double value) override;
 	virtual double getY() override;

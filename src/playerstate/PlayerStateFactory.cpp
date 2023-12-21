@@ -19,15 +19,16 @@ std::shared_ptr<IPlayerState> PlayerStateFactory::createDefault()
 }
 
 std::shared_ptr<IPlayerState> PlayerStateFactory::createDefault(double startX,
-	double startY)
+	double startY, std::shared_ptr<IPlayerInput> playerInputObject)
 {
-	return std::make_shared<DefaultPlayerState>(startX, startY);
+	return std::make_shared<DefaultPlayerState>(startX, startY, playerInputObject);
 }
 
 std::shared_ptr<IPlayerState> PlayerStateFactory::createDefault(double startX,
-	double startY, double startHp, double baseSize, double sizePower,
-	double baseSpeed, double speedPower)
+	double startY, double startHp,
+	std::shared_ptr<IPlayerInput> playerInputObject, double baseSize,
+	double sizePower, double baseSpeed, double speedPower)
 {
 	return std::make_shared<DefaultPlayerState>(startX, startY, startHp,
-		baseSize, sizePower, baseSpeed, speedPower);
+		playerInputObject, baseSize, sizePower, baseSpeed, speedPower);
 }

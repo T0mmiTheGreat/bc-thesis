@@ -14,16 +14,18 @@
 
 #include <memory>
 
+#include "playerinput/IPlayerInput.hpp"
 #include "playerstate/IPlayerState.hpp"
 
 class PlayerStateFactory {
 public:
 	static std::shared_ptr<IPlayerState> createDefault();
 	static std::shared_ptr<IPlayerState> createDefault(double startX,
-		double startY);
+		double startY, std::shared_ptr<IPlayerInput> playerInputObject);
 	static std::shared_ptr<IPlayerState> createDefault(double startX,
-		double startY, double startHp, double baseSize, double sizePower,
-		double baseSpeed, double speedPower);
+		double startY, double startHp, 
+		std::shared_ptr<IPlayerInput> playerInputObject, double baseSize,
+		double sizePower, double baseSpeed, double speedPower);
 };
 
 #endif // PLAYERSTATEFACTORY_HPP

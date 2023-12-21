@@ -12,24 +12,27 @@
 #include "playerstate/DefaultPlayerState.hpp"
 
 #include "functions.hpp"
+#include "playerinput/PlayerInputFactory.hpp"
 
 DefaultPlayerState::DefaultPlayerState(double startX, double startY,
-	double startHp, double baseSize, double sizePower, double baseSpeed,
-	double speedPower)
-	: PlayerStateBase(startX, startY, startHp)
+	double startHp, std::shared_ptr<IPlayerInput> playerInput,
+	double baseSize, double sizePower, double baseSpeed, double speedPower)
+	: PlayerStateBase(startX, startY, startHp, playerInput)
 	, baseSize{baseSize}
 	, sizePower{sizePower}
 	, baseSpeed{baseSpeed}
 	, speedPower{speedPower}
 {}
 
-DefaultPlayerState::DefaultPlayerState(double startX, double startY)
-	: DefaultPlayerState(startX, startY, 1.0, DEFAULT_BASE_SIZE,
+DefaultPlayerState::DefaultPlayerState(double startX, double startY,
+	std::shared_ptr<IPlayerInput> playerInput)
+	: DefaultPlayerState(startX, startY, 1.0, playerInput, DEFAULT_BASE_SIZE,
 		DEFAULT_SIZE_POWER, DEFAULT_BASE_SPEED, DEFAULT_SPEED_POWER)
 {}
 
 DefaultPlayerState::DefaultPlayerState()
-	: DefaultPlayerState(0.0, 0.0)
+	: DefaultPlayerState(0.0, 0.0, 
+		PlayerInputFactory::createImmobilePlayerInput())
 {}
 
 double DefaultPlayerState::getSize()
