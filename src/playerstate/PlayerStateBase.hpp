@@ -33,6 +33,9 @@ public:
 	virtual void setY(double value) override;
 	virtual double getHp() override;
 	virtual void setHp(double value) override;
+	virtual void deltaX(double value) override;
+	virtual void deltaY(double value) override;
+	virtual void deltaPos(double valueX, double valueY) override;
 	virtual std::shared_ptr<IPlayerInput> getPlayerInputObject() override;
 	virtual void setPlayerInputObject(std::shared_ptr<IPlayerInput> value) override;
 };

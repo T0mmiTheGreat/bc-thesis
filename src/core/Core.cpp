@@ -16,8 +16,7 @@ void Core::playerTick(std::shared_ptr<IPlayerState> player)
 	auto playerInput = player->getPlayerInputObject()->readInput();
 	double vecX, vecY;
 	inputToVector(playerInput, vecX, vecY);
-	player->setX(player->getX() + vecX * player->getSpeed());
-	player->setY(player->getY() + vecY * player->getSpeed());
+	player->deltaPos(vecX * player->getSpeed(), vecY * player->getSpeed());
 }
 
 void Core::inputToVector(const PlayerInputState& input, double& x, double& y)

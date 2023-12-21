@@ -27,6 +27,9 @@ public:
 	virtual void setHp(double value) = 0;
 	virtual double getSize() = 0;
 	virtual double getSpeed() = 0;
+	virtual void deltaX(double value) = 0;
+	virtual void deltaY(double value) = 0;
+	virtual void deltaPos(double valueX, double valueY) = 0;
 	virtual std::shared_ptr<IPlayerInput> getPlayerInputObject() = 0;
 	virtual void setPlayerInputObject(std::shared_ptr<IPlayerInput> value) = 0;
 };
