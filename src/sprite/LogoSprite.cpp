@@ -121,7 +121,7 @@ void LogoSprite::frameEvent()
 
 void LogoSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)
 {
-	canvas->setFillingColor(Color(m_opacity, m_opacity, m_opacity, 0xff));
+	canvas->setFillingColor(Color(m_opacity, m_opacity, m_opacity));
 	canvas->fillText(getX(), getY(), LOGO_TEXT, LOGO_FONT);
 	invalidRect += getBounds();
 }

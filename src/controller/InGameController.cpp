@@ -48,7 +48,7 @@ void InGameController::frameEvent()
 void InGameController::paintEvent(std::shared_ptr<ICanvas> canvas, Rect & invalidRect)
 {
 	for (auto player : m_core->getPlayerList()) {
-		canvas->setFillingColor(Color(0xff, 0, 0, 0xff));
+		canvas->setFillingColor(Color::red());
 		canvas->fillCircle(
 			static_cast<int>(player->getX()),
 			static_cast<int>(player->getY()),

@@ -22,7 +22,7 @@ Size2d MainMenuTitleSprite::getSize()
 
 void MainMenuTitleSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)
 {
-	canvas->setFillingColor(Color(0xff, 0xff, 0xff, 0xff));
+	canvas->setFillingColor(Color::white());
 	canvas->fillText(x, y, TITLE_TEXT, TITLE_FONT);
 	invalidRect += getBounds();
 }

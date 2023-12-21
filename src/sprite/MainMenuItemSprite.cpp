@@ -33,16 +33,15 @@ void MainMenuItemSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidR
 	Size2d spriteSize = getSize();
 
 	// Bounds
-	canvas->setFillingColor(Color(0, 0, 0, 0));
-	canvas->setStrokingColor(Color(0xff, 0xff, 0xff, 0xff));
+	canvas->setStrokingColor(Color::white());
 	int rectW = (m_isScaled ? RECT_WIDTH_SCALED : RECT_WIDTH_NORMAL);
 	int rectH = (m_isScaled ? RECT_HEIGHT_SCALED : RECT_HEIGHT_NORMAL);
 	int rectX = x + ((spriteSize.w - rectW) / 2);
 	int rectY = y + ((spriteSize.h - rectH) / 2);
-	canvas->drawRectangle(rectX, rectY, rectW, rectH);
+	canvas->strokeRectangle(rectX, rectY, rectW, rectH);
 
 	// Text
-	canvas->setFillingColor(Color(0xff, 0xff, 0xff, 0xff));
+	canvas->setFillingColor(Color::white());
 	Size2d textSize = sysProxy->getTextSize(m_text, FONT);
 	int textX = x + ((spriteSize.w - textSize.w) / 2);
 	int textY = y + ((spriteSize.h - textSize.h) / 2);

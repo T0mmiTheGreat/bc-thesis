@@ -262,6 +262,12 @@ struct Color {
 	Color(uint8_t r, uint8_t g, uint8_t b)
 		: Color(r, g, b, 0xff)
 	{}
+
+	static Color black() { return Color(0, 0, 0); }
+	static Color white() { return Color(0xff, 0xff, 0xff); }
+	static Color red() { return Color(0xff, 0, 0); }
+	static Color green() { return Color(0, 0xff, 0); }
+	static Color blue() { return Color(0, 0, 0xff); }
 };
 
 /**
