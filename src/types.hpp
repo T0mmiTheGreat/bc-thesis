@@ -233,13 +233,13 @@ struct Color {
 	uint8_t a;
 
 	/**
-	 * @brief Constructs a black color.
+	 * @brief Constructs a transparent color.
 	 */
 	Color()
-		: Color(0, 0, 0, 0xff)
+		: Color(0, 0, 0, 0)
 	{}
 	/**
-	 * @brief Construct a color.
+	 * @brief Constructs a color.
 	 * 
 	 * @param r Intensity of red channel.
 	 * @param g Intensity of green channel.
