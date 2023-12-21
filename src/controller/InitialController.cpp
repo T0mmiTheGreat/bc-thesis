@@ -15,7 +15,7 @@
 
 std::unique_ptr<IControllerChild> InitialController::createReplacement()
 {
-	return ControllerFactory::createLogoController();
+	return ControllerFactory::createInGameController();
 }
 
 void InitialController::frameEvent()

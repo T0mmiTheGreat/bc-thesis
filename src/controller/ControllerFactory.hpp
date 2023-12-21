@@ -26,6 +26,7 @@ public:
 	static std::unique_ptr<IControllerChild> createInitialController();
 	static std::unique_ptr<IControllerChild> createLogoController();
 	static std::unique_ptr<IControllerChild> createMainMenuController();
+	static std::unique_ptr<IControllerChild> createInGameController();
 };
 
 #endif // CONTROLLERFACTORY_HPP

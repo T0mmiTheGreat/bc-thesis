@@ -31,6 +31,7 @@ set(SOURCE_FILES
 	controller/InitialController.cpp
 	controller/LogoController.cpp
 	controller/MainMenuController.cpp
+	controller/InGameController.cpp
 	sprite/SpriteBase.cpp
 	sprite/LogoSprite.cpp
 	sprite/MainMenuItemSprite.cpp
@@ -73,6 +74,7 @@ set(HEADER_FILES
 	controller/InitialController.hpp
 	controller/LogoController.hpp
 	controller/MainMenuController.hpp
+	controller/InGameController.hpp
 	sprite/ISprite.hpp
 	sprite/SpriteBase.hpp
 	sprite/LogoSprite.hpp
