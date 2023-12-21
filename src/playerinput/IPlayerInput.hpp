@@ -17,6 +17,13 @@ struct PlayerInputState {
 	bool up: 1;
 	bool right: 1;
 	bool down: 1;
+
+	PlayerInputState()
+		: left{false}
+		, up{false}
+		, right{false}
+		, down{false}
+	{}
 };
 
 class IPlayerInput {
