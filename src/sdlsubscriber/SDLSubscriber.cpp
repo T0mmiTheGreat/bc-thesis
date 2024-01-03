@@ -42,10 +42,10 @@ void SDLSubscriber::paintEvent(SDL_Rect& invalidRect)
 	}
 }
 
-void SDLSubscriber::frameEvent()
+void SDLSubscriber::loopEvent()
 {
 	if (auto lockedSubscriber = m_subscriber.lock()) {
-		lockedSubscriber->frameEvent();
+		lockedSubscriber->loopEvent();
 	}
 }
 void SDLSubscriber::startEvent()

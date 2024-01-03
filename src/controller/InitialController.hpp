@@ -18,7 +18,7 @@ class InitialController : public GeneralControllerBase {
 protected:
 	std::unique_ptr<IControllerChild> createReplacement();
 public:
-	void frameEvent() override;
+	void loopEvent() override;
 };
 
 #endif // INITIALCONTROLLER_HPP

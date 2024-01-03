@@ -33,10 +33,10 @@ void LogoController::startedEvent()
 	m_sprite->startAnimation();
 }
 
-void LogoController::frameEvent()
+void LogoController::loopEvent()
 {
-	GeneralControllerBase::frameEvent();
-	m_sprite->frameEvent();
+	GeneralControllerBase::loopEvent();
+	m_sprite->loopEvent();
 	if (!m_sprite->isAnimationRunning()) {
 		finishedEvent();
 	}

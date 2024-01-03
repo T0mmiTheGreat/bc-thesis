@@ -143,16 +143,16 @@ public:
 	 */
 	virtual bool isAnimationRunning() override;
 	/**
-	 * @brief Event that happens every frame.
+	 * @brief Event that happens every event loop iteration.
 	 * 
 	 * @details This method is mainly used to progress any running animations,
 	 *          but in the future there might be more functionality to this, so
-	 *          it is better to call it every frame no matter the sprite does
-	 *          or does not have an animation.
+	 *          it is better to call it every iteration no matter the sprite
+	 *          does or does not have an animation.
 	 * 
-	 *          No-op.
+	 *          No-op unless overriden.
 	 */
-	virtual void frameEvent() override;
+	virtual void loopEvent() override;
 };
 
 #endif // SPRITEBASE_HPP

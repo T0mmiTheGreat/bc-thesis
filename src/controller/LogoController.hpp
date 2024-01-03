@@ -30,7 +30,7 @@ protected:
 	std::unique_ptr<IControllerChild> createReplacement() override;
 public:
 	virtual void startedEvent() override;
-	virtual void frameEvent() override;
+	virtual void loopEvent() override;
 	virtual void paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
 };
 

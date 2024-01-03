@@ -29,7 +29,7 @@ public:
 	{}
 	virtual void generalEvent(SDL_Event& ev) override;
 	virtual void paintEvent(SDL_Rect& invalidRect) override;
-	virtual void frameEvent() override;
+	virtual void loopEvent() override;
 	virtual void startEvent() override;
 };
 

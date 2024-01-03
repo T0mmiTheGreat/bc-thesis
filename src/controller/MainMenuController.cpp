@@ -34,11 +34,11 @@ void MainMenuController::mouseMoveEvent(int x, int y)
 	m_mainMenu->mouseMoveEvent(x, y);
 }
 
-void MainMenuController::frameEvent()
+void MainMenuController::loopEvent()
 {
-	GeneralControllerBase::frameEvent();
-	m_mainMenu->frameEvent();
-	m_title->frameEvent();
+	GeneralControllerBase::loopEvent();
+	m_mainMenu->loopEvent();
+	m_title->loopEvent();
 }
 
 void MainMenuController::paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)

@@ -19,7 +19,7 @@ std::unique_ptr<IControllerChild> InitialController::createReplacement()
 	//return ControllerFactory::createLogoController();
 }
 
-void InitialController::frameEvent()
+void InitialController::loopEvent()
 {
 	finishedEvent();
 }

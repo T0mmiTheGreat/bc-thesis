@@ -45,9 +45,9 @@ void RootController::mouseMoveEvent(int x, int y)
 	m_childController->mouseMoveEvent(x, y);
 }
 
-void RootController::frameEvent()
+void RootController::loopEvent()
 {
-	m_childController->frameEvent();
+	m_childController->loopEvent();
 }
 
 void RootController::paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)

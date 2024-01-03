@@ -57,7 +57,7 @@ void LogoSprite::nextAnimationPhase()
 	}
 }
 
-void LogoSprite::frameEventAnimation()
+void LogoSprite::loopEventAnimation()
 {
 	if (!isAnimationRunning()) return;
 
@@ -67,30 +67,30 @@ void LogoSprite::frameEventAnimation()
 		}
 		switch (m_animPhase) {
 			case ANIM_FADEIN:
-				frameEventAnimFadein();
+				loopEventAnimFadein();
 				break;
 			case ANIM_FULLBRIGHT:
-				frameEventAnimFullbright();
+				loopEventAnimFullbright();
 				break;
 			case ANIM_FADEOUT:
-				frameEventAnimFadeout();
+				loopEventAnimFadeout();
 				break;
 		}
 		invalidateBounds();
 	}
 }
 
-void LogoSprite::frameEventAnimFadein()
+void LogoSprite::loopEventAnimFadein()
 {
 	m_opacity = m_anim.getTime() * 0xff;
 }
 
-void LogoSprite::frameEventAnimFullbright()
+void LogoSprite::loopEventAnimFullbright()
 {
 	m_opacity = 0xff;
 }
 
-void LogoSprite::frameEventAnimFadeout()
+void LogoSprite::loopEventAnimFadeout()
 {
 	m_opacity = (1.0 - m_anim.getTime()) * 0xff;
 }
@@ -114,9 +114,9 @@ void LogoSprite::stopAnimation()
 	invalidateBounds();
 }
 
-void LogoSprite::frameEvent()
+void LogoSprite::loopEvent()
 {
-	frameEventAnimation();
+	loopEventAnimation();
 }
 
 void LogoSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)

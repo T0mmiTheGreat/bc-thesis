@@ -30,7 +30,7 @@ public:
 	void keyDownEvent(KeyCode key) override;
 	void mouseBtnDownEvent(MouseBtn btn) override;
 	void mouseMoveEvent(int x, int y) override;
-	void frameEvent() override;
+	void loopEvent() override;
 	void paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
 	void run() override;
 

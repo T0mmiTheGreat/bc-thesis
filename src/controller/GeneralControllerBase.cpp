@@ -56,7 +56,7 @@ void GeneralControllerBase::mouseMoveEvent(int x, int y)
 {
 }
 
-void GeneralControllerBase::frameEvent()
+void GeneralControllerBase::loopEvent()
 {
 }
 

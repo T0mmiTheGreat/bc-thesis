@@ -51,7 +51,7 @@ void SDLManager::runEventLoop()
 		}
 		if (!isRunning) break;
 
-		m_subscriber->frameEvent();
+		m_subscriber->loopEvent();
 
 		// Painting
 		if (this->needsRepaint()) {

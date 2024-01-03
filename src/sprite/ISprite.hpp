@@ -104,14 +104,14 @@ public:
 	 */
 	virtual bool isAnimationRunning() = 0;
 	/**
-	 * @brief Event that happens every frame.
+	 * @brief Event that happens every event loop iteration.
 	 * 
 	 * @details This method is mainly used to progress any running animations,
 	 *          but in the future there might be more functionality to this, so
-	 *          it is better to call it every frame no matter the sprite does
-	 *          or does not have an animation.
+	 *          it is better to call it every iteration no matter the sprite
+	 *          does or does not have an animation.
 	 */
-	virtual void frameEvent() = 0;
+	virtual void loopEvent() = 0;
 	/**
 	 * @brief Repaints an area of sprite.
 	 * 

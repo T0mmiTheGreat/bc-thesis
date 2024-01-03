@@ -27,7 +27,7 @@ private:
 public:
 	InGameController();
 	void startedEvent() override;
-	void frameEvent() override;
+	void loopEvent() override;
 	void paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
 };
 

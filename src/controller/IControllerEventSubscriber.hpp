@@ -76,11 +76,9 @@ public:
 	 */
 	virtual void mouseMoveEvent(int x, int y) = 0;
 	/**
-	 * @brief Event that happens every frame.
-	 * 
-	 * @details Frame = iteration of event loop after all non-painting events.
+	 * @brief Event that happens every event loop iteration.
 	 */
-	virtual void frameEvent() = 0;
+	virtual void loopEvent() = 0;
 	/**
 	 * @brief Request to paint.
 	 * 

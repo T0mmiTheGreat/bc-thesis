@@ -42,10 +42,10 @@ private:
 
 	void startAnimationPhase(AnimationPhase phase);
 	void nextAnimationPhase();
-	void frameEventAnimation();
-	void frameEventAnimFadein();
-	void frameEventAnimFullbright();
-	void frameEventAnimFadeout();
+	void loopEventAnimation();
+	void loopEventAnimFadein();
+	void loopEventAnimFullbright();
+	void loopEventAnimFadeout();
 public:
 	LogoSprite();
 
@@ -75,11 +75,11 @@ public:
 	 */
 	void stopAnimation() override;
 	/**
-	 * @brief Event that happens every frame.
+	 * @brief Event that happens every event loop iteration.
 	 * 
 	 * @details This method is mainly used to progress any running animations.
 	 */
-	void frameEvent() override;
+	void loopEvent() override;
 	/**
 	 * @brief Repaints an area of sprite.
 	 * 

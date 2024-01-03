@@ -37,7 +37,7 @@ void InGameController::startedEvent()
 	m_tickTimer.reset();
 }
 
-void InGameController::frameEvent()
+void InGameController::loopEvent()
 {
 	if (m_tickTimer.isLap()) {
 		m_core->tick();
