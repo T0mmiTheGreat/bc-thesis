@@ -1,34 +1,24 @@
 /**
- * @file ISysProxy.hpp
+ * @file IPaintingProxy.hpp
  * @author Tomáš Ludrovan
- * @brief ISysProxy interface
+ * @brief IPaintingProxy interface
  * @version 0.1
- * @date 2023-12-01
+ * @date 2024-01-05
  * 
- * @copyright Copyright (c) 2023
+ * @copyright Copyright (c) 2024
  * 
  */
 
-#ifndef ISYSPROXY_HPP
-#define ISYSPROXY_HPP
+#ifndef IPAINTINGPROXY_HPP
+#define IPAINTINGPROXY_HPP
 
 #include <string>
 
 #include "types.hpp"
-#include "paintingproxy/IPaintingProxy.hpp"
 
-/**
- * @brief Proxy for communication with the system manager (e.g. SDLManager).
- */
-class ISysProxy : public IPaintingProxy {
+class IPaintingProxy {
 public:
-	virtual ~ISysProxy() {}
-	/**
-	 * @brief Runs the event loop synchronously.
-	 * 
-	 * @details Most methods may be called only if this method is running.
-	 */
-	virtual void runEventLoop() = 0;
+	virtual ~IPaintingProxy() {}
 	/**
 	 * @brief Requests the whole client area to be repainted.
 	 * 
@@ -44,16 +34,6 @@ public:
 	 */
 	virtual void invalidateRect(const Rect& rect) = 0;
 	/**
-	 * @brief Returns true if the key represented by `keyCode` is pressed.
-	 * 
-	 * @remark May only be called if the event loop is running.
-	 */
-	virtual bool isKeyPressed(KeyCode keyCode) = 0;
-	/**
-	 * @brief Returns the current event loop state.
-	 */
-	virtual EventLoopState getEventLoopState() = 0;
-	/**
 	 * @brief Calculates the size that would be taken by text.
 	 * 
 	 * @param text Text to measure.
@@ -66,4 +46,4 @@ public:
 	virtual Size2d getPaintAreaSize() = 0;
 };
 
-#endif // ISYSPROXY_HPP
+#endif // IPAINTINGPROXY_HPP

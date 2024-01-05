@@ -81,6 +81,7 @@ set(HEADER_FILES
 	sprite/MainMenuItemSprite.hpp
 	sprite/MainMenuTitleSprite.hpp
 	sprite/MainMenuSprite.hpp
+	paintingproxy/IPaintingProxy.hpp
 	core/ICore.hpp
 	core/Core.hpp
 	playerinput/IPlayerInput.hpp
