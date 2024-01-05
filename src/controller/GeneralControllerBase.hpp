@@ -29,7 +29,7 @@
 class GeneralControllerBase : public IControllerChild {
 protected:
 	SwapCallback swapCallback;
-	std::unique_ptr<ISysProxy> sysProxy;
+	std::shared_ptr<ISysProxy> sysProxy;
 
 	/**
 	 * @brief Creates the replacement for this current controller.

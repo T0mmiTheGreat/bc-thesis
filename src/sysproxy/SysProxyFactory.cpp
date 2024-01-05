@@ -14,11 +14,11 @@
 #include "sysproxy/SDLSysProxy.hpp"
 #include "SysProxyFactory.hpp"
 
-std::unique_ptr<ISysProxy> SysProxyFactory::createDefault()
+std::shared_ptr<ISysProxy> SysProxyFactory::createDefault()
 {
 	return createSdlSysProxy();
 }
-std::unique_ptr<ISysProxy> SysProxyFactory::createSdlSysProxy()
+std::shared_ptr<ISysProxy> SysProxyFactory::createSdlSysProxy()
 {
-	return std::make_unique<SDLSysProxy>();
+	return std::make_shared<SDLSysProxy>();
 }

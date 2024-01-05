@@ -21,8 +21,8 @@
  */
 class SysProxyFactory {
 public:
-	static std::unique_ptr<ISysProxy> createDefault();
-	static std::unique_ptr<ISysProxy> createSdlSysProxy();
+	static std::shared_ptr<ISysProxy> createDefault();
+	static std::shared_ptr<ISysProxy> createSdlSysProxy();
 };
 
 #endif // SYSPROXYFACTORY_HPP
