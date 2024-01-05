@@ -14,10 +14,11 @@
 #include "controller/ControllerFactory.hpp"
 #include "sysproxy/SysProxyFactory.hpp"
 
-RootController::RootController()
+RootController::RootController(std::shared_ptr<ISysProxy> sysProxy)
 	: ControllerBase()
+	, m_sysProxy{sysProxy}
 {
-	setChildController(ControllerFactory::createInitialController());
+	setChildController(ControllerFactory::createInitialController(sysProxy));
 }
 
 void RootController::startEvent()

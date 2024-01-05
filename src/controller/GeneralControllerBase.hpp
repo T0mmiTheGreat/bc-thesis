@@ -41,7 +41,7 @@ protected:
 	 */
 	virtual std::unique_ptr<IControllerChild> createReplacement();
 public:
-	GeneralControllerBase();
+	GeneralControllerBase(std::shared_ptr<ISysProxy> sysProxy);
 	/**
 	 * @brief The controller should start.
 	 * 

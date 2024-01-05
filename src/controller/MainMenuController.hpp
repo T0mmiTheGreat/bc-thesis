@@ -24,6 +24,7 @@ private:
 	std::unique_ptr<MainMenuSprite> m_mainMenu;
 	std::unique_ptr<MainMenuTitleSprite> m_title;
 public:
+	MainMenuController(std::shared_ptr<ISysProxy> sysProxy) : GeneralControllerBase(sysProxy) {}
 	void startedEvent() override;
 	void mouseMoveEvent(int x, int y) override;
 	void loopEvent() override;

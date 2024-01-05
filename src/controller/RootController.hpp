@@ -18,13 +18,15 @@
 #include "canvas/ICanvas.hpp"
 #include "controller/ControllerBase.hpp"
 #include "controller/IRootController.hpp"
+#include "sysproxy/ISysProxy.hpp"
 #include "syssubscriber/ISysSubscriber.hpp"
 
 class RootController : public ControllerBase, public IRootController {
 private:
 	std::unique_ptr<IControllerChild> m_childController;
+	std::shared_ptr<ISysProxy> m_sysProxy;
 public:
-	RootController();
+	RootController(std::shared_ptr<ISysProxy> sysProxy);
 	void startEvent() override;
 	void quitEvent() override;
 	void keyDownEvent(KeyCode key) override;

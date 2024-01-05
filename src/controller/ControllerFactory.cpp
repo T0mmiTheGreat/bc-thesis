@@ -19,27 +19,27 @@
 #include "controller/MainMenuController.hpp"
 #include "controller/InGameController.hpp"
 
-std::shared_ptr<IRootController> ControllerFactory::createRootController()
+std::shared_ptr<IRootController> ControllerFactory::createRootController(std::shared_ptr<ISysProxy> sysProxy)
 {
-	return std::make_shared<RootController>();
+	return std::make_shared<RootController>(sysProxy);
 }
 
-std::unique_ptr<IControllerChild> ControllerFactory::createInitialController()
+std::unique_ptr<IControllerChild> ControllerFactory::createInitialController(std::shared_ptr<ISysProxy> sysProxy)
 {
-	return std::make_unique<InitialController>();
+	return std::make_unique<InitialController>(sysProxy);
 }
 
-std::unique_ptr<IControllerChild> ControllerFactory::createLogoController()
+std::unique_ptr<IControllerChild> ControllerFactory::createLogoController(std::shared_ptr<ISysProxy> sysProxy)
 {
-	return std::make_unique<LogoController>();
+	return std::make_unique<LogoController>(sysProxy);
 }
 
-std::unique_ptr<IControllerChild> ControllerFactory::createMainMenuController()
+std::unique_ptr<IControllerChild> ControllerFactory::createMainMenuController(std::shared_ptr<ISysProxy> sysProxy)
 {
-	return std::make_unique<MainMenuController>();
+	return std::make_unique<MainMenuController>(sysProxy);
 }
 
-std::unique_ptr<IControllerChild> ControllerFactory::createInGameController()
+std::unique_ptr<IControllerChild> ControllerFactory::createInGameController(std::shared_ptr<ISysProxy> sysProxy)
 {
-	return std::make_unique<InGameController>();
+	return std::make_unique<InGameController>(sysProxy);
 }

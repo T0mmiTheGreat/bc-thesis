@@ -17,8 +17,8 @@
 #include "playerinput/PlayerInputFactory.hpp"
 #include "playerstate/PlayerStateFactory.hpp"
 
-InGameController::InGameController()
-	: GeneralControllerBase()
+InGameController::InGameController(std::shared_ptr<ISysProxy> sysProxy)
+	: GeneralControllerBase(sysProxy)
 	, m_core{std::make_unique<Core>()}
 	, m_tickTimer(TICK_TIMER_INTERVAL)
 {

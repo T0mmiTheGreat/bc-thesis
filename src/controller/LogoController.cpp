@@ -17,7 +17,7 @@
 
 std::unique_ptr<IControllerChild> LogoController::createReplacement()
 {
-	return ControllerFactory::createMainMenuController();
+	return ControllerFactory::createMainMenuController(sysProxy);
 }
 
 void LogoController::startedEvent()

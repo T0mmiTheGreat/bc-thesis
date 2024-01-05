@@ -15,11 +15,12 @@
 #include "controller/ControllerFactory.hpp"
 #include "sdlsubscriber/SDLSubscriber.hpp"
 #include "sdlmanager/SDLManager.hpp"
+#include "sysproxy/SysProxyFactory.hpp"
 
 extern "C"
 int main(int argc, char *argv[])
 {
-	auto rootCntl = ControllerFactory::createRootController();
+	auto rootCntl = ControllerFactory::createRootController(SysProxyFactory::createDefault());
 	auto sdlSubs = std::make_shared<SDLSubscriber>(rootCntl);
 	SDLManager::get().assignSubscriber(sdlSubs);
 	rootCntl->run();

@@ -11,16 +11,14 @@
 
 #include "controller/GeneralControllerBase.hpp"
 
-#include "sysproxy/SysProxyFactory.hpp"
-
 std::unique_ptr<IControllerChild> GeneralControllerBase::createReplacement()
 {
 	return nullptr;
 }
 
-GeneralControllerBase::GeneralControllerBase()
+GeneralControllerBase::GeneralControllerBase(std::shared_ptr<ISysProxy> sysProxy)
 	: swapCallback{nullptr}
-	, sysProxy{SysProxyFactory::createDefault()}
+	, sysProxy{sysProxy}
 {}
 
 void GeneralControllerBase::startedEvent()
