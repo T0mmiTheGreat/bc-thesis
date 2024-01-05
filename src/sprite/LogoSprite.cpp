@@ -11,8 +11,8 @@
 
 #include "sprite/LogoSprite.hpp"
 
-LogoSprite::LogoSprite()
-	: SpriteBase()
+LogoSprite::LogoSprite(std::shared_ptr<IPaintingProxy> paintingProxy)
+	: SpriteBase(paintingProxy)
 	, m_timer(TIMER_INTERVAL)
 	, m_anim(0)
 {}
@@ -97,7 +97,7 @@ void LogoSprite::loopEventAnimFadeout()
 
 Size2d LogoSprite::getSize()
 {
-	return sysProxy->getTextSize(LOGO_TEXT, LOGO_FONT);
+	return paintingProxy->getTextSize(LOGO_TEXT, LOGO_FONT);
 }
 
 void LogoSprite::startAnimation()

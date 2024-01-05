@@ -19,8 +19,8 @@ void MainMenuItemSprite::setIsScaled(bool value)
 	}
 }
 
-MainMenuItemSprite::MainMenuItemSprite()
-	: SpriteBase()
+MainMenuItemSprite::MainMenuItemSprite(std::shared_ptr<IPaintingProxy> paintingProxy)
+	: SpriteBase(paintingProxy)
 {}
 
 Size2d MainMenuItemSprite::getSize()
@@ -42,7 +42,7 @@ void MainMenuItemSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidR
 
 	// Text
 	canvas->setFillingColor(Color::white());
-	Size2d textSize = sysProxy->getTextSize(m_text, FONT);
+	Size2d textSize = paintingProxy->getTextSize(m_text, FONT);
 	int textX = x + ((spriteSize.w - textSize.w) / 2);
 	int textY = y + ((spriteSize.h - textSize.h) / 2);
 	canvas->fillText(textX, textY, m_text, FONT);
@@ -59,7 +59,7 @@ void MainMenuItemSprite::setText(const std::string& value)
 {
 	if (m_text != value) {
 		m_text = value;
-		sysProxy->invalidateRect(getBounds());
+		paintingProxy->invalidateRect(getBounds());
 	}
 }
 

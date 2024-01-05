@@ -29,7 +29,7 @@ private:
 	void posChangedEvent(int oldX, int oldY, int newX, int newY) override;
 	std::array<MainMenuItemSprite*, ITEM_COUNT> getMenuItems();
 public:
-	MainMenuSprite();
+	MainMenuSprite(std::shared_ptr<IPaintingProxy> paintingProxy);
 
 	/**
 	 * @brief Returns the size (width and height) of the sprite.

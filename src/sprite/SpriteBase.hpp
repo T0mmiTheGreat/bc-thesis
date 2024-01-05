@@ -15,7 +15,7 @@
 #include <memory>
 
 #include "sprite/ISprite.hpp"
-#include "sysproxy/ISysProxy.hpp"
+#include "paintingproxy/IPaintingProxy.hpp"
 
 /**
  * @brief Base class for all sprites.
@@ -24,7 +24,7 @@ class SpriteBase : public ISprite {
 protected:
 	int x;
 	int y;
-	std::shared_ptr<ISysProxy> sysProxy;
+	std::shared_ptr<IPaintingProxy> paintingProxy;
 	bool isAnimationRunningFlag;
 
 	/**
@@ -48,7 +48,7 @@ protected:
 	 */
 	virtual void posChangedEvent(int oldX, int oldY, int newX, int newY);
 public:
-	SpriteBase();
+	SpriteBase(std::shared_ptr<IPaintingProxy> paintingProxy);
 	/**
 	 * @brief Get the X coordinate of the sprite.
 	 * 

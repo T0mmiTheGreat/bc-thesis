@@ -11,8 +11,10 @@
 
 #include "sprite/MainMenuSprite.hpp"
 
-MainMenuSprite::MainMenuSprite()
-	: SpriteBase()
+MainMenuSprite::MainMenuSprite(std::shared_ptr<IPaintingProxy> paintingProxy)
+	: SpriteBase(paintingProxy)
+	, m_playBtn(paintingProxy)
+	, m_quitBtn(paintingProxy)
 {
 	m_playBtn.setText("Play");
 	m_quitBtn.setText("Quit");

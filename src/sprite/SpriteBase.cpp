@@ -15,21 +15,21 @@
 
 void SpriteBase::invalidateBounds()
 {
-	sysProxy->invalidateRect(getBounds());
+	paintingProxy->invalidateRect(getBounds());
 }
 
 void SpriteBase::posChangedEvent(int oldX, int oldY, int newX, int newY)
 {
 	Size2d spriteSize = getSize();
-	sysProxy->invalidateRect(Rect(oldX, oldY, spriteSize.w, spriteSize.h));
-	sysProxy->invalidateRect(Rect(newX, newY, spriteSize.w, spriteSize.h));
+	paintingProxy->invalidateRect(Rect(oldX, oldY, spriteSize.w, spriteSize.h));
+	paintingProxy->invalidateRect(Rect(newX, newY, spriteSize.w, spriteSize.h));
 }
 
-SpriteBase::SpriteBase()
+SpriteBase::SpriteBase(std::shared_ptr<IPaintingProxy> paintingProxy)
 	: x{0}
 	, y{0}
 	, isAnimationRunningFlag{false}
-	, sysProxy{SysProxyFactory::createDefault()}
+	, paintingProxy{paintingProxy}
 {}
 
 int SpriteBase::getX()

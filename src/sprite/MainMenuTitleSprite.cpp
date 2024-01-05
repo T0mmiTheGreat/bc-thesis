@@ -11,13 +11,13 @@
 
 #include "sprite/MainMenuTitleSprite.hpp"
 
-MainMenuTitleSprite::MainMenuTitleSprite()
-	: SpriteBase()
+MainMenuTitleSprite::MainMenuTitleSprite(std::shared_ptr<IPaintingProxy> paintingProxy)
+	: SpriteBase(paintingProxy)
 {}
 
 Size2d MainMenuTitleSprite::getSize()
 {
-	return sysProxy->getTextSize(TITLE_TEXT, TITLE_FONT);
+	return paintingProxy->getTextSize(TITLE_TEXT, TITLE_FONT);
 }
 
 void MainMenuTitleSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)

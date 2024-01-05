@@ -47,7 +47,7 @@ private:
 	void loopEventAnimFullbright();
 	void loopEventAnimFadeout();
 public:
-	LogoSprite();
+	LogoSprite(std::shared_ptr<IPaintingProxy> paintingProxy);
 
 	/**
 	 * @brief Returns the size (width and height) of the sprite.

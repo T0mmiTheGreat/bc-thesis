@@ -22,7 +22,7 @@ private:
 	const std::string TITLE_TEXT = "MAIN TITLE";
 	const FontId TITLE_FONT = FONT_SEGOEPR_66;
 public:
-	MainMenuTitleSprite();
+	MainMenuTitleSprite(std::shared_ptr<IPaintingProxy> paintingProxy);
 
 	/**
 	 * @brief Returns the size (width and height) of the sprite.

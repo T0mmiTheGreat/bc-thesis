@@ -40,7 +40,7 @@ private:
 
 	void setIsScaled(bool value);
 public:
-	MainMenuItemSprite();
+	MainMenuItemSprite(std::shared_ptr<IPaintingProxy> paintingProxy);
 
 	/**
 	 * @brief Returns the size (width and height) of the sprite.

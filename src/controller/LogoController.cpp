@@ -23,7 +23,7 @@ std::unique_ptr<IControllerChild> LogoController::createReplacement()
 void LogoController::startedEvent()
 {
 	GeneralControllerBase::startedEvent();
-	m_sprite = std::make_unique<LogoSprite>();
+	m_sprite = std::make_unique<LogoSprite>(sysProxy);
 
 	Size2d winSize = sysProxy->getPaintAreaSize();
 	Size2d spriteSize = m_sprite->getSize();

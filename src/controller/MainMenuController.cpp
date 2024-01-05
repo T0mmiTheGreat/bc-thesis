@@ -19,8 +19,8 @@ void MainMenuController::startedEvent()
 
 	Size2d paintareaSize = sysProxy->getPaintAreaSize();
 
-	m_mainMenu = std::make_unique<MainMenuSprite>();
-	m_title = std::make_unique<MainMenuTitleSprite>();
+	m_mainMenu = std::make_unique<MainMenuSprite>(sysProxy);
+	m_title = std::make_unique<MainMenuTitleSprite>(sysProxy);
 
 	Size2d menuSize = m_mainMenu->getSize();
 	m_mainMenu->setPos((paintareaSize.w - menuSize.w) / 2, 230);
