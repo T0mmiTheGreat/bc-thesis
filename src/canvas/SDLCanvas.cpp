@@ -113,6 +113,10 @@ void SDLCanvas::strokeRectangle(int x, int y, int w, int h)
 
 void SDLCanvas::fillText(int x, int y, const std::string& text, FontId font)
 {
+	if (text.empty()) {
+		return;
+	}
+
 	// Get the font object
 	SDL2pp::Font& fontObj = SDLManager::get().getFont(font);
 	// Paint the text onto the surface
