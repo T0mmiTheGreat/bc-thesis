@@ -20,7 +20,7 @@
 InGameController::InGameController(std::shared_ptr<ISysProxy> sysProxy)
 	: GeneralControllerBase(sysProxy)
 	, m_core{std::make_unique<Core>()}
-	, m_tickTimer(TICK_TIMER_INTERVAL)
+	, m_tickTimer(ICore::TICK_INTERVAL)
 {
 	auto player1Input = PlayerInputFactory::createKeyboardPlayerInputWSAD();
 	auto player1 = PlayerStateFactory::createDefault(200.0, 200.0, player1Input);

@@ -20,8 +20,6 @@
 
 class InGameController : public GeneralControllerBase {
 private:
-	static const std::clock_t TICK_TIMER_INTERVAL = 17;
-
 	std::unique_ptr<ICore> m_core;
 	Timer m_tickTimer;
 public:

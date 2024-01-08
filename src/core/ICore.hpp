@@ -12,6 +12,7 @@
 #ifndef ICORE_HPP
 #define ICORE_HPP
 
+#include <ctime>
 #include <memory>
 #include <vector>
 
@@ -23,6 +24,8 @@ typedef std::vector<std::shared_ptr<IPlayerState>> PlayerList;
 
 class ICore {
 public:
+	static constexpr std::clock_t TICK_INTERVAL = 17;
+
 	virtual ~ICore() {}
 	virtual void tick() = 0;
 	virtual void addPlayer(std::shared_ptr<IPlayerState> player) = 0;

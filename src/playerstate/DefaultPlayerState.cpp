@@ -48,10 +48,8 @@ double DefaultPlayerState::getSize()
 
 double DefaultPlayerState::getSpeed()
 {
-	// Full HP -> 3.0
-	// 1/2 full HP -> 6.0 ...?
-	// 2x Full HP -> 1.5 ...?
-	// `hp^x * 35.0`, where x -> (0, 1)
-	return 3.0 / std::pow(hp, speedPower);
-	//return 3.0 / hp;
+	// Full HP -> 1.0
+	// 1/2 full HP -> 2.0 ...?
+	// 2x Full HP -> 0.5 ...?
+	return 1.0 / std::pow(hp, speedPower);
 }
