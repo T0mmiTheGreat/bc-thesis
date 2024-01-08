@@ -13,17 +13,37 @@
 
 #include <format>
 
+MainMenuController::MainMenuController(std::shared_ptr<ISysProxy> sysProxy)
+	: GeneralControllerBase(sysProxy)
+{
+}
+
 void MainMenuController::startedEvent()
 {
 	GeneralControllerBase::startedEvent();
 
 	Size2d paintareaSize = sysProxy->getPaintAreaSize();
 
-	m_mainMenu = std::make_unique<MainMenuSprite>(sysProxy);
+	for (auto& btn : m_menuBtns) {
+		btn = std::make_unique<MainMenuItemSprite>(sysProxy);
+	}
 	m_title = std::make_unique<MainMenuTitleSprite>(sysProxy);
 
-	Size2d menuSize = m_mainMenu->getSize();
-	m_mainMenu->setPos((paintareaSize.w - menuSize.w) / 2, 230);
+	auto& playBtn = m_menuBtns[MENU_PLAY_BTN_IDX];
+	playBtn->setText("Play");
+	Size2d playBtnSize = playBtn->getSize();
+	playBtn->setPos(
+		(paintareaSize.w - playBtnSize.w) / 2,
+		MENU_TOP
+	);
+
+	auto& quitBtn = m_menuBtns[MENU_QUIT_BTN_IDX];
+	quitBtn->setText("Quit");
+	Size2d quitBtnSize = quitBtn->getSize();
+	quitBtn->setPos(
+		(paintareaSize.w - quitBtnSize.w) / 2,
+		playBtn->getY() + playBtnSize.h + MENU_ITEM_SPACING
+	);
 
 	Size2d titleSize = m_title->getSize();
 	m_title->setPos((paintareaSize.w - titleSize.w) / 2, 70);
@@ -31,19 +51,31 @@ void MainMenuController::startedEvent()
 
 void MainMenuController::mouseMoveEvent(int x, int y)
 {
-	m_mainMenu->mouseMoveEvent(x, y);
+	Point mousePt(x, y);
+
+	for (auto& btn : m_menuBtns) {
+		if (btn->getBounds().containsPoint(mousePt)) {
+			btn->setCostume(MainMenuItemSprite::COSTUME_HOVER);
+		} else {
+			btn->setCostume(MainMenuItemSprite::COSTUME_NORMAL);
+		}
+	}
 }
 
 void MainMenuController::loopEvent()
 {
 	GeneralControllerBase::loopEvent();
-	m_mainMenu->loopEvent();
+	for (auto& btn : m_menuBtns) {
+		btn->loopEvent();
+	}
 	m_title->loopEvent();
 }
 
 void MainMenuController::paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)
 {
 	GeneralControllerBase::paintEvent(canvas, invalidRect);
-	m_mainMenu->repaint(canvas, invalidRect);
+	for (auto& btn : m_menuBtns) {
+		btn->repaint(canvas, invalidRect);
+	}
 	m_title->repaint(canvas, invalidRect);
 }

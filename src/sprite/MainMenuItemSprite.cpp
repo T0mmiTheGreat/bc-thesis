@@ -11,16 +11,9 @@
 
 #include "sprite/MainMenuItemSprite.hpp"
 
-void MainMenuItemSprite::setIsScaled(bool value)
-{
-	if (m_isScaled != value) {
-		m_isScaled = value;
-		invalidateBounds();
-	}
-}
-
 MainMenuItemSprite::MainMenuItemSprite(std::shared_ptr<IPaintingProxy> paintingProxy)
 	: SpriteBase(paintingProxy)
+	, m_costume{COSTUME_NORMAL}
 {}
 
 Size2d MainMenuItemSprite::getSize()
@@ -34,8 +27,8 @@ void MainMenuItemSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidR
 
 	// Bounds
 	canvas->setStrokingColor(Color::white());
-	int rectW = (m_isScaled ? RECT_WIDTH_SCALED : RECT_WIDTH_NORMAL);
-	int rectH = (m_isScaled ? RECT_HEIGHT_SCALED : RECT_HEIGHT_NORMAL);
+	int rectW = ((m_costume == COSTUME_HOVER) ? RECT_WIDTH_SCALED : RECT_WIDTH_NORMAL);
+	int rectH = ((m_costume == COSTUME_HOVER) ? RECT_HEIGHT_SCALED : RECT_HEIGHT_NORMAL);
 	int rectX = x + ((spriteSize.w - rectW) / 2);
 	int rectY = y + ((spriteSize.h - rectH) / 2);
 	canvas->strokeRectangle(rectX, rectY, rectW, rectH);
@@ -63,9 +56,16 @@ void MainMenuItemSprite::setText(const std::string& value)
 	}
 }
 
-void MainMenuItemSprite::mouseMoveEvent(int x, int y)
+MainMenuItemSprite::Costume MainMenuItemSprite::getCostume() const
 {
-	Rect spriteBounds = getBounds();
-	bool isMouseHover = spriteBounds.containsPoint(Point(x, y));
-	setIsScaled(isMouseHover);
+	return m_costume;
+}
+
+void MainMenuItemSprite::setCostume(MainMenuItemSprite::Costume costume)
+{
+	if (m_costume != costume) {
+		paintingProxy->invalidateRect(getBounds());
+		m_costume = costume;
+		paintingProxy->invalidateRect(getBounds());
+	}
 }

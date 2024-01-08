@@ -23,6 +23,11 @@
  * @details On hover logic is also implemented here.
  */
 class MainMenuItemSprite : public SpriteBase {
+public:
+	enum Costume {
+		COSTUME_NORMAL,
+		COSTUME_HOVER,
+	};
 private:
 	// Non-scaled rectangle width
 	const int RECT_WIDTH_NORMAL = 165;
@@ -36,9 +41,7 @@ private:
 	const FontId FONT = FONT_BRLNSTR_20;
 
 	std::string m_text;
-	bool m_isScaled;
-
-	void setIsScaled(bool value);
+	Costume m_costume;
 public:
 	MainMenuItemSprite(std::shared_ptr<IPaintingProxy> paintingProxy);
 
@@ -67,15 +70,15 @@ public:
 	 * @brief Setter for the `m_text`.
 	 */
 	void setText(const std::string& value);
+	
 	/**
-	 * @brief A mouse cursor moved.
-	 * 
-	 * @param x The x coordinate. 0 is the left border of the window. The
-	 *          coordinate increases to the right.
-	 * @param y The y coordinate. 0 is the top border of the window. The
-	 *          coordinate increases downwards.
+	 * @brief Getter for the `m_costume`.
 	 */
-	void mouseMoveEvent(int x, int y);
+	Costume getCostume() const;
+	/**
+	 * @brief Setter for the `m_costume`.
+	 */
+	void setCostume(Costume costume);
 };
 
 #endif // MAINMENUITEMSPRITE_HPP
