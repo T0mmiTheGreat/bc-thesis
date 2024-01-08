@@ -22,15 +22,21 @@
 
 class MainMenuController : public GeneralControllerBase {
 private:
+	// Space between menu items
 	static constexpr int MENU_ITEM_SPACING = 10;
+	// Y position of the first menu item
 	static constexpr int MENU_TOP = 230;
 
+	// Indices of the buttons in the buttons array (and the length of the array)
 	static constexpr int MENU_PLAY_BTN_IDX = 0;
 	static constexpr int MENU_QUIT_BTN_IDX = MENU_PLAY_BTN_IDX + 1;
 	static constexpr int MENU_ITEM_COUNT = MENU_QUIT_BTN_IDX + 1;
 
+	// Sprites
 	std::array<std::unique_ptr<MainMenuItemSprite>, MENU_ITEM_COUNT> m_menuBtns;
 	std::unique_ptr<MainMenuTitleSprite> m_title;
+
+	void createSprites();
 public:
 	MainMenuController(std::shared_ptr<ISysProxy> sysProxy);
 	void startedEvent() override;
