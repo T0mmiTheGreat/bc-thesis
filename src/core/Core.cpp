@@ -52,8 +52,6 @@ void Core::inputToVector(const PlayerInputState& input, double& x, double& y)
 
 void Core::tick()
 {
-	static constexpr double hpDrain = TICK_INTERVAL / 3400.0;
-
 	for (auto player : m_players) {
 		playerTick(player);
 	}
@@ -63,8 +61,8 @@ void Core::tick()
 			auto plA = m_players[i];
 			auto plB = m_players[j];
 			if (distance(plA->getX(), plA->getY(), plB->getX(), plB->getY()) <= plA->getSize() + plB->getSize()) {
-				plA->setHp(plA->getHp() - hpDrain);
-				plB->setHp(plB->getHp() - hpDrain);
+				plA->setHp(plA->getHp() - HP_DRAIN);
+				plB->setHp(plB->getHp() - HP_DRAIN);
 			}
 		}
 	}

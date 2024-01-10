@@ -20,7 +20,9 @@ private:
 	// sin(pi/4)
 	static constexpr double DIAG_MOVEMENT_PERAXIS_LENGTH = 0.70710678118654752440084436210485;
 	// Value to multiply with the player speed
-	static constexpr double SPEED_FACTOR =  TICK_INTERVAL / 6.0;
+	static constexpr double SPEED_FACTOR = TICK_INTERVAL / 6.0;
+	// HP depleted per frame
+	static constexpr double HP_DRAIN = TICK_INTERVAL / 3400.0;
 
 	PlayerList m_players;
 
