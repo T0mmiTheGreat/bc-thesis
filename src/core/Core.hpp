@@ -19,6 +19,8 @@ private:
 	// sqrt(1/2)
 	// sin(pi/4)
 	static constexpr double DIAG_MOVEMENT_PERAXIS_LENGTH = 0.70710678118654752440084436210485;
+	// Value to multiply with the player speed
+	static constexpr double SPEED_FACTOR =  TICK_INTERVAL / 6.0;
 
 	PlayerList m_players;
 

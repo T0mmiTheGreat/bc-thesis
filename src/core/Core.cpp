@@ -15,12 +15,10 @@
 
 void Core::playerTick(std::shared_ptr<IPlayerState> player)
 {
-	static constexpr double speedFactor = TICK_INTERVAL / 6.0;
-
 	auto playerInput = player->getPlayerInputObject()->readInput();
 	double vecX, vecY;
 	inputToVector(playerInput, vecX, vecY);
-	player->deltaPos(vecX * player->getSpeed() * speedFactor, vecY * player->getSpeed() * speedFactor);
+	player->deltaPos(vecX * player->getSpeed() * SPEED_FACTOR, vecY * player->getSpeed() * SPEED_FACTOR);
 }
 
 void Core::inputToVector(const PlayerInputState& input, double& x, double& y)
