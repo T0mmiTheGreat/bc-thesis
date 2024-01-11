@@ -41,6 +41,12 @@ protected:
 	 */
 	virtual std::unique_ptr<IControllerChild> createReplacement();
 public:
+	/**
+	 * @brief Constructs a new GeneralControllerBase object.
+	 * 
+	 * @param sysProxy Proxy for communication with the system manager
+	 *                 (dependency injection).
+	 */
 	GeneralControllerBase(std::shared_ptr<ISysProxy> sysProxy);
 	/**
 	 * @brief The controller should start.

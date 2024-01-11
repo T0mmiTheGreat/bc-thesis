@@ -17,6 +17,8 @@
 #include "sprite/ISprite.hpp"
 #include "paintingproxy/IPaintingProxy.hpp"
 
+// TODO: Begin change + End change (to optimize painting)
+
 /**
  * @brief Base class for all sprites.
  */

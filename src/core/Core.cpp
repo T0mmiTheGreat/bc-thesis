@@ -15,9 +15,12 @@
 
 void Core::playerTick(std::shared_ptr<IPlayerState> player)
 {
+	// Read input
 	auto playerInput = player->getPlayerInputObject()->readInput();
+	// Input to vector
 	double vecX, vecY;
 	inputToVector(playerInput, vecX, vecY);
+	// Move player
 	player->deltaPos(vecX * player->getSpeed() * SPEED_FACTOR, vecY * player->getSpeed() * SPEED_FACTOR);
 }
 
@@ -30,6 +33,8 @@ void Core::inputToVector(const PlayerInputState& input, double& x, double& y)
 	bool isVertMove = (input.up != input.down);
 
 	if (!isHorzMove && !isVertMove) {
+		// Doesn't move
+
 		x = 0.0;
 		y = 0.0;
 	} else if (isHorzMove && isVertMove) {
@@ -52,10 +57,12 @@ void Core::inputToVector(const PlayerInputState& input, double& x, double& y)
 
 void Core::tick()
 {
+	// Tick players
 	for (auto player : m_players) {
 		playerTick(player);
 	}
 
+	// Drain HP
 	for (int i = 0; i < m_players.size(); i++) {
 		for (int j = i + 1; j < m_players.size(); j++) {
 			auto plA = m_players[i];

@@ -30,14 +30,18 @@ SDLManager::SDLManager()
 
 void SDLManager::runEventLoop()
 {
+	// There would be no point in running the event loop if there wasn't
+	// a subscriber which subscribes to the events
 	assert(m_subscriber != nullptr);
 
+	// Send start event and modify the eventLoopState property accordingly
 	this->m_eventLoopstate = EVENTLOOP_PRESTARTEVENT;
 	m_subscriber->startEvent();
 	this->m_eventLoopstate = EVENTLOOP_RUNNING;
 
 	window.Show();
 
+	// The event loop itself
 	SDL_Event ev;
 	bool isRunning = true;
 	while (isRunning) {
@@ -84,14 +88,14 @@ KeyCode SDLManager::sdlKeycodeToEnum(SDL_Keycode sdlk)
 {
 	switch (sdlk) {
 		case SDLK_RETURN: return KEY_RETURN;
-		case SDLK_LEFT: return KEY_LEFT_ARROW;
-		case SDLK_UP: return KEY_UP_ARROW;
-		case SDLK_RIGHT: return KEY_RIGHT_ARROW;
-		case SDLK_DOWN: return KEY_DOWN_ARROW;
-		case SDLK_a: return KEY_A;
-		case SDLK_w: return KEY_W;
-		case SDLK_d: return KEY_D;
-		case SDLK_s: return KEY_S;
+		case SDLK_LEFT:   return KEY_LEFT_ARROW;
+		case SDLK_UP:     return KEY_UP_ARROW;
+		case SDLK_RIGHT:  return KEY_RIGHT_ARROW;
+		case SDLK_DOWN:   return KEY_DOWN_ARROW;
+		case SDLK_a:      return KEY_A;
+		case SDLK_w:      return KEY_W;
+		case SDLK_d:      return KEY_D;
+		case SDLK_s:      return KEY_S;
 		// TODO: more keys
 		default: return KEY_UNKNOWN;
 	}
@@ -100,9 +104,9 @@ KeyCode SDLManager::sdlKeycodeToEnum(SDL_Keycode sdlk)
 MouseBtn SDLManager::sdlMouseBtnToEnum(Uint8 btn)
 {
 	switch (btn) {
-		case SDL_BUTTON_LEFT: return BTN_LEFT;
+		case SDL_BUTTON_LEFT:   return BTN_LEFT;
 		case SDL_BUTTON_MIDDLE: return BTN_MIDDLE;
-		case SDL_BUTTON_RIGHT: return BTN_RIGHT;
+		case SDL_BUTTON_RIGHT:  return BTN_RIGHT;
 		default: return BTN_UNKNOWN;
 	}
 }

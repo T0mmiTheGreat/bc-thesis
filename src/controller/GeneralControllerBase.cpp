@@ -23,6 +23,7 @@ GeneralControllerBase::GeneralControllerBase(std::shared_ptr<ISysProxy> sysProxy
 
 void GeneralControllerBase::startedEvent()
 {
+	// Ignore
 }
 
 void GeneralControllerBase::finishedEvent()
@@ -44,22 +45,27 @@ void GeneralControllerBase::abortedEvent()
 
 void GeneralControllerBase::keyDownEvent(KeyCode key)
 {
+	// Ignore
 }
 
 void GeneralControllerBase::mouseBtnDownEvent(MouseBtn btn)
 {
+	// Ignore
 }
 
 void GeneralControllerBase::mouseMoveEvent(int x, int y)
 {
+	// Ignore
 }
 
 void GeneralControllerBase::loopEvent()
 {
+	// Ignore
 }
 
 void GeneralControllerBase::paintEvent(std::shared_ptr<ICanvas> canvas, Rect & invalidRect)
 {
+	// Ignore
 }
 
 void GeneralControllerBase::setSwapCallback(SwapCallback f)

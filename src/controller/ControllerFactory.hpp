@@ -23,10 +23,40 @@
  */
 class ControllerFactory {
 public:
+	/**
+	 * @brief Constructs a new RootController object.
+	 * 
+	 * @param sysProxy Proxy for communication with the system manager
+	 *                 (dependency injection). 
+	 */
 	static std::shared_ptr<IRootController> createRootController(std::shared_ptr<ISysProxy> sysProxy);
+	/**
+	 * @brief Constructs a new InitialController object.
+	 * 
+	 * @param sysProxy Proxy for communication with the system manager
+	 *                 (dependency injection). 
+	 */
 	static std::unique_ptr<IControllerChild> createInitialController(std::shared_ptr<ISysProxy> sysProxy);
+	/**
+	 * @brief Constructs a new LogoController object.
+	 * 
+	 * @param sysProxy Proxy for communication with the system manager
+	 *                 (dependency injection). 
+	 */
 	static std::unique_ptr<IControllerChild> createLogoController(std::shared_ptr<ISysProxy> sysProxy);
+	/**
+	 * @brief Constructs a new MainMenuController object.
+	 * 
+	 * @param sysProxy Proxy for communication with the system manager
+	 *                 (dependency injection). 
+	 */
 	static std::unique_ptr<IControllerChild> createMainMenuController(std::shared_ptr<ISysProxy> sysProxy);
+	/**
+	 * @brief Constructs a new InGameController object.
+	 * 
+	 * @param sysProxy Proxy for communication with the system manager
+	 *                 (dependency injection). 
+	 */
 	static std::unique_ptr<IControllerChild> createInGameController(std::shared_ptr<ISysProxy> sysProxy);
 };
 

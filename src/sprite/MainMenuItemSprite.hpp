@@ -19,16 +19,18 @@
 
 /**
  * @brief Sprite for main menu items.
- * 
- * @details On hover logic is also implemented here.
  */
 class MainMenuItemSprite : public SpriteBase {
 public:
 	enum Costume {
+		// Default appearance
 		COSTUME_NORMAL,
+		// When mouse is over the item
 		COSTUME_HOVER,
 	};
 private:
+	// FIXME: static constexpr
+
 	// Non-scaled rectangle width
 	const int RECT_WIDTH_NORMAL = 165;
 	// Non-scaled rectangle height

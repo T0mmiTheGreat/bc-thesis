@@ -32,7 +32,7 @@ KeyboardPlayerInput KeyboardPlayerInput::constructArrows()
 PlayerInputState KeyboardPlayerInput::readInput()
 {
 	PlayerInputState res;
-	auto proxy = SysProxyFactory::createDefault();
+	auto proxy = SysProxyFactory::createDefault(); // FIXME: uh... how to...?
 	
 	res.left = proxy->isKeyPressed(m_keyLeft);
 	res.up = proxy->isKeyPressed(m_keyUp);

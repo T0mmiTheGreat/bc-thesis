@@ -23,13 +23,18 @@ std::unique_ptr<IControllerChild> LogoController::createReplacement()
 void LogoController::startedEvent()
 {
 	GeneralControllerBase::startedEvent();
+
+	// Create logo sprite
 	m_sprite = std::make_unique<LogoSprite>(sysProxy);
 
-	Size2d winSize = sysProxy->getPaintAreaSize();
-	Size2d spriteSize = m_sprite->getSize();
-	Size2d remSize = winSize - spriteSize;
+	// Sprite position calculations
+	Size2d winSize = sysProxy->getPaintAreaSize(); // Paint area size
+	Size2d spriteSize = m_sprite->getSize();       // Sprite size
+	Size2d remSize = winSize - spriteSize;         // Remaining size (paint area minus sprite)
 
+	// Set position (window center)
 	m_sprite->setPos(remSize.w / 2, remSize.h / 2);
+	// Animate
 	m_sprite->startAnimation();
 }
 

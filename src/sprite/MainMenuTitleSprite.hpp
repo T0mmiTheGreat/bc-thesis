@@ -19,7 +19,9 @@
 
 class MainMenuTitleSprite : public SpriteBase {
 private:
+	// The title text to show
 	const std::string TITLE_TEXT = "MAIN TITLE";
+	// The font of the title text
 	const FontId TITLE_FONT = FONT_SEGOEPR_66;
 public:
 	MainMenuTitleSprite(std::shared_ptr<IPaintingProxy> paintingProxy);

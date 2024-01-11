@@ -40,6 +40,7 @@ void MainMenuItemSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidR
 	int textY = y + ((spriteSize.h - textSize.h) / 2);
 	canvas->fillText(textX, textY, m_text, FONT);
 
+	// We might have repainted an area bigger than invalidRect
 	invalidRect += getBounds();
 }
 
@@ -64,8 +65,10 @@ MainMenuItemSprite::Costume MainMenuItemSprite::getCostume() const
 void MainMenuItemSprite::setCostume(MainMenuItemSprite::Costume costume)
 {
 	if (m_costume != costume) {
+		// Paint over the current costume
 		paintingProxy->invalidateRect(getBounds());
 		m_costume = costume;
+		// Paint the new costume
 		paintingProxy->invalidateRect(getBounds());
 	}
 }

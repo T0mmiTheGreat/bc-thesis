@@ -14,6 +14,11 @@
 
 #include "playerinput/PlayerInputBase.hpp"
 
+/**
+ * @brief Player input which does not read any input.
+ * 
+ * @details There are surely situations where this class finds its use.
+ */
 class ImmobilePlayerInput : public PlayerInputBase {
 public:
 	PlayerInputState readInput() override;

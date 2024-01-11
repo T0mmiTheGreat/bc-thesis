@@ -22,6 +22,14 @@ private:
 	KeyCode m_keyRight;
 	KeyCode m_keyDown;
 public:
+	/**
+	 * @brief Constructs a new PlayerInputFactory object.
+	 * 
+	 * @param keyLeft Key code for the "move left" action.
+	 * @param keyUp Key code for the "move up" action.
+	 * @param keyRight Key code for the "move right" action.
+	 * @param keyDown Key code for the "move down" action.
+	 */
 	KeyboardPlayerInput(KeyCode keyLeft, KeyCode keyUp, KeyCode keyRight,
 		KeyCode keyDown);
 	static KeyboardPlayerInput constructWSAD();

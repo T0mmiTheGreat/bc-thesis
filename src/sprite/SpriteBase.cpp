@@ -65,10 +65,13 @@ void SpriteBase::setY(int value)
 void SpriteBase::setPos(int x, int y)
 {
 	if (getX() != x || getY() != y) {
+		// Remember old values
 		int oldX = this->x;
 		int oldY = this->y;
+		// Set new values
 		this->x = x;
 		this->y = y;
+		// Notify
 		posChangedEvent(oldX, oldY, x, y);
 	}
 }

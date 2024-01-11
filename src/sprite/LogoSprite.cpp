@@ -19,9 +19,12 @@ LogoSprite::LogoSprite(std::shared_ptr<IPaintingProxy> paintingProxy)
 
 void LogoSprite::startAnimationPhase(AnimationPhase phase)
 {
+	// Animation phase length
 	double animTime = 0.0;
+	// Sprite brightness at the start of the animation phase
 	uint8_t opacity = 0;
 
+	// Set variable values
 	switch (phase) {
 		case ANIM_FADEIN:
 			animTime = FADEIN_TIME;
@@ -37,8 +40,11 @@ void LogoSprite::startAnimationPhase(AnimationPhase phase)
 			break;
 	}
 
+	// Create continuous animation instance
 	m_anim = AnimationContinuous(animTime);
+	// Set the current animation phase
 	m_animPhase = phase;
+	// Set the initial opacity (brightness)
 	m_opacity = opacity;
 }
 
@@ -59,12 +65,21 @@ void LogoSprite::nextAnimationPhase()
 
 void LogoSprite::loopEventAnimation()
 {
+	// Nothing to animate
 	if (!isAnimationRunning()) return;
 
 	if (m_timer.isLap()) {
+		// Next animation frame
+
 		if (m_anim.isCompleted()) {
+			// Animation phase finished - start a new one (or stop animation)
+
 			nextAnimationPhase();
+			// FIXME: exit if animation is not running
 		}
+
+		// Progress the animation phase
+		// FIXME: rename methods - loopEvent -> frameEvent ...?
 		switch (m_animPhase) {
 			case ANIM_FADEIN:
 				loopEventAnimFadein();
@@ -76,6 +91,8 @@ void LogoSprite::loopEventAnimation()
 				loopEventAnimFadeout();
 				break;
 		}
+
+		// Request repaint
 		invalidateBounds();
 	}
 }
@@ -121,7 +138,9 @@ void LogoSprite::loopEvent()
 
 void LogoSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)
 {
+	// Paint
 	canvas->setFillingColor(Color(m_opacity, m_opacity, m_opacity));
 	canvas->fillText(getX(), getY(), LOGO_TEXT, LOGO_FONT);
+	// We might have repainted an area bigger than invalidRect
 	invalidRect += getBounds();
 }

@@ -16,6 +16,11 @@
 
 #include "types.hpp"
 
+/**
+ * @brief Proxy for communication with the painting manager.
+ * 
+ * @remark Subset of sys proxy, used by objects responsible for drawing.
+ */
 class IPaintingProxy {
 public:
 	virtual ~IPaintingProxy() {}

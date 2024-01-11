@@ -16,6 +16,8 @@
 
 class DefaultPlayerState : public PlayerStateBase {
 public:
+	// Default values, i.e., not provided in the constructor
+
 	static constexpr double DEFAULT_BASE_SIZE = 35.0;
 	static constexpr double DEFAULT_SIZE_POWER = 1.0;
 	static constexpr double DEFAULT_BASE_SPEED = 3.0;
@@ -26,6 +28,16 @@ public:
 	const double baseSpeed;
 	const double speedPower;
 public:
+	DefaultPlayerState();
+	/**
+	 * @brief Constructs a new DefaultPlayerState object.
+	 * 
+	 * @param startX Initial X coordinate.
+	 * @param startY Initial Y coordinate.
+	 * @param playerInput Player input instance.
+	 */
+	DefaultPlayerState(double startX, double startY,
+		std::shared_ptr<IPlayerInput> playerInput);
 	/**
 	 * @brief Constructs a new DefaultPlayerState object.
 	 * 
@@ -33,6 +45,7 @@ public:
 	 * @param startY Starting Y position.
 	 * @param startHp Starting health points (1.0 is full HP, 2.0 is 2x full
 	 *                HP, etc.).
+	 * @param playerInput Player input instance.
 	 * @param baseSize Player sprite radius at full HP.
 	 * @param sizePower Power to apply to current HP in size calculations.
 	 *                  Interval (0,1) causes the player size to change faster
@@ -47,9 +60,6 @@ public:
 	DefaultPlayerState(double startX, double startY, double startHp,
 		std::shared_ptr<IPlayerInput> playerInput, double baseSize,
 		double sizePower, double baseSpeed, double speedPower);
-	DefaultPlayerState(double startX, double startY,
-		std::shared_ptr<IPlayerInput> playerInput);
-	DefaultPlayerState();
 	
 	double getSize() override;
 	double getSpeed() override;

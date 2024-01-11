@@ -74,6 +74,8 @@ std::shared_ptr<IPlayerInput> PlayerStateBase::getPlayerInputObject()
 
 void PlayerStateBase::setPlayerInputObject(std::shared_ptr<IPlayerInput> value)
 {
+	// TODO: Constructor doesn't have this check. Should it create a default
+	// player input if value is nullptr?
 	assert(value != nullptr);
 	playerInput = value;
 }

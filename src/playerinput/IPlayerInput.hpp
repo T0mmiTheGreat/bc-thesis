@@ -12,6 +12,9 @@
 #ifndef IPLAYERINPUT_HPP
 #define IPLAYERINPUT_HPP
 
+/**
+ * @brief Structure of flags representing the action requested by player.
+ */
 struct PlayerInputState {
 	bool left: 1;
 	bool up: 1;
@@ -26,9 +29,15 @@ struct PlayerInputState {
 	{}
 };
 
+/**
+ * @brief Interface for classes which send player input to the game core.
+ */
 class IPlayerInput {
 public:
 	virtual ~IPlayerInput() {}
+	/**
+	 * @brief Obtains the actions requested by the player.
+	 */
 	virtual PlayerInputState readInput() = 0;
 };
 

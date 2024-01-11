@@ -17,6 +17,8 @@
 #include "types.hpp"
 #include "canvas/ICanvas.hpp"
 
+// FIXME: Too many dependencies - should animation be separate from the sprite?
+
 /**
  * @brief Sprite.
  */

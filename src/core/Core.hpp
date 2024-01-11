@@ -24,9 +24,27 @@ private:
 	// HP depleted per frame
 	static constexpr double HP_DRAIN = TICK_INTERVAL / 3400.0;
 
+	/**
+	 * @brief Player list.
+	 */
 	PlayerList m_players;
 
+	/**
+	 * @brief "Tick" a player.
+	 * 
+	 * @param player The player to "tick".
+	 */
 	void playerTick(std::shared_ptr<IPlayerState> player);
+	/**
+	 * @brief Convert player input value to a vector.
+	 * 
+	 * @details Based on the player input creates a unit vector in the direction
+	 *          the player wants to move.
+	 * 
+	 * @param input The player input.
+	 * @param x Vector X coordinate.
+	 * @param y Vector Y coordinate.
+	 */
 	static void inputToVector(const PlayerInputState& input, double& x, double& y);
 public:
 	void tick() override;

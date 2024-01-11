@@ -17,8 +17,19 @@
 #include "types.hpp"
 #include "playerinput/IPlayerInput.hpp"
 
+/**
+ * @brief Factory for the IPlayerInput interface.
+ */
 class PlayerInputFactory {
 public:
+	/**
+	 * @brief Constructs a new PlayerInputFactory object.
+	 * 
+	 * @param keyLeft Key code for the "move left" action.
+	 * @param keyUp Key code for the "move up" action.
+	 * @param keyRight Key code for the "move right" action.
+	 * @param keyDown Key code for the "move down" action.
+	 */
 	static std::shared_ptr<IPlayerInput> createKeyboardPlayerInput(
 		KeyCode keyLeft, KeyCode keyUp, KeyCode keyRight, KeyCode keyDown);
 	static std::shared_ptr<IPlayerInput> createKeyboardPlayerInputWSAD();

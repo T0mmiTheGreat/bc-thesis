@@ -17,21 +17,31 @@
 #include "types.hpp"
 #include "sprite/SpriteBase.hpp"
 
+/**
+ * @brief The developer's logo.
+ */
 class LogoSprite : public SpriteBase {
 private:
+	// The animation has 3 phases: logo fades in, full brightness, fades out
 	enum AnimationPhase {
 		ANIM_FADEIN,
 		ANIM_FULLBRIGHT,
 		ANIM_FADEOUT,
 	};
 private:
+	// The logo text to show
 	const std::string LOGO_TEXT = "Awesome Logo";
+	// The font of the logo text
 	const FontId LOGO_FONT = FONT_OLDENGL_72;
 
+	// Approx. 60 animation frames per second
 	const std::clock_t TIMER_INTERVAL = 17;
 
+	// Number of milliseconds it takes to fade in
 	const double FADEIN_TIME = 1088.0;
+	// Number of milliseconds the logo is shown at full brightness
 	const double FULLBRIGHT_TIME = 612.0;
+	// Number of milliseconds it takes to fade out
 	const double FADEOUT_TIME = FADEIN_TIME;
 
 	Timer m_timer;
@@ -40,11 +50,31 @@ private:
 
 	uint8_t m_opacity;
 
+	/**
+	 * @brief Initializes an animation phase.
+	 */
 	void startAnimationPhase(AnimationPhase phase);
+	/**
+	 * @brief Based on the current animation phase goes to the next phase.
+	 * 
+	 * @remark If the current phase is the last one, stops the animation.
+	 */
 	void nextAnimationPhase();
+	/**
+	 * @brief Animation processing.
+	 */
 	void loopEventAnimation();
+	/**
+	 * @brief Fade in animation processing.
+	 */
 	void loopEventAnimFadein();
+	/**
+	 * @brief Full brightness "animation" processing.
+	 */
 	void loopEventAnimFullbright();
+	/**
+	 * @brief Fade out animation processing.
+	 */
 	void loopEventAnimFadeout();
 public:
 	LogoSprite(std::shared_ptr<IPaintingProxy> paintingProxy);

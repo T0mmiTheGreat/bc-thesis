@@ -14,10 +14,17 @@
 
 #include <cmath>
 
+// FIXME: constexpr
+/**
+ * @brief Calculates the square of `x`.
+ */
 inline double sqr(double x) {
 	return x*x;
 }
 
+/**
+ * @brief Calculates the distance between points [x1,y1], [x2,y2].
+ */
 inline double distance(double x1, double y1, double x2, double y2) {
 	return std::sqrt(sqr(x2 - x1) + sqr(y2 - y1));
 }

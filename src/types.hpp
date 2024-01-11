@@ -71,17 +71,34 @@ typedef enum MouseBtn {
 	BTN_RIGHT,
 } MouseBtn;
 
+/**
+ * @brief Fonts used by the program.
+ * 
+ * @note The naming is "FONT_<font_file_name>_<font_size>"
+ */
 enum FontId {
-	FONT_OLDENGL_72 = 0,
-	FONT_SEGOEPR_66,
-	FONT_BRLNSTR_20,
-	COUNT_FONTID
+	FONT_OLDENGL_72 = 0, // Old English Text MT
+	FONT_SEGOEPR_66,     // Segoe Print
+	FONT_BRLNSTR_20,     // Berlin Sans FB
+	// XXX: Add new fonts to SDL manager too (constructor)
+
+	COUNT_FONTID // Number of fonts used by the program
 };
+// Number of fonts used by the program
+// FIXME: constexpr is better...?
 const size_t fontIdCount = (size_t)COUNT_FONTID;
 
+/**
+ * @brief Converts milliseconds to clocks.
+ * 
+ * @tparam T Scalar type.
+ */
 template <typename T>
 inline constexpr T msToClocks(T ms);
 
+/**
+ * @brief Structure representing X and Y coordinate (fixed point).
+ */
 struct Point {
 	int x;
 	int y;
@@ -111,18 +128,48 @@ struct Size2d {
 		: Size2d(0, 0)
 	{}
 
+	/**
+	 * @brief Adds up two Size2d objects.
+	 * 
+	 * @return A new Size2d which's width is the sum of the widths of the two
+	 *         operands (same for height).
+	 */
 	Size2d operator+ (const Size2d& rhs) const {
 		return Size2d(this->w + rhs.w, this->h + rhs.h);
 	}
+	/**
+	 * @brief Negates a Size2d object.
+	 * 
+	 * @return A new Size2d which's each dimension is negation of that dimension
+	 *         in the operand.
+	 */
 	Size2d operator- () const {
 		return Size2d(-w, -h);
 	}
+	/**
+	 * @brief Subtracts two Size2d objects.
+	 * 
+	 * @return A new Size2d which's width is the difference of the widths of the
+	 *         two operands (same for height).
+	 */
 	Size2d operator- (const Size2d& rhs) const {
 		return *this + (-rhs);
 	}
+	/**
+	 * @brief Increments a Size2d object.
+	 * 
+	 * @return Reference to self which's width has been incremented by the width
+	 *         of the operand (same for height).
+	 */
 	Size2d& operator+= (const Size2d& rhs) {
 		return (*this = *this + rhs);
 	}
+	/**
+	 * @brief Decrements a Size2d object.
+	 * 
+	 * @return Reference to self which's width has been decremented by the width
+	 *         of the operand (same for height).
+	 */
 	Size2d& operator-= (const Size2d& rhs) {
 		return (*this = *this - rhs);
 	}
@@ -177,6 +224,9 @@ struct Rect {
 	 * @brief Get Y coordinate of the bottom side of the rectangle.
 	 */
 	int getBottom() const { return y + h; }
+	/**
+	 * @brief Get the structure containing the width and height of the rectangle.
+	 */
 	Size2d getSize() const { return Size2d(w, h); }
 
 	/**
@@ -195,6 +245,12 @@ struct Rect {
 		return r;
 	}
 
+	/**
+	 * @brief Returns true if a point is within the bounds of the rectangle.
+	 * 
+	 * @remark Inclusive, i.e., returns true even if it lies on the rectangle
+	 *         bound.
+	 */
 	bool containsPoint(const Point& pt) const {
 		return (x <= pt.x && pt.x <= getRight()) && (y <= pt.y && pt.y <= getBottom());
 	}
