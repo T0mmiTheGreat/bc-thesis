@@ -15,22 +15,25 @@
 #include "playerinput/ImmobilePlayerInput.hpp"
 
 std::shared_ptr<IPlayerInput> PlayerInputFactory::createKeyboardPlayerInput(
-	KeyCode keyLeft, KeyCode keyUp, KeyCode keyRight, KeyCode keyDown)
+	std::shared_ptr<ISysProxyPlayerInput> sysProxy, KeyCode keyLeft,
+	KeyCode keyUp, KeyCode keyRight, KeyCode keyDown)
 {
-	return std::make_shared<KeyboardPlayerInput>(keyLeft, keyUp, keyRight,
-		keyDown);
+	return std::make_shared<KeyboardPlayerInput>(sysProxy, keyLeft, keyUp,
+		keyRight, keyDown);
 }
 
-std::shared_ptr<IPlayerInput> PlayerInputFactory::createKeyboardPlayerInputWSAD()
+std::shared_ptr<IPlayerInput> PlayerInputFactory::createKeyboardPlayerInputWSAD(
+	std::shared_ptr<ISysProxyPlayerInput> sysProxy)
 {
 	return std::make_shared<KeyboardPlayerInput>(
-		KeyboardPlayerInput::constructWSAD());
+		KeyboardPlayerInput::constructWSAD(sysProxy));
 }
 
-std::shared_ptr<IPlayerInput> PlayerInputFactory::createKeyboardPlayerInputArrows()
+std::shared_ptr<IPlayerInput> PlayerInputFactory::createKeyboardPlayerInputArrows(
+	std::shared_ptr<ISysProxyPlayerInput> sysProxy)
 {
 	return std::make_shared<KeyboardPlayerInput>(
-		KeyboardPlayerInput::constructArrows());
+		KeyboardPlayerInput::constructArrows(sysProxy));
 }
 
 std::shared_ptr<IPlayerInput> PlayerInputFactory::createImmobilePlayerInput()

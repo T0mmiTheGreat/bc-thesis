@@ -12,11 +12,15 @@
 #ifndef KEYBOARDPLAYERINPUT_HPP
 #define KEYBOARDPLAYERINPUT_HPP
 
+#include <memory>
+
 #include "types.hpp"
 #include "playerinput/PlayerInputBase.hpp"
+#include "playerinput/ISysProxyPlayerInput.hpp"
 
 class KeyboardPlayerInput : public PlayerInputBase {
 private:
+	std::shared_ptr<ISysProxyPlayerInput> m_sysProxy;
 	KeyCode m_keyLeft;
 	KeyCode m_keyUp;
 	KeyCode m_keyRight;
@@ -25,15 +29,18 @@ public:
 	/**
 	 * @brief Constructs a new PlayerInputFactory object.
 	 * 
+	 * @param sysProxy 
 	 * @param keyLeft Key code for the "move left" action.
 	 * @param keyUp Key code for the "move up" action.
 	 * @param keyRight Key code for the "move right" action.
 	 * @param keyDown Key code for the "move down" action.
 	 */
-	KeyboardPlayerInput(KeyCode keyLeft, KeyCode keyUp, KeyCode keyRight,
-		KeyCode keyDown);
-	static KeyboardPlayerInput constructWSAD();
-	static KeyboardPlayerInput constructArrows();
+	KeyboardPlayerInput(std::shared_ptr<ISysProxyPlayerInput> sysProxy,
+		KeyCode keyLeft, KeyCode keyUp, KeyCode keyRight, KeyCode keyDown);
+	static KeyboardPlayerInput constructWSAD(
+		std::shared_ptr<ISysProxyPlayerInput> sysProxy);
+	static KeyboardPlayerInput constructArrows(
+		std::shared_ptr<ISysProxyPlayerInput> sysProxy);
 	PlayerInputState readInput() override;
 };
 

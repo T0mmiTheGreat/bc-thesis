@@ -16,6 +16,7 @@
 
 #include "types.hpp"
 #include "playerinput/IPlayerInput.hpp"
+#include "playerinput/ISysProxyplayerInput.hpp"
 
 /**
  * @brief Factory for the IPlayerInput interface.
@@ -31,9 +32,12 @@ public:
 	 * @param keyDown Key code for the "move down" action.
 	 */
 	static std::shared_ptr<IPlayerInput> createKeyboardPlayerInput(
-		KeyCode keyLeft, KeyCode keyUp, KeyCode keyRight, KeyCode keyDown);
-	static std::shared_ptr<IPlayerInput> createKeyboardPlayerInputWSAD();
-	static std::shared_ptr<IPlayerInput> createKeyboardPlayerInputArrows();
+		std::shared_ptr<ISysProxyPlayerInput> sysProxy, KeyCode keyLeft,
+		KeyCode keyUp, KeyCode keyRight, KeyCode keyDown);
+	static std::shared_ptr<IPlayerInput> createKeyboardPlayerInputWSAD(
+		std::shared_ptr<ISysProxyPlayerInput> sysProxy);
+	static std::shared_ptr<IPlayerInput> createKeyboardPlayerInputArrows(
+		std::shared_ptr<ISysProxyPlayerInput> sysProxy);
 	static std::shared_ptr<IPlayerInput> createImmobilePlayerInput();
 };
 

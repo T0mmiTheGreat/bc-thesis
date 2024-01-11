@@ -22,10 +22,10 @@ InGameController::InGameController(std::shared_ptr<ISysProxy> sysProxy)
 	, m_core{std::make_unique<Core>()}
 	, m_tickTimer(ICore::TICK_INTERVAL)
 {
-	auto player1Input = PlayerInputFactory::createKeyboardPlayerInputWSAD();
+	auto player1Input = PlayerInputFactory::createKeyboardPlayerInputWSAD(sysProxy);
 	auto player1 = PlayerStateFactory::createDefault(200.0, 200.0, player1Input);
 	
-	auto player2Input = PlayerInputFactory::createKeyboardPlayerInputArrows();
+	auto player2Input = PlayerInputFactory::createKeyboardPlayerInputArrows(sysProxy);
 	auto player2 = PlayerStateFactory::createDefault(400.0, 200.0, player2Input);
 
 	m_core->addPlayer(player1);
