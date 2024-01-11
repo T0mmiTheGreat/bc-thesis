@@ -85,8 +85,7 @@ enum FontId {
 	COUNT_FONTID // Number of fonts used by the program
 };
 // Number of fonts used by the program
-// FIXME: constexpr is better...?
-const size_t fontIdCount = (size_t)COUNT_FONTID;
+constexpr size_t fontIdCount = (size_t)COUNT_FONTID;
 
 /**
  * @brief Converts milliseconds to clocks.
