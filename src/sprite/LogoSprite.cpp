@@ -75,7 +75,7 @@ void LogoSprite::loopEventAnimation()
 			// Animation phase finished - start a new one (or stop animation)
 
 			nextAnimationPhase();
-			// FIXME: exit if animation is not running
+			if (!isAnimationRunning()) return;
 		}
 
 		// Progress the animation phase
