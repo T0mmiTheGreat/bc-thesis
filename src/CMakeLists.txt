@@ -87,6 +87,7 @@ set(HEADER_FILES
 	playerinput/PlayerInputBase.hpp
 	playerinput/KeyboardPlayerInput.hpp
 	playerinput/ImmobilePlayerInput.hpp
+	playerinput/ISysProxyPlayerInput.hpp
 	playerstate/IPlayerState.hpp
 	playerstate/PlayerStateFactory.hpp
 	playerstate/PlayerStateBase.hpp

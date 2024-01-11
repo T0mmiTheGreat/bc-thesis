@@ -16,11 +16,15 @@
 
 #include "types.hpp"
 #include "paintingproxy/IPaintingProxy.hpp"
+#include "playerinput/ISysProxyPlayerInput.hpp"
 
 /**
  * @brief Proxy for communication with the system manager (e.g. SDLManager).
  */
-class ISysProxy : public IPaintingProxy {
+class ISysProxy
+	: public IPaintingProxy
+	, public ISysProxyPlayerInput
+{
 public:
 	virtual ~ISysProxy() {}
 	/**
