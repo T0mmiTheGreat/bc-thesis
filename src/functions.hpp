@@ -14,11 +14,10 @@
 
 #include <cmath>
 
-// FIXME: constexpr
 /**
  * @brief Calculates the square of `x`.
  */
-inline double sqr(double x) {
+inline constexpr double sqr(double x) {
 	return x*x;
 }
 
