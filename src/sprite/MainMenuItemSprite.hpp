@@ -29,16 +29,14 @@ public:
 		COSTUME_HOVER,
 	};
 private:
-	// FIXME: static constexpr
-
 	// Non-scaled rectangle width
-	const int RECT_WIDTH_NORMAL = 165;
+	static constexpr int RECT_WIDTH_NORMAL = 165;
 	// Non-scaled rectangle height
-	const int RECT_HEIGHT_NORMAL = 35;
+	static constexpr int RECT_HEIGHT_NORMAL = 35;
 	// Scaled rectangle width
-	const int RECT_WIDTH_SCALED = 198;
+	static constexpr int RECT_WIDTH_SCALED = 198;
 	// Scaled rectangle height
-	const int RECT_HEIGHT_SCALED = 42;
+	static constexpr int RECT_HEIGHT_SCALED = 42;
 
 	const FontId FONT = FONT_BRLNSTR_20;
 
