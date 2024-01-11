@@ -79,16 +79,15 @@ void LogoSprite::loopEventAnimation()
 		}
 
 		// Progress the animation phase
-		// FIXME: rename methods - loopEvent -> frameEvent ...?
 		switch (m_animPhase) {
 			case ANIM_FADEIN:
-				loopEventAnimFadein();
+				frameEventAnimFadein();
 				break;
 			case ANIM_FULLBRIGHT:
-				loopEventAnimFullbright();
+				frameEventAnimFullbright();
 				break;
 			case ANIM_FADEOUT:
-				loopEventAnimFadeout();
+				frameEventAnimFadeout();
 				break;
 		}
 
@@ -97,17 +96,17 @@ void LogoSprite::loopEventAnimation()
 	}
 }
 
-void LogoSprite::loopEventAnimFadein()
+void LogoSprite::frameEventAnimFadein()
 {
 	m_opacity = m_anim.getTime() * 0xff;
 }
 
-void LogoSprite::loopEventAnimFullbright()
+void LogoSprite::frameEventAnimFullbright()
 {
 	m_opacity = 0xff;
 }
 
-void LogoSprite::loopEventAnimFadeout()
+void LogoSprite::frameEventAnimFadeout()
 {
 	m_opacity = (1.0 - m_anim.getTime()) * 0xff;
 }

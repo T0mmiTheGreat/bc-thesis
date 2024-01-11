@@ -67,15 +67,15 @@ private:
 	/**
 	 * @brief Fade in animation processing.
 	 */
-	void loopEventAnimFadein();
+	void frameEventAnimFadein();
 	/**
 	 * @brief Full brightness "animation" processing.
 	 */
-	void loopEventAnimFullbright();
+	void frameEventAnimFullbright();
 	/**
 	 * @brief Fade out animation processing.
 	 */
-	void loopEventAnimFadeout();
+	void frameEventAnimFadeout();
 public:
 	LogoSprite(std::shared_ptr<IPaintingProxy> paintingProxy);
 
