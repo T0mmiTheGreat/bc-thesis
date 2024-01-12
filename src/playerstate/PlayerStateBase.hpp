@@ -37,7 +37,7 @@ public:
 	 * @param startX Initial X coordinate.
 	 * @param startY Initial Y coordinate.
 	 * @param startHp Initial health points.
-	 * @param playerInput Player input instance.
+	 * @param playerInput Player input object. Must not be nullptr.
 	 */
 	PlayerStateBase(double startX, double startY, double startHp,
 		std::shared_ptr<IPlayerInput> playerInput);
@@ -83,12 +83,12 @@ public:
 	virtual void deltaHp(double value) override;
 	/**
 	 * @brief Getter for the player input object.
-	 * 
-	 * @return The assigned input object or nullptr if none assigned.
 	 */
 	virtual std::shared_ptr<IPlayerInput> getPlayerInputObject() override;
 	/**
 	 * @brief Setter for the player input object.
+	 * 
+	 * @param value Player input object. Must not be nullptr.
 	 */
 	virtual void setPlayerInputObject(std::shared_ptr<IPlayerInput> value) override;
 };

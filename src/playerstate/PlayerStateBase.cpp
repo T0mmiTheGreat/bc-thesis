@@ -19,7 +19,9 @@ PlayerStateBase::PlayerStateBase(double startX, double startY, double startHp,
 	, y{startY}
 	, hp{startHp}
 	, playerInput{playerInput}
-{}
+{
+	assert(playerInput != nullptr);
+}
 
 double PlayerStateBase::getX()
 {
@@ -79,8 +81,6 @@ std::shared_ptr<IPlayerInput> PlayerStateBase::getPlayerInputObject()
 
 void PlayerStateBase::setPlayerInputObject(std::shared_ptr<IPlayerInput> value)
 {
-	// TODO: Constructor doesn't have this check. Should it create a default
-	// player input if value is nullptr?
 	assert(value != nullptr);
 	playerInput = value;
 }
