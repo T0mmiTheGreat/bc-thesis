@@ -22,7 +22,7 @@ void SDLSubscriber::generalEvent(SDL_Event& ev)
 				lockedSubscriber->keyDownEvent(SDLManager::sdlKeycodeToEnum(ev.key.keysym.sym));
 				break;
 			case SDL_MOUSEBUTTONDOWN:
-				lockedSubscriber->mouseBtnDownEvent(SDLManager::sdlMouseBtnToEnum(ev.button.button));
+				lockedSubscriber->mouseBtnDownEvent(SDLManager::sdlMouseBtnToEnum(ev.button.button), ev.button.x, ev.button.y);
 				break;
 			case SDL_MOUSEMOTION:
 				lockedSubscriber->mouseMoveEvent(ev.motion.x, ev.motion.y);

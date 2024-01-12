@@ -48,7 +48,7 @@ void GeneralControllerBase::keyDownEvent(KeyCode key)
 	// Ignore
 }
 
-void GeneralControllerBase::mouseBtnDownEvent(MouseBtn btn)
+void GeneralControllerBase::mouseBtnDownEvent(MouseBtn btn, int x, int y)
 {
 	// Ignore
 }

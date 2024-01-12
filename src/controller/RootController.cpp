@@ -40,10 +40,10 @@ void RootController::keyDownEvent(KeyCode key)
 	m_childController->keyDownEvent(key);
 }
 
-void RootController::mouseBtnDownEvent(MouseBtn btn)
+void RootController::mouseBtnDownEvent(MouseBtn btn, int x, int y)
 {
 	// Propagate
-	m_childController->mouseBtnDownEvent(btn);
+	m_childController->mouseBtnDownEvent(btn, x, y);
 }
 
 void RootController::mouseMoveEvent(int x, int y)
