@@ -27,6 +27,7 @@ public:
 	EventLoopState getEventLoopState() override;
 	Size2d getTextSize(const std::string& text, FontId font) override;
 	Size2d getPaintAreaSize() override;
+	void quit() override;
 };
 
 #endif // SDLSYSPROXY_HPP

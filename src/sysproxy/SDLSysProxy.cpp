@@ -54,3 +54,17 @@ Size2d SDLSysProxy::getPaintAreaSize()
 {
 	return SDLManager::sdlPointToSize(SDLManager::get().renderer.GetOutputSize());
 }
+
+void SDLSysProxy::quit()
+{
+	SDL_Event ev = {
+		.quit = {
+			.type = SDL_QUIT,
+			.timestamp = SDL_GetTicks(),
+		},
+	};
+	if (SDL_PushEvent(&ev) < 0) {
+		// Making use of their exception because why not
+		throw SDL2pp::Exception("SDL_PushEvent");
+	}
+}

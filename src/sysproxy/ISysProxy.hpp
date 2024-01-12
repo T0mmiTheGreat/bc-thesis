@@ -68,6 +68,17 @@ public:
 	 * @brief Returns the current size of the screen area in pixels.
 	 */
 	virtual Size2d getPaintAreaSize() = 0;
+	/**
+	 * @brief Requests the program to stop.
+	 * 
+	 * @details This method should stop the event loop just like pressing the
+	 *          'X' button. The implementations may not necessarily "simulate"
+	 *          the 'X' button click exactly but should try to (the caller is
+	 *          unlikely to notice any difference anyway). Quit event is the
+	 *          consequence of calling this method, although there may be some
+	 *          events in the queue before the quit event.
+	 */
+	virtual void quit() = 0;
 };
 
 #endif // ISYSPROXY_HPP
