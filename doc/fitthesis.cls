@@ -99,11 +99,14 @@
   \usepackage{graphics}
   \usepackage{epsfig}
 \else % je to pdftex ! / it is pdftex !
-  \ifzadani
-    \usepackage{pdfpages}
-  \else % neni potreba pdfpages / pdfpages is not necessary
-    \usepackage[pdftex]{graphicx}
-  \fi
+  % \ifzadani
+  %   \usepackage{pdfpages}
+  % \else % neni potreba pdfpages / pdfpages is not necessary
+  %   \usepackage[pdftex]{graphicx}
+  % \fi
+  % Tomáš Ludrovan: I have no idea what's pdftex, but I need this package.
+  % If something breaks, it's likely because someone's not using pdftex.
+  \usepackage{pdfpages}
 \fi
 
 \newtoggle{phd_summary}
