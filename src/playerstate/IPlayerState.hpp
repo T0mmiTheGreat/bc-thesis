@@ -74,7 +74,10 @@ public:
 	 * @brief Increments the player's X and Y coordinates.
 	 */
 	virtual void deltaPos(double valueX, double valueY) = 0;
-	// TODO: deltaHp()
+	/**
+	 * @brief Increments the player's HP by `value`.
+	 */
+	virtual void deltaHp(double value) = 0;
 	/**
 	 * @brief Getter for the player input object.
 	 * 

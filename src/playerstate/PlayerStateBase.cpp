@@ -67,6 +67,11 @@ void PlayerStateBase::deltaPos(double valueX, double valueY)
 	y += valueY;
 }
 
+void PlayerStateBase::deltaHp(double value)
+{
+	setHp(getHp() + value);
+}
+
 std::shared_ptr<IPlayerInput> PlayerStateBase::getPlayerInputObject()
 {
 	return playerInput;

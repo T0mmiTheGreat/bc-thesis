@@ -78,6 +78,10 @@ public:
 	 */
 	virtual void deltaPos(double valueX, double valueY) override;
 	/**
+	 * @brief Increments the player's HP by `value`.
+	 */
+	virtual void deltaHp(double value) override;
+	/**
 	 * @brief Getter for the player input object.
 	 * 
 	 * @return The assigned input object or nullptr if none assigned.

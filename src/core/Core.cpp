@@ -68,8 +68,8 @@ void Core::tick()
 			auto plA = m_players[i];
 			auto plB = m_players[j];
 			if (distance(plA->getX(), plA->getY(), plB->getX(), plB->getY()) <= plA->getSize() + plB->getSize()) {
-				plA->setHp(plA->getHp() - HP_DRAIN);
-				plB->setHp(plB->getHp() - HP_DRAIN);
+				plA->deltaHp(-HP_DRAIN);
+				plB->deltaHp(-HP_DRAIN);
 			}
 		}
 	}
