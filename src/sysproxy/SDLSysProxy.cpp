@@ -57,12 +57,15 @@ Size2d SDLSysProxy::getPaintAreaSize()
 
 void SDLSysProxy::quit()
 {
+	// This event will be pushed to the event queue
 	SDL_Event ev = {
 		.quit = {
 			.type = SDL_QUIT,
-			.timestamp = SDL_GetTicks(),
+			.timestamp = SDL_GetTicks(), // See SDL_QuitEvent why it's
+			                             // initialized like this
 		},
 	};
+
 	if (SDL_PushEvent(&ev) < 0) {
 		// Making use of their exception because why not
 		throw SDL2pp::Exception("SDL_PushEvent");

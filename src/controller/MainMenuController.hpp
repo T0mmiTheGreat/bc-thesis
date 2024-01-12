@@ -34,12 +34,25 @@ private:
 
 	// Sprites
 	std::array<std::unique_ptr<MainMenuItemSprite>, MENU_ITEM_COUNT> m_menuBtns;
+	// The menu item clicked or -1 if none was clicked
+	int m_selectedItem;
 	std::unique_ptr<MainMenuTitleSprite> m_title;
 
 	void createSprites();
+	/**
+	 * @brief Returns the index of menu item at the given position.
+	 * 
+	 * @param x 
+	 * @param y 
+	 * @return Index to `m_menuBtns` or -1 if no item is at the given position.
+	 */
+	int getMenuItemAt(int x, int y);
+protected:
+	std::unique_ptr<IControllerChild> createReplacement() override;
 public:
 	MainMenuController(std::shared_ptr<ISysProxy> sysProxy);
 	void startedEvent() override;
+	void mouseBtnDownEvent(MouseBtn btn, int x, int y) override;
 	void mouseMoveEvent(int x, int y) override;
 	void loopEvent() override;
 	void paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;

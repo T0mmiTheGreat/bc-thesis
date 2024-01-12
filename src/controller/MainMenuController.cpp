@@ -13,8 +13,12 @@
 
 #include <format>
 
+#include "types.hpp"
+#include "controller/ControllerFactory.hpp"
+
 MainMenuController::MainMenuController(std::shared_ptr<ISysProxy> sysProxy)
 	: GeneralControllerBase(sysProxy)
+	, m_selectedItem{-1}
 {
 }
 
@@ -49,10 +53,57 @@ void MainMenuController::createSprites()
 	}
 }
 
+int MainMenuController::getMenuItemAt(int x, int y)
+{
+	// Sprite bounds rectangle
+	Rect sprBounds;
+	// The position passed as `x` and `y` parameters
+	Point pos(x, y);
+
+	for (int i = 0; i < m_menuBtns.size(); i++) {
+		sprBounds = m_menuBtns[i]->getBounds();
+		if (sprBounds.containsPoint(pos)) {
+			// Position within a menu item
+			return i;
+		}
+	}
+
+	// No menu item at the given position
+	return -1;
+}
+
+std::unique_ptr<IControllerChild> MainMenuController::createReplacement()
+{
+	switch (m_selectedItem) {
+		case MENU_PLAY_BTN_IDX:
+			return ControllerFactory::createInGameController(sysProxy);
+		default:
+			return nullptr;
+	}
+}
+
 void MainMenuController::startedEvent()
 {
 	GeneralControllerBase::startedEvent();
 	createSprites();
+}
+
+void MainMenuController::mouseBtnDownEvent(MouseBtn btn, int x, int y)
+{
+	if (btn != BTN_LEFT) return;
+
+	int menuItemIdx = getMenuItemAt(x, y);
+	
+	m_selectedItem = menuItemIdx;
+
+	switch (menuItemIdx) {
+		case MENU_PLAY_BTN_IDX:
+			finishedEvent();
+			break;
+		case MENU_QUIT_BTN_IDX:
+			sysProxy->quit();
+			break;
+	}
 }
 
 void MainMenuController::mouseMoveEvent(int x, int y)
