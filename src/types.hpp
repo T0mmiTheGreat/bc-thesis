@@ -52,7 +52,6 @@ typedef enum KeyCode {
 	KEY_W,
 	KEY_D,
 	KEY_S,
-	// TODO: more keys
 	// XXX: also add to SysEvent publishers/subscribers if needed
 } KeyCode;
 

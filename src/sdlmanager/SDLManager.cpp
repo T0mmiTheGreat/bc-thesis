@@ -96,7 +96,6 @@ KeyCode SDLManager::sdlKeycodeToEnum(SDL_Keycode sdlk)
 		case SDLK_w:      return KEY_W;
 		case SDLK_d:      return KEY_D;
 		case SDLK_s:      return KEY_S;
-		// TODO: more keys
 		default: return KEY_UNKNOWN;
 	}
 }
