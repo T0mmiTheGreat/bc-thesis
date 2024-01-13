@@ -23,36 +23,50 @@ InGameController::InGameController(std::shared_ptr<ISysProxy> sysProxy)
 	, m_tickTimer(ICore::TICK_INTERVAL)
 {
 	auto player1Input = PlayerInputFactory::createKeyboardPlayerInputWSAD(sysProxy);
-	auto player1 = PlayerStateFactory::createDefault(200.0, 200.0, player1Input);
+	auto player1State = PlayerStateFactory::createDefault(200.0, 200.0, player1Input);
+	auto player1Sprite = std::make_unique<PlayerSprite>(sysProxy);
 	
 	auto player2Input = PlayerInputFactory::createKeyboardPlayerInputArrows(sysProxy);
-	auto player2 = PlayerStateFactory::createDefault(400.0, 200.0, player2Input);
+	auto player2State = PlayerStateFactory::createDefault(400.0, 200.0, player2Input);
+	auto player2Sprite = std::make_unique<PlayerSprite>(sysProxy);
 
-	m_core->addPlayer(player1);
-	m_core->addPlayer(player2);
+	m_core->addPlayer(player1State);
+	m_core->addPlayer(player2State);
+
+	player1Sprite->setColor(Color::red());
+	player2Sprite->setColor(Color::green());
+
+	m_playerSprites.push_back(std::move(player1Sprite));
+	m_playerSprites.push_back(std::move(player2Sprite));
+}
+
+void InGameController::updatePlayerSprites()
+{
+	auto plStates = m_core->getPlayerList();
+
+	for (int i = 0; i < PLAYER_COUNT; i++) {
+		m_playerSprites[i]->setPos(plStates[i]->getX(), plStates[i]->getY());
+		m_playerSprites[i]->setRadius(static_cast<int>(plStates[i]->getSize()));
+	}
 }
 
 void InGameController::startedEvent()
 {
 	m_tickTimer.reset();
+	updatePlayerSprites();
 }
 
 void InGameController::loopEvent()
 {
 	if (m_tickTimer.isLap()) {
 		m_core->tick();
-		sysProxy->invalidateRect();
+		updatePlayerSprites();
 	}
 }
 
-void InGameController::paintEvent(std::shared_ptr<ICanvas> canvas, Rect & invalidRect)
+void InGameController::paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)
 {
-	for (auto player : m_core->getPlayerList()) {
-		canvas->setFillingColor(Color::red());
-		canvas->fillCircle(
-			static_cast<int>(player->getX()),
-			static_cast<int>(player->getY()),
-			static_cast<int>(player->getSize())
-		);
+	for (auto& spr : m_playerSprites) {
+		spr->repaint(canvas, invalidRect);
 	}
 }
