@@ -322,6 +322,14 @@ struct Color {
 	static Color red() { return Color(0xff, 0, 0); }
 	static Color green() { return Color(0, 0xff, 0); }
 	static Color blue() { return Color(0, 0, 0xff); }
+
+	bool operator== (const Color& rhs) {
+		return
+			(this->r == rhs.r) &&
+			(this->g == rhs.g) &&
+			(this->b == rhs.b) &&
+			(this->a == rhs.a);
+	}
 };
 
 /**
