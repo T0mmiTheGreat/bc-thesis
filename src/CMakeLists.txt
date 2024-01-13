@@ -36,6 +36,7 @@ set(SOURCE_FILES
 	sprite/LogoSprite.cpp
 	sprite/MainMenuItemSprite.cpp
 	sprite/MainMenuTitleSprite.cpp
+	sprite/PlayerSprite.cpp
 	core/Core.cpp
 	playerinput/PlayerInputFactory.cpp
 	playerinput/PlayerInputBase.cpp
@@ -79,6 +80,7 @@ set(HEADER_FILES
 	sprite/LogoSprite.hpp
 	sprite/MainMenuItemSprite.hpp
 	sprite/MainMenuTitleSprite.hpp
+	sprite/PlayerSprite.hpp
 	paintingproxy/IPaintingProxy.hpp
 	core/ICore.hpp
 	core/Core.hpp
