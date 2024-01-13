@@ -11,8 +11,6 @@
 
 #include "sprite/SpriteBase.hpp"
 
-#include "sysproxy/SysProxyFactory.hpp"
-
 void SpriteBase::invalidateBounds()
 {
 	paintingProxy->invalidateRect(getBounds());

@@ -12,7 +12,6 @@
 #include "controller/RootController.hpp"
 
 #include "controller/ControllerFactory.hpp"
-#include "sysproxy/SysProxyFactory.hpp"
 
 RootController::RootController(std::shared_ptr<ISysProxy> sysProxy)
 	: ControllerBase()
@@ -66,7 +65,7 @@ void RootController::paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRe
 
 void RootController::run()
 {
-	SysProxyFactory::createDefault()->runEventLoop();
+	m_sysProxy->runEventLoop();
 }
 
 void RootController::setChildController(std::unique_ptr<IControllerChild> value)
@@ -81,7 +80,7 @@ void RootController::setChildController(std::unique_ptr<IControllerChild> value)
 		// If the event loop is already running, send the started event straight
 		// away. If it's not running yet, it will be sent once the event loop
 		// starts
-		if (SysProxyFactory::createDefault()->getEventLoopState() == EVENTLOOP_RUNNING) {
+		if (m_sysProxy->getEventLoopState() == EVENTLOOP_RUNNING) {
 			m_childController->startedEvent();
 		}
 	}

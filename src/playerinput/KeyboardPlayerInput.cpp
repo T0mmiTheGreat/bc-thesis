@@ -10,7 +10,6 @@
  */
 
 #include "playerinput/KeyboardPlayerInput.hpp"
-#include "sysproxy/SysProxyFactory.hpp"
 
 KeyboardPlayerInput::KeyboardPlayerInput(
 	std::shared_ptr<ISysProxyPlayerInput> sysProxy, KeyCode keyLeft,
