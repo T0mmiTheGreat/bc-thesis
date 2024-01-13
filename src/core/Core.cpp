@@ -21,7 +21,7 @@ void Core::playerTick(std::shared_ptr<IPlayerState> player)
 	double vecX, vecY;
 	inputToVector(playerInput, vecX, vecY);
 	// Move player
-	player->deltaPos(vecX * player->getSpeed() * SPEED_FACTOR, vecY * player->getSpeed() * SPEED_FACTOR);
+	player->incPos(vecX * player->getSpeed() * SPEED_FACTOR, vecY * player->getSpeed() * SPEED_FACTOR);
 }
 
 void Core::inputToVector(const PlayerInputState& input, double& x, double& y)
@@ -68,8 +68,8 @@ void Core::tick()
 			auto plA = m_players[i];
 			auto plB = m_players[j];
 			if (distance(plA->getX(), plA->getY(), plB->getX(), plB->getY()) <= plA->getSize() + plB->getSize()) {
-				plA->deltaHp(-HP_DRAIN);
-				plB->deltaHp(-HP_DRAIN);
+				plA->incHp(-HP_DRAIN);
+				plB->incHp(-HP_DRAIN);
 			}
 		}
 	}

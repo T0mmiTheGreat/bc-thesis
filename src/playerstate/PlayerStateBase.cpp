@@ -53,23 +53,23 @@ void PlayerStateBase::setHp(double value)
 	hp = value;
 }
 
-void PlayerStateBase::deltaX(double value)
+void PlayerStateBase::incX(double value)
 {
-	deltaPos(value, 0.0);
+	incPos(value, 0.0);
 }
 
-void PlayerStateBase::deltaY(double value)
+void PlayerStateBase::incY(double value)
 {
-	deltaPos(0.0, value);
+	incPos(0.0, value);
 }
 
-void PlayerStateBase::deltaPos(double valueX, double valueY)
+void PlayerStateBase::incPos(double valueX, double valueY)
 {
 	x += valueX;
 	y += valueY;
 }
 
-void PlayerStateBase::deltaHp(double value)
+void PlayerStateBase::incHp(double value)
 {
 	setHp(getHp() + value);
 }

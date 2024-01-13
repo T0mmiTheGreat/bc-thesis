@@ -65,19 +65,19 @@ public:
 	/**
 	 * @brief Increments the player's X coordinate by `value`.
 	 */
-	virtual void deltaX(double value) = 0;
+	virtual void incX(double value) = 0;
 	/**
 	 * @brief Increments the player's Y coordinate by `value`.
 	 */
-	virtual void deltaY(double value) = 0;
+	virtual void incY(double value) = 0;
 	/**
 	 * @brief Increments the player's X and Y coordinates.
 	 */
-	virtual void deltaPos(double valueX, double valueY) = 0;
+	virtual void incPos(double valueX, double valueY) = 0;
 	/**
 	 * @brief Increments the player's HP by `value`.
 	 */
-	virtual void deltaHp(double value) = 0;
+	virtual void incHp(double value) = 0;
 	/**
 	 * @brief Getter for the player input object.
 	 * 
