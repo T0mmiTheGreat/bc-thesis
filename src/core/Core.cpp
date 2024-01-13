@@ -13,6 +13,10 @@
 
 #include "functions.hpp"
 
+Core::Core()
+	: m_tickTimer(TICK_INTERVAL)
+{}
+
 void Core::playerTick(std::shared_ptr<IPlayerState> player)
 {
 	// Read input
@@ -72,6 +76,13 @@ void Core::tick()
 				plB->incHp(-HP_DRAIN);
 			}
 		}
+	}
+}
+
+void Core::loopEvent()
+{
+	if (m_tickTimer.isLap()) {
+		tick();
 	}
 }
 

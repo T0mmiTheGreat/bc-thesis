@@ -12,10 +12,17 @@
 #ifndef CORE_HPP
 #define CORE_HPP
 
+#include "types.hpp"
 #include "core/ICore.hpp"
 
 class Core : public ICore {
 private:
+	/**
+	 * @brief The number of milliseconds between ticks.
+	 * 
+	 * @details I.e., how often the tick() events should be sent.
+	 */
+	static constexpr std::clock_t TICK_INTERVAL = 17;
 	// sqrt(1/2)
 	// sin(pi/4)
 	static constexpr double DIAG_MOVEMENT_PERAXIS_LENGTH = 0.70710678118654752440084436210485;
@@ -28,7 +35,15 @@ private:
 	 * @brief Player list.
 	 */
 	PlayerList m_players;
+	Timer m_tickTimer;
 
+	/**
+	 * @brief Game tick event.
+	 * 
+	 * @details Game tick is the moment when the game state progresses further.
+	 *          Players move, bonuses appear, effects are applied, etc.
+	 */
+	void tick();
 	/**
 	 * @brief "Tick" a player.
 	 * 
@@ -47,8 +62,18 @@ private:
 	 */
 	static void inputToVector(const PlayerInputState& input, double& x, double& y);
 public:
-	void tick() override;
+	Core();
+	/**
+	 * @brief Event that happens every event loop iteration.
+	 */
+	void loopEvent() override;
+	/**
+	 * @brief Add a player to the player list.
+	 */
 	void addPlayer(std::shared_ptr<IPlayerState> player) override;
+	/**
+	 * @brief Access the player list.
+	 */
 	const PlayerList& getPlayerList() override;
 };
 

@@ -30,21 +30,11 @@ typedef std::vector<std::shared_ptr<IPlayerState>> PlayerList;
  */
 class ICore {
 public:
-	/**
-	 * @brief The number of milliseconds between ticks.
-	 * 
-	 * @details I.e., how often the tick() events should be sent.
-	 */
-	static constexpr std::clock_t TICK_INTERVAL = 17;
-
 	virtual ~ICore() {}
 	/**
-	 * @brief Game tick event.
-	 * 
-	 * @details Game tick is the moment when the game state progresses further.
-	 *          Players move, bonuses appear, effects are applied, etc.
+	 * @brief Event that happens every event loop iteration.
 	 */
-	virtual void tick() = 0;
+	virtual void loopEvent() = 0;
 	/**
 	 * @brief Add a player to the player list.
 	 */

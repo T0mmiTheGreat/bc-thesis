@@ -20,7 +20,6 @@
 InGameController::InGameController(std::shared_ptr<ISysProxy> sysProxy)
 	: GeneralControllerBase(sysProxy)
 	, m_core{std::make_unique<Core>()}
-	, m_tickTimer(ICore::TICK_INTERVAL)
 {
 	auto player1Input = PlayerInputFactory::createKeyboardPlayerInputWSAD(sysProxy);
 	auto player1State = PlayerStateFactory::createDefault(200.0, 200.0, player1Input);
@@ -52,16 +51,14 @@ void InGameController::updatePlayerSprites()
 
 void InGameController::startedEvent()
 {
-	m_tickTimer.reset();
+	m_core->loopEvent();
 	updatePlayerSprites();
 }
 
 void InGameController::loopEvent()
 {
-	if (m_tickTimer.isLap()) {
-		m_core->tick();
-		updatePlayerSprites();
-	}
+	m_core->loopEvent();
+	updatePlayerSprites();
 }
 
 void InGameController::paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)

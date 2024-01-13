@@ -27,7 +27,6 @@ private:
 
 	std::unique_ptr<ICore> m_core;
 	std::vector<std::unique_ptr<PlayerSprite>> m_playerSprites;
-	Timer m_tickTimer;
 
 	/**
 	 * @brief Sets the player sprite properties based on the state of the core.
