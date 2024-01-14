@@ -11,7 +11,7 @@
 
 #include "core/Core.hpp"
 
-#include "functions.hpp"
+#include "math/Math.hpp"
 
 Core::Core()
 	: m_tickTimer(TICK_INTERVAL)
@@ -67,16 +67,16 @@ void Core::tick()
 	}
 
 	// Drain HP
-	for (int i = 0; i < m_players.size(); i++) {
-		for (int j = i + 1; j < m_players.size(); j++) {
-			auto plA = m_players[i];
-			auto plB = m_players[j];
-			if (distance(plA->getX(), plA->getY(), plB->getX(), plB->getY()) <= plA->getSize() + plB->getSize()) {
-				plA->incHp(-HP_DRAIN);
-				plB->incHp(-HP_DRAIN);
-			}
-		}
-	}
+	// for (int i = 0; i < m_players.size(); i++) {
+	// 	for (int j = i + 1; j < m_players.size(); j++) {
+	// 		auto plA = m_players[i];
+	// 		auto plB = m_players[j];
+	// 		if (distance(plA->getX(), plA->getY(), plB->getX(), plB->getY()) <= plA->getSize() + plB->getSize()) {
+	// 			plA->incHp(-HP_DRAIN);
+	// 			plB->incHp(-HP_DRAIN);
+	// 		}
+	// 	}
+	// }
 }
 
 void Core::loopEvent()

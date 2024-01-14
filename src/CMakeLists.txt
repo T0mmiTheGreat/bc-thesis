@@ -32,6 +32,7 @@ set(SOURCE_FILES
 	controller/LogoController.cpp
 	controller/MainMenuController.cpp
 	controller/InGameController.cpp
+	math/Math.cpp
 	sprite/SpriteBase.cpp
 	sprite/LogoSprite.cpp
 	sprite/MainMenuItemSprite.cpp
@@ -51,7 +52,6 @@ set(SOURCE_FILES
 set(HEADER_FILES
 	SDL2_gfxPrimitives.h
 	types.hpp
-	functions.hpp
 	sdlmanager/SDLManager.hpp
 	sdlsubscriber/ISDLSubscriber.hpp
 	sdlsubscriber/SDLSubscriber.hpp
@@ -75,6 +75,7 @@ set(HEADER_FILES
 	controller/LogoController.hpp
 	controller/MainMenuController.hpp
 	controller/InGameController.hpp
+	math/Math.hpp
 	sprite/ISprite.hpp
 	sprite/SpriteBase.hpp
 	sprite/LogoSprite.hpp
