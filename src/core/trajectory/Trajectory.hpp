@@ -9,6 +9,9 @@
  * 
  */
 
+#ifndef TRAJECTORY_HPP
+#define TRAJECTORY_HPP
+
 #include <vector>
 
 #include "math/Math.hpp"
@@ -41,3 +44,5 @@ struct Trajectory {
 	 */
 	double minSqdist(const Trajectory& rhs);
 };
+
+#endif // TRAJECTORY_HPP
