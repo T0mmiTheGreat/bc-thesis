@@ -43,6 +43,10 @@ struct Trajectory {
 	 *          desires to.
 	 */
 	double minSqdist(const Trajectory& rhs);
+	/**
+	 * @brief Returns the delta (i.e., vector) between initial and end point.
+	 */
+	void getDelta(double& x, double& y) const;
 };
 
 #endif // TRAJECTORY_HPP

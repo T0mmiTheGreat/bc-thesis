@@ -33,7 +33,7 @@ double Trajectory::minSqdist(const Trajectory & rhs)
 
 	// The time must be within the interval <0,1>. If the `t` is less than
 	// 0, we know that the minimum value for t => <0,1> is at t=0. Likewise,
-	// if t > 1, then the minimum value t => <0,1> is at t=1.
+	// if t > 1, then the minimum value for t => <0,1> is at t=1.
 
 	if (t <= 0) {
 		return c;
@@ -42,4 +42,10 @@ double Trajectory::minSqdist(const Trajectory & rhs)
 	} else {
 		return sqr(t)*a + t*b + c;
 	}
+}
+
+void Trajectory::getDelta(double& x, double& y) const
+{
+	x = segment.lineSegment.ux;
+	y = segment.lineSegment.uy;
 }
