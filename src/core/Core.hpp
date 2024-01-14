@@ -12,17 +12,23 @@
 #ifndef CORE_HPP
 #define CORE_HPP
 
+#include <vector>
+
 #include "types.hpp"
 #include "core/ICore.hpp"
 #include "core/Constants.hpp"
+#include "core/stageobstacles/StageObstacles.hpp"
 
 class Core : public ICore {
 private:
-	// sqrt(1/2)
-	// sin(pi/4)
-	static constexpr double DIAG_MOVEMENT_PERAXIS_LENGTH = 0.70710678118654752440084436210485;
-	// Value to multiply with the player speed
-	static constexpr double SPEED_FACTOR = TICK_INTERVAL / 6.0;
+	struct PlayerTurn {
+		std::shared_ptr<IPlayerState> playerRef;
+		Trajectory trajectory;
+	};
+	struct TurnData {
+		std::vector<PlayerTurn> playerTurns;
+	};
+private:
 	// HP depleted per frame
 	static constexpr double HP_DRAIN = TICK_INTERVAL / 3400.0;
 
@@ -31,6 +37,7 @@ private:
 	 */
 	PlayerList m_players;
 	Timer m_tickTimer;
+	StageObstacles m_obstacles;
 
 	/**
 	 * @brief Game tick event.
@@ -45,23 +52,9 @@ private:
 	 * @note Called every tick.
 	 */
 	void playersActions();
-	/**
-	 * @brief "Tick" a player.
-	 * 
-	 * @param player The player to "tick".
-	 */
-	void playerTick(std::shared_ptr<IPlayerState> player);
-	/**
-	 * @brief Convert player input value to a vector.
-	 * 
-	 * @details Based on the player input creates a unit vector in the direction
-	 *          the player wants to move.
-	 * 
-	 * @param input The player input.
-	 * @param x Vector X coordinate.
-	 * @param y Vector Y coordinate.
-	 */
-	static void inputToVector(const PlayerInputFlags& input, double& x, double& y);
+	void initTurnData(TurnData& turnData);
+	void calculateTrajectories(TurnData& turnData);
+	void movePlayers(TurnData& turnData);
 public:
 	Core();
 	/**
