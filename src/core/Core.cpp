@@ -61,6 +61,16 @@ void Core::inputToVector(const PlayerInputFlags& input, double& x, double& y)
 
 void Core::tick()
 {
+	playersActions();
+}
+
+void Core::playersActions()
+{
+	// 1. Calculate trajectories
+	// 2. Find collisions with players
+	// 3. Set position
+	// 4. Shrink
+
 	// Tick players
 	for (auto player : m_players) {
 		playerTick(player);

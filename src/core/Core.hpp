@@ -40,6 +40,12 @@ private:
 	 */
 	void tick();
 	/**
+	 * @brief Processes actions of players (movement, bonuses, etc).
+	 * 
+	 * @note Called every tick.
+	 */
+	void playersActions();
+	/**
 	 * @brief "Tick" a player.
 	 * 
 	 * @param player The player to "tick".
