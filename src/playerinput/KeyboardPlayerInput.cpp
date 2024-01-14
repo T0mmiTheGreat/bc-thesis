@@ -34,9 +34,9 @@ KeyboardPlayerInput KeyboardPlayerInput::constructArrows(
 		KEY_RIGHT_ARROW, KEY_DOWN_ARROW);
 }
 
-PlayerInputState KeyboardPlayerInput::readInput()
+PlayerInputFlags KeyboardPlayerInput::readInput()
 {
-	PlayerInputState res;
+	PlayerInputFlags res;
 	
 	res.left = m_sysProxy->isKeyPressed(m_keyLeft);
 	res.up = m_sysProxy->isKeyPressed(m_keyUp);

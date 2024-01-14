@@ -28,7 +28,7 @@ void Core::playerTick(std::shared_ptr<IPlayerState> player)
 	player->incPos(vecX * player->getSpeed() * SPEED_FACTOR, vecY * player->getSpeed() * SPEED_FACTOR);
 }
 
-void Core::inputToVector(const PlayerInputState& input, double& x, double& y)
+void Core::inputToVector(const PlayerInputFlags& input, double& x, double& y)
 {
 	// If none or both keys for horizontal movement are pressed, the player
 	// won't move horizontally

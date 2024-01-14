@@ -41,7 +41,7 @@ public:
 		std::shared_ptr<ISysProxyPlayerInput> sysProxy);
 	static KeyboardPlayerInput constructArrows(
 		std::shared_ptr<ISysProxyPlayerInput> sysProxy);
-	PlayerInputState readInput() override;
+	PlayerInputFlags readInput() override;
 };
 
 #endif // KEYBOARDPLAYERINPUT_HPP

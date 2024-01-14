@@ -21,7 +21,7 @@
  */
 class ImmobilePlayerInput : public PlayerInputBase {
 public:
-	PlayerInputState readInput() override;
+	PlayerInputFlags readInput() override;
 };
 
 #endif // IMMOBILEPLAYERINPUT_HPP

@@ -60,7 +60,7 @@ private:
 	 * @param x Vector X coordinate.
 	 * @param y Vector Y coordinate.
 	 */
-	static void inputToVector(const PlayerInputState& input, double& x, double& y);
+	static void inputToVector(const PlayerInputFlags& input, double& x, double& y);
 public:
 	Core();
 	/**

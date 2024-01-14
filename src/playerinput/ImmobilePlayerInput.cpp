@@ -11,7 +11,7 @@
 
 #include "playerinput/ImmobilePlayerInput.hpp"
 
-PlayerInputState ImmobilePlayerInput::readInput()
+PlayerInputFlags ImmobilePlayerInput::readInput()
 {
-	return PlayerInputState();
+	return PlayerInputFlags();
 }

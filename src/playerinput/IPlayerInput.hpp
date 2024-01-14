@@ -15,13 +15,13 @@
 /**
  * @brief Structure of flags representing the action requested by player.
  */
-struct PlayerInputState {
+struct PlayerInputFlags {
 	bool left: 1;
 	bool up: 1;
 	bool right: 1;
 	bool down: 1;
 
-	PlayerInputState()
+	PlayerInputFlags()
 		: left{false}
 		, up{false}
 		, right{false}
@@ -38,7 +38,7 @@ public:
 	/**
 	 * @brief Obtains the actions requested by the player.
 	 */
-	virtual PlayerInputState readInput() = 0;
+	virtual PlayerInputFlags readInput() = 0;
 };
 
 #endif // IPLAYERINPUT_HPP
