@@ -39,6 +39,7 @@ set(SOURCE_FILES
 	sprite/MainMenuTitleSprite.cpp
 	sprite/PlayerSprite.cpp
 	core/Core.cpp
+	core/trajectory/Trajectory.cpp
 	playerinput/PlayerInputFactory.cpp
 	playerinput/PlayerInputBase.cpp
 	playerinput/ImmobilePlayerInput.cpp
@@ -85,6 +86,7 @@ set(HEADER_FILES
 	paintingproxy/IPaintingProxy.hpp
 	core/ICore.hpp
 	core/Core.hpp
+	core/trajectory/Trajectory.hpp
 	playerinput/IPlayerInput.hpp
 	playerinput/PlayerInputFactory.hpp
 	playerinput/PlayerInputBase.hpp
