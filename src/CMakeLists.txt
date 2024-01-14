@@ -86,6 +86,7 @@ set(HEADER_FILES
 	paintingproxy/IPaintingProxy.hpp
 	core/ICore.hpp
 	core/Core.hpp
+	core/Constants.hpp
 	core/trajectory/Trajectory.hpp
 	playerinput/IPlayerInput.hpp
 	playerinput/PlayerInputFactory.hpp

@@ -14,15 +14,10 @@
 
 #include "types.hpp"
 #include "core/ICore.hpp"
+#include "core/Constants.hpp"
 
 class Core : public ICore {
 private:
-	/**
-	 * @brief The number of milliseconds between ticks.
-	 * 
-	 * @details I.e., how often the tick() events should be sent.
-	 */
-	static constexpr std::clock_t TICK_INTERVAL = 17;
 	// sqrt(1/2)
 	// sin(pi/4)
 	static constexpr double DIAG_MOVEMENT_PERAXIS_LENGTH = 0.70710678118654752440084436210485;
