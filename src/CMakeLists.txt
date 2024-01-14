@@ -39,6 +39,7 @@ set(SOURCE_FILES
 	sprite/MainMenuTitleSprite.cpp
 	sprite/PlayerSprite.cpp
 	core/Core.cpp
+	core/stageobstacles/StageObstacles.cpp
 	core/trajectory/Trajectory.cpp
 	playerinput/PlayerInputFactory.cpp
 	playerinput/PlayerInputBase.cpp
@@ -87,6 +88,7 @@ set(HEADER_FILES
 	core/ICore.hpp
 	core/Core.hpp
 	core/Constants.hpp
+	core/stageobstacles/StageObstacles.cpp
 	core/trajectory/Trajectory.hpp
 	playerinput/IPlayerInput.hpp
 	playerinput/PlayerInputFactory.hpp
