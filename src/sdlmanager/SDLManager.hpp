@@ -14,6 +14,7 @@
 
 #include <array>
 #include <memory>
+#include <string>
 
 #include <SDL2/SDL.h>
 #include <SDL2pp/SDL2pp.hh>
@@ -64,6 +65,8 @@ public:
 	 */
 	SDL2pp::Renderer renderer;
 private:
+	static constexpr std::string FONTS_DIR = "font/";
+
 	/**
 	 * @brief The assigned SDL event subscriber.
 	 */

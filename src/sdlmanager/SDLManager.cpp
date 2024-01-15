@@ -22,9 +22,9 @@ SDLManager::SDLManager()
 	, renderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)
 	, m_eventLoopstate{EVENTLOOP_PRERUN}
 	, m_fonts{
-		SDL2pp::Font("oldengl.ttf", 72),
-		SDL2pp::Font("segoepr.ttf", 66),
-		SDL2pp::Font("brlnstr.ttf", 20),
+		SDL2pp::Font(FONTS_DIR + "oldengl.ttf", 72),
+		SDL2pp::Font(FONTS_DIR + "segoepr.ttf", 66),
+		SDL2pp::Font(FONTS_DIR + "brlnstr.ttf", 20),
 	}
 {}
 
