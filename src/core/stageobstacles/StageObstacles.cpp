@@ -50,6 +50,6 @@ void StageObstacles::getPlayerTrajectory(std::shared_ptr<IPlayerState> playerSta
 
 	trajectory.segment.lineSegment.Ax = playerState->getX();
 	trajectory.segment.lineSegment.Ay = playerState->getY();
-	trajectory.segment.lineSegment.ux = ux * SPEED_FACTOR;
-	trajectory.segment.lineSegment.uy = uy * SPEED_FACTOR;
+	trajectory.segment.lineSegment.ux = ux * playerState->getSpeed() * SPEED_FACTOR;
+	trajectory.segment.lineSegment.uy = uy * playerState->getSpeed() * SPEED_FACTOR;
 }
