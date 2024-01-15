@@ -111,6 +111,22 @@ struct Point {
 };
 
 /**
+ * @brief Structure representing X and Y coordinate (floating point).
+ */
+struct PointF {
+	double x;
+	double y;
+
+	PointF(double x, double y)
+		: x{x}
+		, y{y}
+	{}
+	PointF()
+		: PointF(0, 0)
+	{}
+};
+
+/**
  * @brief Width and height structure.
  */
 struct Size2d {
