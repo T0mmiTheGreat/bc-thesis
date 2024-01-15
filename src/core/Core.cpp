@@ -36,6 +36,21 @@ void Core::calculateTrajectories(TurnData& turnData)
 	}
 }
 
+void Core::findPlayerCollisions(TurnData& turnData)
+{
+	for (auto& playerTurnA : turnData.playerTurns) {
+		for (auto& playerTurnB : turnData.playerTurns) {
+			if (std::addressof(playerTurnA) != std::addressof(playerTurnB)) {
+				double minSqdist = playerTurnA.trajectory.minSqdist(playerTurnB.trajectory);
+				double playerSqsizes = sqr(playerTurnA.playerRef->getSize() + playerTurnB.playerRef->getSize());
+				if (minSqdist <= playerSqsizes) {
+					playerTurnA.playerCollisions.push_back(playerTurnB.playerRef);
+				}
+			}
+		}
+	}
+}
+
 void Core::movePlayers(TurnData& turnData)
 {
 	double x, y;
@@ -43,6 +58,13 @@ void Core::movePlayers(TurnData& turnData)
 	for (auto& playerTurn : turnData.playerTurns) {
 		playerTurn.trajectory.getDelta(x, y);
 		playerTurn.playerRef->incPos(x, y);
+	}
+}
+
+void Core::changePlayersHp(TurnData& turnData)
+{
+	for (auto& playerTurn : turnData.playerTurns) {
+		playerTurn.playerRef->incHp(-HP_DRAIN*playerTurn.playerCollisions.size());
 	}
 }
 
@@ -57,7 +79,9 @@ void Core::playersActions()
 
 	initTurnData(turnData);
 	calculateTrajectories(turnData);
+	findPlayerCollisions(turnData);
 	movePlayers(turnData);
+	changePlayersHp(turnData);
 }
 
 void Core::loopEvent()

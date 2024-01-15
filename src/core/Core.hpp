@@ -24,6 +24,10 @@ private:
 	struct PlayerTurn {
 		std::shared_ptr<IPlayerState> playerRef;
 		Trajectory trajectory;
+		// This could also use unordered_set, but that's probably too complex;
+		// the operations needed are add(), read(), and clear(), each in random
+		// order, so vector is just enough, plus it has less overhead
+		std::vector<std::shared_ptr<IPlayerState>> playerCollisions;
 	};
 	struct TurnData {
 		std::vector<PlayerTurn> playerTurns;
@@ -54,7 +58,9 @@ private:
 	void playersActions();
 	void initTurnData(TurnData& turnData);
 	void calculateTrajectories(TurnData& turnData);
+	void findPlayerCollisions(TurnData& turnData);
 	void movePlayers(TurnData& turnData);
+	void changePlayersHp(TurnData& turnData);
 public:
 	Core();
 	/**
