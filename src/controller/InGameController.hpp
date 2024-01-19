@@ -19,15 +19,19 @@
 #include "types.hpp"
 #include "controller/GeneralControllerBase.hpp"
 #include "core/ICore.hpp"
+#include "playerinput/IPlayerInput.hpp"
 #include "sprite/PlayerSprite.hpp"
 
 class InGameController : public GeneralControllerBase {
 private:
-	static constexpr int PLAYER_COUNT = 2;
+	static constexpr int PLAYER_COUNT = 3;
 
 	std::unique_ptr<ICore> m_core;
 	std::vector<std::unique_ptr<PlayerSprite>> m_playerSprites;
 
+	void createPlayers();
+	void newPlayer(std::shared_ptr<IPlayerInput> playerInput, double startX,
+		double startY, const Color& color);
 	/**
 	 * @brief Sets the player sprite properties based on the state of the core.
 	 */

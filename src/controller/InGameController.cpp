@@ -21,22 +21,39 @@ InGameController::InGameController(std::shared_ptr<ISysProxy> sysProxy)
 	: GeneralControllerBase(sysProxy)
 	, m_core{std::make_unique<Core>()}
 {
-	auto player1Input = PlayerInputFactory::createKeyboardPlayerInputWSAD(sysProxy);
-	auto player1State = PlayerStateFactory::createDefault(200.0, 200.0, player1Input);
-	auto player1Sprite = std::make_unique<PlayerSprite>(sysProxy);
-	
-	auto player2Input = PlayerInputFactory::createKeyboardPlayerInputArrows(sysProxy);
-	auto player2State = PlayerStateFactory::createDefault(400.0, 200.0, player2Input);
-	auto player2Sprite = std::make_unique<PlayerSprite>(sysProxy);
+	createPlayers();
+}
 
-	m_core->addPlayer(player1State);
-	m_core->addPlayer(player2State);
+void InGameController::createPlayers()
+{
+	newPlayer(
+		PlayerInputFactory::createKeyboardPlayerInputWSAD(sysProxy),
+		200.0, 200.0,
+		Color::red()
+	);
+	newPlayer(
+		PlayerInputFactory::createKeyboardPlayerInputArrows(sysProxy),
+		400.0, 200.0,
+		Color::green()
+	);
+	newPlayer(
+		PlayerInputFactory::createKeyboardPlayerInput(sysProxy,
+			KEY_H, KEY_U, KEY_K, KEY_J),
+		300.0, 300.0,
+		Color(0xff, 0x80, 0xa0)
+	);
+}
 
-	player1Sprite->setColor(Color::red());
-	player2Sprite->setColor(Color::green());
+void InGameController::newPlayer(std::shared_ptr<IPlayerInput> playerInput,
+	double startX, double startY, const Color& color)
+{
+	auto playerState = PlayerStateFactory::createDefault(startX, startY,
+		playerInput);
+	m_core->addPlayer(playerState);
 
-	m_playerSprites.push_back(std::move(player1Sprite));
-	m_playerSprites.push_back(std::move(player2Sprite));
+	auto playerSprite = std::make_unique<PlayerSprite>(sysProxy);
+	playerSprite->setColor(color);
+	m_playerSprites.push_back(std::move(playerSprite));
 }
 
 void InGameController::updatePlayerSprites()
