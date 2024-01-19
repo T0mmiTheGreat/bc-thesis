@@ -87,6 +87,23 @@ enum FontId {
 constexpr size_t fontIdCount = (size_t)COUNT_FONTID;
 
 /**
+ * @brief Images used by the program.
+ */
+enum ImageId {
+	IMG_ICON_NEW = 0,
+	IMG_ICON_OPEN,
+	IMG_ICON_SAVE,
+	IMG_ICON_SAVE_AS,
+	IMG_ICON_PLAYER_TOOL,
+	IMG_ICON_OBSTACLE_TOOL,
+	// XXX: Add new images to SDL manager too (constructor)
+
+	COUNT_IMAGEID // Number of images used by the program
+};
+// Number of images used by the program
+constexpr size_t imageIdCount = (size_t)COUNT_IMAGEID;
+
+/**
  * @brief Converts milliseconds to clocks.
  * 
  * @tparam T Scalar type.
