@@ -83,6 +83,10 @@ private:
 	 * @brief Array of font objects.
 	 */
 	std::array<SDL2pp::Font, fontIdCount> m_fonts;
+	/**
+	 * @brief Array of images.
+	 */
+	std::array<SDL2pp::Texture, imageIdCount> m_images;
 
 	/**
 	 * @brief Returns true if the window needs to be repainted.
@@ -98,6 +102,10 @@ public:
 	 * @brief Returns font object by its ID.
 	 */
 	SDL2pp::Font& getFont(FontId id) { return m_fonts[id]; }
+	/**
+	 * @brief Returns image object (texture) by its ID.
+	 */
+	SDL2pp::Texture& getImage(ImageId id) { return m_images[id]; }
 
 	/**
 	 * @brief Assigns a SDL event subscriber.

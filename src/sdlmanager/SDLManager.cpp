@@ -22,9 +22,19 @@ SDLManager::SDLManager()
 	, renderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)
 	, m_eventLoopstate{EVENTLOOP_PRERUN}
 	, m_fonts{
+		//           font file path     font size
 		SDL2pp::Font(FONT_PATH_OLDENGL, 72),
 		SDL2pp::Font(FONT_PATH_SEGOEPR, 66),
 		SDL2pp::Font(FONT_PATH_BRLNSTR, 20),
+	}
+	, m_images{
+		//              renderer  image file path
+		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_NEW),
+		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_OPEN),
+		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_SAVE),
+		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_SAVE_AS),
+		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_PLAYER_TOOL),
+		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_OBSTACLE_TOOL),
 	}
 {}
 
