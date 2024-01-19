@@ -58,6 +58,13 @@ public:
 	 *                 (dependency injection). 
 	 */
 	static std::unique_ptr<IControllerChild> createInGameController(std::shared_ptr<ISysProxy> sysProxy);
+	/**
+	 * @brief Constructs a new StageEditorController object.
+	 * 
+	 * @param sysProxy Proxy for communication with the system manager
+	 *                 (dependency injection). 
+	 */
+	static std::unique_ptr<IControllerChild> createStageEditorController(std::shared_ptr<ISysProxy> sysProxy);
 };
 
 #endif // CONTROLLERFACTORY_HPP

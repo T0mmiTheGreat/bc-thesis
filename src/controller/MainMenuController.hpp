@@ -29,7 +29,8 @@ private:
 
 	// Indices of the buttons in the buttons array (and the length of the array)
 	static constexpr int MENU_PLAY_BTN_IDX = 0;
-	static constexpr int MENU_QUIT_BTN_IDX = MENU_PLAY_BTN_IDX + 1;
+	static constexpr int MENU_STAGE_EDITOR_BTN_IDX = MENU_PLAY_BTN_IDX + 1;
+	static constexpr int MENU_QUIT_BTN_IDX = MENU_STAGE_EDITOR_BTN_IDX + 1;
 	static constexpr int MENU_ITEM_COUNT = MENU_QUIT_BTN_IDX + 1;
 
 	// Sprites

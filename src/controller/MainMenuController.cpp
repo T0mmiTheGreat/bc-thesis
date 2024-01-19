@@ -42,6 +42,7 @@ void MainMenuController::createSprites()
 
 	// Set texts
 	m_menuBtns[MENU_PLAY_BTN_IDX]->setText("Play");
+	m_menuBtns[MENU_STAGE_EDITOR_BTN_IDX]->setText("Stage editor");
 	m_menuBtns[MENU_QUIT_BTN_IDX]->setText("Quit");
 
 	// Position
@@ -77,6 +78,8 @@ std::unique_ptr<IControllerChild> MainMenuController::createReplacement()
 	switch (m_selectedItem) {
 		case MENU_PLAY_BTN_IDX:
 			return ControllerFactory::createInGameController(sysProxy);
+		case MENU_STAGE_EDITOR_BTN_IDX:
+			return ControllerFactory::createStageEditorController(sysProxy);
 		default:
 			return nullptr;
 	}
@@ -98,6 +101,7 @@ void MainMenuController::mouseBtnDownEvent(MouseBtn btn, int x, int y)
 
 	switch (menuItemIdx) {
 		case MENU_PLAY_BTN_IDX:
+		case MENU_STAGE_EDITOR_BTN_IDX:
 			finishedEvent();
 			break;
 		case MENU_QUIT_BTN_IDX:
