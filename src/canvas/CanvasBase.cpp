@@ -11,6 +11,11 @@
 
 #include "canvas/CanvasBase.hpp"
 
+Size2d CanvasBase::getImageSize(ImageId img)
+{
+	return Size2d();
+}
+
 int CanvasBase::getWidth()
 {
 	return getRect().w;
@@ -67,4 +72,41 @@ void CanvasBase::drawRectangle(int x, int y, int w, int h)
 {
 	fillRectangle(x, y, w, h);
 	strokeRectangle(x, y, w, h);
+}
+
+void CanvasBase::copyImage(ImageId img, int x, int y)
+{
+	Size2d s = getImageSize(img);
+	copyImage(img, Rect(0, 0, s), x, y);
+}
+
+void CanvasBase::copyImage(ImageId img, int x, int y, double scale)
+{
+	Size2d s = getImageSize(img);
+	copyImage(img, Rect(0, 0, s), x, y, scale);
+}
+
+void CanvasBase::copyImage(ImageId img, int x, int y, double xScale, double yScale)
+{
+	Size2d s = getImageSize(img);
+	copyImage(img, Rect(0, 0, s), x, y, xScale, yScale);
+}
+
+void CanvasBase::copyImage(ImageId img, const Rect& srcRect, int x, int y)
+{
+	copyImage(img, srcRect, x, y, 1.0);
+}
+
+void CanvasBase::copyImage(ImageId img, const Rect& srcRect, int x, int y,
+	double scale)
+{
+	copyImage(img, srcRect, x, y, scale, scale);
+}
+
+void CanvasBase::copyImage(ImageId img, const Rect& srcRect, int x, int y,
+	double xScale, double yScale)
+{
+	const Rect dstRect(x, y, static_cast<int>(srcRect.w * xScale),
+		static_cast<int>(srcRect.h * yScale));
+	ICanvas::copyImage(img, srcRect, dstRect);
 }

@@ -156,6 +156,77 @@ public:
 	 * @param font The font to use.
 	 */
 	virtual void fillText(int x, int y, const std::string& text, FontId font) = 0;
+
+	/**
+	 * @brief Paint whole image.
+	 * 
+	 * @param img The image.
+	 * @param x X coordinate of the top left corner of the image.
+	 * @param y Y coordinate of the top left corner of the image.
+	 */
+	virtual void copyImage(ImageId img, int x, int y) = 0;
+	/**
+	 * @brief Paint scaled image.
+	 * 
+	 * @param img The image.
+	 * @param x X coordinate of the top left corner of the image.
+	 * @param y Y coordinate of the top left corner of the image.
+	 * @param scale Scaling of the image in both directions.
+	 */
+	virtual void copyImage(ImageId img, int x, int y, double scale) = 0;
+	/**
+	 * @brief Paint scaled image.
+	 * 
+	 * @param img The image.
+	 * @param x X coordinate of the top left corner of the image.
+	 * @param y Y coordinate of the top left corner of the image.
+	 * @param xScale Scaling of the image in the X dimension.
+	 * @param yScale Scaling of the image in the Y dimension.
+	 */
+	virtual void copyImage(ImageId img, int x, int y, double xScale,
+		double yScale) = 0;
+	/**
+	 * @brief Paint portion of image.
+	 * 
+	 * @param img The image.
+	 * @param srcRect Portion of the source image to paint.
+	 * @param x X coordinate of the top left corner of the image.
+	 * @param y Y coordinate of the top left corner of the image.
+	 */
+	virtual void copyImage(ImageId img, const Rect& srcRect, int x, int y) = 0;
+	/**
+	 * @brief Paint scaled portion of image.
+	 * 
+	 * @param img The image.
+	 * @param srcRect Portion of the source image to paint.
+	 * @param x X coordinate of the top left corner of the image.
+	 * @param y Y coordinate of the top left corner of the image.
+	 * @param scale Scaling of the image in both directions.
+	 */
+	virtual void copyImage(ImageId img, const Rect& srcRect, int x, int y,
+		double scale) = 0;
+	/**
+	 * @brief 
+	 * 
+	 * @param img The image.
+	 * @param srcRect Portion of the source image to paint.
+	 * @param x X coordinate of the top left corner of the image.
+	 * @param y Y coordinate of the top left corner of the image.
+	 * @param xScale Scaling of the image in the X dimension.
+	 * @param yScale Scaling of the image in the Y dimension.
+	 */
+	virtual void copyImage(ImageId img, const Rect& srcRect, int x, int y,
+		double xScale, double yScale) = 0;
+	/**
+	 * @brief Paint image.
+	 * 
+	 * @param img The image.
+	 * @param srcRect Portion of the source image to paint.
+	 * @param dstRect Area on the canvas to paint into. The image will be
+	 *                scaled.
+	 */
+	virtual void copyImage(ImageId img, const Rect& srcRect,
+		const Rect& dstRect) = 0;
 };
 
 #endif // ICANVAS_HPP

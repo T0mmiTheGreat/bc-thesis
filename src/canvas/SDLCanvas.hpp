@@ -21,6 +21,8 @@
  * @brief Concrete implementation of ICanvas for the SDL library.
  */
 class SDLCanvas : public CanvasBase {
+protected:
+	Size2d getImageSize(ImageId img) override;
 public:
 	/**
 	 * @brief Converts `fColor` value to `SDL2pp::Color`.
@@ -136,6 +138,9 @@ public:
 	 * @param font The font to use.
 	 */
 	void fillText(int x, int y, const std::string& text, FontId font) override;
+	
+	void copyImage(ImageId img, const Rect& srcRect,
+		const Rect& dstRect) override;
 };
 
 #endif // SDLCANVAS_HPP

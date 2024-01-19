@@ -46,6 +46,15 @@ protected:
 	 * @brief Stroke width.
 	 */
 	double sWidth;
+
+	/**
+	 * @brief Returns the size of an image.
+	 * 
+	 * @remark This method returns empty size. If descendants are not willing to
+	 *         implement all the overloads of the copyImage() method, they
+	 *         should override this method.
+	 */
+	virtual Size2d getImageSize(ImageId img);
 public:
 	/**
 	 * @brief Get width of the canvas in screen coordinates.
@@ -130,6 +139,85 @@ public:
 	 * @param h Height of the rectangle.
 	 */
 	virtual void drawRectangle(int x, int y, int w, int h) override;
+	
+	/**
+	 * @brief Paint whole image.
+	 * 
+	 * @param img The image.
+	 * @param x X coordinate of the top left corner of the image.
+	 * @param y Y coordinate of the top left corner of the image.
+	 * 
+	 * @remark If descendants are not going to override this method, they should
+	 *         override the getImageSize() method.
+	 */
+	virtual void copyImage(ImageId img, int x, int y) override;
+	/**
+	 * @brief Paint scaled image.
+	 * 
+	 * @param img The image.
+	 * @param x X coordinate of the top left corner of the image.
+	 * @param y Y coordinate of the top left corner of the image.
+	 * @param scale Scaling of the image in both directions.
+	 * 
+	 * @remark If descendants are not going to override this method, they should
+	 *         override the getImageSize() method.
+	 */
+	virtual void copyImage(ImageId img, int x, int y, double scale) override;
+	/**
+	 * @brief Paint scaled image.
+	 * 
+	 * @param img The image.
+	 * @param x X coordinate of the top left corner of the image.
+	 * @param y Y coordinate of the top left corner of the image.
+	 * @param xScale Scaling of the image in the X dimension.
+	 * @param yScale Scaling of the image in the Y dimension.
+	 * 
+	 * @remark If descendants are not going to override this method, they should
+	 *         override the getImageSize() method.
+	 */
+	virtual void copyImage(ImageId img, int x, int y, double xScale,
+		double yScale) override;
+	/**
+	 * @brief Paint portion of image.
+	 * 
+	 * @param img The image.
+	 * @param srcRect Portion of the source image to paint.
+	 * @param x X coordinate of the top left corner of the image.
+	 * @param y Y coordinate of the top left corner of the image.
+	 * 
+	 * @remark If descendants are not going to override this method, they should
+	 *         override the getImageSize() method.
+	 */
+	virtual void copyImage(ImageId img, const Rect& srcRect, int x, int y) override;
+	/**
+	 * @brief Paint scaled portion of image.
+	 * 
+	 * @param img The image.
+	 * @param srcRect Portion of the source image to paint.
+	 * @param x X coordinate of the top left corner of the image.
+	 * @param y Y coordinate of the top left corner of the image.
+	 * @param scale Scaling of the image in both directions.
+	 * 
+	 * @remark If descendants are not going to override this method, they should
+	 *         override the getImageSize() method.
+	 */
+	virtual void copyImage(ImageId img, const Rect& srcRect, int x, int y,
+		double scale) override;
+	/**
+	 * @brief 
+	 * 
+	 * @param img The image.
+	 * @param srcRect Portion of the source image to paint.
+	 * @param x X coordinate of the top left corner of the image.
+	 * @param y Y coordinate of the top left corner of the image.
+	 * @param xScale Scaling of the image in the X dimension.
+	 * @param yScale Scaling of the image in the Y dimension.
+	 * 
+	 * @remark If descendants are not going to override this method, they should
+	 *         override the getImageSize() method.
+	 */
+	virtual void copyImage(ImageId img, const Rect& srcRect, int x, int y,
+		double xScale, double yScale) override;
 };
 
 #endif // CANVASBASE_HPP

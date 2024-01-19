@@ -17,6 +17,12 @@
 
 #include "sdlmanager/SDLManager.hpp"
 
+Size2d SDLCanvas::getImageSize(ImageId img)
+{
+	SDL2pp::Point p = SDLManager::get().getImageSize(img);
+	return SDLManager::sdlPointToSize(p);
+}
+
 SDL2pp::Color SDLCanvas::fillToColor()
 {
 	return SDL2pp::Color(fColor.r, fColor.g, fColor.b, fColor.a);
@@ -127,3 +133,10 @@ void SDLCanvas::fillText(int x, int y, const std::string& text, FontId font)
 	SDLManager::get().renderer.Copy(textTex, SDL2pp::NullOpt, SDL2pp::Point(x, y));
 }
 
+void SDLCanvas::copyImage(ImageId img, const Rect& srcRect, const Rect& dstRect)
+{
+	SDL2pp::Texture& img_ = SDLManager::get().getImage(img);
+	SDL2pp::Rect srcRect_ = SDLManager::rectToSdlRect(srcRect);
+	SDL2pp::Rect dstRect_ = SDLManager::rectToSdlRect(dstRect);
+	SDLManager::get().renderer.Copy(img_, srcRect_, dstRect_);
+}
