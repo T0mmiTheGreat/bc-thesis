@@ -32,6 +32,7 @@ set(SOURCE_FILES
 	controller/LogoController.cpp
 	controller/MainMenuController.cpp
 	controller/InGameController.cpp
+	controller/StageEditorController.cpp
 	math/Math.cpp
 	sprite/SpriteBase.cpp
 	sprite/LogoSprite.cpp
@@ -79,6 +80,7 @@ set(HEADER_FILES
 	controller/LogoController.hpp
 	controller/MainMenuController.hpp
 	controller/InGameController.hpp
+	controller/StageEditorController.hpp
 	math/Math.hpp
 	sprite/ISprite.hpp
 	sprite/SpriteBase.hpp
