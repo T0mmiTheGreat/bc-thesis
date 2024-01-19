@@ -106,7 +106,7 @@ set(HEADER_FILES
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../)
 
 set(SDL2PP_WITH_TTF ON)
-set(SDL2PP_WITH_IMAGE OFF)
+set(SDL2PP_WITH_IMAGE ON)
 set(SDL2PP_WITH_MIXER OFF)
 add_subdirectory(../libSDL2pp/ ../libSDL2pp/)
 
@@ -115,10 +115,13 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 find_package(SDL2_ttf REQUIRED)
 include_directories(${SDL2_ttf_INCLUDE_DIRS})
+find_package(SDL2_image REQUIRED)
+include_directories(${SDL2_image_INCLUDE_DIRS})
 
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
 
 # Link libraries
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${SDL2_ttf_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${SDL2_image_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} SDL2pp::SDL2pp)

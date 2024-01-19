@@ -52,8 +52,11 @@ public:
 	 */
 	SDL2pp::SDL sdl;
 	/**
+	 * @brief Global SDLImage object instance.
+	 */
+	SDL2pp::SDLImage sdlImage;
+	/**
 	 * @brief Global SDLTTF object instance.
-	 * 
 	 */
 	SDL2pp::SDLTTF sdlTtf;
 	/**
