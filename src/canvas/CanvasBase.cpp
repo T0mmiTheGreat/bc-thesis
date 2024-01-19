@@ -108,5 +108,5 @@ void CanvasBase::copyImage(ImageId img, const Rect& srcRect, int x, int y,
 {
 	const Rect dstRect(x, y, static_cast<int>(srcRect.w * xScale),
 		static_cast<int>(srcRect.h * yScale));
-	ICanvas::copyImage(img, srcRect, dstRect);
+	copyImage(img, srcRect, dstRect);
 }

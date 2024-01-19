@@ -218,6 +218,16 @@ public:
 	 */
 	virtual void copyImage(ImageId img, const Rect& srcRect, int x, int y,
 		double xScale, double yScale) override;
+	/**
+	 * @brief Paint image.
+	 * 
+	 * @param img The image.
+	 * @param srcRect Portion of the source image to paint.
+	 * @param dstRect Area on the canvas to paint into. The image will be
+	 *                scaled.
+	 */
+	virtual void copyImage(ImageId img, const Rect& srcRect,
+		const Rect& dstRect) = 0;
 };
 
 #endif // CANVASBASE_HPP
