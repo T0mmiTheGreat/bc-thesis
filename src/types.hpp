@@ -84,7 +84,7 @@ enum FontId {
 	COUNT_FONTID // Number of fonts used by the program
 };
 // Number of fonts used by the program
-constexpr size_t fontIdCount = (size_t)COUNT_FONTID;
+constexpr size_t fontIdCount = static_cast<size_t>(COUNT_FONTID);
 
 /**
  * @brief Images used by the program.
@@ -101,7 +101,7 @@ enum ImageId {
 	COUNT_IMAGEID // Number of images used by the program
 };
 // Number of images used by the program
-constexpr size_t imageIdCount = (size_t)COUNT_IMAGEID;
+constexpr size_t imageIdCount = static_cast<size_t>(COUNT_IMAGEID);
 
 /**
  * @brief Converts milliseconds to clocks.
