@@ -106,6 +106,12 @@ public:
 	 * @brief Returns image object (texture) by its ID.
 	 */
 	SDL2pp::Texture& getImage(ImageId id) { return m_images[id]; }
+	/**
+	 * @brief Returns the size of an image.
+	 */
+	SDL2pp::Point getImageSize(ImageId id) const {
+		return m_images[id].GetSize();
+	}
 
 	/**
 	 * @brief Assigns a SDL event subscriber.
