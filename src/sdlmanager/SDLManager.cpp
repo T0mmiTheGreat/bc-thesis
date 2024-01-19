@@ -12,8 +12,8 @@
 #include "sdlmanager/SDLManager.hpp"
 
 #include <cassert>
-#include "SDLManager.hpp"
-#include "SDLManager.hpp"
+
+#include "constants.hpp"
 
 SDLManager::SDLManager()
 	: sdl(SDL_INIT_VIDEO)
@@ -22,9 +22,9 @@ SDLManager::SDLManager()
 	, renderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)
 	, m_eventLoopstate{EVENTLOOP_PRERUN}
 	, m_fonts{
-		SDL2pp::Font(FONTS_DIR + "oldengl.ttf", 72),
-		SDL2pp::Font(FONTS_DIR + "segoepr.ttf", 66),
-		SDL2pp::Font(FONTS_DIR + "brlnstr.ttf", 20),
+		SDL2pp::Font(FONT_PATH_OLDENGL, 72),
+		SDL2pp::Font(FONT_PATH_SEGOEPR, 66),
+		SDL2pp::Font(FONT_PATH_BRLNSTR, 20),
 	}
 {}
 

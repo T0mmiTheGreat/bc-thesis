@@ -53,6 +53,7 @@ set(SOURCE_FILES
 # Headers (*.hpp)
 set(HEADER_FILES
 	SDL2_gfxPrimitives.h
+	constants.hpp
 	types.hpp
 	sdlmanager/SDLManager.hpp
 	sdlsubscriber/ISDLSubscriber.hpp
