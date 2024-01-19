@@ -46,6 +46,10 @@ public:
 	 */
 	virtual Size2d getTextSize(const std::string& text, FontId font) = 0;
 	/**
+	 * @brief Returns the size of an image.
+	 */
+	virtual Size2d getImageSize(ImageId img) = 0;
+	/**
 	 * @brief Returns the current size of the screen area in pixels.
 	 */
 	virtual Size2d getPaintAreaSize() = 0;

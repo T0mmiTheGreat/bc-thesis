@@ -50,6 +50,12 @@ Size2d SDLSysProxy::getTextSize(const std::string& text, FontId font)
 	return SDLManager::sdlPointToSize(fontObj.GetSizeUTF8(text));
 }
 
+Size2d SDLSysProxy::getImageSize(ImageId img)
+{
+	SDL2pp::Point p = SDLManager::get().getImageSize(img);
+	return SDLManager::get().sdlPointToSize(p);
+}
+
 Size2d SDLSysProxy::getPaintAreaSize()
 {
 	return SDLManager::sdlPointToSize(SDLManager::get().renderer.GetOutputSize());
