@@ -18,7 +18,7 @@ class DefaultPlayerState : public PlayerStateBase {
 public:
 	// Default values, i.e., not provided in the constructor
 
-	static constexpr double DEFAULT_BASE_SIZE = 35.0;
+	static constexpr double DEFAULT_BASE_SIZE = 32.0;
 	static constexpr double DEFAULT_SIZE_POWER = 1.0;
 	static constexpr double DEFAULT_BASE_SPEED = 3.0;
 	static constexpr double DEFAULT_SPEED_POWER = 1.0;
