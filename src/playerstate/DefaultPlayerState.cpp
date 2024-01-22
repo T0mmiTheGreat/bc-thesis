@@ -38,12 +38,10 @@ DefaultPlayerState::DefaultPlayerState()
 
 double DefaultPlayerState::getSize()
 {
-	// Full HP -> 35.0
+	// Full HP -> 32.0
 	// 0 HP -> 0.0
-	// 2x Full HP -> 70.0 ...? (Or less?)
-	// Would probably apply this: `hp^x * 35.0`, where x -> (0, 1)
-	return std::pow(hp, sizePower) * 35.0;
-	//return hp * 35.0;
+	// 2x Full HP -> 64.0 ...? (Or less?)
+	return std::pow(hp, sizePower) * baseSize;
 }
 
 double DefaultPlayerState::getSpeed()
