@@ -12,8 +12,10 @@
 #ifndef TYPES_HPP
 #define TYPES_HPP
 
+#include <array>
 #include <cstdint>
 #include <ctime>
+#include <vector>
 
 /**
  * @brief State of the event loop execution.
@@ -323,6 +325,99 @@ struct Rect {
 	 */
 	Rect& operator+= (const Rect& rhs) {
 		return (*this = this->unionRect(rhs));
+	}
+};
+
+/**
+ * @brief Three-corner polygon (floating point coordinates).
+ */
+struct TriangleF {
+	typedef PointF::ValueType ValueType;
+
+	// In case you didn't know, triangle has 3 corners...
+	static constexpr int CORNER_COUNT = 3;
+
+	std::array<PointF, CORNER_COUNT> corners;
+
+	TriangleF(const PointF& pA, const PointF& pB, const PointF& pC)
+		: corners{pA, pB, pC}
+	{}
+
+	TriangleF()
+		: TriangleF(PointF::zero(), PointF::zero(), PointF::zero())
+	{}
+};
+
+/**
+ * @brief Polygon (floating point coordinates).
+ */
+struct PolygonF {
+	typedef PointF::ValueType ValueType;
+	
+	/**
+	 * @brief Vector-based class with a convenient overload.
+	 */
+	class PolygonCorners : public std::vector<PointF> {
+	public:
+		/**
+		 * @brief Appends the given element `value` to the end of the container.
+		 * 
+		 * @param value The value of the element to append. The new element is
+		 *              initialized as a copy of `value`.
+		 * 
+		 * @note Inherited from std::vector.
+		 */
+		constexpr void push_back(const PointF& value) {
+			std::vector<PointF>::push_back(value);
+		}
+		/**
+		 * @brief Appends the given element `value` to the end of the container.
+		 * 
+		 * @param value The value of the element to append. `value` is moved
+		 *              into the new element.
+		 * 
+		 * @note Inherited from std::vector.
+		 */
+		constexpr void push_back(PointF&& value) {
+			std::vector<PointF>::push_back(value);
+		}
+		/**
+		 * @brief Creates a new PointF value and apends it to the end of the
+		 *        container.
+		 * 
+		 * @param x X coordinate of the point.
+		 * @param y Y coordinate of the point.
+		 */
+		constexpr void push_back(PointF::ValueType x, PointF::ValueType y) {
+			push_back(PointF(x, y));
+		}
+	};
+
+	PolygonCorners corners;
+
+	/**
+	 * @brief Constructs a new PolygonF object from the provided list
+	 *        of corners.
+	 * 
+	 * @tparam Args Must be `PointF`.
+	 * @param corners An arbitrary number of `PointF` values.
+	 */
+	template <typename... Args>
+	PolygonF(const Args&... corners) {
+		this->corners.reserve(sizeof...(corners));
+		// "Fold expression" -- for each arg do...
+		// See https://en.cppreference.com/w/cpp/language/fold
+		(this->corners.push_back(corners), ...);
+	}
+
+	/**
+	 * @brief Constructs a new PolygonF object from `TriangleF` object.
+	 */
+	PolygonF(const TriangleF& triangle) {
+		corners.reserve(triangle.CORNER_COUNT);
+		for (auto& corner : triangle.corners) {
+			corners.push_back(corner);
+		}
 	}
 };
 
