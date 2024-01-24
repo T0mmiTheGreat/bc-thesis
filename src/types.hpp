@@ -119,10 +119,12 @@ inline constexpr T msToClocks(T ms);
  * @brief Structure representing X and Y coordinate (fixed point).
  */
 struct Point {
-	int x;
-	int y;
+	typedef int ValueType;
 
-	Point(int x, int y)
+	ValueType x;
+	ValueType y;
+
+	Point(ValueType x, ValueType y)
 		: x{x}
 		, y{y}
 	{}
@@ -135,26 +137,34 @@ struct Point {
  * @brief Structure representing X and Y coordinate (floating point).
  */
 struct PointF {
-	double x;
-	double y;
+	typedef double ValueType;
 
-	PointF(double x, double y)
+	ValueType x;
+	ValueType y;
+
+	PointF(ValueType x, ValueType y)
 		: x{x}
 		, y{y}
 	{}
 	PointF()
 		: PointF(0, 0)
 	{}
+
+	static PointF zero() {
+		return PointF();
+	}
 };
 
 /**
  * @brief Width and height structure.
  */
 struct Size2d {
-	int w;
-	int h;
+	typedef int ValueType;
 
-	Size2d(int w, int h)
+	ValueType w;
+	ValueType h;
+
+	Size2d(ValueType w, ValueType h)
 		: w{w}
 		, h{h}
 	{}
@@ -214,33 +224,35 @@ struct Size2d {
  * @brief The axis-aligned rectangle type.
  */
 struct Rect {
+	typedef int ValueType;
+
 	/**
 	 * @brief X coordinate of the left side of the rectangle.
 	 */
-	int x;
+	ValueType x;
 	/**
 	 * @brief Y coordinate of the left side of the rectangle.
 	 */
-	int y;
+	ValueType y;
 	/**
 	 * @brief Width of the rectangle.
 	 */
-	int w;
+	ValueType w;
 	/**
 	 * @brief Height of the rectangle.
 	 */
-	int h;
+	ValueType h;
 
 	Rect()
 		: Rect(0, 0, 0, 0)
 	{}
-	Rect(int x, int y, int w, int h)
+	Rect(ValueType x, ValueType y, ValueType w, ValueType h)
 		: x{x}
 		, y{y}
 		, w{w}
 		, h{h}
 	{}
-	Rect(int x, int y, const Size2d& size)
+	Rect(ValueType x, ValueType y, const Size2d& size)
 		: Rect(x, y, size.w, size.h)
 	{}
 	Rect(const Point& topLeft, const Size2d& size)
@@ -254,11 +266,11 @@ struct Rect {
 	/**
 	 * @brief Get X coordinate of the right side of the rectangle.
 	 */
-	int getRight() const { return x + w; }
+	ValueType getRight() const { return x + w; }
 	/**
 	 * @brief Get Y coordinate of the bottom side of the rectangle.
 	 */
-	int getBottom() const { return y + h; }
+	ValueType getBottom() const { return y + h; }
 	/**
 	 * @brief Get the structure containing the width and height of the rectangle.
 	 */
