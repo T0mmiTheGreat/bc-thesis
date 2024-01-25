@@ -43,5 +43,7 @@ int HorizontalLineSprite::getR() const
 
 void HorizontalLineSprite::setR(int value)
 {
+	invalidateBounds();
 	r = value;
+	invalidateBounds();
 }
