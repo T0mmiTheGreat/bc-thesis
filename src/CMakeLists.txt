@@ -37,6 +37,7 @@ set(SOURCE_FILES
 	controller/StageEditorController.cpp
 	math/Math.cpp
 	sprite/SpriteBase.cpp
+	sprite/AnimatedSpriteBase.cpp
 	sprite/LogoSprite.cpp
 	sprite/MainMenuItemSprite.cpp
 	sprite/MainMenuTitleSprite.cpp
@@ -85,7 +86,9 @@ set(HEADER_FILES
 	controller/StageEditorController.hpp
 	math/Math.hpp
 	sprite/ISprite.hpp
+	sprite/IAnimatedSprite.hpp
 	sprite/SpriteBase.hpp
+	sprite/AnimatedSpriteBase.hpp
 	sprite/LogoSprite.hpp
 	sprite/MainMenuItemSprite.hpp
 	sprite/MainMenuTitleSprite.hpp

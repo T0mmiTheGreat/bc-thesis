@@ -26,7 +26,6 @@ void SpriteBase::posChangedEvent(int oldX, int oldY, int newX, int newY)
 SpriteBase::SpriteBase(std::shared_ptr<IPaintingProxy> paintingProxy)
 	: x{0}
 	, y{0}
-	, isAnimationRunningFlag{false}
 	, paintingProxy{paintingProxy}
 {}
 
@@ -78,26 +77,4 @@ Rect SpriteBase::getBounds()
 {
 	Size2d size = getSize();
 	return Rect(getX(), getY(), size.w, size.h);
-}
-
-void SpriteBase::startAnimation()
-{
-	if (isAnimationRunning()) {
-		stopAnimation();
-	}
-	isAnimationRunningFlag = true;
-}
-
-void SpriteBase::stopAnimation()
-{
-	isAnimationRunningFlag = false;
-}
-
-bool SpriteBase::isAnimationRunning()
-{
-	return isAnimationRunningFlag;
-}
-
-void SpriteBase::loopEvent()
-{
 }

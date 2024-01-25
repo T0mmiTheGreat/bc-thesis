@@ -12,7 +12,7 @@
 #include "sprite/LogoSprite.hpp"
 
 LogoSprite::LogoSprite(std::shared_ptr<IPaintingProxy> paintingProxy)
-	: SpriteBase(paintingProxy)
+	: AnimatedSpriteBase(paintingProxy)
 	, m_timer(TIMER_INTERVAL)
 	, m_anim(0)
 {}
@@ -118,14 +118,14 @@ Size2d LogoSprite::getSize()
 
 void LogoSprite::startAnimation()
 {
-	SpriteBase::startAnimation();
+	AnimatedSpriteBase::startAnimation();
 	startAnimationPhase(ANIM_FADEIN);
 	m_timer.reset();
 }
 
 void LogoSprite::stopAnimation()
 {
-	SpriteBase::stopAnimation();
+	AnimatedSpriteBase::stopAnimation();
 	m_opacity = 0;
 	invalidateBounds();
 }

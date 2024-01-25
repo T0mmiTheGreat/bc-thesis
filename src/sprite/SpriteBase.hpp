@@ -31,7 +31,6 @@ protected:
 	int x;
 	int y;
 	std::shared_ptr<IPaintingProxy> paintingProxy;
-	bool isAnimationRunningFlag;
 
 	/**
 	 * @brief Calls `invalidateRect()` with the sprite bounds as the parameter.
@@ -39,16 +38,6 @@ protected:
 	 * @details `sysProxy->invalidateRect(getBounds())`.
 	 */
 	void invalidateBounds();
-	/**
-	 * @brief Represent the animation progress as a number in interval <0,1>.
-	 * 
-	 * @param frameNumber Current frame number.
-	 * @param frameCount Maximum frame number.
-	 */
-	static constexpr double getAnimProgress(int frameNumber, unsigned frameCount) {
-		return static_cast<double>(frameNumber) / static_cast<double>(frameCount - 1);
-	}
-
 	/**
 	 * @brief The sprite position has changed.
 	 * 
@@ -114,53 +103,6 @@ public:
 	 *          Uses `getX()`, `getY()` and `getSize()` to get the bounds rect.
 	 */
 	virtual Rect getBounds() override;
-	/**
-	 * @brief Starts a sprite animation.
-	 * 
-	 * @details If the method is called while an animation is running, the
-	 *          running animation is stopped.
-	 * 
-	 *         	Sets the `isAnimationRunningFlag`.
-	 * 
-	 * @remarks If a sprite doesn't have an animation, this should be no-op.
-	 * 
-	 *          If a sprite has multiple animations, they might provide methods
-	 *          to select which animation to start. The caller then should first
-	 *          call the method which selects the animation and then call this
-	 *          method.
-	 */
-	virtual void startAnimation() override;
-	/**
-	 * @brief Stops an animation if one is running.
-	 * 
-	 * @details Clears the `isAnimationRunningFlag`.
-	 * 
-	 * @remarks This should be no-op if a sprite doesn't have an animation or
-	 *          if animation is not running.
-	 * 
-	 *          It is NOT necessary to call this method after the animation
-	 *          finishes. If it would be, the object itself should call it.
-	 */
-	virtual void stopAnimation() override;
-	/**
-	 * @brief Checks whether an animation is running.
-	 * 
-	 * @details Reads the `isAnimationRunningFlag`.
-	 * 
-	 * @remark Mainly used for checking whether the animation has finished.
-	 */
-	virtual bool isAnimationRunning() override;
-	/**
-	 * @brief Event that happens every event loop iteration.
-	 * 
-	 * @details This method is mainly used to progress any running animations,
-	 *          but in the future there might be more functionality to this, so
-	 *          it is better to call it every iteration no matter the sprite
-	 *          does or does not have an animation.
-	 * 
-	 *          No-op unless overriden.
-	 */
-	virtual void loopEvent() override;
 };
 
 #endif // SPRITEBASE_HPP

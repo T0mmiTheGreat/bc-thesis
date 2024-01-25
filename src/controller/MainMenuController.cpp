@@ -128,10 +128,6 @@ void MainMenuController::mouseMoveEvent(int x, int y)
 void MainMenuController::loopEvent()
 {
 	GeneralControllerBase::loopEvent();
-	for (auto& btn : m_menuBtns) {
-		btn->loopEvent();
-	}
-	m_title->loopEvent();
 }
 
 void MainMenuController::paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)
