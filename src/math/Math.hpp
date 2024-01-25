@@ -12,10 +12,26 @@
 #ifndef MATH_HPP
 #define MATH_HPP
 
+#include <vector>
+
 template<typename T>
 inline constexpr T sqr(T x)
 {
 	return x*x;
 }
+
+/**
+ * @brief Triangulates a polygon (converts it to a collection of triangles).
+ * 
+ * @param corners X and Y coordinates of the polygon corners.
+ * @param triangles The generated triangles, each stored as array of corners,
+ *                  which are arrays consisting of the corner's X and Y
+ *                  coordinate.
+ * 
+ * @remark The polygon must be simple, i.e., without self-intersecting
+ *         edges.
+ */
+void triangulatePolygon(std::vector<double[2]> corners,
+	std::vector<double[2][3]> triangles);
 
 #endif // MATH_HPP
