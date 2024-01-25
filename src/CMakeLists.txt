@@ -10,6 +10,8 @@ project(krpole LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 
+cmake_policy(SET CMP0153 OLD)
+
 include_directories(.)
 
 # Sources (*.cpp)
