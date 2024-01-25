@@ -343,6 +343,10 @@ struct TriangleF {
 		: corners{pA, pB, pC}
 	{}
 
+	constexpr TriangleF(const PointF (&corners)[3])
+		: TriangleF(corners[0], corners[1], corners[2])
+	{}
+
 	constexpr TriangleF()
 		: TriangleF(PointF::zero(), PointF::zero(), PointF::zero())
 	{}
