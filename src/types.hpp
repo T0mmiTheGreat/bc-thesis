@@ -462,15 +462,15 @@ struct PolygonF {
 		std::vector<std::array<std::array<double,2>,3>> outTriangles;
 
 		// Fill vector for triangulatePolygon()
-		//inPolygon.reserve(cornerCount());
+		inPolygon.reserve(cornerCount());
 		for (auto& corner : corners) {
 			polygonPt[0] = corner.x;
 			polygonPt[1] = corner.y;
-			//inPolygon.push_back(std::move(polygonPt));
+			inPolygon.push_back(std::move(polygonPt));
 		}
 
 		// Triangulate
-		//triangulatePolygon(inPolygon, outTriangles);
+		triangulatePolygon(inPolygon, outTriangles);
 
 		PointF corners[3];
 		// Copy to output vector
