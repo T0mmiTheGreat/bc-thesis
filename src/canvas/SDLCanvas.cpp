@@ -59,6 +59,15 @@ void SDLCanvas::setStrokingColor(Color color)
 	CanvasBase::setStrokingColor(color);
 }
 
+void SDLCanvas::strokeLine(int x0, int y0, int x1, int y1)
+{
+	SDLManager::get().renderer.SetDrawColor(strokeToColor());
+	SDLManager::get().renderer.DrawLine(
+		SDL2pp::Point(x0, y0),
+		SDL2pp::Point(x1, y1)
+	);
+}
+
 void SDLCanvas::fillEllipse(int x, int y, int rx, int ry)
 {
 	filledEllipseRGBA(
