@@ -129,6 +129,7 @@ find_package(SDL2_ttf REQUIRED)
 include_directories(${SDL2_ttf_INCLUDE_DIRS})
 find_package(SDL2_image REQUIRED)
 include_directories(${SDL2_image_INCLUDE_DIRS})
+set(CGAL_DO_NOT_WARN_ABOUT_CMAKE_BUILD_TYPE TRUE)
 find_package(CGAL REQUIRED)
 include_directories(${CGAL_INCLUDE_DIRS})
 
