@@ -25,6 +25,11 @@
  * @details Provides convenient overrides for events, so if descendants don't
  *          need to listen to some events, they don't need to explicitly
  *          override the pure virtual methods and make their body empty.
+ * 
+ *          There are no methods that the descendants are forced to implement.
+ *          They may choose to override `createReplacement()` if they are not
+ *          "point of no return". They MUST call this class's constructor if
+ *          they provide their own.
  */
 class GeneralControllerBase : public IControllerChild {
 protected:
@@ -61,6 +66,8 @@ public:
 	 *          only by the controller itself and not its parent.
 	 * 
 	 *          Automatically calls the swap callback.
+	 * 
+	 *          Descendants should call this method if they override it.
 	 */
 	virtual void finishedEvent() override;
 	/**
@@ -70,6 +77,8 @@ public:
 	 *          by its parent and not the controller itself.
 	 * 
 	 *          Delegated to finishedEvent.
+	 * 
+	 *          Descendants should call this method if they override it.
 	 */
 	virtual void stoppedEvent() override;
 	/**
@@ -80,6 +89,8 @@ public:
 	 *          "exceptional termination".
 	 * 
 	 *          Delegated to finishedEvent.
+	 * 
+	 *          Descendants should call this method if they override it.
 	 */
 	virtual void abortedEvent() override;
 	/**
@@ -135,6 +146,8 @@ public:
 	 *          the child with the provided controller.
 	 * 
 	 *          Modifies `swapCallback`.
+	 * 
+	 *          Descendants should call this method if they override it.
 	 */
 	virtual void setSwapCallback(SwapCallback f) override;
 };

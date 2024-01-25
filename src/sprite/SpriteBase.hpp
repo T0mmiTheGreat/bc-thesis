@@ -21,6 +21,10 @@
 
 /**
  * @brief Base class for all sprites.
+ * 
+ * @details Every descendant MUST provide implementation of getSize() and
+ *          repaint() methods. They MUST call this class's constructor if
+ *          they provide their own.
  */
 class SpriteBase : public ISprite {
 protected:
@@ -47,6 +51,8 @@ protected:
 
 	/**
 	 * @brief The sprite position has changed.
+	 * 
+	 * @details Descendants should call this method if they override it.
 	 */
 	virtual void posChangedEvent(int oldX, int oldY, int newX, int newY);
 public:
