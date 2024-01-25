@@ -12,6 +12,7 @@
 #ifndef MATH_HPP
 #define MATH_HPP
 
+#include <array>
 #include <vector>
 
 template<typename T>
@@ -31,7 +32,7 @@ inline constexpr T sqr(T x)
  * @remark The polygon must be simple, i.e., without self-intersecting
  *         edges.
  */
-void triangulatePolygon(std::vector<double[2]> corners,
-	std::vector<double[2][3]> triangles);
+void triangulatePolygon(std::vector<std::array<double,2>> corners,
+	std::vector<std::array<std::array<double,2>,3>> triangles);
 
 #endif // MATH_HPP

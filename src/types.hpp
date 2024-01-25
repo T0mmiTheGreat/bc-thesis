@@ -454,21 +454,24 @@ struct PolygonF {
 		// We want to create a new "result"
 		assert(result.empty());
 
-		std::vector<double[2]> in_polygon;
-		std::vector<double[2][3]> out_triangles;
+		std::vector<std::array<double,2>> inPolygon;
+		std::array<double,2> polygonPt;
+		std::vector<std::array<std::array<double,2>,3>> outTriangles;
 
 		// Fill vector for triangulatePolygon()
-		in_polygon.reserve(cornerCount());
+		//inPolygon.reserve(cornerCount());
 		for (auto& corner : corners) {
-			in_polygon.push_back({corner.x, corner.y});
+			polygonPt[0] = corner.x;
+			polygonPt[1] = corner.y;
+			//inPolygon.push_back(std::move(polygonPt));
 		}
 
 		// Triangulate
-		triangulatePolygon(in_polygon, out_triangles);
+		//triangulatePolygon(inPolygon, outTriangles);
 
 		PointF corners[3];
 		// Copy to output vector
-		for (auto& triangle : out_triangles) {
+		for (auto& triangle : outTriangles) {
 			// For each triangle corner...
 			for (int i = 0; i < 3; i++) {
 				corners[i].x = triangle[i][0];

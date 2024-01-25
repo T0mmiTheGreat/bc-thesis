@@ -19,8 +19,8 @@
 #include <CGAL/mark_domain_in_triangulation.h>
 #include <CGAL/Polygon_2.h>
 
-void triangulatePolygon(std::vector<double[2]> corners,
-	std::vector<double[2][3]> triangles)
+void triangulatePolygon(std::vector<std::array<double,2>> corners,
+	std::vector<std::array<std::array<double,2>,3>> triangles)
 {
 	// Inspired from https://doc.cgal.org/latest/Triangulation_2/Triangulation_2_2polygon_triangulation_8cpp-example.html
 
