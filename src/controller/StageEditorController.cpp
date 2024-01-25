@@ -18,20 +18,23 @@ StageEditorController::StageEditorController(
 
 void StageEditorController::createSprites()
 {
-	auto iconNew = std::make_unique<ImageSprite>(sysProxy, IMG_ICON_NEW);
-	auto iconOpen = std::make_unique<ImageSprite>(sysProxy, IMG_ICON_OPEN);
-	auto iconSave = std::make_unique<ImageSprite>(sysProxy, IMG_ICON_SAVE);
-	auto iconSaveAs = std::make_unique<ImageSprite>(sysProxy, IMG_ICON_SAVE_AS);
+	// Create icons
+	m_icons[ICON_NEW_IDX] = std::make_unique<ImageSprite>(sysProxy, IMG_ICON_NEW);
+	m_icons[ICON_OPEN_IDX] = std::make_unique<ImageSprite>(sysProxy, IMG_ICON_OPEN);
+	m_icons[ICON_SAVE_IDX] = std::make_unique<ImageSprite>(sysProxy, IMG_ICON_SAVE);
+	m_icons[ICON_SAVE_AS_IDX] = std::make_unique<ImageSprite>(sysProxy, IMG_ICON_SAVE_AS);
 
-	iconNew->setPos(10, 10);
-	iconOpen->setPos(50, 10);
-	iconSave->setPos(90, 10);
-	iconSaveAs->setPos(130, 10);
+	int iconX = ICONS_LEFT_MARGIN;
+	// Position icons
+	for (auto& icon : m_icons) {
+		icon->setPos(iconX, ICONS_TOP_MARGIN);
+		iconX += ICONS_WIDTH + ICONS_SPACING;
+	}
 
-	m_icons[ICON_NEW_IDX] = std::move(iconNew);
-	m_icons[ICON_OPEN_IDX] = std::move(iconOpen);
-	m_icons[ICON_SAVE_IDX] = std::move(iconSave);
-	m_icons[ICON_SAVE_AS_IDX] = std::move(iconSaveAs);
+	// Create menubar line
+	m_menuBarLine = std::make_unique<HorizontalLineSprite>(sysProxy);
+	// Position
+	m_menuBarLine->setPos(0, MENUBAR_HEIGHT);
 }
 
 void StageEditorController::startedEvent()
@@ -45,4 +48,6 @@ void StageEditorController::paintEvent(std::shared_ptr<ICanvas> canvas,
 	for (auto& icon : m_icons) {
 		icon->repaint(canvas, invalidRect);
 	}
+
+	m_menuBarLine->repaint(canvas, invalidRect);
 }
