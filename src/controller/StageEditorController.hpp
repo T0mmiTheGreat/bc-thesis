@@ -39,7 +39,7 @@ private:
 	static constexpr int MENUBAR_HEIGHT = MENUICONS_TOP_MARGIN
 		+ MENUICONS_HEIGHT + MENUICONS_BOTTOM_MARGIN;
 
-	std::array<std::unique_ptr<ImageSprite>, MENUICON_COUNT> m_icons;
+	std::array<std::unique_ptr<ImageSprite>, MENUICON_COUNT> m_menuIcons;
 	std::unique_ptr<HorizontalLineSprite> m_menuBarLine;
 
 	void createSprites();
