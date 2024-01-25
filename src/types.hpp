@@ -88,6 +88,7 @@ enum FontId {
 	FONT_OLDENGL_72 = 0, // Old English Text MT
 	FONT_SEGOEPR_66,     // Segoe Print
 	FONT_BRLNSTR_20,     // Berlin Sans FB
+	FONT_TAHOMA_16,      // Tahoma
 	// XXX: Add new fonts to SDL manager too (constructor)
 
 	COUNT_FONTID // Number of fonts used by the program

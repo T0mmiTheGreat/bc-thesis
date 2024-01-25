@@ -25,6 +25,7 @@
 #define FONT_PATH_OLDENGL FONTS_PATH "OLDENGL.ttf"
 #define FONT_PATH_SEGOEPR FONTS_PATH "segoepr.ttf"
 #define FONT_PATH_BRLNSTR FONTS_PATH "brlnstr.ttf"
+#define FONT_PATH_TAHOMA  FONTS_PATH "tahoma.ttf"
 
 #define IMAGE_PATH_ICON_NEW           IMAGES_PATH "new.png"
 #define IMAGE_PATH_ICON_OPEN          IMAGES_PATH "open.png"
