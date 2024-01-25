@@ -103,6 +103,9 @@ enum ImageId {
 	IMG_ICON_OPEN,
 	IMG_ICON_SAVE,
 	IMG_ICON_SAVE_AS,
+	IMG_ICON_UNDO,
+	IMG_ICON_REDO,
+	IMG_ICON_SELECT_TOOL,
 	IMG_ICON_PLAYER_TOOL,
 	IMG_ICON_OBSTACLE_TOOL,
 	// XXX: Add new images to SDL manager too (constructor)

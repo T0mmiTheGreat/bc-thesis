@@ -33,6 +33,9 @@ SDLManager::SDLManager()
 		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_OPEN),
 		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_SAVE),
 		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_SAVE_AS),
+		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_UNDO),
+		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_REDO),
+		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_SELECT_TOOL),
 		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_PLAYER_TOOL),
 		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_OBSTACLE_TOOL),
 	}
