@@ -19,16 +19,16 @@ StageEditorController::StageEditorController(
 void StageEditorController::createSprites()
 {
 	// Create icons
-	m_icons[ICON_NEW_IDX] = std::make_unique<ImageSprite>(sysProxy, IMG_ICON_NEW);
-	m_icons[ICON_OPEN_IDX] = std::make_unique<ImageSprite>(sysProxy, IMG_ICON_OPEN);
-	m_icons[ICON_SAVE_IDX] = std::make_unique<ImageSprite>(sysProxy, IMG_ICON_SAVE);
-	m_icons[ICON_SAVE_AS_IDX] = std::make_unique<ImageSprite>(sysProxy, IMG_ICON_SAVE_AS);
+	m_icons[MENUICON_NEW_IDX] = std::make_unique<ImageSprite>(sysProxy, IMG_ICON_NEW);
+	m_icons[MENUICON_OPEN_IDX] = std::make_unique<ImageSprite>(sysProxy, IMG_ICON_OPEN);
+	m_icons[MENUICON_SAVE_IDX] = std::make_unique<ImageSprite>(sysProxy, IMG_ICON_SAVE);
+	m_icons[MENUICON_SAVE_AS_IDX] = std::make_unique<ImageSprite>(sysProxy, IMG_ICON_SAVE_AS);
 
-	int iconX = ICONS_LEFT_MARGIN;
+	int iconX = MENUICONS_LEFT_MARGIN;
 	// Position icons
 	for (auto& icon : m_icons) {
-		icon->setPos(iconX, ICONS_TOP_MARGIN);
-		iconX += ICONS_WIDTH + ICONS_SPACING;
+		icon->setPos(iconX, MENUICONS_TOP_MARGIN);
+		iconX += MENUICONS_WIDTH + MENUICONS_SPACING;
 	}
 
 	// Create menubar line
