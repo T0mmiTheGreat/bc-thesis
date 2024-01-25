@@ -126,11 +126,11 @@ struct Point {
 	ValueType x;
 	ValueType y;
 
-	Point(ValueType x, ValueType y)
+	constexpr Point(ValueType x, ValueType y)
 		: x{x}
 		, y{y}
 	{}
-	Point()
+	constexpr Point()
 		: Point(0, 0)
 	{}
 };
@@ -144,15 +144,15 @@ struct PointF {
 	ValueType x;
 	ValueType y;
 
-	PointF(ValueType x, ValueType y)
+	constexpr PointF(ValueType x, ValueType y)
 		: x{x}
 		, y{y}
 	{}
-	PointF()
+	constexpr PointF()
 		: PointF(0, 0)
 	{}
 
-	static PointF zero() {
+	static constexpr PointF zero() {
 		return PointF();
 	}
 };
@@ -166,12 +166,12 @@ struct Size2d {
 	ValueType w;
 	ValueType h;
 
-	Size2d(ValueType w, ValueType h)
+	constexpr Size2d(ValueType w, ValueType h)
 		: w{w}
 		, h{h}
 	{}
 
-	Size2d()
+	constexpr Size2d()
 		: Size2d(0, 0)
 	{}
 
@@ -181,7 +181,7 @@ struct Size2d {
 	 * @return A new Size2d which's width is the sum of the widths of the two
 	 *         operands (same for height).
 	 */
-	Size2d operator+ (const Size2d& rhs) const {
+	constexpr Size2d operator+ (const Size2d& rhs) const {
 		return Size2d(this->w + rhs.w, this->h + rhs.h);
 	}
 	/**
@@ -190,7 +190,7 @@ struct Size2d {
 	 * @return A new Size2d which's each dimension is negation of that dimension
 	 *         in the operand.
 	 */
-	Size2d operator- () const {
+	constexpr Size2d operator- () const {
 		return Size2d(-w, -h);
 	}
 	/**
@@ -199,7 +199,7 @@ struct Size2d {
 	 * @return A new Size2d which's width is the difference of the widths of the
 	 *         two operands (same for height).
 	 */
-	Size2d operator- (const Size2d& rhs) const {
+	constexpr Size2d operator- (const Size2d& rhs) const {
 		return *this + (-rhs);
 	}
 	/**
@@ -208,7 +208,7 @@ struct Size2d {
 	 * @return Reference to self which's width has been incremented by the width
 	 *         of the operand (same for height).
 	 */
-	Size2d& operator+= (const Size2d& rhs) {
+	constexpr Size2d& operator+= (const Size2d& rhs) {
 		return (*this = *this + rhs);
 	}
 	/**
@@ -217,7 +217,7 @@ struct Size2d {
 	 * @return Reference to self which's width has been decremented by the width
 	 *         of the operand (same for height).
 	 */
-	Size2d& operator-= (const Size2d& rhs) {
+	constexpr Size2d& operator-= (const Size2d& rhs) {
 		return (*this = *this - rhs);
 	}
 };
@@ -245,38 +245,38 @@ struct Rect {
 	 */
 	ValueType h;
 
-	Rect()
+	constexpr Rect()
 		: Rect(0, 0, 0, 0)
 	{}
-	Rect(ValueType x, ValueType y, ValueType w, ValueType h)
+	constexpr Rect(ValueType x, ValueType y, ValueType w, ValueType h)
 		: x{x}
 		, y{y}
 		, w{w}
 		, h{h}
 	{}
-	Rect(ValueType x, ValueType y, const Size2d& size)
+	constexpr Rect(ValueType x, ValueType y, const Size2d& size)
 		: Rect(x, y, size.w, size.h)
 	{}
-	Rect(const Point& topLeft, const Size2d& size)
+	constexpr Rect(const Point& topLeft, const Size2d& size)
 		: Rect(topLeft.x, topLeft.y, size.w, size.h)
 	{}
-	Rect(const Point& topLeft, const Point& bottomRight)
+	constexpr Rect(const Point& topLeft, const Point& bottomRight)
 		: Rect(topLeft.x, topLeft.y, bottomRight.x - topLeft.x, bottomRight.y - topLeft.y)
 	{}
-	static Rect createEmpty() { return Rect(); }
+	static constexpr Rect createEmpty() { return Rect(); }
 
 	/**
 	 * @brief Get X coordinate of the right side of the rectangle.
 	 */
-	ValueType getRight() const { return x + w; }
+	constexpr ValueType getRight() const { return x + w; }
 	/**
 	 * @brief Get Y coordinate of the bottom side of the rectangle.
 	 */
-	ValueType getBottom() const { return y + h; }
+	constexpr ValueType getBottom() const { return y + h; }
 	/**
 	 * @brief Get the structure containing the width and height of the rectangle.
 	 */
-	Size2d getSize() const { return Size2d(w, h); }
+	constexpr Size2d getSize() const { return Size2d(w, h); }
 
 	/**
 	 * @brief Get the union of two rectangles.
@@ -285,7 +285,7 @@ struct Rect {
 	 *          shape. In order to make things simple for us, let's asume the
 	 *          union "the smallest rectangle that both rectangles fit into".
 	 */
-	Rect unionRect(const Rect& rhs) const {
+	constexpr Rect unionRect(const Rect& rhs) const {
 		Rect r;
 		r.x = (this->x < rhs.x ? this->x : rhs.x);
 		r.y = (this->y < rhs.y ? this->y : rhs.y);
@@ -300,21 +300,21 @@ struct Rect {
 	 * @remark Inclusive, i.e., returns true even if it lies on the rectangle
 	 *         bound.
 	 */
-	bool containsPoint(const Point& pt) const {
+	constexpr bool containsPoint(const Point& pt) const {
 		return (x <= pt.x && pt.x <= getRight()) && (y <= pt.y && pt.y <= getBottom());
 	}
 
 	/**
 	 * @brief Returns true if the rectangle has no area.
 	 */
-	bool isEmpty() const {
+	constexpr bool isEmpty() const {
 		return (this->w <= 0 || this->h <= 0);
 	}
 
 	/**
 	 * @brief Alias for rectangle union.
 	 */
-	Rect operator+ (const Rect& rhs) const {
+	constexpr Rect operator+ (const Rect& rhs) const {
 		return unionRect(rhs);
 	}
 
@@ -323,7 +323,7 @@ struct Rect {
 	 * 
 	 * @return The reference to self.
 	 */
-	Rect& operator+= (const Rect& rhs) {
+	constexpr Rect& operator+= (const Rect& rhs) {
 		return (*this = this->unionRect(rhs));
 	}
 };
@@ -339,11 +339,11 @@ struct TriangleF {
 
 	std::array<PointF, CORNER_COUNT> corners;
 
-	TriangleF(const PointF& pA, const PointF& pB, const PointF& pC)
+	constexpr TriangleF(const PointF& pA, const PointF& pB, const PointF& pC)
 		: corners{pA, pB, pC}
 	{}
 
-	TriangleF()
+	constexpr TriangleF()
 		: TriangleF(PointF::zero(), PointF::zero(), PointF::zero())
 	{}
 };
@@ -433,7 +433,7 @@ struct Color {
 	/**
 	 * @brief Constructs a transparent color.
 	 */
-	Color()
+	constexpr Color()
 		: Color(0, 0, 0, 0)
 	{}
 	/**
@@ -444,7 +444,7 @@ struct Color {
 	 * @param b Intensity of blue channel.
 	 * @param a Intensity of alpha channel.
 	 */
-	Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+	constexpr Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
 		: r{r}
 		, g{g}
 		, b{b}
@@ -457,17 +457,17 @@ struct Color {
 	 * @param g Intensity of green channel.
 	 * @param b Intensity of blue channel.
 	 */
-	Color(uint8_t r, uint8_t g, uint8_t b)
+	constexpr Color(uint8_t r, uint8_t g, uint8_t b)
 		: Color(r, g, b, 0xff)
 	{}
 
-	static Color black() { return Color(0, 0, 0); }
-	static Color white() { return Color(0xff, 0xff, 0xff); }
-	static Color red() { return Color(0xff, 0, 0); }
-	static Color green() { return Color(0, 0xff, 0); }
-	static Color blue() { return Color(0, 0, 0xff); }
+	static constexpr Color black() { return Color(0, 0, 0); }
+	static constexpr Color white() { return Color(0xff, 0xff, 0xff); }
+	static constexpr Color red() { return Color(0xff, 0, 0); }
+	static constexpr Color green() { return Color(0, 0xff, 0); }
+	static constexpr Color blue() { return Color(0, 0, 0xff); }
 
-	bool operator== (const Color& rhs) {
+	constexpr bool operator== (const Color& rhs) {
 		return
 			(this->r == rhs.r) &&
 			(this->g == rhs.g) &&
