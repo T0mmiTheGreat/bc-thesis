@@ -13,9 +13,12 @@
 #define TYPES_HPP
 
 #include <array>
+#include <cassert>
 #include <cstdint>
 #include <ctime>
 #include <vector>
+
+#include "math/Math.hpp"
 
 /**
  * @brief State of the event loop execution.
@@ -357,7 +360,7 @@ struct TriangleF {
  */
 struct PolygonF {
 	typedef PointF::ValueType ValueType;
-	
+
 	/**
 	 * @brief Vector-based class with a convenient overload.
 	 */
@@ -421,6 +424,57 @@ struct PolygonF {
 		corners.reserve(triangle.CORNER_COUNT);
 		for (auto& corner : triangle.corners) {
 			corners.push_back(corner);
+		}
+	}
+
+	/**
+	 * @brief Checks whether a polygon is valid in Euclidean plane.
+	 * 
+	 * @details A valid polygon in Euclidean plane has at least 3 corners.
+	 */
+	constexpr bool isValidEuclidean() const {
+		return (cornerCount() >= 3);
+	}
+
+	constexpr size_t cornerCount() const {
+		return corners.size();
+	}
+
+	/**
+	 * @brief Triangulates a polygon (converts it to a collection of triangles).
+	 * 
+	 * @remark The polygon must be simple, i.e., without self-intersecting
+	 *         edges.
+	 * 
+	 * @param result The generated triangles.
+	 */
+	void triangulate(std::vector<TriangleF>& result) {
+		// Invalid polygon cannot be triangulated
+		assert(isValidEuclidean());
+		// We want to create a new "result"
+		assert(result.empty());
+
+		std::vector<double[2]> in_polygon;
+		std::vector<double[2][3]> out_triangles;
+
+		// Fill vector for triangulatePolygon()
+		in_polygon.reserve(cornerCount());
+		for (auto& corner : corners) {
+			in_polygon.push_back({corner.x, corner.y});
+		}
+
+		// Triangulate
+		triangulatePolygon(in_polygon, out_triangles);
+
+		PointF corners[3];
+		// Copy to output vector
+		for (auto& triangle : out_triangles) {
+			// For each triangle corner...
+			for (int i = 0; i < 3; i++) {
+				corners[i].x = triangle[i][0];
+				corners[i].y = triangle[i][1];
+			}
+			result.push_back(TriangleF(corners));
 		}
 	}
 };
