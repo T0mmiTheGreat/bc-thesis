@@ -22,6 +22,7 @@ class ImageSprite : public SpriteBase {
 private:
 	ImageId m_img;
 	Rect m_imgBounds;
+	// Size2d m_dstSize;
 
 	static Rect calculateImgBounds(
 		std::shared_ptr<IPaintingProxy> paintingProxy, ImageId img);
@@ -45,6 +46,33 @@ public:
 	 * @param invalidRect Area to repaint.
 	 */
 	void repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
+
+	// /**
+	//  * @brief Sets the sprite width, making the sprite scaled.
+	//  */
+	// void setW(int value);
+	// /**
+	//  * @brief Sets the sprite height, making the sprite scaled.
+	//  */
+	// void setH(int value);
+	// /**
+	//  * @brief Adjusts the sprite width so the scaling of the sprite is same in
+	//  *        both X and Y dimensions.
+	//  */
+	// void adjustW();
+	// /**
+	//  * @brief Adjusts the sprite height so the scaling of the sprite is same in
+	//  *        both X and Y dimensions.
+	//  */
+	// void adjustH();
+	// /**
+	//  * @brief Sets the sprite width to match the width of its image.
+	//  */
+	// void setDefaultW();
+	// /**
+	//  * @brief Sets the sprite height to match the width of its image.
+	//  */
+	// void setDefaultH();
 };
 
 #endif // IMAGESPRITE_HPP
