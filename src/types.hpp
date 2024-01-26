@@ -281,9 +281,15 @@ struct Rect {
 	 */
 	constexpr ValueType getBottom() const { return y + h; }
 	/**
-	 * @brief Get the structure containing the width and height of the rectangle.
+	 * @brief Get the structure containing the width and height of the
+	 *        rectangle.
 	 */
 	constexpr Size2d getSize() const { return Size2d(w, h); }
+	/**
+	 * @brief Get the structure containing the X and Y coordinate of the
+	 *        rectangle.
+	 */
+	constexpr Point getTopLeft() const { return Point(x, y); }
 
 	/**
 	 * @brief Get the union of two rectangles.
