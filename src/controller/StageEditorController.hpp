@@ -18,7 +18,7 @@
 #include "types.hpp"
 #include "canvas/ICanvas.hpp"
 #include "controller/GeneralControllerBase.hpp"
-#include "sprite/ImageSprite.hpp"
+#include "sprite/EditorIconSprite.hpp"
 #include "sprite/HorizontalLineSprite.hpp"
 #include "sprite/VerticalLineSprite.hpp"
 
@@ -66,8 +66,8 @@ private:
 	static constexpr int STATUSBAR_TEXT_LOFFSET = 8;
 	static constexpr FontId STATUSBAR_TEXT_FONT = FONT_TAHOMA_16;
 
-	std::array<std::unique_ptr<ImageSprite>, MENUICON_COUNT> m_menuIcons;
-	std::array<std::unique_ptr<ImageSprite>, TOOLICON_COUNT> m_toolIcons;
+	std::array<std::unique_ptr<EditorIconSprite>, MENUICON_COUNT> m_menuIcons;
+	std::array<std::unique_ptr<EditorIconSprite>, TOOLICON_COUNT> m_toolIcons;
 	std::unique_ptr<HorizontalLineSprite> m_menuBarLine;
 	std::unique_ptr<VerticalLineSprite> m_toolBarLine;
 

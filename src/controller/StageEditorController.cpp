@@ -19,23 +19,27 @@ StageEditorController::StageEditorController(
 void StageEditorController::createSprites()
 {
 	// Menu icons
-	m_menuIcons[MENUICON_NEW_IDX] = std::make_unique<ImageSprite>(sysProxy, IMG_ICON_NEW);
-	m_menuIcons[MENUICON_OPEN_IDX] = std::make_unique<ImageSprite>(sysProxy, IMG_ICON_OPEN);
-	m_menuIcons[MENUICON_SAVE_IDX] = std::make_unique<ImageSprite>(sysProxy, IMG_ICON_SAVE);
-	m_menuIcons[MENUICON_SAVE_AS_IDX] = std::make_unique<ImageSprite>(sysProxy, IMG_ICON_SAVE_AS);
-	m_menuIcons[MENUICON_UNDO_IDX] = std::make_unique<ImageSprite>(sysProxy, IMG_ICON_UNDO);
-	m_menuIcons[MENUICON_REDO_IDX] = std::make_unique<ImageSprite>(sysProxy, IMG_ICON_REDO);
+	m_menuIcons[MENUICON_NEW_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_NEW);
+	m_menuIcons[MENUICON_OPEN_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_OPEN);
+	m_menuIcons[MENUICON_SAVE_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_SAVE);
+	m_menuIcons[MENUICON_SAVE_AS_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_SAVE_AS);
+	m_menuIcons[MENUICON_UNDO_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_UNDO);
+	m_menuIcons[MENUICON_REDO_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_REDO);
 
 	// Menubar line
 	m_menuBarLine = std::make_unique<HorizontalLineSprite>(sysProxy);
 
 	// Tool icons
-	m_toolIcons[TOOLICON_SELECT_IDX] = std::make_unique<ImageSprite>(sysProxy, IMG_ICON_SELECT_TOOL);
-	m_toolIcons[TOOLICON_PLAYER_IDX] = std::make_unique<ImageSprite>(sysProxy, IMG_ICON_PLAYER_TOOL);
-	m_toolIcons[TOOLICON_OBSTACLE_IDX] = std::make_unique<ImageSprite>(sysProxy, IMG_ICON_OBSTACLE_TOOL);
+	m_toolIcons[TOOLICON_SELECT_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_SELECT_TOOL);
+	m_toolIcons[TOOLICON_PLAYER_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_PLAYER_TOOL);
+	m_toolIcons[TOOLICON_OBSTACLE_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_OBSTACLE_TOOL);
 
 	// Toolbar line
 	m_toolBarLine = std::make_unique<VerticalLineSprite>(sysProxy);
+
+	m_menuIcons[MENUICON_REDO_IDX]->setCostume(EditorIconSprite::COSTUME_DISABLED);
+	m_menuIcons[MENUICON_NEW_IDX]->setCostume(EditorIconSprite::COSTUME_HOVER);
+	m_toolIcons[TOOLICON_SELECT_IDX]->setCostume(EditorIconSprite::COSTUME_SELECTED);
 
 	positionSprites();
 }
