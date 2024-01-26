@@ -20,6 +20,7 @@
 #include "controller/GeneralControllerBase.hpp"
 #include "sprite/ImageSprite.hpp"
 #include "sprite/HorizontalLineSprite.hpp"
+#include "sprite/VerticalLineSprite.hpp"
 
 class StageEditorController : public GeneralControllerBase {
 private:
@@ -27,7 +28,9 @@ private:
 	static constexpr int MENUICON_OPEN_IDX = MENUICON_NEW_IDX + 1;
 	static constexpr int MENUICON_SAVE_IDX = MENUICON_OPEN_IDX + 1;
 	static constexpr int MENUICON_SAVE_AS_IDX = MENUICON_SAVE_IDX + 1;
-	static constexpr int MENUICON_COUNT = MENUICON_SAVE_AS_IDX + 1;
+	static constexpr int MENUICON_UNDO_IDX = MENUICON_SAVE_AS_IDX + 1;
+	static constexpr int MENUICON_REDO_IDX = MENUICON_UNDO_IDX + 1;
+	static constexpr int MENUICON_COUNT = MENUICON_REDO_IDX + 1;
 
 	static constexpr int MENUICONS_WIDTH = 32;
 	static constexpr int MENUICONS_HEIGHT = 32;
@@ -38,11 +41,45 @@ private:
 
 	static constexpr int MENUBAR_HEIGHT = MENUICONS_TOP_MARGIN
 		+ MENUICONS_HEIGHT + MENUICONS_BOTTOM_MARGIN;
+	
+	static constexpr int TOOLICON_SELECT_IDX = 0;
+	static constexpr int TOOLICON_PLAYER_IDX = TOOLICON_SELECT_IDX + 1;
+	static constexpr int TOOLICON_OBSTACLE_IDX = TOOLICON_PLAYER_IDX + 1;
+	static constexpr int TOOLICON_COUNT = TOOLICON_OBSTACLE_IDX + 1;
+
+	static constexpr int TOOLICONS_WIDTH = MENUICONS_WIDTH;
+	static constexpr int TOOLICONS_HEIGHT = MENUICONS_HEIGHT;
+	static constexpr int TOOLICONS_TOP_MARGIN = MENUICONS_TOP_MARGIN;
+	static constexpr int TOOLICONS_LEFT_MARGIN = MENUICONS_LEFT_MARGIN;
+	static constexpr int TOOLICONS_RIGHT_MARGIN = TOOLICONS_LEFT_MARGIN;
+	static constexpr int TOOLICONS_HORZ_SPACING = MENUICONS_SPACING;
+	static constexpr int TOOLICONS_VERT_SPACING = TOOLICONS_HORZ_SPACING;
+
+	static constexpr int TOOLBAR_Y = MENUBAR_HEIGHT;
+	static constexpr int TOOLBAR_ITEM_COLUMNS = 3;
+	static constexpr int TOOLBAR_WIDTH = TOOLICONS_LEFT_MARGIN
+		+ (TOOLICONS_WIDTH * TOOLBAR_ITEM_COLUMNS)
+		+ (TOOLICONS_HORZ_SPACING * (TOOLBAR_ITEM_COLUMNS - 1))
+		+ TOOLICONS_RIGHT_MARGIN;
+	
+	static constexpr int STATUSBAR_HEIGHT = 30;
+	static constexpr int STATUSBAR_TEXT_LOFFSET = 8;
+	static constexpr FontId STATUSBAR_TEXT_FONT = FONT_TAHOMA_16;
 
 	std::array<std::unique_ptr<ImageSprite>, MENUICON_COUNT> m_menuIcons;
+	std::array<std::unique_ptr<ImageSprite>, TOOLICON_COUNT> m_toolIcons;
 	std::unique_ptr<HorizontalLineSprite> m_menuBarLine;
+	std::unique_ptr<VerticalLineSprite> m_toolBarLine;
 
 	void createSprites();
+	void positionSprites();
+
+	Rect getMenubarRect();
+	Rect getToolbarRect();
+	Rect getStatusbarRect();
+	Rect getDesktopRect();
+	Rect getMenuIconRect(int iconIdx);
+	Rect getToolIconRect(int iconIdx);
 public:
 	StageEditorController(std::shared_ptr<ISysProxy> sysProxy);
 	void startedEvent() override;
