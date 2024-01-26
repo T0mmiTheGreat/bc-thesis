@@ -21,6 +21,7 @@
 #include "sprite/EditorIconSprite.hpp"
 #include "sprite/HorizontalLineSprite.hpp"
 #include "sprite/VerticalLineSprite.hpp"
+#include "sprite/StatusbarTextSprite.hpp"
 
 class StageEditorController : public GeneralControllerBase {
 private:
@@ -67,9 +68,11 @@ private:
 	static constexpr FontId STATUSBAR_TEXT_FONT = FONT_TAHOMA_16;
 
 	std::array<std::unique_ptr<EditorIconSprite>, MENUICON_COUNT> m_menuIcons;
-	std::array<std::unique_ptr<EditorIconSprite>, TOOLICON_COUNT> m_toolIcons;
 	std::unique_ptr<HorizontalLineSprite> m_menuBarLine;
+	std::array<std::unique_ptr<EditorIconSprite>, TOOLICON_COUNT> m_toolIcons;
 	std::unique_ptr<VerticalLineSprite> m_toolBarLine;
+	std::unique_ptr<StatusbarTextSprite> m_statusBarText;
+	std::unique_ptr<HorizontalLineSprite> m_statusBarLine;
 
 	void createSprites();
 	void positionSprites();

@@ -37,9 +37,10 @@ void StageEditorController::createSprites()
 	// Toolbar line
 	m_toolBarLine = std::make_unique<VerticalLineSprite>(sysProxy);
 
-	m_menuIcons[MENUICON_REDO_IDX]->setCostume(EditorIconSprite::COSTUME_DISABLED);
-	m_menuIcons[MENUICON_NEW_IDX]->setCostume(EditorIconSprite::COSTUME_HOVER);
-	m_toolIcons[TOOLICON_SELECT_IDX]->setCostume(EditorIconSprite::COSTUME_SELECTED);
+	// Statusbar text
+	m_statusBarText = std::make_unique<StatusbarTextSprite>(sysProxy);
+	// Statusbar line
+	m_statusBarLine = std::make_unique<HorizontalLineSprite>(sysProxy);
 
 	positionSprites();
 }
@@ -59,6 +60,15 @@ void StageEditorController::positionSprites()
 	}
 	// Toolbar line
 	m_toolBarLine->setPos(TOOLBAR_WIDTH, TOOLBAR_Y);
+	m_toolBarLine->setBottomMargin(STATUSBAR_HEIGHT);
+
+	Rect statusbarRect = getStatusbarRect();
+	// Statusbar text
+	m_statusBarText->setPos(statusbarRect.getTopLeft());
+	// Statusbar line
+	m_statusBarLine->setPos(statusbarRect.getTopLeft());
+
+	m_statusBarText->setText("Wazzup");
 }
 
 Rect StageEditorController::getMenubarRect()
@@ -133,12 +143,13 @@ void StageEditorController::paintEvent(std::shared_ptr<ICanvas> canvas,
 	for (auto& icon : m_menuIcons) {
 		icon->repaint(canvas, invalidRect);
 	}
-
 	m_menuBarLine->repaint(canvas, invalidRect);
 
 	for (auto& icon : m_toolIcons) {
 		icon->repaint(canvas, invalidRect);
 	}
-
 	m_toolBarLine->repaint(canvas, invalidRect);
+
+	m_statusBarText->repaint(canvas, invalidRect);
+	m_statusBarLine->repaint(canvas, invalidRect);
 }
