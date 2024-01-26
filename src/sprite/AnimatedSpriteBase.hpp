@@ -79,6 +79,14 @@ public:
 	 */
 	virtual void setPos(int x, int y) override { return SpriteBase::setPos(x, y); }
 	/**
+	 * @brief Sets the X and Y coordinates of the sprite.
+	 * 
+	 * @details If both X and Y has to be set, this should be preferred over
+	 *          calling setX() and setY() separately, although that should still
+	 *          be possible.
+	 */
+	virtual void setPos(Point p) override { return SpriteBase::setPos(p); }
+	/**
 	 * @brief Returns the rectangle that represents the bounds of the sprite.
 	 * 
 	 * @details This should always yield the same result as calling the Rect
