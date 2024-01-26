@@ -140,6 +140,15 @@ struct Point {
 	constexpr Point()
 		: Point(0, 0)
 	{}
+
+	/**
+	 * @brief Calculates the point position relative to position of `rel`.
+	 * 
+	 * @remark The result is basically vector: `rel` -> `this`.
+	 */
+	constexpr Point relativeTo(const Point& rel) const {
+		return Point(x - rel.x, y - rel.y);
+	}
 };
 
 /**
