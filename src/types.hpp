@@ -545,6 +545,19 @@ struct Color {
 			(this->b == rhs.b) &&
 			(this->a == rhs.a);
 	}
+
+	static constexpr uint8_t modulateChannel(uint8_t ch, uint8_t mod) {
+		return (static_cast<unsigned>(ch) * static_cast<unsigned>(mod)) / 0xffU;
+	}
+
+	constexpr Color getModulated(const Color& mod) const {
+		return Color(
+			modulateChannel(this->r, mod.r),
+			modulateChannel(this->g, mod.g),
+			modulateChannel(this->b, mod.b),
+			modulateChannel(this->a, mod.a)
+		);
+	}
 };
 
 /**
