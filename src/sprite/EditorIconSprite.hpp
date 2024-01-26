@@ -12,9 +12,9 @@
 #ifndef EDITORICONSPRITE_HPP
 #define EDITORICONSPRITE_HPP
 
-#include "sprite/ImageSprite.hpp"
+#include "sprite/SpriteBase.hpp"
 
-class EditorIconSprite : public ImageSprite {
+class EditorIconSprite : public SpriteBase {
 public:
 	enum Costume {
 		COSTUME_NORMAL,   // Normal, unmodified
@@ -23,17 +23,27 @@ public:
 		COSTUME_DISABLED, // Cannot be pressed
 	};
 private:
+	static constexpr int IMG_MARGINS = 2;
+
+	ImageId m_img;
 	Costume m_costume;
 
+	void paintImg(std::shared_ptr<ICanvas> canvas, Rect& invalidRect);
 	void repaintCostumeNormal(std::shared_ptr<ICanvas> canvas, Rect& invalidRect);
 	void repaintCostumeHover(std::shared_ptr<ICanvas> canvas, Rect& invalidRect);
 	void repaintCostumeSelected(std::shared_ptr<ICanvas> canvas, Rect& invalidRect);
 	void repaintCostumeDisabled(std::shared_ptr<ICanvas> canvas, Rect& invalidRect);
 public:
+	// For convenience, this sprite has fixed width and height (i.e., doesn't
+	// depend on the actual image dimensions)
+
+	static constexpr int FIXED_IMG_WIDTH = 32;
+	static constexpr int FIXED_IMG_HEIGHT = FIXED_IMG_WIDTH;
+	static constexpr int FIXED_WIDTH = FIXED_IMG_WIDTH + 2*IMG_MARGINS;
+	static constexpr int FIXED_HEIGHT = FIXED_IMG_HEIGHT + 2*IMG_MARGINS;
+
 	EditorIconSprite(std::shared_ptr<IPaintingProxy> paintingProxy,
 		ImageId img);
-	EditorIconSprite(std::shared_ptr<IPaintingProxy> paintingProxy,
-		ImageId img, const Rect& imgBounds);
 
 	/**
 	 * @brief Returns the size (width and height) of the sprite.

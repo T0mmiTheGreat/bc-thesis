@@ -13,20 +13,14 @@
 
 EditorIconSprite::EditorIconSprite(
 	std::shared_ptr<IPaintingProxy> paintingProxy, ImageId img)
-	: ImageSprite(paintingProxy, img)
-	, m_costume{COSTUME_NORMAL}
-{}
-
-EditorIconSprite::EditorIconSprite(
-	std::shared_ptr<IPaintingProxy> paintingProxy, ImageId img,
-	const Rect& imgBounds)
-	: ImageSprite(paintingProxy, img, imgBounds)
+	: SpriteBase(paintingProxy)
+	, m_img{img}
 	, m_costume{COSTUME_NORMAL}
 {}
 
 Size2d EditorIconSprite::getSize()
 {
-	return ImageSprite::getSize();
+	return Size2d(FIXED_WIDTH, FIXED_HEIGHT);
 }
 
 void EditorIconSprite::repaint(std::shared_ptr<ICanvas> canvas,
@@ -46,12 +40,22 @@ void EditorIconSprite::repaint(std::shared_ptr<ICanvas> canvas,
 			repaintCostumeDisabled(canvas, invalidRect);
 			break;
 	}
+
+	invalidRect += getBounds();
+}
+
+void EditorIconSprite::paintImg(std::shared_ptr<ICanvas> canvas,
+	Rect& invalidRect)
+{
+	Rect dstRect(getX() + IMG_MARGINS, getY() + IMG_MARGINS, FIXED_IMG_WIDTH,
+		FIXED_IMG_HEIGHT);
+	canvas->copyImage(m_img, dstRect);
 }
 
 void EditorIconSprite::repaintCostumeNormal(std::shared_ptr<ICanvas> canvas,
 	Rect& invalidRect)
 {
-	ImageSprite::repaint(canvas, invalidRect);
+	paintImg(canvas, invalidRect);
 }
 
 void EditorIconSprite::repaintCostumeHover(std::shared_ptr<ICanvas> canvas,
@@ -62,7 +66,7 @@ void EditorIconSprite::repaintCostumeHover(std::shared_ptr<ICanvas> canvas,
 	canvas->setStrokingColor(Color::white());
 	canvas->setStrokeWidth(1.0);
 	canvas->strokeRectangle(bounds.x, bounds.y, bounds.w, bounds.h);
-	ImageSprite::repaint(canvas, invalidRect);
+	paintImg(canvas, invalidRect);
 }
 
 void EditorIconSprite::repaintCostumeSelected(std::shared_ptr<ICanvas> canvas,
@@ -72,14 +76,14 @@ void EditorIconSprite::repaintCostumeSelected(std::shared_ptr<ICanvas> canvas,
 
 	canvas->setFillingColor(Color(0xff, 0xff, 0xff, 0x80));
 	canvas->fillRectangle(bounds.x, bounds.y, bounds.w, bounds.h);
-	ImageSprite::repaint(canvas, invalidRect);
+	paintImg(canvas, invalidRect);
 }
 
 void EditorIconSprite::repaintCostumeDisabled(std::shared_ptr<ICanvas> canvas,
 	Rect& invalidRect)
 {
 	canvas->setColorMod(Color(0xff, 0xff, 0xff, 0x80));
-	ImageSprite::repaint(canvas, invalidRect);
+	paintImg(canvas, invalidRect);
 	canvas->setColorMod(Color(0xff, 0xff, 0xff, 0xff));
 }
 

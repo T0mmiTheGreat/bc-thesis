@@ -33,8 +33,8 @@ private:
 	static constexpr int MENUICON_REDO_IDX = MENUICON_UNDO_IDX + 1;
 	static constexpr int MENUICON_COUNT = MENUICON_REDO_IDX + 1;
 
-	static constexpr int MENUICONS_WIDTH = 32;
-	static constexpr int MENUICONS_HEIGHT = 32;
+	static constexpr int MENUICONS_WIDTH = EditorIconSprite::FIXED_WIDTH;
+	static constexpr int MENUICONS_HEIGHT = EditorIconSprite::FIXED_HEIGHT;
 	static constexpr int MENUICONS_TOP_MARGIN = 8;
 	static constexpr int MENUICONS_LEFT_MARGIN = 8;
 	static constexpr int MENUICONS_BOTTOM_MARGIN = 8;
@@ -48,8 +48,8 @@ private:
 	static constexpr int TOOLICON_OBSTACLE_IDX = TOOLICON_PLAYER_IDX + 1;
 	static constexpr int TOOLICON_COUNT = TOOLICON_OBSTACLE_IDX + 1;
 
-	static constexpr int TOOLICONS_WIDTH = MENUICONS_WIDTH;
-	static constexpr int TOOLICONS_HEIGHT = MENUICONS_HEIGHT;
+	static constexpr int TOOLICONS_WIDTH = EditorIconSprite::FIXED_WIDTH;
+	static constexpr int TOOLICONS_HEIGHT = EditorIconSprite::FIXED_HEIGHT;
 	static constexpr int TOOLICONS_TOP_MARGIN = MENUICONS_TOP_MARGIN;
 	static constexpr int TOOLICONS_LEFT_MARGIN = MENUICONS_LEFT_MARGIN;
 	static constexpr int TOOLICONS_RIGHT_MARGIN = TOOLICONS_LEFT_MARGIN;
