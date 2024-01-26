@@ -31,7 +31,7 @@ void VerticalLineSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect & invalid
 	canvas->setStrokingColor(Color::white());
 	canvas->setStrokeWidth(sprSize.w);
 
-	canvas->strokeLine(getX(), getY(), getX(), sprSize.h);
+	canvas->strokeLine(getX(), getY(), getX(), getY() + sprSize.h);
 	
 	invalidRect += getBounds();
 }

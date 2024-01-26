@@ -31,7 +31,7 @@ void HorizontalLineSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect& invali
 	canvas->setStrokingColor(Color::white());
 	canvas->setStrokeWidth(sprSize.h);
 
-	canvas->strokeLine(getX(), getY(), sprSize.w, getY());
+	canvas->strokeLine(getX(), getY(), getX() + sprSize.w, getY());
 	
 	invalidRect += getBounds();
 }
