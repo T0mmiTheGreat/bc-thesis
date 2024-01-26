@@ -25,22 +25,26 @@ Size2d SDLCanvas::getImageSize(ImageId img)
 
 SDL2pp::Color SDLCanvas::fillToColor()
 {
-	return SDLManager::colorToSdlColor(getFillingColorMod());
+	SDL2pp::Color res = SDLManager::colorToSdlColor(getFillingColorMod());
+	return res;
 }
 
 SDL2pp::Color SDLCanvas::strokeToColor()
 {
-	return SDLManager::colorToSdlColor(getStrokingColorMod());
+	SDL2pp::Color res = SDLManager::colorToSdlColor(getStrokingColorMod());
+	return res;
 }
 
 int SDLCanvas::getWidth()
 {
-	return SDLManager::get().window.GetDrawableWidth();
+	int res = SDLManager::get().window.GetDrawableWidth();
+	return res;
 }
 
 int SDLCanvas::getHeight()
 {
-	return SDLManager::get().window.GetDrawableHeight();
+	int res = SDLManager::get().window.GetDrawableHeight();
+	return res;
 }
 
 Rect SDLCanvas::getRect()
