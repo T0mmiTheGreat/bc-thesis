@@ -38,14 +38,14 @@ public:
 	 *          method should be preferred, because this object may optimize it
 	 *          to gain performance.
 	 */
-	Size2d getSize() override;
+	virtual Size2d getSize() override;
 	/**
 	 * @brief Repaints an area of sprite.
 	 * 
 	 * @param canvas Canvas to paint onto.
 	 * @param invalidRect Area to repaint.
 	 */
-	void repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
+	virtual void repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
 
 	// /**
 	//  * @brief Sets the sprite width, making the sprite scaled.
