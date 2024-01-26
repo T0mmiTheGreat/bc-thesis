@@ -64,7 +64,7 @@ private:
 		+ TOOLICONS_RIGHT_MARGIN;
 	
 	static constexpr int STATUSBAR_HEIGHT = 30;
-	static constexpr int STATUSBAR_TEXT_LOFFSET = 8;
+	static constexpr int STATUSBAR_TEXT_LEFT_MARGIN = 8;
 	static constexpr FontId STATUSBAR_TEXT_FONT = FONT_TAHOMA_16;
 
 	std::array<std::unique_ptr<EditorIconSprite>, MENUICON_COUNT> m_menuIcons;

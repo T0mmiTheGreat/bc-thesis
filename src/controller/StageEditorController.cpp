@@ -64,7 +64,10 @@ void StageEditorController::positionSprites()
 
 	Rect statusbarRect = getStatusbarRect();
 	// Statusbar text
-	m_statusBarText->setPos(statusbarRect.getTopLeft());
+	m_statusBarText->setPos(
+		statusbarRect.x + STATUSBAR_TEXT_LEFT_MARGIN,
+		statusbarRect.y + ((statusbarRect.h - m_statusBarText->getH()) / 2)
+	);
 	// Statusbar line
 	m_statusBarLine->setPos(statusbarRect.getTopLeft());
 
