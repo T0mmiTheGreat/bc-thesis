@@ -161,6 +161,10 @@ public:
 	 * @brief Converts Rect type to SDL rectangle.
 	 */
 	static SDL_Rect rectToSdlRect(const Rect& rect);
+	/**
+	 * @brief Converts Color type to SDL color.
+	 */
+	static SDL2pp::Color colorToSdlColor(const Color& color);
 };
 
 #endif // SDLMANAGER_HPP

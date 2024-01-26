@@ -170,3 +170,8 @@ SDL_Rect SDLManager::rectToSdlRect(const Rect& rect)
 	};
 }
 
+SDL2pp::Color SDLManager::colorToSdlColor(const Color& color)
+{
+	return SDL2pp::Color(color.r, color.g, color.b, color.a);
+}
+
