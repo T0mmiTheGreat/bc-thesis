@@ -25,12 +25,12 @@ Size2d SDLCanvas::getImageSize(ImageId img)
 
 SDL2pp::Color SDLCanvas::fillToColor()
 {
-	return SDL2pp::Color(fColor.r, fColor.g, fColor.b, fColor.a);
+	return SDLManager::colorToSdlColor(getFillingColorMod());
 }
 
 SDL2pp::Color SDLCanvas::strokeToColor()
 {
-	return SDL2pp::Color(sColor.r, sColor.g, sColor.b, sColor.a);
+	return SDLManager::colorToSdlColor(getStrokingColorMod());
 }
 
 int SDLCanvas::getWidth()
@@ -144,8 +144,20 @@ void SDLCanvas::fillText(int x, int y, const std::string& text, FontId font)
 
 void SDLCanvas::copyImage(ImageId img, const Rect& srcRect, const Rect& dstRect)
 {
+	// Get the texture object
 	SDL2pp::Texture& img_ = SDLManager::get().getImage(img);
+
+	// Set texture color modulation
+	SDL2pp::Color colorMod_(colorMod.r, colorMod.g, colorMod.b, colorMod.a);
+	img_.SetColorAndAlphaMod(colorMod_);
+
+	// Convert rectangles
 	SDL2pp::Rect srcRect_ = SDLManager::rectToSdlRect(srcRect);
 	SDL2pp::Rect dstRect_ = SDLManager::rectToSdlRect(dstRect);
+	
+	// Render
 	SDLManager::get().renderer.Copy(img_, srcRect_, dstRect_);
+
+	// Reset texture color modulation
+	img_.SetColorAndAlphaMod();
 }

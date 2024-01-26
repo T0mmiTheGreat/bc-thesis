@@ -46,6 +46,10 @@ protected:
 	 * @brief Stroke width.
 	 */
 	double sWidth;
+	/**
+	 * @brief Color modulation.
+	 */
+	Color colorMod;
 
 	/**
 	 * @brief Returns the size of an image.
@@ -55,7 +59,16 @@ protected:
 	 *         should override this method.
 	 */
 	virtual Size2d getImageSize(ImageId img);
+	/**
+	 * @brief Returns the filling color with modulation applied.
+	 */
+	virtual Color getFillingColorMod();
+	/**
+	 * @brief Returns the stroking color with modulation applied.
+	 */
+	virtual Color getStrokingColorMod();
 public:
+	CanvasBase();
 	/**
 	 * @brief Get width of the canvas in screen coordinates.
 	 * 
@@ -106,6 +119,32 @@ public:
 	 * @details Modifies the `sWidth` value.
 	 */
 	virtual void setStrokeWidth(double value) override;
+	
+	/**
+	 * @brief Get the current color and alpha modulation of drawing operations.
+	 */
+	virtual Color getColorMod();
+	/**
+	 * @brief Set the current color and alpha modulation of drawing operations.
+	 * 
+	 * @details The modulation is calculated as `ch = ch * (cl / 255)`, where
+	 *          `ch` is the color channel (r/g/b/a) and `cl` is the respective
+	 *          color channel of `value`. The modulation applies to every
+	 *          drawing operation (image, text, filling, ...).
+	 *
+	 *          A good convention is to reset the value once the painting is
+	 *          done:
+	 *          \code
+	 *          {
+	 *              tmp = getColorMod()
+	 *              setColorMod(value)
+	 *              ...
+	 *              setColorMod(tmp)
+	 *          }
+	 *          \endcode
+	 * 
+	 */
+	virtual void setColorMod(const Color& value);
 
 	/**
 	 * @brief Fill and stroke an elliptical area.

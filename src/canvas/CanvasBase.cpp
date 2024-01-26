@@ -11,9 +11,26 @@
 
 #include "canvas/CanvasBase.hpp"
 
+CanvasBase::CanvasBase()
+	: fColor{Color::white()}
+	, sColor{Color::white()}
+	, sWidth{1.0}
+	, colorMod{Color::white()}
+{}
+
 Size2d CanvasBase::getImageSize(ImageId img)
 {
 	return Size2d();
+}
+
+Color CanvasBase::getFillingColorMod()
+{
+	return fColor.getModulated(colorMod);
+}
+
+Color CanvasBase::getStrokingColorMod()
+{
+	return sColor.getModulated(colorMod);
 }
 
 int CanvasBase::getWidth()
@@ -54,6 +71,16 @@ double CanvasBase::getStrokeWidth()
 void CanvasBase::setStrokeWidth(double value)
 {
 	sWidth = value;
+}
+
+Color CanvasBase::getColorMod()
+{
+	return colorMod;
+}
+
+void CanvasBase::setColorMod(const Color& value)
+{
+	colorMod = value;
 }
 
 void CanvasBase::drawEllipse(int x, int y, int rx, int ry)

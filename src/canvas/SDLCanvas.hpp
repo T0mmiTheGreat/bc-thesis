@@ -33,6 +33,7 @@ public:
 	 */
 	SDL2pp::Color strokeToColor();
 public:
+	SDLCanvas() : CanvasBase() {}
 	/**
 	 * @brief Get width of the canvas in screen coordinates.
 	 */

@@ -65,6 +65,32 @@ public:
 	virtual void setStrokeWidth(double value) = 0;
 
 	/**
+	 * @brief Get the current color and alpha modulation of drawing operations.
+	 */
+	virtual Color getColorMod() = 0;
+	/**
+	 * @brief Set the current color and alpha modulation of drawing operations.
+	 * 
+	 * @details The modulation is calculated as `ch = ch * (cl / 255)`, where
+	 *          `ch` is the color channel (r/g/b/a) and `cl` is the respective
+	 *          color channel of `value`. The modulation applies to every
+	 *          drawing operation (image, text, filling, ...).
+	 *
+	 *          A good convention is to reset the value once the painting is
+	 *          done:
+	 *          \code
+	 *          {
+	 *              tmp = getColorMod()
+	 *              setColorMod(value)
+	 *              ...
+	 *              setColorMod(tmp)
+	 *          }
+	 *          \endcode
+	 * 
+	 */
+	virtual void setColorMod(const Color& value) = 0;
+
+	/**
 	 * @brief Draw a line.
 	 * 
 	 * @param x0 X coordinate of the initial point.
