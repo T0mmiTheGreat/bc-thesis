@@ -73,6 +73,11 @@ void SpriteBase::setPos(int x, int y)
 	}
 }
 
+void SpriteBase::setPos(Point p)
+{
+	setPos(p.x, p.y);
+}
+
 Rect SpriteBase::getBounds()
 {
 	Size2d size = getSize();

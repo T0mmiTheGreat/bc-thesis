@@ -56,6 +56,14 @@ public:
 	 */
 	virtual void setPos(int x, int y) = 0;
 	/**
+	 * @brief Sets the X and Y coordinates of the sprite.
+	 * 
+	 * @details If both X and Y has to be set, this should be preferred over
+	 *          calling setX() and setY() separately, although that should still
+	 *          be possible.
+	 */
+	virtual void setPos(Point p) = 0;
+	/**
 	 * @brief Returns the size (width and height) of the sprite.
 	 * 
 	 * @details This should always yield the same result as calling the Size2d
