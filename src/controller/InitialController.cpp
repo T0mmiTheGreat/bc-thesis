@@ -16,7 +16,8 @@
 std::unique_ptr<IControllerChild> InitialController::createReplacement()
 {
 	//return ControllerFactory::createInGameController(sysProxy);
-	return ControllerFactory::createLogoController(sysProxy);
+	//return ControllerFactory::createLogoController(sysProxy);
+	return ControllerFactory::createStageEditorController(sysProxy);
 }
 
 void InitialController::loopEvent()
