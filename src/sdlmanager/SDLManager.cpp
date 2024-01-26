@@ -40,7 +40,9 @@ SDLManager::SDLManager()
 		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_PLAYER_TOOL),
 		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_OBSTACLE_TOOL),
 	}
-{}
+{
+	renderer.SetDrawBlendMode(SDL_BLENDMODE_BLEND);
+}
 
 void SDLManager::runEventLoop()
 {
