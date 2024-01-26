@@ -40,3 +40,8 @@ void ImageSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)
 	Rect dstRect(x, y, m_imgBounds.getSize());
 	canvas->copyImage(m_img, m_imgBounds, dstRect);
 }
+
+ImageId ImageSprite::getImg() const
+{
+	return m_img;
+}

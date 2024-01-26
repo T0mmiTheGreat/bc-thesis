@@ -46,6 +46,10 @@ public:
 	 * @param invalidRect Area to repaint.
 	 */
 	virtual void repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
+	/**
+	 * @brief Getter for the sprite image.
+	 */
+	virtual ImageId getImg() const;
 
 	// /**
 	//  * @brief Sets the sprite width, making the sprite scaled.
