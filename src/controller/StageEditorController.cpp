@@ -76,23 +76,31 @@ void StageEditorController::positionSprites()
 
 Rect StageEditorController::getMenubarRect()
 {
+	// Full width
 	Rect res(0, 0, sysProxy->getPaintAreaSize());
+	// Fixed height
 	res.h = MENUBAR_HEIGHT;
 	return res;
 }
 
 Rect StageEditorController::getToolbarRect()
 {
+	// Full height
 	Rect res(0, 0, sysProxy->getPaintAreaSize());
+	// Height limited by the menu bar
 	res.y = TOOLBAR_Y;
+	// Fixed width
 	res.w = TOOLBAR_WIDTH;
+	// Height limited by the status bar
 	res.h -= (MENUBAR_HEIGHT + STATUSBAR_HEIGHT);
 	return res;
 }
 
 Rect StageEditorController::getStatusbarRect()
 {
+	// Full width
 	Rect res(0, 0, sysProxy->getPaintAreaSize());
+	// Fixed height (at the bottom of the screen)
 	res.y = res.h - STATUSBAR_HEIGHT;
 	res.h = STATUSBAR_HEIGHT;
 	return res;
@@ -100,37 +108,49 @@ Rect StageEditorController::getStatusbarRect()
 
 Rect StageEditorController::getDesktopRect()
 {
+	// Full size
 	Rect res(0, 0, sysProxy->getPaintAreaSize());
+	// Width limited by the tool bar
 	res.x = TOOLBAR_WIDTH;
+	// Height limited by the menu bar
 	res.y = MENUBAR_HEIGHT;
+	// Width must not go beyond the screen bounds
 	res.w -= res.x;
+	// Height limited by the status bar
 	res.h -= (res.y - STATUSBAR_HEIGHT);
 	return res;
 }
 
 Rect StageEditorController::getMenuIconRect(int iconIdx)
 {
+	// Get the menu bar position
 	Rect menubarRect = getMenubarRect();
 	Rect res(
-		menubarRect.x + MENUICONS_LEFT_MARGIN,
-		menubarRect.y + MENUICONS_TOP_MARGIN,
-		MENUICONS_WIDTH,
-		MENUICONS_HEIGHT
+		menubarRect.x + MENUICONS_LEFT_MARGIN, // Add left margin
+		menubarRect.y + MENUICONS_TOP_MARGIN,  // Add top margin
+		MENUICONS_WIDTH, // Set width
+		MENUICONS_HEIGHT // Set height
 	);
+	// Skip preceding icons
 	res.x += iconIdx * (MENUICONS_WIDTH + MENUICONS_SPACING);
 	return res;
 }
 
 Rect StageEditorController::getToolIconRect(int iconIdx)
 {
+	// Get the tool bar position
 	Rect toolbarRect = getToolbarRect();
 	Rect res(
-		toolbarRect.x + TOOLICONS_LEFT_MARGIN,
-		toolbarRect.y + TOOLICONS_TOP_MARGIN,
-		MENUICONS_WIDTH,
-		MENUICONS_HEIGHT
+		toolbarRect.x + TOOLICONS_LEFT_MARGIN, // Add left margin
+		toolbarRect.y + TOOLICONS_TOP_MARGIN,  // Add top margin
+		MENUICONS_WIDTH, // Set width
+		MENUICONS_HEIGHT // Set height
 	);
+	// Skip icons on the left
 	res.x += (iconIdx % TOOLBAR_ITEM_COLUMNS) * (TOOLICONS_WIDTH + TOOLICONS_HORZ_SPACING);
+	// Skip rows
+	// Note: currently there is only one row (3 columns, 3 icons). If this
+	// changes in the future, this note should be deleted
 	res.y += (iconIdx / TOOLBAR_ITEM_COLUMNS) * (TOOLICONS_HEIGHT + TOOLICONS_VERT_SPACING);
 	return res;
 }
@@ -143,16 +163,19 @@ void StageEditorController::startedEvent()
 void StageEditorController::paintEvent(std::shared_ptr<ICanvas> canvas,
 	Rect& invalidRect)
 {
+	// Menu
 	for (auto& icon : m_menuIcons) {
 		icon->repaint(canvas, invalidRect);
 	}
 	m_menuBarLine->repaint(canvas, invalidRect);
 
+	// Toolbar
 	for (auto& icon : m_toolIcons) {
 		icon->repaint(canvas, invalidRect);
 	}
 	m_toolBarLine->repaint(canvas, invalidRect);
 
+	// Status bar
 	m_statusBarText->repaint(canvas, invalidRect);
 	m_statusBarLine->repaint(canvas, invalidRect);
 }
