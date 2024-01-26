@@ -538,7 +538,7 @@ struct Color {
 	static constexpr Color green() { return Color(0, 0xff, 0); }
 	static constexpr Color blue() { return Color(0, 0, 0xff); }
 
-	constexpr bool operator== (const Color& rhs) {
+	constexpr bool operator== (const Color& rhs) const {
 		return
 			(this->r == rhs.r) &&
 			(this->g == rhs.g) &&
