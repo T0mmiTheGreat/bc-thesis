@@ -44,6 +44,7 @@ set(SOURCE_FILES
 	sprite/PlayerSprite.cpp
 	sprite/ImageSprite.cpp
 	sprite/HorizontalLineSprite.cpp
+	sprite/VerticalLineSprite.cpp
 	core/Core.cpp
 	core/stageobstacles/StageObstacles.cpp
 	core/trajectory/Trajectory.cpp
@@ -96,6 +97,7 @@ set(HEADER_FILES
 	sprite/PlayerSprite.hpp
 	sprite/ImageSprite.hpp
 	sprite/HorizontalLineSprite.hpp
+	sprite/VerticalLineSprite.hpp
 	paintingproxy/IPaintingProxy.hpp
 	core/ICore.hpp
 	core/Core.hpp
