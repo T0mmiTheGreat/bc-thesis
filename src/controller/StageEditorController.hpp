@@ -83,9 +83,41 @@ private:
 	Rect getDesktopRect();
 	Rect getMenuIconRect(int iconIdx);
 	Rect getToolIconRect(int iconIdx);
+
+	/**
+	 * @brief If the icon has COSTUME_HOVER changes it to COSTUME_NORMAL.
+	 */
+	void iconHighlightOff(std::unique_ptr<EditorIconSprite>& icon);
+	/**
+	 * @brief If the icon has COSTUME_NORMAL changes it to COSTUME_HOVER.
+	 */
+	void iconHighlightOn(std::unique_ptr<EditorIconSprite>& icon);
+	/**
+	 * @brief Finds all icons with COSTUME_HOVER and changes it to
+	 *        COSTUME_NORMAL.
+	 */
+	void iconHighlightOffAll();
+
+	/**
+	 * @brief Mouse moved above the menu bar.
+	 */
+	void mouseMoveMenubar(int x, int y);
+	/**
+	 * @brief Mouse moved above the tool bar.
+	 */
+	void mouseMoveToolbar(int x, int y);
+	/**
+	 * @brief Mouse moved above the status bar.
+	 */
+	void mouseMoveStatusbar(int x, int y);
+	/**
+	 * @brief Mouse moved above the desktop.
+	 */
+	void mouseMoveDesktop(int x, int y);
 public:
 	StageEditorController(std::shared_ptr<ISysProxy> sysProxy);
 	void startedEvent() override;
+	void mouseMoveEvent(int x, int y) override;
 	void paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
 };
 

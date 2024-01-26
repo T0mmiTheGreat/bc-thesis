@@ -155,9 +155,96 @@ Rect StageEditorController::getToolIconRect(int iconIdx)
 	return res;
 }
 
+void StageEditorController::iconHighlightOff(
+	std::unique_ptr<EditorIconSprite>& icon)
+{
+	if (icon->getCostume() == EditorIconSprite::COSTUME_HOVER) {
+		icon->setCostume(EditorIconSprite::COSTUME_NORMAL);
+	}
+}
+
+void StageEditorController::iconHighlightOn(
+	std::unique_ptr<EditorIconSprite>& icon)
+{
+	if (icon->getCostume() == EditorIconSprite::COSTUME_NORMAL) {
+		icon->setCostume(EditorIconSprite::COSTUME_HOVER);
+	}
+}
+
+void StageEditorController::iconHighlightOffAll()
+{
+	for (auto& icon : m_menuIcons) {
+		iconHighlightOff(icon);
+	}
+	for (auto& icon : m_toolIcons) {
+		iconHighlightOff(icon);
+	}
+}
+
+void StageEditorController::mouseMoveMenubar(int x, int y)
+{
+	Point mouse(x, y);
+	Rect iconRect;
+
+	for (int iconIdx = 0; iconIdx < MENUICON_COUNT; iconIdx++) {
+		iconRect = getMenuIconRect(iconIdx);
+		if (iconRect.containsPoint(mouse)) {
+			iconHighlightOn(m_menuIcons[iconIdx]);
+			break;
+		}
+	}
+}
+
+void StageEditorController::mouseMoveToolbar(int x, int y)
+{
+	Point mouse(x, y);
+	Rect iconRect;
+
+	for (int iconIdx = 0; iconIdx < TOOLICON_COUNT; iconIdx++) {
+		iconRect = getToolIconRect(iconIdx);
+		if (iconRect.containsPoint(mouse)) {
+			iconHighlightOn(m_toolIcons[iconIdx]);
+			break;
+		}
+	}
+}
+
+void StageEditorController::mouseMoveStatusbar(int x, int y)
+{
+}
+
+void StageEditorController::mouseMoveDesktop(int x, int y)
+{
+}
+
 void StageEditorController::startedEvent()
 {
 	createSprites();
+}
+
+void StageEditorController::mouseMoveEvent(int x, int y)
+{
+	Rect menubarRect = getMenubarRect();
+	Rect toolbarRect = getToolbarRect();
+	Rect statusbarRect = getStatusbarRect();
+	Rect desktopRect = getDesktopRect();
+	Point mouse(x, y);
+
+	iconHighlightOffAll();
+
+	if (menubarRect.containsPoint(mouse)) {
+		// Within menubar
+		mouseMoveMenubar(x, y);
+	} else if (toolbarRect.containsPoint(mouse)) {
+		// Within toolbar
+		mouseMoveToolbar(x, y);
+	} else if (statusbarRect.containsPoint(mouse)) {
+		// Within status bar
+		mouseMoveStatusbar(x, y);
+	} else if (desktopRect.containsPoint(mouse)) {
+		// Within desktop
+		mouseMoveDesktop(x, y);
+	}
 }
 
 void StageEditorController::paintEvent(std::shared_ptr<ICanvas> canvas,
