@@ -261,6 +261,14 @@ public:
 	 * @brief Paint image.
 	 * 
 	 * @param img The image.
+	 * @param dstRect Area on the canvas to paint into. The image will be
+	 *                scaled.
+	 */
+	virtual void copyImage(ImageId img, const Rect& dstRect) override;
+	/**
+	 * @brief Paint image.
+	 * 
+	 * @param img The image.
 	 * @param srcRect Portion of the source image to paint.
 	 * @param dstRect Area on the canvas to paint into. The image will be
 	 *                scaled.

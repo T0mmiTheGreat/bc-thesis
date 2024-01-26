@@ -242,7 +242,7 @@ public:
 	virtual void copyImage(ImageId img, const Rect& srcRect, int x, int y,
 		double scale) = 0;
 	/**
-	 * @brief 
+	 * @brief Paint scaled portion of image.
 	 * 
 	 * @param img The image.
 	 * @param srcRect Portion of the source image to paint.
@@ -253,6 +253,14 @@ public:
 	 */
 	virtual void copyImage(ImageId img, const Rect& srcRect, int x, int y,
 		double xScale, double yScale) = 0;
+	/**
+	 * @brief Paint image.
+	 * 
+	 * @param img The image.
+	 * @param dstRect Area on the canvas to paint into. The image will be
+	 *                scaled.
+	 */
+	virtual void copyImage(ImageId img, const Rect& dstRect) = 0;
 	/**
 	 * @brief Paint image.
 	 * 

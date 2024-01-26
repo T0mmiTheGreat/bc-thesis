@@ -137,3 +137,10 @@ void CanvasBase::copyImage(ImageId img, const Rect& srcRect, int x, int y,
 		static_cast<int>(srcRect.h * yScale));
 	copyImage(img, srcRect, dstRect);
 }
+
+void CanvasBase::copyImage(ImageId img, const Rect& dstRect)
+{
+	Size2d s = getImageSize(img);
+	Rect srcRect(0, 0, s);
+	copyImage(img, srcRect, dstRect);
+}
