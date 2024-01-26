@@ -111,6 +111,27 @@ public:
 	 *          Uses `getX()`, `getY()` and `getSize()` to get the bounds rect.
 	 */
 	virtual Rect getBounds() override;
+
+	/**
+	 * @brief Returns the size (width and height) of the sprite.
+	 * 
+	 * @details This should always yield the same result as calling the Size2d
+	 *          constructor as `Size2d(getW(), getH())`. However, calling this
+	 *          method should be preferred, because descendants may optimize it
+	 *          to gain performance.
+	 */
+	virtual Size2d getSize() override = 0;
+	/**
+	 * @brief Repaints an area of sprite.
+	 * 
+	 * @param canvas Canvas to paint onto.
+	 * @param invalidRect Area to repaint.
+	 * 
+	 * @remark The sprite may choose to repaint area larger than invalidRect,
+	 *         but it must modify the invalidRect value to mach the area it
+	 *         painted.
+	 */
+	virtual void repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override = 0;
 };
 
 #endif // SPRITEBASE_HPP
