@@ -308,6 +308,28 @@ struct RectGeneric {
 	 *        rectangle.
 	 */
 	constexpr PointGeneric<T> getTopLeft() const { return PointGeneric<T>(x, y); }
+	/**
+	 * @brief Get the structure containing the X and Y coordinate of the
+	 *        bottom right corner of the rectangle.
+	 */
+	constexpr PointGeneric<T> getBottomRight() const {
+		return PointGeneric<T>(getRight(), getBottom());
+	}
+	/**
+	 * @brief Get the structure containing the X and Y coordinate of the
+	 *        point in the center of the rectangle.
+	 */
+	constexpr PointGeneric<T> getCenterPoint() const {
+		return PointGeneric<T>(x + w/2, y + h/2);
+	}
+
+	void setPos(T x, T y) {
+		this->x = x;
+		this->y = y;
+	}
+	void setPos(const PointGeneric<T>& pos) {
+		setPos(pos.x, pos.y);
+	}
 
 	/**
 	 * @brief Get the union of two rectangles.
@@ -340,6 +362,15 @@ struct RectGeneric {
 	 */
 	constexpr bool isEmpty() const {
 		return (this->w <= 0 || this->h <= 0);
+	}
+
+	RectGeneric<T> centerAt(const RectGeneric<T>& rhs) const {
+		RectGeneric<T> res(
+			rhs.x + ((rhs.w - this->w) / 2),
+			rhs.y + ((rhs.h - this->h) / 2),
+			this->getSize()
+		);
+		return res;
 	}
 
 	/**
