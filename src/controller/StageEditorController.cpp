@@ -106,7 +106,7 @@ Rect StageEditorController::getStatusbarRect()
 	return res;
 }
 
-Rect StageEditorController::getDesktopRect()
+Rect StageEditorController::getWorkspaceRect()
 {
 	// Full size
 	Rect res(0, 0, sysProxy->getPaintAreaSize());
@@ -213,7 +213,7 @@ void StageEditorController::mouseMoveStatusbar(int x, int y)
 {
 }
 
-void StageEditorController::mouseMoveDesktop(int x, int y)
+void StageEditorController::mouseMoveWorkspace(int x, int y)
 {
 }
 
@@ -227,7 +227,7 @@ void StageEditorController::mouseMoveEvent(int x, int y)
 	Rect menubarRect = getMenubarRect();
 	Rect toolbarRect = getToolbarRect();
 	Rect statusbarRect = getStatusbarRect();
-	Rect desktopRect = getDesktopRect();
+	Rect workspaceRect = getWorkspaceRect();
 	Point mouse(x, y);
 
 	iconHighlightOffAll();
@@ -241,9 +241,9 @@ void StageEditorController::mouseMoveEvent(int x, int y)
 	} else if (statusbarRect.containsPoint(mouse)) {
 		// Within status bar
 		mouseMoveStatusbar(x, y);
-	} else if (desktopRect.containsPoint(mouse)) {
-		// Within desktop
-		mouseMoveDesktop(x, y);
+	} else if (workspaceRect.containsPoint(mouse)) {
+		// Within workspace
+		mouseMoveWorkspace(x, y);
 	}
 }
 

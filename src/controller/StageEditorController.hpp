@@ -80,7 +80,7 @@ private:
 	Rect getMenubarRect();
 	Rect getToolbarRect();
 	Rect getStatusbarRect();
-	Rect getDesktopRect();
+	Rect getWorkspaceRect();
 	Rect getMenuIconRect(int iconIdx);
 	Rect getToolIconRect(int iconIdx);
 
@@ -111,9 +111,9 @@ private:
 	 */
 	void mouseMoveStatusbar(int x, int y);
 	/**
-	 * @brief Mouse moved above the desktop.
+	 * @brief Mouse moved above the workspace.
 	 */
-	void mouseMoveDesktop(int x, int y);
+	void mouseMoveWorkspace(int x, int y);
 public:
 	StageEditorController(std::shared_ptr<ISysProxy> sysProxy);
 	void startedEvent() override;
