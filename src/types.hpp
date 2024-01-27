@@ -125,180 +125,189 @@ template <typename T>
 inline constexpr T msToClocks(T ms);
 
 /**
- * @brief Structure representing X and Y coordinate (fixed point).
+ * @brief Structure representing X and Y coordinate.
+ * 
+ * @tparam T Scalar type.
  */
-struct Point {
-	typedef int ValueType;
+template <typename T>
+struct PointGeneric {
+	typedef T ValueType;
 
-	ValueType x;
-	ValueType y;
+	T x;
+	T y;
 
-	constexpr Point(ValueType x, ValueType y)
+	constexpr PointGeneric(T x, T y)
 		: x{x}
 		, y{y}
 	{}
-	constexpr Point()
-		: Point(0, 0)
+	constexpr PointGeneric()
+		: PointGeneric(0, 0)
 	{}
+
+	static constexpr PointGeneric<T> zero() {
+		return PointGeneric<T>();
+	}
 
 	/**
 	 * @brief Calculates the point position relative to position of `rel`.
 	 * 
 	 * @remark The result is basically vector: `rel` -> `this`.
 	 */
-	constexpr Point relativeTo(const Point& rel) const {
-		return Point(x - rel.x, y - rel.y);
+	constexpr PointGeneric<T> relativeTo(const PointGeneric<T>& rel) const {
+		return PointGeneric<T>(x - rel.x, y - rel.y);
 	}
 };
 
+/**
+ * @brief Structure representing X and Y coordinate (integral).
+ */
+typedef PointGeneric<int> Point;
 /**
  * @brief Structure representing X and Y coordinate (floating point).
  */
-struct PointF {
-	typedef double ValueType;
-
-	ValueType x;
-	ValueType y;
-
-	constexpr PointF(ValueType x, ValueType y)
-		: x{x}
-		, y{y}
-	{}
-	constexpr PointF()
-		: PointF(0, 0)
-	{}
-
-	static constexpr PointF zero() {
-		return PointF();
-	}
-};
+typedef PointGeneric<double> PointF;
 
 /**
  * @brief Width and height structure.
+ * 
+ * @tparam T Scalar type.
  */
-struct Size2d {
-	typedef int ValueType;
+template <typename T>
+struct Size2dGeneric {
+	typedef T ValueType;
 
-	ValueType w;
-	ValueType h;
+	T w;
+	T h;
 
-	constexpr Size2d(ValueType w, ValueType h)
+	constexpr Size2dGeneric(T w, T h)
 		: w{w}
 		, h{h}
 	{}
 
-	constexpr Size2d()
-		: Size2d(0, 0)
+	constexpr Size2dGeneric()
+		: Size2dGeneric(0, 0)
 	{}
 
 	/**
 	 * @brief Adds up two Size2d objects.
 	 * 
-	 * @return A new Size2d which's width is the sum of the widths of the two
-	 *         operands (same for height).
+	 * @return A new Size2dGeneric which's width is the sum of the widths of
+	 *         the two operands (same for height).
 	 */
-	constexpr Size2d operator+ (const Size2d& rhs) const {
-		return Size2d(this->w + rhs.w, this->h + rhs.h);
+	constexpr Size2dGeneric<T> operator+ (const Size2dGeneric<T>& rhs) const {
+		return Size2dGeneric<T>(this->w + rhs.w, this->h + rhs.h);
 	}
 	/**
-	 * @brief Negates a Size2d object.
+	 * @brief Negates a Size2dGeneric object.
 	 * 
-	 * @return A new Size2d which's each dimension is negation of that dimension
-	 *         in the operand.
+	 * @return A new Size2dGeneric which's each dimension is negation of that
+	 *         dimension in the operand.
 	 */
-	constexpr Size2d operator- () const {
-		return Size2d(-w, -h);
+	constexpr Size2dGeneric<T> operator- () const {
+		return Size2dGeneric<T>(-w, -h);
 	}
 	/**
-	 * @brief Subtracts two Size2d objects.
+	 * @brief Subtracts two Size2dGeneric objects.
 	 * 
-	 * @return A new Size2d which's width is the difference of the widths of the
-	 *         two operands (same for height).
+	 * @return A new Size2dGeneric which's width is the difference of the widths
+	 *         of the two operands (same for height).
 	 */
-	constexpr Size2d operator- (const Size2d& rhs) const {
+	constexpr Size2dGeneric<T> operator- (const Size2dGeneric<T>& rhs) const {
 		return *this + (-rhs);
 	}
 	/**
-	 * @brief Increments a Size2d object.
+	 * @brief Increments a Size2dGeneric object.
 	 * 
 	 * @return Reference to self which's width has been incremented by the width
 	 *         of the operand (same for height).
 	 */
-	constexpr Size2d& operator+= (const Size2d& rhs) {
+	constexpr Size2dGeneric<T>& operator+= (const Size2dGeneric<T>& rhs) {
 		return (*this = *this + rhs);
 	}
 	/**
-	 * @brief Decrements a Size2d object.
+	 * @brief Decrements a Size2dGeneric object.
 	 * 
 	 * @return Reference to self which's width has been decremented by the width
 	 *         of the operand (same for height).
 	 */
-	constexpr Size2d& operator-= (const Size2d& rhs) {
+	constexpr Size2dGeneric<T>& operator-= (const Size2dGeneric<T>& rhs) {
 		return (*this = *this - rhs);
 	}
 };
 
 /**
- * @brief The axis-aligned rectangle type.
+ * @brief Width and height structure (integral).
  */
-struct Rect {
-	typedef int ValueType;
+typedef Size2dGeneric<int> Size2d;
+/**
+ * @brief Width and height structure (floating point).
+ */
+typedef Size2dGeneric<double> Size2dF;
+
+/**
+ * @brief The axis-aligned rectangle type.
+ * 
+ * @tparam T Scalar type.
+ */
+template <typename T>
+struct RectGeneric {
+	typedef T ValueType;
 
 	/**
 	 * @brief X coordinate of the left side of the rectangle.
 	 */
-	ValueType x;
+	T x;
 	/**
 	 * @brief Y coordinate of the left side of the rectangle.
 	 */
-	ValueType y;
+	T y;
 	/**
 	 * @brief Width of the rectangle.
 	 */
-	ValueType w;
+	T w;
 	/**
 	 * @brief Height of the rectangle.
 	 */
-	ValueType h;
+	T h;
 
-	constexpr Rect()
-		: Rect(0, 0, 0, 0)
+	constexpr RectGeneric()
+		: RectGeneric(0, 0, 0, 0)
 	{}
-	constexpr Rect(ValueType x, ValueType y, ValueType w, ValueType h)
+	constexpr RectGeneric(T x, T y, T w, T h)
 		: x{x}
 		, y{y}
 		, w{w}
 		, h{h}
 	{}
-	constexpr Rect(ValueType x, ValueType y, const Size2d& size)
-		: Rect(x, y, size.w, size.h)
+	constexpr RectGeneric(T x, T y, const Size2dGeneric<T>& size)
+		: RectGeneric(x, y, size.w, size.h)
 	{}
-	constexpr Rect(const Point& topLeft, const Size2d& size)
-		: Rect(topLeft.x, topLeft.y, size.w, size.h)
+	constexpr RectGeneric(const PointGeneric<T>& topLeft, const Size2dGeneric<T>& size)
+		: RectGeneric(topLeft.x, topLeft.y, size.w, size.h)
 	{}
-	constexpr Rect(const Point& topLeft, const Point& bottomRight)
-		: Rect(topLeft.x, topLeft.y, bottomRight.x - topLeft.x, bottomRight.y - topLeft.y)
+	constexpr RectGeneric(const PointGeneric<T>& topLeft, const PointGeneric<T>& bottomRight)
+		: RectGeneric(topLeft.x, topLeft.y, bottomRight.x - topLeft.x, bottomRight.y - topLeft.y)
 	{}
-	static constexpr Rect createEmpty() { return Rect(); }
+	static constexpr RectGeneric<T> createEmpty() { return RectGeneric<T>(); }
 
 	/**
 	 * @brief Get X coordinate of the right side of the rectangle.
 	 */
-	constexpr ValueType getRight() const { return x + w; }
+	constexpr T getRight() const { return x + w; }
 	/**
 	 * @brief Get Y coordinate of the bottom side of the rectangle.
 	 */
-	constexpr ValueType getBottom() const { return y + h; }
+	constexpr T getBottom() const { return y + h; }
 	/**
 	 * @brief Get the structure containing the width and height of the
 	 *        rectangle.
 	 */
-	constexpr Size2d getSize() const { return Size2d(w, h); }
+	constexpr Size2dGeneric<T> getSize() const { return Size2dGeneric<T>(w, h); }
 	/**
 	 * @brief Get the structure containing the X and Y coordinate of the
 	 *        rectangle.
 	 */
-	constexpr Point getTopLeft() const { return Point(x, y); }
+	constexpr PointGeneric<T> getTopLeft() const { return PointGeneric<T>(x, y); }
 
 	/**
 	 * @brief Get the union of two rectangles.
@@ -307,8 +316,8 @@ struct Rect {
 	 *          shape. In order to make things simple for us, let's asume the
 	 *          union "the smallest rectangle that both rectangles fit into".
 	 */
-	constexpr Rect unionRect(const Rect& rhs) const {
-		Rect r;
+	constexpr RectGeneric<T> unionRect(const RectGeneric<T>& rhs) const {
+		RectGeneric<T> r;
 		r.x = (this->x < rhs.x ? this->x : rhs.x);
 		r.y = (this->y < rhs.y ? this->y : rhs.y);
 		r.w = (this->getRight() > rhs.getRight() ? this->getRight() : rhs.getRight()) - r.x;
@@ -322,7 +331,7 @@ struct Rect {
 	 * @remark Inclusive, i.e., returns true even if it lies on the rectangle
 	 *         bound.
 	 */
-	constexpr bool containsPoint(const Point& pt) const {
+	constexpr bool containsPoint(const PointGeneric<T>& pt) const {
 		return (x <= pt.x && pt.x <= getRight()) && (y <= pt.y && pt.y <= getBottom());
 	}
 
@@ -336,7 +345,7 @@ struct Rect {
 	/**
 	 * @brief Alias for rectangle union.
 	 */
-	constexpr Rect operator+ (const Rect& rhs) const {
+	constexpr RectGeneric<T> operator+ (const RectGeneric<T>& rhs) const {
 		return unionRect(rhs);
 	}
 
@@ -345,10 +354,19 @@ struct Rect {
 	 * 
 	 * @return The reference to self.
 	 */
-	constexpr Rect& operator+= (const Rect& rhs) {
+	constexpr RectGeneric<T>& operator+= (const RectGeneric<T>& rhs) {
 		return (*this = this->unionRect(rhs));
 	}
 };
+
+/**
+ * @brief The axis-aligned rectangle type (integral).
+ */
+typedef RectGeneric<int> Rect;
+/**
+ * @brief The axis-aligned rectangle type (floating point).
+ */
+typedef RectGeneric<double> RectF;
 
 /**
  * @brief Three-corner polygon (floating point coordinates).
