@@ -156,6 +156,19 @@ struct PointGeneric {
 	constexpr PointGeneric<T> relativeTo(const PointGeneric<T>& rel) const {
 		return PointGeneric<T>(x - rel.x, y - rel.y);
 	}
+
+	/**
+	 * @brief Casts point to another point type.
+	 * 
+	 * @tparam TT Scalar type. Value type of the other point.
+	 */
+	template <typename TT>
+	explicit constexpr operator PointGeneric<TT>() const {
+		return PointGeneric<TT>(
+			static_cast<TT>(x),
+			static_cast<TT>(y)
+		);
+	}
 };
 
 /**
@@ -232,6 +245,19 @@ struct Size2dGeneric {
 	 */
 	constexpr Size2dGeneric<T>& operator-= (const Size2dGeneric<T>& rhs) {
 		return (*this = *this - rhs);
+	}
+
+	/**
+	 * @brief Casts size2d to another size2d type.
+	 * 
+	 * @tparam TT Scalar type. Value type of the other size2d.
+	 */
+	template <typename TT>
+	explicit constexpr operator Size2dGeneric<TT>() const {
+		return Size2dGeneric<TT>(
+			static_cast<TT>(w),
+			static_cast<TT>(h)
+		);
 	}
 };
 
@@ -387,6 +413,21 @@ struct RectGeneric {
 	 */
 	constexpr RectGeneric<T>& operator+= (const RectGeneric<T>& rhs) {
 		return (*this = this->unionRect(rhs));
+	}
+
+	/**
+	 * @brief Casts rectangle to another rectangle type.
+	 * 
+	 * @tparam TT Scalar type. Value type of the other rectangle.
+	 */
+	template <typename TT>
+	explicit constexpr operator RectGeneric<TT>() const {
+		return RectGeneric<TT>(
+			static_cast<TT>(x),
+			static_cast<TT>(y),
+			static_cast<TT>(w),
+			static_cast<TT>(h)
+		);
 	}
 };
 
