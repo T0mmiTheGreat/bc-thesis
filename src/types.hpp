@@ -291,12 +291,7 @@ struct PointGeneric {
 		return PointGeneric<T>(x - rel.x, y - rel.y);
 	}
 
-	/**
-	 * @brief Transforms point using transformation matrix.
-	 * 
-	 * @param tm Transformation matrix.
-	 */
-	constexpr PointGeneric<T> transform(const Matrix3x3& tm) const {
+	constexpr void transform(const Matrix3x3& tm) {
 		PointGeneric<Matrix3x3::ValueType> resF;
 		Matrix3x3::ValueType h;
 
@@ -313,7 +308,18 @@ struct PointGeneric {
 		resF.x /= h;
 		resF.y /= h;
 
-		return static_cast<PointGeneric<T>>(resF);
+		*this = static_cast<PointGeneric<T>>(resF);
+	}
+
+	/**
+	 * @brief Returns the point transformed using transformation matrix.
+	 * 
+	 * @param tm Transformation matrix.
+	 */
+	constexpr PointGeneric<T> getTransformed(const Matrix3x3& tm) const {
+		PointGeneric<Matrix3x3::ValueType> res(*this);
+		res.transform(tm);
+		return res;
 	}
 
 	constexpr bool operator== (const PointGeneric<T>& rhs) const {
@@ -512,12 +518,26 @@ struct RectGeneric {
 		return PointGeneric<T>(x + w/2, y + h/2);
 	}
 
-	void setPos(T x, T y) {
+	constexpr void setPos(T x, T y) {
 		this->x = x;
 		this->y = y;
 	}
-	void setPos(const PointGeneric<T>& pos) {
+	constexpr void setPos(const PointGeneric<T>& pos) {
 		setPos(pos.x, pos.y);
+	}
+
+	/**
+	 * @brief Unite rectangle with another.
+	 * 
+	 * @details A union of rectangles in 2D space may result in an octagonal
+	 *          shape. In order to make things simple for us, let's asume the
+	 *          union "the smallest rectangle that both rectangles fit into".
+	 */
+	constexpr void unionRect(const RectGeneric<T>& rhs) {
+		this->x = (this->x < rhs.x ? this->x : rhs.x);
+		this->y = (this->y < rhs.y ? this->y : rhs.y);
+		this->w = (this->getRight() > rhs.getRight() ? this->getRight() : rhs.getRight()) - x;
+		this->h = (this->getBottom() > rhs.getBottom() ? this->getBottom() : rhs.getBottom()) - y;
 	}
 
 	/**
@@ -527,13 +547,10 @@ struct RectGeneric {
 	 *          shape. In order to make things simple for us, let's asume the
 	 *          union "the smallest rectangle that both rectangles fit into".
 	 */
-	constexpr RectGeneric<T> unionRect(const RectGeneric<T>& rhs) const {
-		RectGeneric<T> r;
-		r.x = (this->x < rhs.x ? this->x : rhs.x);
-		r.y = (this->y < rhs.y ? this->y : rhs.y);
-		r.w = (this->getRight() > rhs.getRight() ? this->getRight() : rhs.getRight()) - r.x;
-		r.h = (this->getBottom() > rhs.getBottom() ? this->getBottom() : rhs.getBottom()) - r.y;
-		return r;
+	constexpr RectGeneric<T> getunionRect(const RectGeneric<T>& rhs) const {
+		RectGeneric<T> res(*this);
+		res.unionRect(rhs);
+		return res;
 	}
 
 	/**
@@ -553,12 +570,19 @@ struct RectGeneric {
 		return (this->w <= 0 || this->h <= 0);
 	}
 
-	RectGeneric<T> centerAt(const RectGeneric<T>& rhs) const {
-		RectGeneric<T> res(
-			rhs.x + ((rhs.w - this->w) / 2),
-			rhs.y + ((rhs.h - this->h) / 2),
-			this->getSize()
-		);
+	/**
+	 * @brief Centers the rectangle within the area of `rhs`.
+	 */
+	constexpr void centerAt(const RectGeneric<T>& rhs) {
+		x = rhs.x + ((rhs.w - this->w) / 2);
+		y = rhs.y + ((rhs.h - this->h) / 2);
+	}
+	/**
+	 * @brief Returns a copy of this rectangle centered within `rhs`.
+	 */
+	constexpr RectGeneric<T> getCenteredAt(const RectGeneric<T>& rhs) const {
+		RectGeneric<T> res(*this);
+		res.centerAt(rhs);
 		return res;
 	}
 
@@ -566,7 +590,7 @@ struct RectGeneric {
 	 * @brief Alias for rectangle union.
 	 */
 	constexpr RectGeneric<T> operator+ (const RectGeneric<T>& rhs) const {
-		return unionRect(rhs);
+		return getUnionRect(rhs);
 	}
 
 	/**
@@ -575,7 +599,8 @@ struct RectGeneric {
 	 * @return The reference to self.
 	 */
 	constexpr RectGeneric<T>& operator+= (const RectGeneric<T>& rhs) {
-		return (*this = this->unionRect(rhs));
+		unionRect(rhs);
+		return *this;
 	}
 
 	/**
@@ -631,11 +656,20 @@ struct TriangleF {
 	 * 
 	 * @param tm Transformation matrix.
 	 */
-	constexpr TriangleF transform(const Matrix3x3& tm) const {
-		TriangleF res;
+	constexpr void transform(const Matrix3x3& tm) {
 		for (int i = 0; i < CORNER_COUNT; i++) {
-			res.corners[i] = this->corners[i].transform(tm);
+			corners[i].transform(tm);
 		}
+	}
+
+	/**
+	 * @brief Transforms triangle using transformation matrix.
+	 * 
+	 * @param tm Transformation matrix.
+	 */
+	constexpr TriangleF getTransformed(const Matrix3x3& tm) const {
+		TriangleF res(*this);
+		res.transform(tm);
 		return res;
 	}
 };
@@ -752,7 +786,7 @@ struct PolygonF {
 	 * @brief Returns the smallest rectangle that can be formed around the
 	 *        polygon.
 	 */
-	RectF getBoundingBox() const {
+	constexpr RectF getBoundingBox() const {
 		PointF topLeft = corners[0];
 		PointF bottomRight = corners[0];
 
@@ -775,11 +809,20 @@ struct PolygonF {
 	 * 
 	 * @param tm Transformation matrix.
 	 */
-	PolygonF transform(const Matrix3x3& tm) const {
-		PolygonF res;
+	constexpr void transform(const Matrix3x3& tm) {
 		for (int i = 0; i < cornerCount(); i++) {
-			res.corners[i] = this->corners[i].transform(tm);
+			corners[i].transform(tm);
 		}
+	}
+
+	/**
+	 * @brief Transforms polygon using transformation matrix.
+	 * 
+	 * @param tm Transformation matrix.
+	 */
+	constexpr PolygonF getTransformed(const Matrix3x3& tm) const {
+		PolygonF res(*this);
+		res.transform(tm);
 		return res;
 	}
 };
