@@ -790,7 +790,7 @@ struct PolygonF {
 		PointF topLeft = corners[0];
 		PointF bottomRight = corners[0];
 
-		// This algorithm as basically about finding the minima and maxima in
+		// This algorithm is basically about finding the minima and maxima in
 		// both X and Y dimensions.
 		for (int i = 1; i < cornerCount(); i++) {
 			const PointF& corner = corners[i];
@@ -802,6 +802,36 @@ struct PolygonF {
 		}
 
 		return RectF(topLeft, bottomRight);
+	}
+
+	/**
+	 * @brief Set the polygon location.
+	 * 
+	 * @details The polygon location is determined by the top left corner
+	 *          of its bounding box.
+	 */
+	constexpr void setLocation(ValueType x, ValueType y) {
+		// Determine its current location
+		PointF topLeft = getBoundingBox().getTopLeft();
+
+		// Calculate the delta
+		ValueType dx = x - topLeft.x;
+		ValueType dy = y - topLeft.y;
+
+		// Move every corner
+		for (auto& corner : corners) {
+			corner.x += dx;
+			corner.y += dy;
+		}
+	}
+	/**
+	 * @brief Set the polygon location.
+	 * 
+	 * @details The polygon location is determined by the top left corner
+	 *          of its bounding box.
+	 */
+	constexpr void setLocation(const PointF& p) {
+		setLocation(p.x, p.y);
 	}
 
 	/**
