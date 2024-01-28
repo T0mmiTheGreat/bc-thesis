@@ -646,46 +646,9 @@ struct TriangleF {
 struct PolygonF {
 	typedef PointF::ValueType ValueType;
 
-	/**
-	 * @brief Vector-based class with a convenient overload.
-	 */
-	class PolygonCorners : public std::vector<PointF> {
-	public:
-		/**
-		 * @brief Appends the given element `value` to the end of the container.
-		 * 
-		 * @param value The value of the element to append. The new element is
-		 *              initialized as a copy of `value`.
-		 * 
-		 * @note Inherited from std::vector.
-		 */
-		constexpr void push_back(const PointF& value) {
-			std::vector<PointF>::push_back(value);
-		}
-		/**
-		 * @brief Appends the given element `value` to the end of the container.
-		 * 
-		 * @param value The value of the element to append. `value` is moved
-		 *              into the new element.
-		 * 
-		 * @note Inherited from std::vector.
-		 */
-		constexpr void push_back(PointF&& value) {
-			std::vector<PointF>::push_back(value);
-		}
-		/**
-		 * @brief Creates a new PointF value and apends it to the end of the
-		 *        container.
-		 * 
-		 * @param x X coordinate of the point.
-		 * @param y Y coordinate of the point.
-		 */
-		constexpr void push_back(PointF::ValueType x, PointF::ValueType y) {
-			push_back(PointF(x, y));
-		}
-	};
+	std::vector<PointF> corners;
 
-	PolygonCorners corners;
+	constexpr PolygonF() {}
 
 	/**
 	 * @brief Constructs a new PolygonF object from the provided list
@@ -701,6 +664,25 @@ struct PolygonF {
 		// See https://en.cppreference.com/w/cpp/language/fold
 		(this->corners.push_back(corners), ...);
 	}
+
+	/**
+	 * @brief Constructs a new PolygonF object from the provided list
+	 *        of corners.
+	 * 
+	 * @tparam Args Must meet the named requirement "SequenceContainer"
+	 *              and the value type must be `PointF`.
+	 */
+	template <typename T>
+	PolygonF(const T& corners) {
+		this->corners.reserve(corners.size());
+		for (auto& corner : corners) {
+			this->corners.push_back(corner);
+		}
+	}
+
+	constexpr PolygonF(std::vector<PointF>&& corners)
+		: corners{corners}
+	{}
 
 	/**
 	 * @brief Constructs a new PolygonF object from `TriangleF` object.
