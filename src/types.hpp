@@ -133,6 +133,14 @@ template <typename T>
 struct PointGeneric {
 	typedef T ValueType;
 
+	struct Hash {
+		size_t operator() (const PointGeneric<T>& key) const {
+			size_t h1 = std::hash<T>{}(key.x);
+			size_t h2 = std::hash<T>{}(key.y);
+			return h1 ^ h2;
+		}
+	};
+
 	T x;
 	T y;
 
@@ -155,6 +163,10 @@ struct PointGeneric {
 	 */
 	constexpr PointGeneric<T> relativeTo(const PointGeneric<T>& rel) const {
 		return PointGeneric<T>(x - rel.x, y - rel.y);
+	}
+
+	constexpr bool operator== (const PointGeneric<T>& rhs) const {
+		return (this->x == rhs.x && this->y = rhs.y);
 	}
 
 	/**
