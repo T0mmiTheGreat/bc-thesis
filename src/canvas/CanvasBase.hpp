@@ -178,6 +178,12 @@ public:
 	 * @param h Height of the rectangle.
 	 */
 	virtual void drawRectangle(int x, int y, int w, int h) override;
+	/**
+	 * @brief Fill and stroke a polygonal area.
+	 * 
+	 * @param pog The area to fill and stroke.
+	 */
+	virtual void drawPolygon(const PolygonF& pog) override;
 	
 	/**
 	 * @brief Paint whole image.

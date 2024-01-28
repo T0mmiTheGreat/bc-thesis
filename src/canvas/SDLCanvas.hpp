@@ -12,6 +12,8 @@
 #ifndef SDLCANVAS_HPP
 #define SDLCANVAS_HPP
 
+#include <vector>
+
 #include <SDL2pp/SDL.hh>
 #include <SDL2pp/Color.hh>
 
@@ -21,6 +23,11 @@
  * @brief Concrete implementation of ICanvas for the SDL library.
  */
 class SDLCanvas : public CanvasBase {
+private:
+	void polygonToVertexArrays(const PolygonF& pog, std::vector<Sint16>& vx,
+		std::vector<Sint16>& vy);
+	void fillPolygonInternal(const Sint16* vx, const Sint16* vy, int n);
+	void strokePolygonInternal(const Sint16* vx, const Sint16* vy, int n);
 protected:
 	Size2d getImageSize(ImageId img) override;
 public:
@@ -137,6 +144,25 @@ public:
 	 * @param h Height of the rectangle.
 	 */
 	void strokeRectangle(int x, int y, int w, int h) override;
+
+	/**
+	 * @brief Fill a polygonal area.
+	 * 
+	 * @param pog The area to fill.
+	 */
+	void fillPolygon(const PolygonF& pog) override;
+	/**
+	 * @brief Stroke a polygonal area.
+	 * 
+	 * @param pog The area to stroke.
+	 */
+	void strokePolygon(const PolygonF& pog) override;
+	/**
+	 * @brief Fill and stroke a polygonal area.
+	 * 
+	 * @param pog The area to fill and stroke.
+	 */
+	void drawPolygon(const PolygonF& pog) override;
 
 	/**
 	 * @brief Paint text.

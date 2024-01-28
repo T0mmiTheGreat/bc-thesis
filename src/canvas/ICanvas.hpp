@@ -180,6 +180,25 @@ public:
 	 * @param h Height of the rectangle.
 	 */
 	virtual void drawRectangle(int x, int y, int w, int h) = 0;
+
+	/**
+	 * @brief Fill a polygonal area.
+	 * 
+	 * @param pog The area to fill.
+	 */
+	virtual void fillPolygon(const PolygonF& pog) = 0;
+	/**
+	 * @brief Stroke a polygonal area.
+	 * 
+	 * @param pog The area to stroke.
+	 */
+	virtual void strokePolygon(const PolygonF& pog) = 0;
+	/**
+	 * @brief Fill and stroke a polygonal area.
+	 * 
+	 * @param pog The area to fill and stroke.
+	 */
+	virtual void drawPolygon(const PolygonF& pog) = 0;
 	
 	/**
 	 * @brief Paint text.

@@ -101,6 +101,12 @@ void CanvasBase::drawRectangle(int x, int y, int w, int h)
 	strokeRectangle(x, y, w, h);
 }
 
+void CanvasBase::drawPolygon(const PolygonF& pog)
+{
+	fillPolygon(pog);
+	strokePolygon(pog);
+}
+
 void CanvasBase::copyImage(ImageId img, int x, int y)
 {
 	Size2d s = getImageSize(img);

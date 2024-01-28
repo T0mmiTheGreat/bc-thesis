@@ -17,6 +17,40 @@
 
 #include "sdlmanager/SDLManager.hpp"
 
+void SDLCanvas::polygonToVertexArrays(const PolygonF& pog,
+	std::vector<Sint16>& vx, std::vector<Sint16>& vy)
+{
+	vx.reserve(pog.cornerCount());
+	vy.reserve(pog.cornerCount());
+
+	for (auto& corner : pog.corners) {
+		vx.push_back(static_cast<Sint16>(corner.x));
+		vy.push_back(static_cast<Sint16>(corner.y));
+	}
+}
+
+void SDLCanvas::fillPolygonInternal(const Sint16* vx, const Sint16* vy, int n)
+{
+	SDL2pp::Color cl = fillToColor();
+
+	filledPolygonRGBA(
+		SDLManager::get().renderer.Get(),
+		vx, vy, n,
+		cl.r, cl.g, cl.b, cl.a
+	);
+}
+
+void SDLCanvas::strokePolygonInternal(const Sint16* vx, const Sint16* vy, int n)
+{
+	SDL2pp::Color cl = strokeToColor();
+
+	aapolygonRGBA(
+		SDLManager::get().renderer.Get(),
+		vx, vy, n,
+		cl.r, cl.g, cl.b, cl.a
+	);
+}
+
 Size2d SDLCanvas::getImageSize(ImageId img)
 {
 	SDL2pp::Point p = SDLManager::get().getImageSize(img);
@@ -128,6 +162,28 @@ void SDLCanvas::strokeRectangle(int x, int y, int w, int h)
 {
 	SDLManager::get().renderer.SetDrawColor(strokeToColor());
 	SDLManager::get().renderer.DrawRect(SDL2pp::Rect(x, y, w, h));
+}
+
+void SDLCanvas::fillPolygon(const PolygonF& pog)
+{
+	std::vector<Sint16> vx, vy;
+	polygonToVertexArrays(pog, vx, vy);
+	fillPolygonInternal(vx.data(), vy.data(), pog.cornerCount());
+}
+
+void SDLCanvas::strokePolygon(const PolygonF& pog)
+{
+	std::vector<Sint16> vx, vy;
+	polygonToVertexArrays(pog, vx, vy);
+	strokePolygonInternal(vx.data(), vy.data(), pog.cornerCount());
+}
+
+void SDLCanvas::drawPolygon(const PolygonF & pog)
+{
+	std::vector<Sint16> vx, vy;
+	polygonToVertexArrays(pog, vx, vy);
+	fillPolygonInternal(vx.data(), vy.data(), pog.cornerCount());
+	strokePolygonInternal(vx.data(), vy.data(), pog.cornerCount());
 }
 
 void SDLCanvas::fillText(int x, int y, const std::string& text, FontId font)
