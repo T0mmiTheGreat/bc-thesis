@@ -902,6 +902,9 @@ struct Color {
 	static constexpr Color red() { return Color(0xff, 0, 0); }
 	static constexpr Color green() { return Color(0, 0xff, 0); }
 	static constexpr Color blue() { return Color(0, 0, 0xff); }
+	static constexpr Color grayscale(uint8_t intensity) {
+		return Color(intensity, intensity, intensity);
+	}
 
 	constexpr bool operator== (const Color& rhs) const {
 		return
