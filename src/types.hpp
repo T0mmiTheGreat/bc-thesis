@@ -601,6 +601,28 @@ struct PolygonF {
 			result.push_back(TriangleF(corners));
 		}
 	}
+
+	/**
+	 * @brief Returns the smallest rectangle that can be formed around the
+	 *        polygon.
+	 */
+	RectF getBoundingBox() const {
+		PointF topLeft = corners[0];
+		PointF bottomRight = corners[0];
+
+		// This algorithm as basically about finding the minima and maxima in
+		// both X and Y dimensions.
+		for (int i = 1; i < cornerCount(); i++) {
+			const PointF& corner = corners[i];
+
+			if (topLeft.x > corner.x) topLeft.x = corner.x;
+			if (topLeft.y > corner.y) topLeft.y = corner.y;
+			if (bottomRight.x < corner.x) bottomRight.x = corner.x;
+			if (bottomRight.y < corner.y) bottomRight.y = corner.y;
+		}
+
+		return RectF(topLeft, bottomRight);
+	}
 };
 
 /**
