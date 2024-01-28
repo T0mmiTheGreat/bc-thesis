@@ -57,6 +57,10 @@ set(SOURCE_FILES
 	playerstate/PlayerStateFactory.cpp
 	playerstate/PlayerStateBase.cpp
 	playerstate/DefaultPlayerState.cpp
+	stageeditor/StageEditor.cpp
+	stageeditor/StageState.cpp
+	stageeditor/StageEditorAction.cpp
+	stageeditor/StageEditorHistory.cpp
 )
 
 # Headers (*.hpp)
@@ -118,6 +122,11 @@ set(HEADER_FILES
 	playerstate/PlayerStateFactory.hpp
 	playerstate/PlayerStateBase.hpp
 	playerstate/DefaultPlayerState.hpp
+	stageeditor/Common.hpp
+	stageeditor/StageEditor.hpp
+	stageeditor/StageState.hpp
+	stageeditor/StageEditorAction.hpp
+	stageeditor/StageEditorHistory.hpp
 )
 
 # Create the executable in the repo root directory

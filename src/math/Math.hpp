@@ -13,12 +13,33 @@
 #define MATH_HPP
 
 #include <array>
+#include <cmath>
+#include <type_traits>
 #include <vector>
 
 template<typename T>
 inline constexpr T sqr(T x)
 {
 	return x*x;
+}
+
+/**
+ * @brief Rounds `x` to the neares multiple of `y`.
+ * 
+ * @tparam T Scalar type.
+ */
+template <typename T>
+inline constexpr T roundToMultiple(T x, T y)
+{
+	if (std::is_integral_v<T>) {
+		// Integral type
+
+		return ((x + y/2) / y) * y;
+	} else {
+		// Floating point type or error
+
+		return std::round(x / y) * y;
+	}
 }
 
 /**

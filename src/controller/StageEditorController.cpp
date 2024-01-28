@@ -11,6 +11,8 @@
 
 #include "controller/StageEditorController.hpp"
 
+#include "stageeditor/Common.hpp"
+
 StageEditorController::StageEditorController(
 	std::shared_ptr<ISysProxy> sysProxy)
 	: GeneralControllerBase(sysProxy)
@@ -217,9 +219,75 @@ void StageEditorController::mouseMoveWorkspace(int x, int y)
 {
 }
 
+void StageEditorController::mouseBtnDownMenubar(MouseBtn btn, int x, int y)
+{
+}
+
+void StageEditorController::mouseBtnDownToolbar(MouseBtn btn, int x, int y)
+{
+}
+
+void StageEditorController::mouseBtnDownStatusbar(MouseBtn btn, int x, int y)
+{
+}
+
+void StageEditorController::mouseBtnDownWorkspace(MouseBtn btn, int x, int y)
+{
+	if (btn == BTN_LEFT) {
+		m_stageEditor.click(x, y, StageEditor::SNAP_NONE);
+		updateSprites();
+	}
+}
+
+void StageEditorController::updateSprites()
+{
+	const auto lastAction = m_stageEditor.getLastAction();
+
+	switch (lastAction->type) {
+		case StageEditorAction::ACTION_ADD_PLAYER:
+			addPlayerSprite(lastAction->addPlayer.x, lastAction->addPlayer.y);
+			break;
+	}
+}
+
+void StageEditorController::addPlayerSprite(double x, double y)
+{
+	auto newSprite = std::make_unique<PlayerSprite>(sysProxy);
+	newSprite->setPos(static_cast<int>(x) - EDITOR_PLAYER_RADIUS,
+		static_cast<int>(y) - EDITOR_PLAYER_RADIUS);
+	newSprite->setRadius(EDITOR_PLAYER_RADIUS);
+	newSprite->setColor(Color::red());
+	m_playerSprites.push_back(std::move(newSprite));
+}
+
 void StageEditorController::startedEvent()
 {
 	createSprites();
+
+	m_stageEditor.setActiveTool(StageEditor::TOOL_PLAYERS);
+}
+
+void StageEditorController::mouseBtnDownEvent(MouseBtn btn, int x, int y)
+{
+	Rect menubarRect = getMenubarRect();
+	Rect toolbarRect = getToolbarRect();
+	Rect statusbarRect = getStatusbarRect();
+	Rect workspaceRect = getWorkspaceRect();
+	Point mouse(x, y);
+
+	if (menubarRect.containsPoint(mouse)) {
+		// Within menubar
+		mouseBtnDownMenubar(btn, x, y);
+	} else if (toolbarRect.containsPoint(mouse)) {
+		// Within toolbar
+		mouseBtnDownToolbar(btn, x, y);
+	} else if (statusbarRect.containsPoint(mouse)) {
+		// Within status bar
+		mouseBtnDownStatusbar(btn, x, y);
+	} else if (workspaceRect.containsPoint(mouse)) {
+		// Within workspace
+		mouseBtnDownWorkspace(btn, x, y);
+	}
 }
 
 void StageEditorController::mouseMoveEvent(int x, int y)
@@ -250,6 +318,11 @@ void StageEditorController::mouseMoveEvent(int x, int y)
 void StageEditorController::paintEvent(std::shared_ptr<ICanvas> canvas,
 	Rect& invalidRect)
 {
+	// Player objects
+	for (auto& playerSprite : m_playerSprites) {
+		playerSprite->repaint(canvas, invalidRect);
+	}
+
 	// Menu
 	for (auto& icon : m_menuIcons) {
 		icon->repaint(canvas, invalidRect);

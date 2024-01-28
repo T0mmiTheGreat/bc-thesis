@@ -14,6 +14,7 @@
 
 #include <array>
 #include <memory>
+#include <vector>
 
 #include "types.hpp"
 #include "canvas/ICanvas.hpp"
@@ -22,6 +23,8 @@
 #include "sprite/HorizontalLineSprite.hpp"
 #include "sprite/VerticalLineSprite.hpp"
 #include "sprite/StatusbarTextSprite.hpp"
+#include "sprite/PlayerSprite.hpp"
+#include "stageeditor/StageEditor.hpp"
 
 class StageEditorController : public GeneralControllerBase {
 private:
@@ -67,12 +70,16 @@ private:
 	static constexpr int STATUSBAR_TEXT_LEFT_MARGIN = 8;
 	static constexpr FontId STATUSBAR_TEXT_FONT = FONT_TAHOMA_16;
 
+	StageEditor m_stageEditor;
+
 	std::array<std::unique_ptr<EditorIconSprite>, MENUICON_COUNT> m_menuIcons;
 	std::unique_ptr<HorizontalLineSprite> m_menuBarLine;
 	std::array<std::unique_ptr<EditorIconSprite>, TOOLICON_COUNT> m_toolIcons;
 	std::unique_ptr<VerticalLineSprite> m_toolBarLine;
 	std::unique_ptr<StatusbarTextSprite> m_statusBarText;
 	std::unique_ptr<HorizontalLineSprite> m_statusBarLine;
+
+	std::vector<std::unique_ptr<PlayerSprite>> m_playerSprites;
 
 	void createSprites();
 	void positionSprites();
@@ -114,9 +121,31 @@ private:
 	 * @brief Mouse moved above the workspace.
 	 */
 	void mouseMoveWorkspace(int x, int y);
+
+	/**
+	 * @brief Mouse button pressed inside menu bar.
+	 */
+	void mouseBtnDownMenubar(MouseBtn btn, int x, int y);
+	/**
+	 * @brief Mouse button pressed inside tool bar.
+	 */
+	void mouseBtnDownToolbar(MouseBtn btn, int x, int y);
+	/**
+	 * @brief Mouse button pressed inside status bar.
+	 */
+	void mouseBtnDownStatusbar(MouseBtn btn, int x, int y);
+	/**
+	 * @brief Mouse button pressed inside workspace.
+	 */
+	void mouseBtnDownWorkspace(MouseBtn btn, int x, int y);
+
+	void updateSprites();
+
+	void addPlayerSprite(double x, double y);
 public:
 	StageEditorController(std::shared_ptr<ISysProxy> sysProxy);
 	void startedEvent() override;
+	void mouseBtnDownEvent(MouseBtn btn, int x, int y) override;
 	void mouseMoveEvent(int x, int y) override;
 	void paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
 };
