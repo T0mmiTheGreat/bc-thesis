@@ -125,6 +125,126 @@ template <typename T>
 inline constexpr T msToClocks(T ms);
 
 /**
+ * @brief A matrix with 3 rows and 3 columns suitable for transformations.
+ * 
+ * @note In this program the transformations use row vectors. When combining
+ *       transformations (multiplying matrices) the transformations are as if
+ *       performed from left to right.
+ */
+struct Matrix3x3 {
+	typedef double ValueType;
+
+	// matrix[rowIdx][colIdx]
+	std::array<std::array<ValueType, 3>, 3> matrix;
+
+	constexpr Matrix3x3(ValueType a11, ValueType a12, ValueType a13, ValueType a21,
+		ValueType a22, ValueType a23, ValueType a31, ValueType a32,
+		ValueType a33)
+		: matrix{
+			{a11, a12, a13,
+			a21, a22, a23,
+			a31, a32, a33}
+		}
+	{}
+
+	constexpr Matrix3x3()
+		: Matrix3x3(
+			0.0, 0.0, 0.0,
+			0.0, 0.0, 0.0,
+			0.0, 0.0, 0.0
+		)
+	{}
+
+	/**
+	 * @brief Creates zero matrix. 
+	 */
+	static constexpr Matrix3x3 createZero() {
+		return Matrix3x3();
+	}
+
+	/**
+	 * @brief Creates identity matrix.
+	 */
+	static constexpr Matrix3x3 createIdentity() {
+		return Matrix3x3(
+			1, 0, 0,
+			0, 1, 0,
+			0, 0, 1
+		);
+	}
+
+	/**
+	 * @brief Creates translation matrix.
+	 * 
+	 * @param tx Translation in the X axis.
+	 * @param ty Translation in the Y axis.
+	 */
+	static constexpr Matrix3x3 createTranslation(double tx, double ty) {
+		return Matrix3x3(
+			 1,  0,  0,
+			 0,  1,  0,
+			tx, ty,  1
+		);
+	}
+
+	/**
+	 * @brief Creates scale matrix.
+	 * 
+	 * @param sx Scale in the X axis.
+	 * @param sy Scale in the Y axis.
+	 */
+	static constexpr Matrix3x3 createScale(double sx, double sy) {
+		return Matrix3x3(
+			sx,  0,  0,
+			 0, sy,  0,
+			 0,  0,  1
+		);
+	}
+
+	/**
+	 * @brief Returns the value at the given position.
+	 */
+	constexpr const ValueType& get(size_t row, size_t col) const {
+		return matrix[row][col];
+	}
+	/**
+	 * @brief Returns the value at the given position.
+	 */
+	constexpr ValueType& get(size_t row, size_t col) {
+		return matrix[row][col];
+	}
+
+	constexpr const std::array<ValueType, 3>& operator[] (size_t row) const {
+		return matrix[row];
+	}
+	constexpr std::array<ValueType, 3>& operator[] (size_t row) {
+		return matrix[row];
+	}
+
+	/**
+	 * @brief Multiplies two matrices.
+	 * 
+	 * @note Note that matrix multiplication is NOT commutative: A*B != B*A
+	 *       in most cases.
+	 */
+	constexpr Matrix3x3 operator* (const Matrix3x3& rhs) const {
+		Matrix3x3 res = createZero();
+		// This algorithm is optimized for cache misses, although I doubt that
+		// at this little scale there would be any. Copied from:
+		// https://www.fit.vutbr.cz/~peringer/UNOFFICIAL/IPS/IPS.pdf
+		// if anyone cares...
+		for (int i = 0; i < 3; i++) {
+			for (int k = 0; k < 3; k++) {
+				for (int j = 0; j < 3; j++) {
+					res.matrix[i][j] += this->matrix[i][k] * rhs.matrix[k][j];
+				}
+			}
+		}
+		return res;
+	}
+};
+
+/**
  * @brief Structure representing X and Y coordinate.
  * 
  * @tparam T Scalar type.
@@ -133,6 +253,9 @@ template <typename T>
 struct PointGeneric {
 	typedef T ValueType;
 
+	/**
+	 * @brief Hasher for PointGeneric type.
+	 */
 	struct Hash {
 		size_t operator() (const PointGeneric<T>& key) const {
 			size_t h1 = std::hash<T>{}(key.x);
@@ -152,6 +275,9 @@ struct PointGeneric {
 		: PointGeneric(0, 0)
 	{}
 
+	/**
+	 * @brief Creates [0,0] point.
+	 */
 	static constexpr PointGeneric<T> zero() {
 		return PointGeneric<T>();
 	}
@@ -163,6 +289,31 @@ struct PointGeneric {
 	 */
 	constexpr PointGeneric<T> relativeTo(const PointGeneric<T>& rel) const {
 		return PointGeneric<T>(x - rel.x, y - rel.y);
+	}
+
+	/**
+	 * @brief Transforms point using transformation matrix.
+	 * 
+	 * @param tm Transformation matrix.
+	 */
+	constexpr PointGeneric<T> transform(const Matrix3x3& tm) const {
+		PointGeneric<Matrix3x3::ValueType> resF;
+		Matrix3x3::ValueType h;
+
+		resF.x = this->x * tm[0][0];
+		resF.y = this->x * tm[0][1];
+		h      = this->x * tm[0][2];
+		resF.x += this->y * tm[1][0];
+		resF.y += this->y * tm[1][1];
+		h      += this->y * tm[1][2];
+		resF.x += tm[2][0];
+		resF.y += tm[2][1];
+		h      += tm[2][2];
+
+		resF.x /= h;
+		resF.y /= h;
+
+		return static_cast<PointGeneric<T>>(resF);
 	}
 
 	constexpr bool operator== (const PointGeneric<T>& rhs) const {
@@ -474,6 +625,19 @@ struct TriangleF {
 	constexpr TriangleF()
 		: TriangleF(PointF::zero(), PointF::zero(), PointF::zero())
 	{}
+
+	/**
+	 * @brief Transforms triangle using transformation matrix.
+	 * 
+	 * @param tm Transformation matrix.
+	 */
+	constexpr TriangleF transform(const Matrix3x3& tm) const {
+		TriangleF res;
+		for (int i = 0; i < CORNER_COUNT; i++) {
+			res.corners[i] = this->corners[i].transform(tm);
+		}
+		return res;
+	}
 };
 
 /**
@@ -622,6 +786,19 @@ struct PolygonF {
 		}
 
 		return RectF(topLeft, bottomRight);
+	}
+
+	/**
+	 * @brief Transforms polygon using transformation matrix.
+	 * 
+	 * @param tm Transformation matrix.
+	 */
+	PolygonF transform(const Matrix3x3& tm) const {
+		PolygonF res;
+		for (int i = 0; i < cornerCount(); i++) {
+			res.corners[i] = this->corners[i].transform(tm);
+		}
+		return res;
 	}
 };
 
