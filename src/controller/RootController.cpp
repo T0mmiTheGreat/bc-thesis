@@ -45,6 +45,12 @@ void RootController::mouseBtnDownEvent(MouseBtn btn, int x, int y)
 	m_childController->mouseBtnDownEvent(btn, x, y);
 }
 
+void RootController::mouseBtnUpEvent(MouseBtn btn, int x, int y)
+{
+	// Propagate
+	m_childController->mouseBtnUpEvent(btn, x, y);
+}
+
 void RootController::mouseMoveEvent(int x, int y)
 {
 	// Propagate

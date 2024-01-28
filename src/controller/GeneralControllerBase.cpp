@@ -53,6 +53,11 @@ void GeneralControllerBase::mouseBtnDownEvent(MouseBtn btn, int x, int y)
 	// Ignore
 }
 
+void GeneralControllerBase::mouseBtnUpEvent(MouseBtn btn, int x, int y)
+{
+	// Ignore
+}
+
 void GeneralControllerBase::mouseMoveEvent(int x, int y)
 {
 	// Ignore

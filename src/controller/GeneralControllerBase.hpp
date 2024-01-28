@@ -113,6 +113,16 @@ public:
 	 */
 	virtual void mouseBtnDownEvent(MouseBtn btn, int x, int y) override;
 	/**
+	 * @brief A mouse button was released.
+	 * 
+	 * @param btn The code of the button.
+	 * @param x The mouse x coordinate. 0 is the left border of the window. The
+	 *          coordinate increases to the right.
+	 * @param y The mouse y coordinate. 0 is the top border of the window. The
+	 *          coordinate increases downwards.
+	 */
+	virtual void mouseBtnUpEvent(MouseBtn btn, int x, int y) override;
+	/**
 	 * @brief A mouse cursor moved.
 	 * 
 	 * @param x The x coordinate. 0 is the left border of the window. The

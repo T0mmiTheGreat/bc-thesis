@@ -24,6 +24,9 @@ void SDLSubscriber::generalEvent(SDL_Event& ev)
 			case SDL_MOUSEBUTTONDOWN:
 				lockedSubscriber->mouseBtnDownEvent(SDLManager::sdlMouseBtnToEnum(ev.button.button), ev.button.x, ev.button.y);
 				break;
+			case SDL_MOUSEBUTTONUP:
+				lockedSubscriber->mouseBtnUpEvent(SDLManager::sdlMouseBtnToEnum(ev.button.button), ev.button.x, ev.button.y);
+				break;
 			case SDL_MOUSEMOTION:
 				lockedSubscriber->mouseMoveEvent(ev.motion.x, ev.motion.y);
 				break;
