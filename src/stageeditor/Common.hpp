@@ -12,6 +12,7 @@
 #ifndef COMMON_HPP
 #define COMMON_HPP
 
-constexpr double EDITOR_PLAYER_RADIUS = 100.0;
+// Number of units taken by half of a player sprite in the editor
+constexpr double EDITOR_PLAYER_RADIUS = 50.0;
 
 #endif // COMMON_HPP
