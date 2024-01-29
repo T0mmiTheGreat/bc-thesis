@@ -285,6 +285,10 @@ struct Matrix3x3 {
 		}
 		return res;
 	}
+
+	constexpr Matrix3x3& operator*= (const Matrix3x3& rhs) {
+		return (*this = *this * rhs);
+	}
 };
 
 /**
@@ -350,6 +354,15 @@ struct PointGeneric {
 		PointGeneric<Matrix3x3::ValueType> res(*this);
 		res.transform(tm);
 		return res;
+	}
+
+	constexpr void offset(T x, T y) {
+		this->x += x;
+		this->y += y;
+	}
+
+	constexpr void offset(const PointGeneric<T>& offsetPoint) {
+		offset(offsetPoint.x, offsetPoint.y);
 	}
 
 	constexpr bool operator== (const PointGeneric<T>& rhs) const {
@@ -444,6 +457,13 @@ struct Size2dGeneric {
 	 */
 	constexpr Size2dGeneric<T>& operator-= (const Size2dGeneric<T>& rhs) {
 		return (*this = *this - rhs);
+	}
+	/**
+	 * @brief Compares two sizes for equality.
+	 */
+	constexpr bool operator== (const Size2dGeneric<T>& rhs) const {
+		return (this->w == rhs.w)
+			&& (this->h == rhs.h);
 	}
 
 	/**
@@ -613,6 +633,54 @@ struct RectGeneric {
 	constexpr RectGeneric<T> getCenteredAt(const RectGeneric<T>& rhs) const {
 		RectGeneric<T> res(*this);
 		res.centerAt(rhs);
+		return res;
+	}
+
+	constexpr void offset(T x, T y) {
+		this->x += x;
+		this->y += y;
+	}
+	constexpr void offset(const PointGeneric<T>& offsetPoint) {
+		offset(offsetPoint.x, offsetPoint.y);
+	}
+
+	/**
+	 * @brief Transforms rectangle using transformation matrix.
+	 * 
+	 * @param tm Transformation matrix.
+	 * 
+	 * @remark Note that the result might not be as expected, because the
+	 *         rectangle must remain axis-aligned. If the transformation
+	 *         involves rotation, shearing, or other transformations that
+	 *         affect the angle of the rectangle sides, consider converting
+	 *         the rectangle to polygon type.
+	 */
+	constexpr void transform(const Matrix3x3& tm) {
+		PointGeneric<T> topLeft = getTopLeft();
+		PointGeneric<T> bottomRight = getBottomRight();
+		
+		topLeft.transform(tm);
+		bottomRight.transform(tm);
+
+		x = topLeft.x;
+		y = topLeft.y;
+		w = bottomRight.x - topLeft.x;
+		h = bottomRight.y - topLeft.y;
+	}
+	/**
+	 * @brief Transforms rectangle using transformation matrix.
+	 * 
+	 * @param tm Transformation matrix.
+	 * 
+	 * @remark Note that the result might not be as expected, because the
+	 *         rectangle must remain axis-aligned. If the transformation
+	 *         involves rotation, shearing, or other transformations that
+	 *         affect the angle of the rectangle sides, consider converting
+	 *         the rectangle to polygon type.
+	 */
+	constexpr RectGeneric<T> getTransformed(const Matrix3x3& tm) const {
+		RectGeneric<T> res(*this);
+		res.transform(tm);
 		return res;
 	}
 
