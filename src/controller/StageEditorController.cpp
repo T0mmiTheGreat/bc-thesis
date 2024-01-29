@@ -72,8 +72,6 @@ void StageEditorController::positionSprites()
 	);
 	// Statusbar line
 	m_statusBarLine->setPos(statusbarRect.getTopLeft());
-
-	m_statusBarText->setText("Wazzup");
 }
 
 Rect StageEditorController::getMenubarRect()
