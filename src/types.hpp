@@ -214,6 +214,49 @@ struct Matrix3x3 {
 		return matrix[row][col];
 	}
 
+	/**
+	 * @brief Transforms the provided homogeneous coordinates.
+	 * 
+	 * @param x X coordinate.
+	 * @param y Y coordinate.
+	 * @param h The homogeneous element.
+	 * @param xOut Transformed X coordinate.
+	 * @param yOut Transformed Y coordinate.
+	 * @param hOut Transformed homogeneous element.
+	 */
+	constexpr void transform(ValueType x, ValueType y, ValueType h,
+		ValueType& xOut, ValueType& yOut, ValueType& hOut) const
+	{
+		xOut = x * matrix[0][0];
+		yOut = x * matrix[0][1];
+		hOut = x * matrix[0][2];
+		xOut += y * matrix[1][0];
+		yOut += y * matrix[1][1];
+		hOut += y * matrix[1][2];
+		xOut += h * matrix[2][0];
+		yOut += h * matrix[2][1];
+		hOut += h * matrix[2][2];
+	}
+
+	/**
+	 * @brief Transforms the provided Cartesian coordinates.
+	 * 
+	 * @param x X coordinate.
+	 * @param y Y coordinate.
+	 * @param xOut Transformed X coordinate.
+	 * @param yOut Transformed Y coordinate.
+	 */
+	constexpr void transform(ValueType x, ValueType y, ValueType& xOut,
+		ValueType& yOut) const
+	{
+		ValueType hOut;
+
+		transform(x, y, 1.0, xOut, yOut, hOut);
+
+		xOut /= hOut;
+		yOut /= hOut;
+	}
+
 	constexpr const std::array<ValueType, 3>& operator[] (size_t row) const {
 		return matrix[row];
 	}
@@ -293,20 +336,7 @@ struct PointGeneric {
 
 	constexpr void transform(const Matrix3x3& tm) {
 		PointGeneric<Matrix3x3::ValueType> resF;
-		Matrix3x3::ValueType h;
-
-		resF.x = this->x * tm[0][0];
-		resF.y = this->x * tm[0][1];
-		h      = this->x * tm[0][2];
-		resF.x += this->y * tm[1][0];
-		resF.y += this->y * tm[1][1];
-		h      += this->y * tm[1][2];
-		resF.x += tm[2][0];
-		resF.y += tm[2][1];
-		h      += tm[2][2];
-
-		resF.x /= h;
-		resF.y /= h;
+		tm.transform(x, y, resF.x, resF.y);
 
 		*this = static_cast<PointGeneric<T>>(resF);
 	}
