@@ -16,6 +16,8 @@
 StageEditorController::StageEditorController(
 	std::shared_ptr<ISysProxy> sysProxy)
 	: GeneralControllerBase(sysProxy)
+	, m_viewport(static_cast<Size2dF>(m_stageEditor.getState().getSize()),
+		static_cast<RectF>(getWorkspaceRect()))
 {}
 
 void StageEditorController::createSprites()
@@ -44,7 +46,11 @@ void StageEditorController::createSprites()
 	// Statusbar line
 	m_statusBarLine = std::make_unique<HorizontalLineSprite>(sysProxy);
 
+	// Grid
+	m_gridSprite = std::make_unique<EditorWorkspaceGridSprite>(sysProxy);
+
 	positionSprites();
+	updateSpritesByViewport();
 }
 
 void StageEditorController::positionSprites()
@@ -231,31 +237,89 @@ void StageEditorController::mouseBtnDownStatusbar(MouseBtn btn, int x, int y)
 
 void StageEditorController::mouseBtnDownWorkspace(MouseBtn btn, int x, int y)
 {
+	Rect workspaceRect = getWorkspaceRect();
+	Point mouse(x, y);
+	Point mouseRel = mouse.relativeTo(workspaceRect.getTopLeft());
+
 	if (btn == BTN_LEFT) {
-		m_stageEditor.click(x, y, StageEditor::SNAP_NONE);
-		updateSprites();
+		m_stageEditor.click(mouseRel.x, mouseRel.y, StageEditor::SNAP_NONE);
+		updateSpritesByBackend();
 	}
 }
 
-void StageEditorController::updateSprites()
+void StageEditorController::updateSpritesByBackend()
 {
 	const auto lastAction = m_stageEditor.getLastAction();
 
 	switch (lastAction->type) {
 		case StageEditorAction::ACTION_ADD_PLAYER:
-			addPlayerSprite(lastAction->addPlayer.x, lastAction->addPlayer.y);
+			addPlayerSprite(lastAction->addPlayer.x, lastAction->addPlayer.y,
+				lastAction->addPlayer.oid);
 			break;
 	}
+}
+
+void StageEditorController::updateSpritesByViewport()
+{
+	Rect workspaceRect = getWorkspaceRect();
+	Matrix3x3 tm = m_viewport.getProjectionMatrix();
+
+
+	// Grid
+
+	// Grid size
+	Rect gridRect(0, 0, m_stageEditor.getState().getSize());
+	// Project to workspace
+	gridRect.transform(tm);
+	// Put within workspace
+	gridRect.offset(workspaceRect.x, workspaceRect.y);
+
+	m_gridSprite->setPos(gridRect.x, gridRect.y);
+	m_gridSprite->setSize(gridRect.getSize());
+	m_gridSprite->setXSpacing(m_viewport.getZoom() * 100.0);
+	m_gridSprite->setYSpacing(m_viewport.getZoom() * 100.0);
+
+
+	// Players
+
+	double playerRadius = EDITOR_PLAYER_RADIUS * m_viewport.getZoom();
+
+	for (auto& playerSpritePair : m_playerSprites) {
+		updatePlayerSprite(playerSpritePair.first, playerSpritePair.second,
+			tm, playerRadius);
+	}
+}
+
+void StageEditorController::updatePlayerSprite(EditorOID oid)
+{
+	std::unique_ptr<PlayerSprite>& sprite = m_playerSprites[oid];
+	Matrix3x3 tm = m_viewport.getProjectionMatrix();
+	double radius = EDITOR_PLAYER_RADIUS * m_viewport.getZoom();
+
+	updatePlayerSprite(oid, sprite, tm, radius);
+}
+
+void StageEditorController::updatePlayerSprite(EditorOID oid,
+	std::unique_ptr<PlayerSprite>& sprite, const Matrix3x3& tm, double radius)
+{
+	Rect workspaceRect = getWorkspaceRect();
+
+	PointF playerPos = m_stageEditor.getState().players.at(oid);
+	playerPos.transform(tm);
+
+	playerPos.x += (-radius + workspaceRect.x);
+	playerPos.y += (-radius + workspaceRect.y);
+
+	sprite->setPos(static_cast<Point>(playerPos));
+	sprite->setRadius(radius);
 }
 
 void StageEditorController::addPlayerSprite(double x, double y, EditorOID oid)
 {
 	auto newSprite = std::make_unique<PlayerSprite>(sysProxy);
-	newSprite->setPos(static_cast<int>(x) - EDITOR_PLAYER_RADIUS,
-		static_cast<int>(y) - EDITOR_PLAYER_RADIUS);
-	newSprite->setRadius(EDITOR_PLAYER_RADIUS);
 	newSprite->setColor(Color::red());
 	m_playerSprites[oid] = std::move(newSprite);
+	updatePlayerSprite(oid);
 }
 
 void StageEditorController::startedEvent()
@@ -288,6 +352,10 @@ void StageEditorController::mouseBtnDownEvent(MouseBtn btn, int x, int y)
 	}
 }
 
+void StageEditorController::mouseBtnUpEvent(MouseBtn btn, int x, int y)
+{
+}
+
 void StageEditorController::mouseMoveEvent(int x, int y)
 {
 	Rect menubarRect = getMenubarRect();
@@ -316,6 +384,9 @@ void StageEditorController::mouseMoveEvent(int x, int y)
 void StageEditorController::paintEvent(std::shared_ptr<ICanvas> canvas,
 	Rect& invalidRect)
 {
+	// Grid
+	m_gridSprite->repaint(canvas, invalidRect);
+
 	// Player objects
 	for (auto& playerSprite : m_playerSprites) {
 		playerSprite.second->repaint(canvas, invalidRect);

@@ -42,11 +42,13 @@ set(SOURCE_FILES
 	sprite/MainMenuItemSprite.cpp
 	sprite/MainMenuTitleSprite.cpp
 	sprite/PlayerSprite.cpp
+	sprite/ObstacleSprite.cpp
 	sprite/ImageSprite.cpp
 	sprite/EditorIconSprite.cpp
 	sprite/HorizontalLineSprite.cpp
 	sprite/VerticalLineSprite.cpp
 	sprite/StatusbarTextSprite.cpp
+	sprite/EditorWorkspaceGridSprite.cpp
 	core/Core.cpp
 	core/stageobstacles/StageObstacles.cpp
 	core/trajectory/Trajectory.cpp
@@ -59,6 +61,7 @@ set(SOURCE_FILES
 	playerstate/DefaultPlayerState.cpp
 	stageeditor/StageEditor.cpp
 	stageeditor/StageState.cpp
+	stageeditor/StageViewport.cpp
 	stageeditor/StageEditorAction.cpp
 	stageeditor/StageEditorHistory.cpp
 )
@@ -101,11 +104,13 @@ set(HEADER_FILES
 	sprite/MainMenuItemSprite.hpp
 	sprite/MainMenuTitleSprite.hpp
 	sprite/PlayerSprite.hpp
+	sprite/ObstacleSprite.hpp
 	sprite/ImageSprite.hpp
 	sprite/EditorIconSprite.hpp
 	sprite/HorizontalLineSprite.hpp
 	sprite/VerticalLineSprite.hpp
 	sprite/StatusbarTextSprite.hpp
+	sprite/EditorWorkspaceGridSprite.hpp
 	paintingproxy/IPaintingProxy.hpp
 	core/ICore.hpp
 	core/Core.hpp
@@ -125,6 +130,7 @@ set(HEADER_FILES
 	stageeditor/Common.hpp
 	stageeditor/StageEditor.hpp
 	stageeditor/StageState.hpp
+	stageeditor/StageViewport.hpp
 	stageeditor/StageEditorAction.hpp
 	stageeditor/StageEditorHistory.hpp
 )

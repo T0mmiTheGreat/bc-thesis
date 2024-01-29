@@ -23,9 +23,11 @@
 #include "sprite/HorizontalLineSprite.hpp"
 #include "sprite/VerticalLineSprite.hpp"
 #include "sprite/StatusbarTextSprite.hpp"
+#include "sprite/EditorWorkspaceGridSprite.hpp"
 #include "sprite/PlayerSprite.hpp"
 #include "stageeditor/Common.hpp"
 #include "stageeditor/StageEditor.hpp"
+#include "stageeditor/StageViewport.hpp"
 
 class StageEditorController : public GeneralControllerBase {
 private:
@@ -71,7 +73,11 @@ private:
 	static constexpr int STATUSBAR_TEXT_LEFT_MARGIN = 8;
 	static constexpr FontId STATUSBAR_TEXT_FONT = FONT_TAHOMA_16;
 
+	// XXX: Keep the editor and viewport in this order for correct order of
+	//      initialization
+
 	StageEditor m_stageEditor;
+	StageViewport m_viewport;
 
 	std::array<std::unique_ptr<EditorIconSprite>, MENUICON_COUNT> m_menuIcons;
 	std::unique_ptr<HorizontalLineSprite> m_menuBarLine;
@@ -80,6 +86,7 @@ private:
 	std::unique_ptr<StatusbarTextSprite> m_statusBarText;
 	std::unique_ptr<HorizontalLineSprite> m_statusBarLine;
 
+	std::unique_ptr<EditorWorkspaceGridSprite> m_gridSprite;
 	std::unordered_map<EditorOID, std::unique_ptr<PlayerSprite>> m_playerSprites;
 
 	void createSprites();
@@ -140,11 +147,51 @@ private:
 	 */
 	void mouseBtnDownWorkspace(MouseBtn btn, int x, int y);
 
+	/**
+	 * @brief Updates all sprites after a change in backend (StageEditor).
+	 */
+	void updateSpritesByBackend();
+	/**
+	 * @brief Updates all sprites after a change in viewport.
+	 */
+	void updateSpritesByViewport();
+	/**
+	 * @brief Updates player sprite after a change in backend or viewport.
+	 * 
+	 * @param oid Editor OID of the player object.
+	 * 
+	 * @remark This method does the same thing as the overloaded variant below,
+	 *         but it has to calculate the other parameters itself. It is
+	 *         convenient when only one player sprite is updated, but for
+	 *         multiple sprites, the one below should be preferred.
+	 */
+	void updatePlayerSprite(EditorOID oid);
+	/**
+	 * @brief Updates player sprite after a change in backend or viewport.
+	 * 
+	 * @param oid Editor OID of the player object.
+	 * @param sprite The sprite associated with the OID.
+	 * @param tm Transformation matrix to apply to the player object position.
+	 *           The method will make the sprite position adjustments itself.
+	 *           Caller should just pass the result of `StageViewport::
+	 *           getProjectionMatrix()`.
+	 * @param radius Radius of the sprite. This should be calculated as
+	 *               `EDITOR_PLAYER_RADIUS * StageViewport::getZoom()`.
+	 * 
+	 * @remark This methods should be used in "for each player loops" to save
+	 *         computation time (the parameters will be the same for each
+	 *         sprite).
+	 */
+	void updatePlayerSprite(EditorOID oid,
+		std::unique_ptr<PlayerSprite>& sprite, const Matrix3x3& tm,
+		double radius);
+
 	void addPlayerSprite(double x, double y, EditorOID oid);
 public:
 	StageEditorController(std::shared_ptr<ISysProxy> sysProxy);
 	void startedEvent() override;
 	void mouseBtnDownEvent(MouseBtn btn, int x, int y) override;
+	void mouseBtnUpEvent(MouseBtn btn, int x, int y) override;
 	void mouseMoveEvent(int x, int y) override;
 	void paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
 };
