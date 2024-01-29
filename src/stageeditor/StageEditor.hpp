@@ -55,6 +55,8 @@ private:
 	void toolSelectClick(double x, double y, ObjectSnap snapping);
 	void toolPlayersClick(double x, double y, ObjectSnap snapping);
 	void toolObstaclesClick(double x, double y, ObjectSnap snapping);
+
+	void addPlayer(double x, double y);
 public:
 	StageEditor();
 	/**

@@ -14,7 +14,7 @@
 
 #include <array>
 #include <memory>
-#include <vector>
+#include <unordered_map>
 
 #include "types.hpp"
 #include "canvas/ICanvas.hpp"
@@ -24,6 +24,7 @@
 #include "sprite/VerticalLineSprite.hpp"
 #include "sprite/StatusbarTextSprite.hpp"
 #include "sprite/PlayerSprite.hpp"
+#include "stageeditor/Common.hpp"
 #include "stageeditor/StageEditor.hpp"
 
 class StageEditorController : public GeneralControllerBase {
@@ -79,7 +80,7 @@ private:
 	std::unique_ptr<StatusbarTextSprite> m_statusBarText;
 	std::unique_ptr<HorizontalLineSprite> m_statusBarLine;
 
-	std::vector<std::unique_ptr<PlayerSprite>> m_playerSprites;
+	std::unordered_map<EditorOID, std::unique_ptr<PlayerSprite>> m_playerSprites;
 
 	void createSprites();
 	void positionSprites();
@@ -139,9 +140,7 @@ private:
 	 */
 	void mouseBtnDownWorkspace(MouseBtn btn, int x, int y);
 
-	void updateSprites();
-
-	void addPlayerSprite(double x, double y);
+	void addPlayerSprite(double x, double y, EditorOID oid);
 public:
 	StageEditorController(std::shared_ptr<ISysProxy> sysProxy);
 	void startedEvent() override;

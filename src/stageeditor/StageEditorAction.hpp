@@ -14,6 +14,8 @@
 
 #include <memory>
 
+#include "stageeditor/Common.hpp"
+
 struct StageEditorAction {
 	enum ActionType {
 		ACTION_ADD_PLAYER,
@@ -24,11 +26,12 @@ struct StageEditorAction {
 		struct {
 			double x;
 			double y;
+			EditorOID oid;
 		} addPlayer;
 	};
 
 	static std::shared_ptr<StageEditorAction>
-	createActionAddPlayer(double x, double y);
+	createActionAddPlayer(double x, double y, EditorOID oid);
 };
 
 #endif // STAGEEDITORACTION_HPP

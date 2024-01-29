@@ -12,15 +12,20 @@
 #ifndef STAGESTATE_HPP
 #define STAGESTATE_HPP
 
-#include <vector>
+#include <unordered_map>
 
 #include "types.hpp"
+#include "stageeditor/Common.hpp"
 
 struct StageState {
 	int width;
 	int height;
-	std::vector<PolygonF> obstacles;
-	std::vector<PointF> players;
+	std::unordered_map<EditorOID, PolygonF> obstacles;
+	std::unordered_map<EditorOID, PointF> players;
+
+	Size2d getSize() const {
+		return Size2d(width, height);
+	}
 };
 
 #endif // STAGESTATE_HPP

@@ -250,14 +250,14 @@ void StageEditorController::updateSprites()
 	}
 }
 
-void StageEditorController::addPlayerSprite(double x, double y)
+void StageEditorController::addPlayerSprite(double x, double y, EditorOID oid)
 {
 	auto newSprite = std::make_unique<PlayerSprite>(sysProxy);
 	newSprite->setPos(static_cast<int>(x) - EDITOR_PLAYER_RADIUS,
 		static_cast<int>(y) - EDITOR_PLAYER_RADIUS);
 	newSprite->setRadius(EDITOR_PLAYER_RADIUS);
 	newSprite->setColor(Color::red());
-	m_playerSprites.push_back(std::move(newSprite));
+	m_playerSprites[oid] = std::move(newSprite);
 }
 
 void StageEditorController::startedEvent()
@@ -320,7 +320,7 @@ void StageEditorController::paintEvent(std::shared_ptr<ICanvas> canvas,
 {
 	// Player objects
 	for (auto& playerSprite : m_playerSprites) {
-		playerSprite->repaint(canvas, invalidRect);
+		playerSprite.second->repaint(canvas, invalidRect);
 	}
 
 	// Menu

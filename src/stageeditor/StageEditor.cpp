@@ -12,6 +12,7 @@
 #include "stageeditor/StageEditor.hpp"
 
 #include "math/Math.hpp"
+#include "stageeditor/Common.hpp"
 
 void StageEditor::getSnappedXY(double x, double y, ObjectSnap snapping,
 	double& xSnap, double& ySnap)
@@ -45,10 +46,7 @@ void StageEditor::toolPlayersClick(double x, double y, ObjectSnap snapping)
 {
 	double xSnap, ySnap;
 	getSnappedXY(x, y, snapping, xSnap, ySnap);
-
-	m_stageState.players.push_back(PointF(xSnap, ySnap));
-	m_lastAction = StageEditorAction::createActionAddPlayer(x, y);
-	m_history.pushAction(m_lastAction);
+	addPlayer(xSnap, ySnap);
 }
 
 void StageEditor::toolObstaclesClick(double x, double y, ObjectSnap snapping)
@@ -56,6 +54,15 @@ void StageEditor::toolObstaclesClick(double x, double y, ObjectSnap snapping)
 	double xSnap, ySnap;
 	getSnappedXY(xSnap, ySnap, snapping, xSnap, ySnap);
 	// TODO
+}
+
+void StageEditor::addPlayer(double x, double y)
+{
+	EditorOID oid = generateEditorOID();
+
+	m_stageState.players[oid] = PointF(x, y);
+	m_lastAction = StageEditorAction::createActionAddPlayer(x, y, oid);
+	m_history.pushAction(m_lastAction);
 }
 
 StageEditor::StageEditor()
