@@ -116,6 +116,11 @@ KeyCode SDLManager::sdlKeycodeToEnum(SDL_Keycode sdlk)
 		case SDLK_u:      return KEY_U;
 		case SDLK_k:      return KEY_K;
 		case SDLK_j:      return KEY_J;
+		case SDLK_LCTRL:  return KEY_CTRL;
+		case SDLK_RCTRL:  return KEY_CTRL;
+		case SDLK_LSHIFT: return KEY_SHIFT;
+		case SDLK_RSHIFT: return KEY_SHIFT;
+		case SDLK_LALT:   return KEY_ALT;
 		default: return KEY_UNKNOWN;
 	}
 }
@@ -156,6 +161,9 @@ SDL_Scancode SDLManager::enumToSdlScancode(KeyCode keyCode)
 		case KEY_S:           return SDL_SCANCODE_S;
 		case KEY_U:           return SDL_SCANCODE_U;
 		case KEY_W:           return SDL_SCANCODE_W;
+		case KEY_CTRL:        return SDL_SCANCODE_LCTRL;
+		case KEY_SHIFT:       return SDL_SCANCODE_LSHIFT;
+		case KEY_ALT:         return SDL_SCANCODE_LALT;
 		case KEY_UNKNOWN:
 		default:
 			return SDL_SCANCODE_UNKNOWN;
