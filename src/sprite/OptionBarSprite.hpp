@@ -138,9 +138,21 @@ public:
 	 */
 	void setBorders(bool left, bool top, bool right, bool bottom);
 
+	/**
+	 * @brief Getter for the filling color of the bar.
+	 */
 	const Color& getFillingColor() const;
+	/**
+	 * @brief Setter for the filling color of the bar.
+	 */
 	void setFillingColor(const Color& value);
+	/**
+	 * @brief Getter for the stroking color of the bar.
+	 */
 	const Color& getStrokingColor() const;
+	/**
+	 * @brief Setter for the stroking color of the bar.
+	 */
 	void setStrokingColor(const Color& value);
 };
 

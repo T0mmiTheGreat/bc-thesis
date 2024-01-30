@@ -22,7 +22,7 @@ Size2d OptionBarSprite::getSize()
 {
 	Size2d paintAreaSize = paintingProxy->getPaintAreaSize();
 	Size2d res(
-		(m_barWidth > 0 ? m_barWidth : paintAreaSize.w + m_barWidth - getX()),
+		(m_barWidth  > 0 ? m_barWidth  : paintAreaSize.w + m_barWidth  - getX()),
 		(m_barHeight > 0 ? m_barHeight : paintAreaSize.h + m_barHeight - getY())
 	);
 
@@ -32,16 +32,23 @@ Size2d OptionBarSprite::getSize()
 void OptionBarSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)
 {
 	Rect bounds = getBounds();
+	// Top left
 	Point tl(bounds.x, bounds.y);
+	// Top right
 	Point tr(bounds.getRight(), bounds.y);
+	// Bottom right
 	Point br(bounds.getBottomRight());
+	// Bottom left
 	Point bl(bounds.x, bounds.getBottom());
 
+	// Set graphics parameters
 	canvas->setFillingColor(m_fColor);
 	canvas->setStrokingColor(m_sColor);
 	canvas->setStrokeWidth(1.0);
 
+	// Fill
 	canvas->fillRectangle(bounds.x, bounds.y, bounds.w, bounds.h);
+	// Stroke
 	if (m_borders.left) canvas->strokeLine(tl.x, tl.y, bl.x, bl.y);
 	if (m_borders.top) canvas->strokeLine(tl.x, tl.y, tr.x, tr.y);
 	if (m_borders.right) canvas->strokeLine(tr.x, tr.y, br.x, br.y);
