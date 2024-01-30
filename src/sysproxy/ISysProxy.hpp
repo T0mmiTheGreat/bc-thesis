@@ -54,6 +54,12 @@ public:
 	 */
 	virtual bool isKeyPressed(KeyCode keyCode) = 0;
 	/**
+	 * @brief Returns the current mouse position.
+	 * 
+	 * @remark May only be called if the event loop is running.
+	 */
+	virtual Point getMousePos() = 0;
+	/**
 	 * @brief Returns the current event loop state.
 	 */
 	virtual EventLoopState getEventLoopState() = 0;

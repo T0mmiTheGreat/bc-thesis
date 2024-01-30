@@ -24,6 +24,7 @@ public:
 	void invalidateRect() override;
 	void invalidateRect(const Rect& rect) override;
 	bool isKeyPressed(KeyCode keyCode) override;
+	Point getMousePos() override;
 	EventLoopState getEventLoopState() override;
 	Size2d getTextSize(const std::string& text, FontId font) override;
 	Size2d getImageSize(ImageId img) override;

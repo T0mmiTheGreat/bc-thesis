@@ -39,6 +39,13 @@ bool SDLSysProxy::isKeyPressed(KeyCode keyCode)
 	return SDL_GetKeyboardState(NULL)[SDLManager::enumToSdlScancode(keyCode)];
 }
 
+Point SDLSysProxy::getMousePos()
+{
+	Point res;
+	SDL_GetMouseState(&res.x, &res.y);
+	return res;
+}
+
 EventLoopState SDLSysProxy::getEventLoopState()
 {
 	return SDLManager::get().getEventLoopState();
