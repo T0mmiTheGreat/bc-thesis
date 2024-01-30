@@ -51,7 +51,7 @@ void StageViewport::setStagePos(const PointF& pos)
 	setStagePos(pos.x, pos.y);
 }
 
-void StageViewport::srcRectCenter()
+void StageViewport::stageCenter()
 {
 	m_srcRect.centerAt(RectF(0.0, 0.0, m_stageSize));
 }

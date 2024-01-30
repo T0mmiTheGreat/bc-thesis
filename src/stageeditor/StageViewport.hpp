@@ -34,7 +34,7 @@ public:
 
 	void setStagePos(PointF::ValueType x, PointF::ValueType y);
 	void setStagePos(const PointF& pos);
-	void srcRectCenter();
+	void stageCenter();
 
 	void setStageSize(Size2dF::ValueType w, Size2dF::ValueType h);
 	void setStageSize(const Size2dF& size);
