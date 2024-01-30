@@ -35,15 +35,20 @@ StageViewport::StageViewport(const Size2dF& stageSize, const Size2dF& dstSize)
 	setStageSize(stageSize);
 }
 
-void StageViewport::srcRectSetLocation(PointF::ValueType x, PointF::ValueType y)
+void StageViewport::setStagePos(PointF::ValueType x, PointF::ValueType y)
 {
-	m_srcRect.x = x;
-	m_srcRect.y = y;
+	// We consider the stage position to be always [0,0], so instead of moving
+	// the stage, we basically just move the camera.
+	// If we want to move the stage to the right, we need to move the camera to
+	// the left. If we want to move the stage up, we must move the camera down.
+
+	m_srcRect.x = -x;
+	m_srcRect.y = -y;
 }
 
-void StageViewport::srcRectSetLocation(const PointF& location)
+void StageViewport::setStagePos(const PointF& pos)
 {
-	srcRectSetLocation(location.x, location.y);
+	setStagePos(pos.x, pos.y);
 }
 
 void StageViewport::srcRectCenter()

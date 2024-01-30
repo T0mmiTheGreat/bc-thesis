@@ -32,8 +32,8 @@ public:
 
 	StageViewport(const Size2dF& stageSize, const Size2dF& dstSize);
 
-	void srcRectSetLocation(PointF::ValueType x, PointF::ValueType y);
-	void srcRectSetLocation(const PointF& location);
+	void setStagePos(PointF::ValueType x, PointF::ValueType y);
+	void setStagePos(const PointF& pos);
 	void srcRectCenter();
 
 	void setStageSize(Size2dF::ValueType w, Size2dF::ValueType h);
