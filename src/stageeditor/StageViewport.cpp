@@ -196,7 +196,7 @@ StageViewport::ZoomType StageViewport::getZoom() const
 	return m_zoom;
 }
 
-Matrix3x3 StageViewport::getProjectionMatrix() const
+Matrix3x3 StageViewport::getProjectionToScreenMatrix() const
 {
 	// | sx  0  0 |   |  1  0  0 |   | sx  0  0 |
 	// |  0 sy  0 | x |  0  1  0 | = |  0 sy  0 |
@@ -205,5 +205,14 @@ Matrix3x3 StageViewport::getProjectionMatrix() const
               m_zoom,            0,            0,
 			       0,       m_zoom,            0,
 		-m_srcRect.x, -m_srcRect.y,            1
+	);
+}
+
+Matrix3x3 StageViewport::getProjectionToWorkspaceMatrix() const
+{
+	return Matrix3x3(
+           1/m_zoom,           0,           0,
+		          0,    1/m_zoom,           0,
+		m_srcRect.x, m_srcRect.y,           1
 	);
 }

@@ -58,7 +58,8 @@ public:
 
 	RectF getSrcRect() const;
 	ZoomType getZoom() const;
-	Matrix3x3 getProjectionMatrix() const;
+	Matrix3x3 getProjectionToScreenMatrix() const;
+	Matrix3x3 getProjectionToWorkspaceMatrix() const;
 };
 
 #endif // STAGEVIEWPORT_HPP

@@ -254,10 +254,10 @@ void StageEditorController::mouseBtnDownWorkspace(MouseBtn btn, int x, int y)
 	Rect workspaceRect = getWorkspaceRect();
 	Point mouse(x, y);
 	Point mouseRel = mouse.relativeTo(workspaceRect.getTopLeft());
-	PointF mouseProj = static_cast<PointF>(mouseRel);
-	mouseProj.transform(m_viewport.getProjectionMatrix());
 
 	if (btn == BTN_LEFT) {
+		PointF mouseProj = static_cast<PointF>(mouseRel);
+		mouseProj.transform(m_viewport.getProjectionToWorkspaceMatrix());
 		m_stageEditor.click(mouseProj.x, mouseProj.y, StageEditor::SNAP_NONE);
 		updateSpritesByBackend();
 	}
@@ -278,7 +278,7 @@ void StageEditorController::updateSpritesByBackend()
 void StageEditorController::updateSpritesByViewport()
 {
 	Rect workspaceRect = getWorkspaceRect();
-	Matrix3x3 tm = m_viewport.getProjectionMatrix();
+	Matrix3x3 tm = m_viewport.getProjectionToScreenMatrix();
 
 
 	// Grid
@@ -309,7 +309,7 @@ void StageEditorController::updateSpritesByViewport()
 void StageEditorController::updatePlayerSprite(EditorOID oid)
 {
 	std::unique_ptr<PlayerSprite>& sprite = m_playerSprites[oid];
-	Matrix3x3 tm = m_viewport.getProjectionMatrix();
+	Matrix3x3 tm = m_viewport.getProjectionToScreenMatrix();
 	double radius = EDITOR_PLAYER_RADIUS * m_viewport.getZoom();
 
 	updatePlayerSprite(oid, sprite, tm, radius);
