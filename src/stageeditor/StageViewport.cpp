@@ -15,9 +15,9 @@ void StageViewport::pullLeash()
 {
 }
 
-StageViewport::StageViewport(const Size2dF& stageSize, const RectF& dstRect)
-	: m_srcRect(0.0, 0.0, dstRect.getSize())
-	, m_dstRect{dstRect}
+StageViewport::StageViewport(const Size2dF& stageSize, const Size2dF& dstSize)
+	: m_srcRect(0.0, 0.0, dstSize)
+	, m_dstSize{dstSize}
 	, m_isDragging{false}
 	, m_zoom{1.0}
 {
@@ -54,7 +54,7 @@ void StageViewport::setStageSize(const Size2dF& size)
 PointF StageViewport::dstToSrc(const PointF& p)
 {
 	// Relative to [0, 0] of the workspace
-	PointF res = p.relativeTo(m_dstRect.getTopLeft());
+	PointF res = p;//.relativeTo(m_dstRect.getTopLeft());
 
 	// Remove zoom
 	res.x /= m_zoom;
@@ -86,8 +86,8 @@ PointF StageViewport::srcToDst(const PointF& p)
 	res.y *= m_zoom;
 
 	// Relative to dst rect
-	res.x += m_dstRect.x;
-	res.y += m_dstRect.y;
+	// res.x += m_dstRect.x;
+	// res.y += m_dstRect.y;
 
 	return res;
 }
@@ -142,7 +142,7 @@ void StageViewport::setZoom(const PointF& towards, ZoomType newZoom)
 	// Updating the src rect
 
 	// Notice that the rectangle is not normalized, i.e., has negative dimensions.
-	RectF offsetRect(towards, m_dstRect.getTopLeft());
+	RectF offsetRect(towards, PointF::zero());
 	// After this operation the X and Y position of the rectangle will be the `towards`
 	// point projected to the "stage". By changing the size of this rectangle afterwrds,
 	// we are finding the new position for the src rect -- the `bottomRight` property
@@ -163,7 +163,7 @@ void StageViewport::setZoom(const PointF& towards, ZoomType newZoom)
 
 void StageViewport::setZoom(ZoomType newZoom)
 {
-	setZoom(m_dstRect.getCenterPoint(), newZoom);
+	setZoom(PointF(m_dstSize.w/2, m_dstSize.h/2), newZoom);
 }
 
 void StageViewport::zoomIn(const PointF& towards, ZoomType factor)
@@ -198,21 +198,27 @@ StageViewport::ZoomType StageViewport::getZoom() const
 
 Matrix3x3 StageViewport::getProjectionToScreenMatrix() const
 {
-	// | sx  0  0 |   |  1  0  0 |   | sx  0  0 |
-	// |  0 sy  0 | x |  0  1  0 | = |  0 sy  0 |
-	// |  0  0  1 |   | tx ty  1 |   | tx ty  1 |
-	return Matrix3x3(
-              m_zoom,            0,            0,
-			       0,       m_zoom,            0,
-		-m_srcRect.x, -m_srcRect.y,            1
+	// |  1  0  0 |   | sx  0  0 |   |    sx     0     0 |
+	// |  0  1  0 | x |  0 sy  0 | = |     0    sy     0 |
+	// | tx ty  1 |   |  0  0  1 |   | sx*tx sy*ty     1 |
+	Matrix3x3 res(
+		               m_zoom,                     0,                     0,
+		                    0,                m_zoom,                     0,
+		-m_srcRect.x * m_zoom, -m_srcRect.y * m_zoom,                     1
 	);
+	return res;
 }
 
 Matrix3x3 StageViewport::getProjectionToWorkspaceMatrix() const
 {
-	return Matrix3x3(
-           1/m_zoom,           0,           0,
-		          0,    1/m_zoom,           0,
+	// | sx  0  0 |   |  1  0  0 |   | sx  0  0 |
+	// |  0 sy  0 | x |  0  1  0 | = |  0 sy  0 |
+	// |  0  0  1 |   | tx ty  1 |   | tx ty  1 |
+	double s = 1/m_zoom;
+	Matrix3x3 res(
+		          s,           0,           0,
+				  0,           s,           0,
 		m_srcRect.x, m_srcRect.y,           1
 	);
+	return res;
 }

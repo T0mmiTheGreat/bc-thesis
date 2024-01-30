@@ -17,7 +17,7 @@ StageEditorController::StageEditorController(
 	std::shared_ptr<ISysProxy> sysProxy)
 	: GeneralControllerBase(sysProxy)
 	, m_viewport(static_cast<Size2dF>(m_stageEditor.getState().getSize()),
-		static_cast<RectF>(getWorkspaceRect()))
+		static_cast<Size2dF>(getWorkspaceRect().getSize()))
 {}
 
 void StageEditorController::createSprites()

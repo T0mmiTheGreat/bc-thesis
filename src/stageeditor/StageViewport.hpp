@@ -19,7 +19,7 @@ public:
 	typedef double ZoomType;
 private:
 	RectF m_srcRect; 
-	RectF m_dstRect;
+	Size2dF m_dstSize;
 	Size2dF m_stageSize;
 	PointF m_dragBegin;
 	PointF m_srcRectBegin;
@@ -30,7 +30,7 @@ private:
 public:
 	static constexpr ZoomType DEFAULT_ZOOM_FACTOR = 1.2;
 
-	StageViewport(const Size2dF& stageSize, const RectF& dstRect);
+	StageViewport(const Size2dF& stageSize, const Size2dF& dstSize);
 
 	void srcRectSetLocation(PointF::ValueType x, PointF::ValueType y);
 	void srcRectSetLocation(const PointF& location);
