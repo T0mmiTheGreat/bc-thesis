@@ -30,6 +30,8 @@ void SDLSubscriber::generalEvent(SDL_Event& ev)
 			case SDL_MOUSEMOTION:
 				lockedSubscriber->mouseMoveEvent(ev.motion.x, ev.motion.y);
 				break;
+			case SDL_MOUSEWHEEL:
+				lockedSubscriber->mouseWheelEvent(ev.wheel.x, ev.wheel.y);
 			case SDL_QUIT:
 				lockedSubscriber->quitEvent();
 				break;

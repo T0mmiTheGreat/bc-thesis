@@ -75,6 +75,15 @@ public:
 	 */
 	virtual void mouseMoveEvent(int x, int y) = 0;
 	/**
+	 * @brief A mouse wheel has been scrolled.
+	 * 
+	 * @param dx The amount scrolled horizontally, positive to the right and
+	 *           negative to the left.
+	 * @param dy The amount scrolled vertically, positive away from the user
+	 *           and negative towards the user.
+	 */
+	virtual void mouseWheelEvent(int dx, int dy) = 0;
+	/**
 	 * @brief Event that happens every event loop iteration.
 	 */
 	virtual void loopEvent() = 0;

@@ -63,6 +63,11 @@ void GeneralControllerBase::mouseMoveEvent(int x, int y)
 	// Ignore
 }
 
+void GeneralControllerBase::mouseWheelEvent(int dx, int dy)
+{
+	// Ignore
+}
+
 void GeneralControllerBase::loopEvent()
 {
 	// Ignore

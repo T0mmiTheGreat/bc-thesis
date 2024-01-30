@@ -57,6 +57,12 @@ void RootController::mouseMoveEvent(int x, int y)
 	m_childController->mouseMoveEvent(x, y);
 }
 
+void RootController::mouseWheelEvent(int dx, int dy)
+{
+	// Propagate
+	m_childController->mouseWheelEvent(dx, dy);
+}
+
 void RootController::loopEvent()
 {
 	// Propagate
