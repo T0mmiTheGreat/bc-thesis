@@ -13,6 +13,17 @@
 
 void StageViewport::pullLeash()
 {
+	if (m_srcRect.getRight() < 0) {
+		m_srcRect.offset(-m_srcRect.getRight(), 0.0);
+	} else if (m_srcRect.x > m_stageSize.w) {
+		m_srcRect.x = m_stageSize.w;
+	}
+
+	if (m_srcRect.getBottom() < 0) {
+		m_srcRect.offset(0.0, -m_srcRect.getBottom());
+	} else if (m_srcRect.y > m_stageSize.h) {
+		m_srcRect.y = m_stageSize.h;
+	}
 }
 
 StageViewport::StageViewport(const Size2dF& stageSize, const Size2dF& dstSize)
@@ -117,6 +128,7 @@ void StageViewport::doDrag(const PointF& where)
 			dragRelToBegin.y / m_zoom
 		);
 		m_srcRect.setPos(m_srcRectBegin.relativeTo(dragMinusZoom));
+		pullLeash();
 	}
 }
 
@@ -159,6 +171,7 @@ void StageViewport::setZoom(const PointF& towards, ZoomType newZoom)
 
 	// Update the zoom
 	m_zoom = newZoom;
+	pullLeash();
 }
 
 void StageViewport::setZoom(ZoomType newZoom)
