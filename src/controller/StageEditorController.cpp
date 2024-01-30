@@ -410,6 +410,28 @@ void StageEditorController::mouseMoveEvent(int x, int y)
 
 void StageEditorController::mouseWheelEvent(int dx, int dy)
 {
+	Rect workspaceRect = getWorkspaceRect();
+	Point mouse = sysProxy->getMousePos();
+
+	if (workspaceRect.containsPoint(mouse)) {
+		// Within workspace
+		
+		if (sysProxy->isKeyPressed(KEY_CTRL) && dy != 0) {
+			// Zoom
+			
+			Point mouseRel = mouse.relativeTo(workspaceRect.getTopLeft());
+			if (dy > 0) {
+				// Zoom in
+				m_viewport.zoomIn(static_cast<PointF>(mouseRel),
+					dy * StageViewport::DEFAULT_ZOOM_FACTOR);
+			} else {
+				// Zoom out
+				m_viewport.zoomOut(static_cast<PointF>(mouseRel),
+					-dy * StageViewport::DEFAULT_ZOOM_FACTOR);
+			}
+			updateSpritesByViewport();
+		}
+	}
 }
 
 void StageEditorController::paintEvent(std::shared_ptr<ICanvas> canvas,
