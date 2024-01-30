@@ -354,7 +354,7 @@ struct PointGeneric {
 	 * @param tm Transformation matrix.
 	 */
 	constexpr PointGeneric<T> getTransformed(const Matrix3x3& tm) const {
-		PointGeneric<Matrix3x3::ValueType> res(*this);
+		PointGeneric<T> res(*this);
 		res.transform(tm);
 		return res;
 	}
