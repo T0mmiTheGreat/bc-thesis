@@ -47,6 +47,7 @@ set(SOURCE_FILES
 	sprite/EditorIconSprite.cpp
 	sprite/HorizontalLineSprite.cpp
 	sprite/VerticalLineSprite.cpp
+	sprite/OptionBarSprite.cpp
 	sprite/StatusbarTextSprite.cpp
 	sprite/EditorWorkspaceGridSprite.cpp
 	core/Core.cpp
@@ -109,6 +110,7 @@ set(HEADER_FILES
 	sprite/EditorIconSprite.hpp
 	sprite/HorizontalLineSprite.hpp
 	sprite/VerticalLineSprite.hpp
+	sprite/OptionBarSprite.hpp
 	sprite/StatusbarTextSprite.hpp
 	sprite/EditorWorkspaceGridSprite.hpp
 	paintingproxy/IPaintingProxy.hpp

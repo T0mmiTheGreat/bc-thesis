@@ -31,7 +31,7 @@ void StageEditorController::createSprites()
 	m_menuIcons[MENUICON_REDO_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_REDO);
 
 	// Menubar line
-	m_menuBarLine = std::make_unique<HorizontalLineSprite>(sysProxy);
+	m_menuBarSprite = std::make_unique<OptionBarSprite>(sysProxy);
 
 	// Tool icons
 	m_toolIcons[TOOLICON_SELECT_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_SELECT_TOOL);
@@ -39,12 +39,12 @@ void StageEditorController::createSprites()
 	m_toolIcons[TOOLICON_OBSTACLE_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_OBSTACLE_TOOL);
 
 	// Toolbar line
-	m_toolBarLine = std::make_unique<VerticalLineSprite>(sysProxy);
+	m_toolBarSprite = std::make_unique<OptionBarSprite>(sysProxy);
 
 	// Statusbar text
 	m_statusBarText = std::make_unique<StatusbarTextSprite>(sysProxy);
 	// Statusbar line
-	m_statusBarLine = std::make_unique<HorizontalLineSprite>(sysProxy);
+	m_statusBarSprite = std::make_unique<OptionBarSprite>(sysProxy);
 
 	// Grid
 	m_gridSprite = std::make_unique<EditorWorkspaceGridSprite>(sysProxy);
@@ -59,16 +59,25 @@ void StageEditorController::positionSprites()
 	for (int iconIdx = 0; iconIdx < MENUICON_COUNT; iconIdx++) {
 		m_menuIcons[iconIdx]->setPos(getMenuIconRect(iconIdx).getTopLeft());
 	}
-	// Menubar line
-	m_menuBarLine->setPos(0, MENUBAR_HEIGHT);
+	// Menubar
+	m_menuBarSprite->setPos(0, 0);
+	m_menuBarSprite->setBarWidth(0);
+	m_menuBarSprite->setBarHeight(MENUBAR_HEIGHT);
+	m_menuBarSprite->setFillingColor(MENUBAR_FCOLOR);
+	m_menuBarSprite->setStrokingColor(MENUBAR_SCOLOR);
+	m_menuBarSprite->setBorders(false, false, false, true);
 
 	// Tool icons
 	for (int iconIdx = 0; iconIdx < TOOLICON_COUNT; iconIdx++) {
 		m_toolIcons[iconIdx]->setPos(getToolIconRect(iconIdx).getTopLeft());
 	}
-	// Toolbar line
-	m_toolBarLine->setPos(TOOLBAR_WIDTH, TOOLBAR_Y);
-	m_toolBarLine->setBottomMargin(STATUSBAR_HEIGHT);
+	// Toolbar
+	m_toolBarSprite->setPos(0, TOOLBAR_Y);
+	m_toolBarSprite->setBarWidth(TOOLBAR_WIDTH);
+	m_toolBarSprite->setBarHeight(-STATUSBAR_HEIGHT);
+	m_toolBarSprite->setFillingColor(TOOLBAR_FCOLOR);
+	m_toolBarSprite->setStrokingColor(TOOLBAR_SCOLOR);
+	m_toolBarSprite->setBorders(false, false, true, false);
 
 	Rect statusbarRect = getStatusbarRect();
 	// Statusbar text
@@ -76,8 +85,13 @@ void StageEditorController::positionSprites()
 		statusbarRect.x + STATUSBAR_TEXT_LEFT_MARGIN,
 		statusbarRect.y + ((statusbarRect.h - m_statusBarText->getH()) / 2)
 	);
-	// Statusbar line
-	m_statusBarLine->setPos(statusbarRect.getTopLeft());
+	// Statusbar
+	m_statusBarSprite->setPos(statusbarRect.getTopLeft());
+	m_statusBarSprite->setBarWidth(0);
+	m_statusBarSprite->setBarHeight(0);
+	m_statusBarSprite->setFillingColor(STATUSBAR_FCOLOR);
+	m_statusBarSprite->setStrokingColor(STATUSBAR_SCOLOR);
+	m_statusBarSprite->setBorders(false, true, false, false);
 }
 
 Rect StageEditorController::getMenubarRect()
@@ -240,9 +254,11 @@ void StageEditorController::mouseBtnDownWorkspace(MouseBtn btn, int x, int y)
 	Rect workspaceRect = getWorkspaceRect();
 	Point mouse(x, y);
 	Point mouseRel = mouse.relativeTo(workspaceRect.getTopLeft());
+	PointF mouseProj = static_cast<PointF>(mouseRel);
+	mouseProj.transform(m_viewport.getProjectionMatrix());
 
 	if (btn == BTN_LEFT) {
-		m_stageEditor.click(mouseRel.x, mouseRel.y, StageEditor::SNAP_NONE);
+		m_stageEditor.click(mouseProj.x, mouseProj.y, StageEditor::SNAP_NONE);
 		updateSpritesByBackend();
 	}
 }
@@ -393,18 +409,18 @@ void StageEditorController::paintEvent(std::shared_ptr<ICanvas> canvas,
 	}
 
 	// Menu
+	m_menuBarSprite->repaint(canvas, invalidRect);
 	for (auto& icon : m_menuIcons) {
 		icon->repaint(canvas, invalidRect);
 	}
-	m_menuBarLine->repaint(canvas, invalidRect);
 
 	// Toolbar
+	m_toolBarSprite->repaint(canvas, invalidRect);
 	for (auto& icon : m_toolIcons) {
 		icon->repaint(canvas, invalidRect);
 	}
-	m_toolBarLine->repaint(canvas, invalidRect);
 
 	// Status bar
+	m_statusBarSprite->repaint(canvas, invalidRect);
 	m_statusBarText->repaint(canvas, invalidRect);
-	m_statusBarLine->repaint(canvas, invalidRect);
 }

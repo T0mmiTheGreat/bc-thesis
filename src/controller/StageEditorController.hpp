@@ -20,8 +20,7 @@
 #include "canvas/ICanvas.hpp"
 #include "controller/GeneralControllerBase.hpp"
 #include "sprite/EditorIconSprite.hpp"
-#include "sprite/HorizontalLineSprite.hpp"
-#include "sprite/VerticalLineSprite.hpp"
+#include "sprite/OptionBarSprite.hpp"
 #include "sprite/StatusbarTextSprite.hpp"
 #include "sprite/EditorWorkspaceGridSprite.hpp"
 #include "sprite/PlayerSprite.hpp"
@@ -48,6 +47,8 @@ private:
 
 	static constexpr int MENUBAR_HEIGHT = MENUICONS_TOP_MARGIN
 		+ MENUICONS_HEIGHT + MENUICONS_BOTTOM_MARGIN;
+	static constexpr Color MENUBAR_FCOLOR = Color::black();
+	static constexpr Color MENUBAR_SCOLOR = Color::white();
 	
 	static constexpr int TOOLICON_SELECT_IDX = 0;
 	static constexpr int TOOLICON_PLAYER_IDX = TOOLICON_SELECT_IDX + 1;
@@ -62,16 +63,20 @@ private:
 	static constexpr int TOOLICONS_HORZ_SPACING = MENUICONS_SPACING;
 	static constexpr int TOOLICONS_VERT_SPACING = TOOLICONS_HORZ_SPACING;
 
-	static constexpr int TOOLBAR_Y = MENUBAR_HEIGHT;
+	static constexpr int TOOLBAR_Y = MENUBAR_HEIGHT + 1;
 	static constexpr int TOOLBAR_ITEM_COLUMNS = 3;
 	static constexpr int TOOLBAR_WIDTH = TOOLICONS_LEFT_MARGIN
 		+ (TOOLICONS_WIDTH * TOOLBAR_ITEM_COLUMNS)
 		+ (TOOLICONS_HORZ_SPACING * (TOOLBAR_ITEM_COLUMNS - 1))
 		+ TOOLICONS_RIGHT_MARGIN;
+	static constexpr Color TOOLBAR_FCOLOR = MENUBAR_FCOLOR;
+	static constexpr Color TOOLBAR_SCOLOR = MENUBAR_SCOLOR;
 	
 	static constexpr int STATUSBAR_HEIGHT = 30;
 	static constexpr int STATUSBAR_TEXT_LEFT_MARGIN = 8;
 	static constexpr FontId STATUSBAR_TEXT_FONT = FONT_TAHOMA_16;
+	static constexpr Color STATUSBAR_FCOLOR = MENUBAR_FCOLOR;
+	static constexpr Color STATUSBAR_SCOLOR = MENUBAR_SCOLOR;
 
 	// XXX: Keep the editor and viewport in this order for correct order of
 	//      initialization
@@ -80,11 +85,11 @@ private:
 	StageViewport m_viewport;
 
 	std::array<std::unique_ptr<EditorIconSprite>, MENUICON_COUNT> m_menuIcons;
-	std::unique_ptr<HorizontalLineSprite> m_menuBarLine;
+	std::unique_ptr<OptionBarSprite> m_menuBarSprite;
 	std::array<std::unique_ptr<EditorIconSprite>, TOOLICON_COUNT> m_toolIcons;
-	std::unique_ptr<VerticalLineSprite> m_toolBarLine;
+	std::unique_ptr<OptionBarSprite> m_toolBarSprite;
 	std::unique_ptr<StatusbarTextSprite> m_statusBarText;
-	std::unique_ptr<HorizontalLineSprite> m_statusBarLine;
+	std::unique_ptr<OptionBarSprite> m_statusBarSprite;
 
 	std::unique_ptr<EditorWorkspaceGridSprite> m_gridSprite;
 	std::unordered_map<EditorOID, std::unique_ptr<PlayerSprite>> m_playerSprites;
