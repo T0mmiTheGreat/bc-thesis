@@ -235,6 +235,10 @@ void StageEditorController::mouseMoveStatusbar(int x, int y)
 
 void StageEditorController::mouseMoveWorkspace(int x, int y)
 {
+	if (m_viewport.isDrag()) {
+		m_viewport.doDrag(PointF(x, y));
+		updateSpritesByViewport();
+	}
 }
 
 void StageEditorController::mouseBtnDownMenubar(MouseBtn btn, int x, int y)
@@ -260,6 +264,10 @@ void StageEditorController::mouseBtnDownWorkspace(MouseBtn btn, int x, int y)
 		mouseProj.transform(m_viewport.getProjectionToWorkspaceMatrix());
 		m_stageEditor.click(mouseProj.x, mouseProj.y, StageEditor::SNAP_NONE);
 		updateSpritesByBackend();
+	} else if (btn == BTN_MIDDLE) {
+		if (!m_viewport.isDrag()) {
+			m_viewport.beginDrag(static_cast<PointF>(mouse));
+		}
 	}
 }
 
@@ -370,6 +378,9 @@ void StageEditorController::mouseBtnDownEvent(MouseBtn btn, int x, int y)
 
 void StageEditorController::mouseBtnUpEvent(MouseBtn btn, int x, int y)
 {
+	if (btn == BTN_MIDDLE) {
+		m_viewport.endDrag();
+	}
 }
 
 void StageEditorController::mouseMoveEvent(int x, int y)
