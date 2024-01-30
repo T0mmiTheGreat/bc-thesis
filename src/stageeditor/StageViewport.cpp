@@ -14,14 +14,18 @@
 void StageViewport::pullLeash()
 {
 	if (m_srcRect.getRight() < 0) {
+		// Too much on the left; stick to the right side of the workspace area
 		m_srcRect.offset(-m_srcRect.getRight(), 0.0);
 	} else if (m_srcRect.x > m_stageSize.w) {
+		// Too much on the right; stick to the left side of the workspace area
 		m_srcRect.x = m_stageSize.w;
 	}
 
 	if (m_srcRect.getBottom() < 0) {
+		// Too low; stick to the bottom side of the workspace area
 		m_srcRect.offset(0.0, -m_srcRect.getBottom());
 	} else if (m_srcRect.y > m_stageSize.h) {
+		// Too high; stick to the top side of the workspace area
 		m_srcRect.y = m_stageSize.h;
 	}
 }
@@ -69,8 +73,7 @@ void StageViewport::setStageSize(const Size2dF& size)
 
 PointF StageViewport::dstToSrc(const PointF& p)
 {
-	// Relative to [0, 0] of the workspace
-	PointF res = p;//.relativeTo(m_dstRect.getTopLeft());
+	PointF res = p;
 
 	// Remove zoom
 	res.x /= m_zoom;
@@ -101,10 +104,6 @@ PointF StageViewport::srcToDst(const PointF& p)
 	res.x *= m_zoom;
 	res.y *= m_zoom;
 
-	// Relative to dst rect
-	// res.x += m_dstRect.x;
-	// res.y += m_dstRect.y;
-
 	return res;
 }
 
@@ -127,11 +126,15 @@ void StageViewport::beginDrag(const PointF& where)
 void StageViewport::doDrag(const PointF& where)
 {
 	if (m_isDragging) {
+		// Vector `dragBegin` -> `where`
 		PointF dragRelToBegin = where.relativeTo(m_dragBegin);
+		// Project the vector to workspace plane
 		PointF dragMinusZoom(
 			dragRelToBegin.x / m_zoom,
 			dragRelToBegin.y / m_zoom
 		);
+		// Apply the vector to the srcRectBegin to get the new position of
+		// src rect
 		m_srcRect.setPos(m_srcRectBegin.relativeTo(dragMinusZoom));
 		pullLeash();
 	}
