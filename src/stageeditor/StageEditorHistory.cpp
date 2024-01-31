@@ -18,22 +18,32 @@ StageEditorHistory::StageEditorHistory()
 void StageEditorHistory::pushAction(std::shared_ptr<StageEditorAction> action)
 {
 	m_undoHistory.push_back(action);
+
+	// Can not redo after an action has been successfully performed
 	m_redoHistory.clear();
 }
 
 std::shared_ptr<StageEditorAction> StageEditorHistory::undoAction()
 {
+	// Remove from undo history
 	auto action = m_undoHistory.back();
 	m_undoHistory.pop_back();
+
+	// Push to redo history
 	m_redoHistory.push_back(action);
+
 	return action;
 }
 
 std::shared_ptr<StageEditorAction> StageEditorHistory::redoAction()
 {
+	// Remove from redo history
 	auto action = m_redoHistory.back();
 	m_redoHistory.pop_back();
+
+	// Push back to undo history
 	m_undoHistory.push_back(action);
+
 	return action;
 }
 
