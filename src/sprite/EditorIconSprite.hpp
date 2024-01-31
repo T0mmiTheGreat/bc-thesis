@@ -12,9 +12,9 @@
 #ifndef EDITORICONSPRITE_HPP
 #define EDITORICONSPRITE_HPP
 
-#include "sprite/SpriteBase.hpp"
+#include "sprite/PositionedSpriteBase.hpp"
 
-class EditorIconSprite : public SpriteBase {
+class EditorIconSprite : public PositionedSpriteBase {
 public:
 	enum Costume {
 		COSTUME_NORMAL,   // Normal, unmodified

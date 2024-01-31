@@ -17,9 +17,9 @@
 
 #include "types.hpp"
 #include "paintingproxy/IPaintingProxy.hpp"
-#include "sprite/SpriteBase.hpp"
+#include "sprite/PositionedSpriteBase.hpp"
 
-class EditorWorkspaceGridSprite : public SpriteBase {
+class EditorWorkspaceGridSprite : public PositionedSpriteBase {
 private:
 	static constexpr Color GRID_COLOR = Color::grayscale(0x4a);
 

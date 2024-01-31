@@ -12,12 +12,15 @@
 #ifndef HORIZONTALLINESPRITE_HPP
 #define HORIZONTALLINESPRITE_HPP
 
-#include "sprite/SpriteBase.hpp"
+#include <memory>
+
+#include "paintingproxy/IPaintingProxy.hpp"
+#include "sprite/PositionedSpriteBase.hpp"
 
 /**
  * @brief Horizontal line stretching to the right edge of the screen.
  */
-class HorizontalLineSprite : public SpriteBase {
+class HorizontalLineSprite : public PositionedSpriteBase {
 private:
 	int r;
 public:

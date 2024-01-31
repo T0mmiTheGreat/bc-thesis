@@ -13,6 +13,8 @@
 
 VerticalLineSprite::VerticalLineSprite(std::shared_ptr<IPaintingProxy> paintingProxy)
 	: SpriteBase(paintingProxy)
+	, BoundedSpriteBase(paintingProxy)
+	, PositionedSpriteBase(paintingProxy)
 	, bottomMargin{0}
 {}
 

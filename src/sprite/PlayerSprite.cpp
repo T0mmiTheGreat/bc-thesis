@@ -13,6 +13,8 @@
 
 PlayerSprite::PlayerSprite(std::shared_ptr<IPaintingProxy> paintingProxy)
 	: SpriteBase(paintingProxy)
+	, BoundedSpriteBase(paintingProxy)
+	, PositionedSpriteBase(paintingProxy)
 	, m_color()
 	, m_radius{20}
 {}

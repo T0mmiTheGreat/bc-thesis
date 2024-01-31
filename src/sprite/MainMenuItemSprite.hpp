@@ -15,12 +15,12 @@
 #include <ctime>
 #include <string>
 
-#include "sprite/SpriteBase.hpp"
+#include "sprite/PositionedSpriteBase.hpp"
 
 /**
  * @brief Sprite for main menu items.
  */
-class MainMenuItemSprite : public SpriteBase {
+class MainMenuItemSprite : public PositionedSpriteBase {
 public:
 	enum Costume {
 		// Default appearance

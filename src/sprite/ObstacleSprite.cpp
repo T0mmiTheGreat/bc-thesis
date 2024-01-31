@@ -14,6 +14,8 @@
 ObstacleSprite::ObstacleSprite(std::shared_ptr<IPaintingProxy> paintingProxy,
 	const PolygonF& shape)
 	: SpriteBase(paintingProxy)
+	, BoundedSpriteBase(paintingProxy)
+	, PositionedSpriteBase(paintingProxy)
 {
 	setShape(shape);
 }
@@ -21,6 +23,8 @@ ObstacleSprite::ObstacleSprite(std::shared_ptr<IPaintingProxy> paintingProxy,
 ObstacleSprite::ObstacleSprite(std::shared_ptr<IPaintingProxy> paintingProxy,
 	PolygonF&& shape)
 	: SpriteBase(paintingProxy)
+	, BoundedSpriteBase(paintingProxy)
+	, PositionedSpriteBase(paintingProxy)
 {
 	setShape(shape);
 }

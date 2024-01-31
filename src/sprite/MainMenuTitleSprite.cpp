@@ -13,6 +13,8 @@
 
 MainMenuTitleSprite::MainMenuTitleSprite(std::shared_ptr<IPaintingProxy> paintingProxy)
 	: SpriteBase(paintingProxy)
+	, BoundedSpriteBase(paintingProxy)
+	, PositionedSpriteBase(paintingProxy)
 {}
 
 Size2d MainMenuTitleSprite::getSize()

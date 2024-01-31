@@ -14,6 +14,8 @@
 StatusbarTextSprite::StatusbarTextSprite(
 	std::shared_ptr<IPaintingProxy> paintingProxy)
 	: SpriteBase(paintingProxy)
+	, BoundedSpriteBase(paintingProxy)
+	, PositionedSpriteBase(paintingProxy)
 	, m_text{""}
 {}
 

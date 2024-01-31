@@ -26,6 +26,8 @@ ImageSprite::ImageSprite(std::shared_ptr<IPaintingProxy> paintingProxy,
 ImageSprite::ImageSprite(std::shared_ptr<IPaintingProxy> paintingProxy,
 	ImageId img, const Rect& imgBounds)
 	: SpriteBase(paintingProxy)
+	, BoundedSpriteBase(paintingProxy)
+	, PositionedSpriteBase(paintingProxy)
 	, m_img{img}
 	, m_imgBounds{imgBounds}
 {}

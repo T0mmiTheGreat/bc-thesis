@@ -12,9 +12,9 @@
 #ifndef VERTICALLINESPRITE_HPP
 #define VERTICALLINESPRITE_HPP
 
-#include "sprite/SpriteBase.hpp"
+#include "sprite/PositionedSpriteBase.hpp"
 
-class VerticalLineSprite : public SpriteBase {
+class VerticalLineSprite : public PositionedSpriteBase {
 private:
 	int bottomMargin;
 public:

@@ -13,9 +13,9 @@
 #define PLAYERSPRITE_HPP
 
 #include "types.hpp"
-#include "sprite/SpriteBase.hpp"
+#include "sprite/PositionedSpriteBase.hpp"
 
-class PlayerSprite : public SpriteBase {
+class PlayerSprite : public PositionedSpriteBase {
 private:
 	Color m_color;
 	int m_radius;

@@ -14,6 +14,8 @@
 EditorWorkspaceGridSprite::EditorWorkspaceGridSprite(
 	std::shared_ptr<IPaintingProxy> paintingProxy)
 	: SpriteBase(paintingProxy)
+	, BoundedSpriteBase(paintingProxy)
+	, PositionedSpriteBase(paintingProxy)
 	, m_xSpacing{0.0}
 	, m_ySpacing{0.0}
 	, m_size()

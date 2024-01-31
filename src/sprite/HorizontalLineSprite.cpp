@@ -11,8 +11,11 @@
 
 #include "sprite/HorizontalLineSprite.hpp"
 
-HorizontalLineSprite::HorizontalLineSprite(std::shared_ptr<IPaintingProxy> paintingProxy)
+HorizontalLineSprite::HorizontalLineSprite(
+	std::shared_ptr<IPaintingProxy> paintingProxy)
 	: SpriteBase(paintingProxy)
+	, BoundedSpriteBase(paintingProxy)
+	, PositionedSpriteBase(paintingProxy)
 	, r{0}
 {}
 

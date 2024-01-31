@@ -15,9 +15,9 @@
 #include <string>
 
 #include "types.hpp"
-#include "sprite/SpriteBase.hpp"
+#include "sprite/PositionedSpriteBase.hpp"
 
-class MainMenuTitleSprite : public SpriteBase {
+class MainMenuTitleSprite : public PositionedSpriteBase {
 private:
 	// The title text to show
 	const std::string TITLE_TEXT = "MAIN TITLE";

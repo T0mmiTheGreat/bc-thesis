@@ -15,9 +15,9 @@
 #include <memory>
 
 #include "paintingproxy/IPaintingProxy.hpp"
-#include "sprite/SpriteBase.hpp"
+#include "sprite/PositionedSpriteBase.hpp"
 
-class OptionBarSprite : public SpriteBase {
+class OptionBarSprite : public PositionedSpriteBase {
 public:
 	struct Borders {
 		bool left: 1;

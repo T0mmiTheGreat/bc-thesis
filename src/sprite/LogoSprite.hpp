@@ -16,11 +16,12 @@
 
 #include "types.hpp"
 #include "sprite/AnimatedSpriteBase.hpp"
+#include "sprite/PositionedSpriteBase.hpp"
 
 /**
  * @brief The developer's logo.
  */
-class LogoSprite : public AnimatedSpriteBase {
+class LogoSprite : public AnimatedSpriteBase, public PositionedSpriteBase {
 private:
 	// The animation has 3 phases: logo fades in, full brightness, fades out
 	enum AnimationPhase {

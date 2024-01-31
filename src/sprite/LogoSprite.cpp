@@ -12,7 +12,10 @@
 #include "sprite/LogoSprite.hpp"
 
 LogoSprite::LogoSprite(std::shared_ptr<IPaintingProxy> paintingProxy)
-	: AnimatedSpriteBase(paintingProxy)
+	: SpriteBase(paintingProxy)
+	, BoundedSpriteBase(paintingProxy)
+	, AnimatedSpriteBase(paintingProxy)
+	, PositionedSpriteBase(paintingProxy)
 	, m_timer(TIMER_INTERVAL)
 	, m_anim(0)
 {}

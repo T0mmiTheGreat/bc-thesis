@@ -17,9 +17,9 @@
 
 #include "types.hpp"
 #include "paintingproxy/IPaintingProxy.hpp"
-#include "sprite/SpriteBase.hpp"
+#include "sprite/PositionedSpriteBase.hpp"
 
-class StatusbarTextSprite : public SpriteBase {
+class StatusbarTextSprite : public PositionedSpriteBase {
 private:
 	static constexpr FontId FONT = FONT_TAHOMA_16;
 

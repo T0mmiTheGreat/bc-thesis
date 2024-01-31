@@ -13,6 +13,8 @@
 
 OptionBarSprite::OptionBarSprite(std::shared_ptr<IPaintingProxy> paintingProxy)
 	: SpriteBase(paintingProxy)
+	, BoundedSpriteBase(paintingProxy)
+	, PositionedSpriteBase(paintingProxy)
 	, m_barWidth{0}
 	, m_barHeight{0}
 {

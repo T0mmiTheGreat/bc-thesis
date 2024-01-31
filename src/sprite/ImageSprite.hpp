@@ -16,9 +16,9 @@
 
 #include "types.hpp"
 #include "paintingproxy/IPaintingProxy.hpp"
-#include "sprite/SpriteBase.hpp"
+#include "sprite/PositionedSpriteBase.hpp"
 
-class ImageSprite : public SpriteBase {
+class ImageSprite : public PositionedSpriteBase {
 private:
 	ImageId m_img;
 	Rect m_imgBounds;
