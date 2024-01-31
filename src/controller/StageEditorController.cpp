@@ -304,7 +304,7 @@ void StageEditorController::updateSpritesByBackend()
 	switch (lastAction->getType()) {
 		case StageEditorAction::ACTION_ADD_PLAYER: {
 			const auto actionAddPlayer = std::dynamic_pointer_cast<StageEditorActionAddPlayer>(lastAction);
-			addPlayerSprite(actionAddPlayer->pos, actionAddPlayer->oid);
+			addPlayerSprite(actionAddPlayer->getPos(), actionAddPlayer->getOid());
 		} break;
 	}
 }

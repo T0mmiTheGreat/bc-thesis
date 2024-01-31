@@ -12,12 +12,9 @@
 #ifndef STAGEEDITORACTION_HPP
 #define STAGEEDITORACTION_HPP
 
-#include <memory>
-#include <type_traits>
+#include "types.hpp"
 
-#include "stageeditor/Common.hpp"
-
-class StageEditorAction : public std::enable_shared_from_this<StageEditorAction> {
+class StageEditorAction {
 public:
 	enum ActionType {
 		ACTION_ADD_PLAYER,
@@ -31,47 +28,71 @@ public:
 };
 
 class StageEditorActionAddPlayer : public StageEditorAction {
+private:
+	PointF m_pos;    // Player position
+	EditorOID m_oid; // Player object ID
 public:
-	PointF pos;    // Player position
-	EditorOID oid; // Player object ID
 
 	StageEditorActionAddPlayer(const PointF& pos, EditorOID oid)
-		: pos{pos}
-		, oid{oid}
+		: m_pos{pos}
+		, m_oid{oid}
 	{}
 
 	ActionType getType() const override {
 		return ACTION_ADD_PLAYER;
 	}
+
+	const PointF& getPos() const {
+		return m_pos;
+	}
+	EditorOID getOid() const {
+		return m_oid;
+	}
 };
 
 class StageEditorActionPlaceObstacleCorner : public StageEditorAction {
+private:
+	PointF m_p0; // Previous corner position
+	PointF m_p1; // New corner position
 public:
-	PointF p0; // Previous corner position
-	PointF p1; // New corner position
 
 	StageEditorActionPlaceObstacleCorner(const PointF& p0, const PointF& p1)
-		: p0{p0}
-		, p1{p1}
+		: m_p0{p0}
+		, m_p1{p1}
 	{}
 
 	ActionType getType() const override {
 		return ACTION_PLACE_OBSTACLE_CORNER;
 	}
+
+	const PointF& getP0() const {
+		return m_p0;
+	}
+	const PointF& getP1() const {
+		return m_p1;
+	}
 };
 
 class StageEditorActionCompleteObstacle : public StageEditorAction {
+private:
+	PolygonF m_shape; // Obstacle shape
+	EditorOID m_oid;  // Obstacle object ID
 public:
-	PolygonF shape; // Obstacle shape
-	EditorOID oid;  // Obstacle object ID
 
 	StageEditorActionCompleteObstacle(const PolygonF& shape, EditorOID oid)
-		: shape{shape}
-		, oid{oid}
+		: m_shape{shape}
+		, m_oid{oid}
 	{}
 
 	ActionType getType() const override {
 		return ACTION_COMPLETE_OBSTACLE;
+	}
+
+	const PolygonF& getShape() const {
+		return m_shape;
+	}
+	EditorOID getOid() const {
+		return m_oid;
 	}
 };
 
