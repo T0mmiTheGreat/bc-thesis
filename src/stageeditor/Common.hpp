@@ -22,10 +22,12 @@
  */
 typedef size_t EditorOID;
 
+
 // Number of units taken by half of a player sprite in the editor
 constexpr double EDITOR_PLAYER_RADIUS = 50.0;
 
 constexpr EditorOID EDITOR_OID_NULL = 0;
+
 
 /**
  * @brief Generates a unique editor object identifier.
