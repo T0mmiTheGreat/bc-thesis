@@ -24,7 +24,7 @@ private:
 public:
 	StageEditorHistory();
 	void pushAction(std::shared_ptr<StageEditorAction> action);
-	std::shared_ptr<StageEditorAction> popAction();
+	std::shared_ptr<StageEditorAction> undoAction();
 	std::shared_ptr<StageEditorAction> redoAction();
 	bool canUndo() const;
 	bool canRedo() const;

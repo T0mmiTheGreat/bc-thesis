@@ -21,7 +21,7 @@ void StageEditorHistory::pushAction(std::shared_ptr<StageEditorAction> action)
 	m_redoHistory.clear();
 }
 
-std::shared_ptr<StageEditorAction> StageEditorHistory::popAction()
+std::shared_ptr<StageEditorAction> StageEditorHistory::undoAction()
 {
 	auto action = m_undoHistory.back();
 	m_undoHistory.pop_back();
