@@ -13,6 +13,7 @@
 #define STAGEEDITORACTION_HPP
 
 #include "types.hpp"
+#include "stageeditor/Common.hpp"
 
 /**
  * @brief Base class for stage editor actions.
