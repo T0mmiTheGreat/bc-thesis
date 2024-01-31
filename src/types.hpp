@@ -997,15 +997,52 @@ struct Color {
 	constexpr Color(uint8_t r, uint8_t g, uint8_t b)
 		: Color(r, g, b, 0xff)
 	{}
-
-	static constexpr Color black() { return Color(0, 0, 0); }
-	static constexpr Color white() { return Color(0xff, 0xff, 0xff); }
-	static constexpr Color red() { return Color(0xff, 0, 0); }
-	static constexpr Color green() { return Color(0, 0xff, 0); }
-	static constexpr Color blue() { return Color(0, 0, 0xff); }
+	/**
+	 * @brief Constructs a color.
+	 * 
+	 * @param rgba The color stored as 32bit number with red channel being the
+	 *             most significant byte and alpha channel the least significant
+	 *             byte.
+	 */
+	static constexpr Color rgba(uint32_t rgba) {
+		Color res((rgba >> 24) & 0xff, (rgba >> 16) & 0xff, (rgba >> 8) & 0xff,
+			rgba & 0xff);
+		return res;
+	}
+	/**
+	 * @brief Constructs an opaque color.
+	 * 
+	 * @param rgb The color stored as 32bit number with red channel being the
+	 *            second most significant byte and alpha channel the least
+	 *            significant byte. The MSB is ignored.
+	 */
+	static constexpr Color rgb(uint32_t rgb) {
+		Color res = Color::rgba((rgb << 8) | 0xff);
+		return res;
+	}
+	static constexpr Color black() { return Color::rgb(0); }
+	static constexpr Color white() { return Color::rgb(0xffffff); }
+	static constexpr Color red() { return Color::rgb(0xff0000); }
+	static constexpr Color green() { return Color::rgb(0x00ff00); }
+	static constexpr Color blue() { return Color::rgb(0x0000ff); }
+	static constexpr Color cyan() { return Color::rgb(0x00ffff); }
+	static constexpr Color magenta() { return Color::rgb(0xff00ff); }
+	static constexpr Color yellow() { return Color::rgb(0xffff00); }
+	static constexpr Color skyBlue() { return Color::rgb(0x87ceeb); }
 	static constexpr Color grayscale(uint8_t intensity) {
 		return Color(intensity, intensity, intensity);
 	}
+	static constexpr Color playerDefault() { return Color::red(); }
+	static constexpr Color player(unsigned id) {
+		switch (id) {
+			case 0: return Color::playerDefault();
+			case 1: return Color::green();
+			case 2: return Color::skyBlue();
+			case 3: return Color::magenta();
+			default: return Color::playerDefault();
+		}
+	}
+	static constexpr Color obstacle() { return Color::grayscale(0x80); }
 
 	constexpr bool operator== (const Color& rhs) const {
 		return
@@ -1026,6 +1063,23 @@ struct Color {
 			modulateChannel(this->b, mod.b),
 			modulateChannel(this->a, mod.a)
 		);
+	}
+
+	/**
+	 * @brief Modifies the alpha channel of the color.
+	 * 
+	 * @return Reference to self.
+	 * 
+	 * @remark Useful when creating a predefined color using one of the static
+	 *         methods and passing it as a parameter to a function. That way
+	 *         you don't need to create a temporary variable and pass the value
+	 *         straight away.
+	 * 
+	 * @example `canvas->setFillingColor(Color::red().setAlpha(0x80))`
+	 */
+	constexpr Color& setAlpha(uint8_t alpha) {
+		this->a = alpha;
+		return *this;
 	}
 };
 
