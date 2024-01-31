@@ -23,26 +23,18 @@ void StageEditorHistory::pushAction(std::shared_ptr<StageEditorAction> action)
 
 std::shared_ptr<StageEditorAction> StageEditorHistory::popAction()
 {
-	if (canUndo()) {
-		auto action = m_undoHistory.back();
-		m_undoHistory.pop_back();
-		m_redoHistory.push_back(action);
-		return action;
-	} else {
-		return nullptr;
-	}
+	auto action = m_undoHistory.back();
+	m_undoHistory.pop_back();
+	m_redoHistory.push_back(action);
+	return action;
 }
 
 std::shared_ptr<StageEditorAction> StageEditorHistory::redoAction()
 {
-	if (canRedo()) {
-		auto action = m_redoHistory.back();
-		m_redoHistory.pop_back();
-		m_undoHistory.push_back(action);
-		return action;
-	} else {
-		return nullptr;
-	}
+	auto action = m_redoHistory.back();
+	m_redoHistory.pop_back();
+	m_undoHistory.push_back(action);
+	return action;
 }
 
 bool StageEditorHistory::canUndo() const

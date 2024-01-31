@@ -37,16 +37,13 @@ private:
 	/**
 	 * @brief Snaps the coordinates to the grid based on `snapping`.
 	 * 
-	 * @param x The X coordinate to snap.
-	 * @param y The Y coordinate to snap.
+	 * @param p The point to snap
 	 * @param snapping The desired snapping.
-	 * @param xSnap X coordinate snapped to grid based on `snapping`.
-	 * @param ySnap Y coordinate snapped to grid based on `snapping`.
+	 * @param pSnap `p` snapped to grid based on `snapping`.
 	 */
-	void getSnappedXY(double x, double y, ObjectSnap snapping, double& xSnap,
-		double& ySnap);
+	void getSnappedPoint(const PointF& p, ObjectSnap snapping, PointF& pSnap);
 
-	void addPlayerInternal(double x, double y);
+	void addPlayerInternal(const PointF& pos);
 public:
 	StageEditor();
 	/**

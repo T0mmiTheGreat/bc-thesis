@@ -216,7 +216,7 @@ private:
 		std::unique_ptr<PlayerSprite>& sprite, const Matrix3x3& tm,
 		double radius);
 
-	void addPlayerSprite(double x, double y, EditorOID oid);
+	void addPlayerSprite(const PointF& pos, EditorOID oid);
 public:
 	StageEditorController(std::shared_ptr<ISysProxy> sysProxy);
 	void startedEvent() override;

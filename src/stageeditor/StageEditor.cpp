@@ -14,35 +14,34 @@
 #include "math/Math.hpp"
 #include "stageeditor/Common.hpp"
 
-void StageEditor::getSnappedXY(double x, double y, ObjectSnap snapping,
-	double& xSnap, double& ySnap)
+void StageEditor::getSnappedPoint(const PointF& p, ObjectSnap snapping,
+	PointF& pSnap)
 {
 	switch (snapping) {
 		case SNAP_NONE:
-			xSnap = x;
-			ySnap = y;
+			pSnap = p;
 			break;
 		case SNAP_STEP1:
-			xSnap = roundToMultiple(x, 1.0);
-			ySnap = roundToMultiple(y, 1.0);
+			pSnap.x = roundToMultiple(p.x, 1.0);
+			pSnap.y = roundToMultiple(p.y, 1.0);
 			break;
 		case SNAP_STEP10:
-			xSnap = roundToMultiple(x, 10.0);
-			ySnap = roundToMultiple(y, 10.0);
+			pSnap.x = roundToMultiple(p.x, 10.0);
+			pSnap.y = roundToMultiple(p.y, 10.0);
 			break;
 		case SNAP_STEP100:
-			xSnap = roundToMultiple(x, 100.0);
-			ySnap = roundToMultiple(y, 100.0);
+			pSnap.x = roundToMultiple(p.x, 100.0);
+			pSnap.y = roundToMultiple(p.y, 100.0);
 			break;
 	}
 }
 
-void StageEditor::addPlayerInternal(double x, double y)
+void StageEditor::addPlayerInternal(const PointF& pos)
 {
 	EditorOID oid = generateEditorOID();
 
-	m_stageState.players[oid] = PointF(x, y);
-	m_lastAction = StageEditorAction::createActionAddPlayer(x, y, oid);
+	m_stageState.players[oid] = pos;
+	m_lastAction = std::make_shared<StageEditorActionAddPlayer>(pos, oid);
 	m_history.pushAction(m_lastAction);
 }
 
@@ -65,14 +64,14 @@ const std::shared_ptr<StageEditorAction> StageEditor::getLastAction()
 
 void StageEditor::addPlayer(double x, double y, ObjectSnap snapping)
 {
-	double xSnap, ySnap;
-	getSnappedXY(x, y, snapping, xSnap, ySnap);
-	addPlayerInternal(xSnap, ySnap);
+	addPlayer(PointF(x, y), snapping);
 }
 
 void StageEditor::addPlayer(const PointF& pos, ObjectSnap snapping)
 {
-	addPlayer(pos.x, pos.y, snapping);
+	PointF posSnap;
+	getSnappedPoint(pos, snapping, posSnap);
+	addPlayerInternal(posSnap);
 }
 
 void StageEditor::undo()

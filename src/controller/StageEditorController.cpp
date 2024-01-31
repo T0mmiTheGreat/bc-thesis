@@ -301,11 +301,11 @@ void StageEditorController::updateSpritesByBackend()
 {
 	const auto lastAction = m_stageEditor.getLastAction();
 
-	switch (lastAction->type) {
-		case StageEditorAction::ACTION_ADD_PLAYER:
-			addPlayerSprite(lastAction->addPlayer.x, lastAction->addPlayer.y,
-				lastAction->addPlayer.oid);
-			break;
+	switch (lastAction->getType()) {
+		case StageEditorAction::ACTION_ADD_PLAYER: {
+			const auto actionAddPlayer = std::dynamic_pointer_cast<StageEditorActionAddPlayer>(lastAction);
+			addPlayerSprite(actionAddPlayer->pos, actionAddPlayer->oid);
+		} break;
 	}
 }
 
@@ -364,7 +364,7 @@ void StageEditorController::updatePlayerSprite(EditorOID oid,
 	sprite->setRadius(radius);
 }
 
-void StageEditorController::addPlayerSprite(double x, double y, EditorOID oid)
+void StageEditorController::addPlayerSprite(const PointF& pos, EditorOID oid)
 {
 	auto newSprite = std::make_unique<PlayerSprite>(sysProxy);
 	newSprite->setColor(Color::red());
