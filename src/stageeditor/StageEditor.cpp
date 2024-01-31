@@ -37,26 +37,7 @@ void StageEditor::getSnappedXY(double x, double y, ObjectSnap snapping,
 	}
 }
 
-void StageEditor::toolSelectClick(double x, double y, ObjectSnap snapping)
-{
-	// TODO
-}
-
-void StageEditor::toolPlayersClick(double x, double y, ObjectSnap snapping)
-{
-	double xSnap, ySnap;
-	getSnappedXY(x, y, snapping, xSnap, ySnap);
-	addPlayer(xSnap, ySnap);
-}
-
-void StageEditor::toolObstaclesClick(double x, double y, ObjectSnap snapping)
-{
-	double xSnap, ySnap;
-	getSnappedXY(xSnap, ySnap, snapping, xSnap, ySnap);
-	// TODO
-}
-
-void StageEditor::addPlayer(double x, double y)
+void StageEditor::addPlayerInternal(double x, double y)
 {
 	EditorOID oid = generateEditorOID();
 
@@ -66,8 +47,7 @@ void StageEditor::addPlayer(double x, double y)
 }
 
 StageEditor::StageEditor()
-	: m_activeTool{TOOL_SELECT}
-	, m_stageState{
+	: m_stageState{
 		.width = STAGE_WIDTH_INITIAL,
 		.height = STAGE_HEIGHT_INITIAL,
 	}
@@ -78,34 +58,21 @@ const StageState& StageEditor::getState()
 	return m_stageState;
 }
 
-StageEditor::Tool StageEditor::getActiveTool()
-{
-	return m_activeTool;
-}
-
-void StageEditor::setActiveTool(StageEditor::Tool tool)
-{
-	m_activeTool = tool;
-}
-
 const std::shared_ptr<StageEditorAction> StageEditor::getLastAction()
 {
 	return m_lastAction;
 }
 
-void StageEditor::click(double x, double y, StageEditor::ObjectSnap snapping)
+void StageEditor::addPlayer(double x, double y, ObjectSnap snapping)
 {
-	switch (m_activeTool) {
-		case TOOL_SELECT:
-			toolSelectClick(x, y, snapping);
-			break;
-		case TOOL_PLAYERS:
-			toolPlayersClick(x, y, snapping);
-			break;
-		case TOOL_OBSTACLES:
-			toolObstaclesClick(x, y, snapping);
-			break;
-	}
+	double xSnap, ySnap;
+	getSnappedXY(x, y, snapping, xSnap, ySnap);
+	addPlayerInternal(xSnap, ySnap);
+}
+
+void StageEditor::addPlayer(const PointF& pos, ObjectSnap snapping)
+{
+	addPlayer(pos.x, pos.y, snapping);
 }
 
 void StageEditor::undo()

@@ -255,6 +255,27 @@ void StageEditorController::mouseBtnDownStatusbar(MouseBtn btn, int x, int y)
 
 void StageEditorController::mouseBtnDownWorkspace(MouseBtn btn, int x, int y)
 {
+	switch (m_activeTool) {
+		case TOOL_SELECT:
+			mouseBtnDownWorkspaceToolSelect(btn, x, y);
+			break;
+		case TOOL_PLAYERS:
+			mouseBtnDownWorkspaceToolPlayers(btn, x, y);
+			break;
+		case TOOL_OBSTACLES:
+			mouseBtnDownWorkspaceToolObstacles(btn, x, y);
+			break;
+	}
+}
+
+void StageEditorController::mouseBtnDownWorkspaceToolSelect(MouseBtn btn,
+	int x, int y)
+{
+}
+
+void StageEditorController::mouseBtnDownWorkspaceToolPlayers(MouseBtn btn,
+	int x, int y)
+{
 	Rect workspaceRect = getWorkspaceRect();
 	Point mouse(x, y);
 	Point mouseRel = mouse.relativeTo(workspaceRect.getTopLeft());
@@ -262,13 +283,18 @@ void StageEditorController::mouseBtnDownWorkspace(MouseBtn btn, int x, int y)
 	if (btn == BTN_LEFT) {
 		PointF mouseProj = static_cast<PointF>(mouseRel);
 		mouseProj.transform(m_viewport.getProjectionToWorkspaceMatrix());
-		m_stageEditor.click(mouseProj.x, mouseProj.y, StageEditor::SNAP_NONE);
+		m_stageEditor.addPlayer(mouseProj.x, mouseProj.y, StageEditor::SNAP_NONE);
 		updateSpritesByBackend();
 	} else if (btn == BTN_MIDDLE) {
 		if (!m_viewport.isDrag()) {
 			m_viewport.beginDrag(static_cast<PointF>(mouse));
 		}
 	}
+}
+
+void StageEditorController::mouseBtnDownWorkspaceToolObstacles(MouseBtn btn,
+	int x, int y)
+{
 }
 
 void StageEditorController::updateSpritesByBackend()
@@ -350,7 +376,7 @@ void StageEditorController::startedEvent()
 {
 	createSprites();
 
-	m_stageEditor.setActiveTool(StageEditor::TOOL_PLAYERS);
+	m_activeTool = TOOL_PLAYERS;
 }
 
 void StageEditorController::mouseBtnDownEvent(MouseBtn btn, int x, int y)

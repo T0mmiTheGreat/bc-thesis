@@ -30,6 +30,13 @@
 
 class StageEditorController : public GeneralControllerBase {
 private:
+	enum EditorTool {
+		TOOL_SELECT = 0,
+		TOOL_PLAYERS,
+		TOOL_OBSTACLES,
+	};
+private:
+#pragma region constants
 	static constexpr int MENUICON_NEW_IDX = 0;
 	static constexpr int MENUICON_OPEN_IDX = MENUICON_NEW_IDX + 1;
 	static constexpr int MENUICON_SAVE_IDX = MENUICON_OPEN_IDX + 1;
@@ -77,6 +84,9 @@ private:
 	static constexpr FontId STATUSBAR_TEXT_FONT = FONT_TAHOMA_16;
 	static constexpr Color STATUSBAR_FCOLOR = MENUBAR_FCOLOR;
 	static constexpr Color STATUSBAR_SCOLOR = MENUBAR_SCOLOR;
+#pragma endregion constants
+
+	EditorTool m_activeTool;
 
 	// XXX: Keep the editor and viewport in this order for correct order of
 	//      initialization
@@ -151,6 +161,21 @@ private:
 	 * @brief Mouse button pressed inside workspace.
 	 */
 	void mouseBtnDownWorkspace(MouseBtn btn, int x, int y);
+	/**
+	 * @brief Mouse button pressed inside workspace with the active tool being
+	 *        the "select tool".
+	 */
+	void mouseBtnDownWorkspaceToolSelect(MouseBtn btn, int x, int y);
+	/**
+	 * @brief Mouse button pressed inside workspace with the active tool being
+	 *        the "players tool".
+	 */
+	void mouseBtnDownWorkspaceToolPlayers(MouseBtn btn, int x, int y);
+	/**
+	 * @brief Mouse button pressed inside workspace with the active tool being
+	 *        the "obstacles tool".
+	 */
+	void mouseBtnDownWorkspaceToolObstacles(MouseBtn btn, int x, int y);
 
 	/**
 	 * @brief Updates all sprites after a change in backend (StageEditor).

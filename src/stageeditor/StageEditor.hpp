@@ -20,11 +20,6 @@
 
 class StageEditor {
 public:
-	enum Tool {
-		TOOL_SELECT = 0,
-		TOOL_PLAYERS,
-		TOOL_OBSTACLES,
-	};
 	enum ObjectSnap {
 		SNAP_NONE = 0, // Do not snap
 		SNAP_STEP1,    // Snap every step
@@ -36,7 +31,6 @@ private:
 	static constexpr int STAGE_HEIGHT_INITIAL = 720;
 
 	StageState m_stageState;
-	Tool m_activeTool;
 	StageEditorHistory m_history;
 	std::shared_ptr<StageEditorAction> m_lastAction;
 
@@ -52,11 +46,7 @@ private:
 	void getSnappedXY(double x, double y, ObjectSnap snapping, double& xSnap,
 		double& ySnap);
 
-	void toolSelectClick(double x, double y, ObjectSnap snapping);
-	void toolPlayersClick(double x, double y, ObjectSnap snapping);
-	void toolObstaclesClick(double x, double y, ObjectSnap snapping);
-
-	void addPlayer(double x, double y);
+	void addPlayerInternal(double x, double y);
 public:
 	StageEditor();
 	/**
@@ -64,25 +54,24 @@ public:
 	 */
 	const StageState& getState();
 	/**
-	 * @brief Returns the currently selected editor tool.
-	 */
-	Tool getActiveTool();
-	/**
-	 * @brief Selects an editor tool.
-	 */
-	void setActiveTool(Tool tool);
-	/**
 	 * @brief Returns the last performed action.
 	 */
 	const std::shared_ptr<StageEditorAction> getLastAction();
 	/**
-	 * @brief Left mouse button click in the workspace.
+	 * @brief Adds a player object to the stage.
 	 * 
-	 * @param x 
-	 * @param y 
-	 * @param snapping How the location should be snapped to grid.
+	 * @param x Approximate X coordiante of the player object.
+	 * @param y Approximate Y coordiante of the player object.
+	 * @param snapping How the coordinates should be snapped to grid.
 	 */
-	void click(double x, double y, ObjectSnap snapping);
+	void addPlayer(double x, double y, ObjectSnap snapping);
+	/**
+	 * @brief Adds a player object to the stage.
+	 * 
+	 * @param pos Approximate position of the player object.
+	 * @param snapping How the position should be snapped to grid.
+	 */
+	void addPlayer(const PointF& pos, ObjectSnap snapping);
 	void undo();
 	void redo();
 	bool canUndo();
