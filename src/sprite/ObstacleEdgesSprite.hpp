@@ -23,7 +23,7 @@ class ObstacleEdgesSprite : public BoundedSpriteBase {
 private:
 	static constexpr Color STROKE_COLOR = Color::obstacle();
 
-	PolygonF m_corners;
+	std::vector<PointF> m_corners;
 protected:
 	/**
 	 * @brief Returns the rectangle that represents the bounds of the sprite.
@@ -44,19 +44,9 @@ public:
 	 */
 	void repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
 
-	/**
-	 * @brief Adds a corner to the polygon.
-	 */
-	void pushCorner(const PolygonF::CornerType& p);
-	/**
-	 * @brief Removes the last corner from the polygon.
-	 * 
-	 * @note No-op if there are no corners in the polygon.
-	 */
-	void popCorner();
-	const PolygonF::CornerType& getCorner(int idx) const;
-	void setCorner(int idx, const PolygonF::CornerType& value);
-	size_t getCornerCount() const;
+	void setCorners(const std::vector<PointF>& value);
+	void setCorners(std::vector<PointF>&& value);
+	void clearCorners();
 };
 
 #endif // OBSTACLEEDGESSPRITE_HPP

@@ -13,12 +13,18 @@
 
 Rect ObstacleEdgesSprite::getBounds()
 {
-	if (m_corners.cornerCount() == 0) {
-		// Cannot get bounding box of a polygon which has no corners
+	if (m_corners.empty()) {
+		// No corners => empty boundary
 
 		return Rect::createEmpty();
 	} else {
-		Rect res = static_cast<Rect>(m_corners.getBoundingBox());
+		// The corners actually form a polygon which is not closed. We can take
+		// advantage of this, and create a PolygonF using the corners, then get
+		// the bounding box of that polygon.
+
+		PolygonF pog(std::move(m_corners));
+		Rect res = static_cast<Rect>(pog.getBoundingBox());
+		m_corners = std::move(pog.corners);
 		return res;
 	}
 }
@@ -32,46 +38,35 @@ ObstacleEdgesSprite::ObstacleEdgesSprite(
 void ObstacleEdgesSprite::repaint(std::shared_ptr<ICanvas> canvas,
 	Rect& invalidRect)
 {
-	canvas->setStrokeWidth(1.0);
-	canvas->setStrokingColor(STROKE_COLOR);
-	for (size_t i = 1; i < m_corners.cornerCount(); i++) {
-		const PolygonF::CornerType& p0 = m_corners.corners[i - 1];
-		const PolygonF::CornerType& p1 = m_corners.corners[i];
-		canvas->strokeLine(p0.x, p0.y, p1.x, p1.y);
+	if (!m_corners.empty()) {
+		canvas->setStrokeWidth(1.0);
+		canvas->setStrokingColor(STROKE_COLOR);
+		for (size_t i = 1; i < m_corners.size(); i++) {
+			const PolygonF::CornerType& p0 = m_corners[i - 1];
+			const PolygonF::CornerType& p1 = m_corners[i];
+			canvas->strokeLine(p0.x, p0.y, p1.x, p1.y);
+		}
 	}
 }
 
-void ObstacleEdgesSprite::pushCorner(const PolygonF::CornerType& p)
+void ObstacleEdgesSprite::setCorners(const std::vector<PointF>& value)
+{
+	std::vector<PointF> v = value;
+	setCorners(std::move(v));
+}
+
+void ObstacleEdgesSprite::setCorners(std::vector<PointF>&& value)
 {
 	invalidateBounds();
-	m_corners.corners.push_back(p);
+	m_corners = std::move(value);
+	// If its empty then there's nothing to invalidate
+	if (!m_corners.empty()) {
+		invalidateBounds();
+	}
+}
+
+void ObstacleEdgesSprite::clearCorners()
+{
 	invalidateBounds();
-}
-
-void ObstacleEdgesSprite::popCorner()
-{
-	if (m_corners.cornerCount() > 0) {
-		invalidateBounds();
-		m_corners.corners.pop_back();
-		invalidateBounds();
-	}
-}
-
-const PolygonF::CornerType& ObstacleEdgesSprite::getCorner(int idx) const
-{
-	return m_corners.corners[idx];
-}
-
-void ObstacleEdgesSprite::setCorner(int idx, const PolygonF::CornerType& value)
-{
-	if (m_corners.corners[idx] != value) {
-		invalidateBounds();
-		m_corners.corners[idx] = value;
-		invalidateBounds();
-	}
-}
-
-size_t ObstacleEdgesSprite::getCornerCount() const
-{
-	return m_corners.cornerCount();
+	m_corners.clear();
 }

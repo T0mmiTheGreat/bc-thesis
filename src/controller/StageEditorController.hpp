@@ -108,34 +108,11 @@ private:
 	std::unordered_map<EditorOID, std::unique_ptr<PlayerSprite>> m_playerSprites;
 	std::unordered_map<EditorOID, std::unique_ptr<ObstacleSprite>> m_obstacleSprites;
 
-	// Will be created and destroyed repeatedly. Checking for `nullptr` is
-	// recommended.
 	std::unique_ptr<ObstacleEdgesSprite> m_obstacleEdges;
 #pragma endregion sprites
 
 	void createSprites();
 	void positionSprites();
-
-	Rect getMenubarRect();
-	Rect getToolbarRect();
-	Rect getStatusbarRect();
-	Rect getWorkspaceRect();
-	Rect getMenuIconRect(int iconIdx);
-	Rect getToolIconRect(int iconIdx);
-
-	/**
-	 * @brief If the icon has COSTUME_HOVER changes it to COSTUME_NORMAL.
-	 */
-	void iconHighlightOff(std::unique_ptr<EditorIconSprite>& icon);
-	/**
-	 * @brief If the icon has COSTUME_NORMAL changes it to COSTUME_HOVER.
-	 */
-	void iconHighlightOn(std::unique_ptr<EditorIconSprite>& icon);
-	/**
-	 * @brief Finds all icons with COSTUME_HOVER and changes it to
-	 *        COSTUME_NORMAL.
-	 */
-	void iconHighlightOffAll();
 
 	/**
 	 * @brief Mouse moved above the menu bar.
@@ -186,6 +163,30 @@ private:
 	 */
 	void mouseBtnDownWorkspaceToolObstacles(MouseBtn btn, int x, int y);
 
+	void mouseWheelWorkspace(int dx, int dy);
+
+	void checkMenuIconMouseHover(int x, int y);
+	void checkToolIconMouseHover(int x, int y);
+	void checkWorkspaceDoDrag(int x, int y);
+
+	void addPlayerObject(int x, int y);
+	void addObstacleCorner(int x, int y);
+	void completeObstacleObject();
+
+	/**
+	 * @brief If the icon has COSTUME_HOVER changes it to COSTUME_NORMAL.
+	 */
+	void iconHighlightOff(std::unique_ptr<EditorIconSprite>& icon);
+	/**
+	 * @brief If the icon has COSTUME_NORMAL changes it to COSTUME_HOVER.
+	 */
+	void iconHighlightOn(std::unique_ptr<EditorIconSprite>& icon);
+	/**
+	 * @brief Finds all icons with COSTUME_HOVER and changes it to
+	 *        COSTUME_NORMAL.
+	 */
+	void iconHighlightOffAll();
+
 	/**
 	 * @brief Updates all sprites after a change in backend (StageEditor).
 	 */
@@ -194,43 +195,52 @@ private:
 	 * @brief Updates all sprites after a change in viewport.
 	 */
 	void updateSpritesByViewport();
+
+	/**
+	 * @brief Updates grid sprite after a change in viewport.
+	 */
+	void updateGridSprite();
 	/**
 	 * @brief Updates player sprite after a change in backend or viewport.
 	 * 
 	 * @param oid Editor OID of the player object.
-	 * 
-	 * @remark This method does the same thing as the overloaded variant below,
-	 *         but it has to calculate the other parameters itself. It is
-	 *         convenient when only one player sprite is updated, but for
-	 *         multiple sprites, the one below should be preferred.
 	 */
 	void updatePlayerSprite(EditorOID oid);
 	/**
-	 * @brief Updates player sprite after a change in backend or viewport.
-	 * 
-	 * @param oid Editor OID of the player object.
-	 * @param sprite The sprite associated with the OID.
-	 * @param tm Transformation matrix to apply to the player object position.
-	 *           The method will make the sprite position adjustments itself.
-	 *           Caller should just pass the result of `StageViewport::
-	 *           getProjectionMatrix()`.
-	 * @param radius Radius of the sprite. This should be calculated as
-	 *               `EDITOR_PLAYER_RADIUS * StageViewport::getZoom()`.
-	 * 
-	 * @remark This methods should be used in "for each player loops" to save
-	 *         computation time (the parameters will be the same for each
-	 *         sprite).
+	 * @brief Updates obstacle edges sprite after a change in backend or viewport.
 	 */
-	void updatePlayerSprite(EditorOID oid,
-		std::unique_ptr<PlayerSprite>& sprite, const Matrix3x3& tm,
-		double radius);
 	void updateObstacleEdgesSprite();
-	void updateObstacleEdgesSprite(const Matrix3x3& tm);
+	/**
+	 * @brief Updates obstacle sprite after a change in backend or viewport.
+	 * 
+	 * @param oid Editor OID of the obstacle object.
+	 */
 	void updateObstacleSprite(EditorOID oid);
 
-	void addPlayerSprite(const PointF& pos, EditorOID oid);
-	void addObstacleEdge(const PointF& p);
+	void addPlayerSprite(EditorOID oid);
 	void addObstacleSprite(EditorOID oid);
+
+	/**
+	 * @brief Creates matrix for conversion from screen space to stage space.
+	 * 
+	 * @details The objects passed to it must be relative to the screen origin,
+	 *          not workspace origin.
+	 */
+	Matrix3x3 getScreenToStageMatrix();
+	/**
+	 * @brief Creates matrix for conversion from stage space to screen space.
+	 * 
+	 * @details The objects returned will be relative to the screen origin,
+	 *          not workspace origin.
+	 */
+	Matrix3x3 getStageToScreenMatrix();
+
+	Rect getMenubarRect();
+	Rect getToolbarRect();
+	Rect getStatusbarRect();
+	Rect getWorkspaceRect();
+	Rect getMenuIconRect(int iconIdx);
+	Rect getToolIconRect(int iconIdx);
 public:
 	StageEditorController(std::shared_ptr<ISysProxy> sysProxy);
 	void startedEvent() override;
