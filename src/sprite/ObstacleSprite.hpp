@@ -16,26 +16,21 @@
 
 #include "types.hpp"
 #include "paintingproxy/IPaintingProxy.hpp"
-#include "sprite/PositionedSpriteBase.hpp"
+#include "sprite/BoundedSpriteBase.hpp"
 
-class ObstacleSprite : public PositionedSpriteBase {
+class ObstacleSprite : public BoundedSpriteBase {
 private:
-	// Note: The `m_shape` position is irrelevant and can be changed as needed.
 	PolygonF m_shape;
+protected:
+	/**
+	 * @brief Returns the rectangle that represents the bounds of the sprite.
+	 */
+	Rect getBounds() override;
 public:
 	ObstacleSprite(std::shared_ptr<IPaintingProxy> paintingProxy,
 		const PolygonF& shape);
 	ObstacleSprite(std::shared_ptr<IPaintingProxy> paintingProxy,
 		PolygonF&& shape);
-	/**
-	 * @brief Returns the size (width and height) of the sprite.
-	 * 
-	 * @details This should always yield the same result as calling the Size2d
-	 *          constructor as `Size2d(getW(), getH())`. However, calling this
-	 *          method should be preferred, because descendants may optimize it
-	 *          to gain performance.
-	 */
-	Size2d getSize() override;
 	/**
 	 * @brief Repaints an area of sprite.
 	 * 
