@@ -13,32 +13,27 @@
 
 Rect ObstacleSprite::getBounds()
 {
-	Rect res = static_cast<Rect>(m_shape.getBoundingBox());
-	return res;
+	if (m_shape.cornerCount() == 0) {
+		return Rect::createEmpty();
+	} else {
+		Rect res = static_cast<Rect>(m_shape.getBoundingBox());
+		return res;
+	}
 }
 
-ObstacleSprite::ObstacleSprite(std::shared_ptr<IPaintingProxy> paintingProxy,
-	const PolygonF& shape)
+ObstacleSprite::ObstacleSprite(std::shared_ptr<IPaintingProxy> paintingProxy)
 	: SpriteBase(paintingProxy)
 	, BoundedSpriteBase(paintingProxy)
-{
-	setShape(shape);
-}
-
-ObstacleSprite::ObstacleSprite(std::shared_ptr<IPaintingProxy> paintingProxy,
-	PolygonF&& shape)
-	: SpriteBase(paintingProxy)
-	, BoundedSpriteBase(paintingProxy)
-{
-	setShape(std::move(shape));
-}
+{}
 
 void ObstacleSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)
 {
-	canvas->setFillingColor(Color::grayscale(0x80));
-	canvas->fillPolygon(m_shape);
+	if (m_shape.cornerCount() != 0) {
+		canvas->setFillingColor(Color::grayscale(0x80));
+		canvas->fillPolygon(m_shape);
 
-	invalidRect += getBounds();
+		invalidRect += getBounds();
+	}
 }
 
 const PolygonF& ObstacleSprite::getShape() const

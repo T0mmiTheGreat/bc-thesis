@@ -27,10 +27,7 @@ protected:
 	 */
 	Rect getBounds() override;
 public:
-	ObstacleSprite(std::shared_ptr<IPaintingProxy> paintingProxy,
-		const PolygonF& shape);
-	ObstacleSprite(std::shared_ptr<IPaintingProxy> paintingProxy,
-		PolygonF&& shape);
+	ObstacleSprite(std::shared_ptr<IPaintingProxy> paintingProxy);
 	/**
 	 * @brief Repaints an area of sprite.
 	 * 

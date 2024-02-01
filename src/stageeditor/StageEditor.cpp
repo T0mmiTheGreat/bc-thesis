@@ -45,6 +45,29 @@ void StageEditor::addPlayerInternal(const PointF& pos)
 	m_history.pushAction(m_lastAction);
 }
 
+void StageEditor::addObstacleCornerInternal(const PointF& pos)
+{
+	m_obstacleCorners.push_back(pos);
+	m_lastAction = std::make_shared<StageEditorActionPlaceObstacleCorner>(pos);
+	m_history.pushAction(m_lastAction);
+}
+
+void StageEditor::completeObstacleInternal()
+{
+	// Must be a valid Euclidean polygon
+	if (m_obstacleCorners.size() >= 3) {
+		EditorOID oid = generateEditorOID();
+		PolygonF shape(std::move(m_obstacleCorners));
+
+		m_stageState.obstacles[oid] = std::move(shape);
+
+		m_obstacleCorners = PolygonF::CollectionType();
+
+		m_lastAction = std::make_shared<StageEditorActionCompleteObstacle>(shape, oid);
+		m_history.pushAction(m_lastAction);
+	}
+}
+
 StageEditor::StageEditor()
 	: m_stageState{
 		.width = STAGE_WIDTH_INITIAL,
@@ -74,6 +97,23 @@ void StageEditor::addPlayer(const PointF& pos, ObjectSnap snapping)
 	addPlayerInternal(posSnap);
 }
 
+void StageEditor::addObstacleCorner(double x, double y, ObjectSnap snapping)
+{
+	addObstacleCorner(PointF(x, y), snapping);
+}
+
+void StageEditor::addObstacleCorner(const PointF& pos, ObjectSnap snapping)
+{
+	PointF posSnap;
+	getSnappedPoint(pos, snapping, posSnap);
+	addObstacleCornerInternal(posSnap);
+}
+
+void StageEditor::completeObstacle()
+{
+	completeObstacleInternal();
+}
+
 void StageEditor::undo()
 {
 	// TODO
@@ -92,4 +132,9 @@ bool StageEditor::canUndo()
 bool StageEditor::canRedo()
 {
 	return m_history.canRedo();
+}
+
+const PolygonF::CollectionType& StageEditor::getObstacleCorners() const
+{
+	return m_obstacleCorners;
 }

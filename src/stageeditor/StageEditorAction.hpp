@@ -90,18 +90,15 @@ public:
 
 class StageEditorActionPlaceObstacleCorner : public StageEditorAction {
 private:
-	PointF m_p0;
-	PointF m_p1;
+	PointF m_pos;
 public:
 	/**
 	 * @brief Constructs a new StageEditorActionPlaceObstacleCorner object.
 	 * 
-	 * @param p0 Previous corner position.
-	 * @param p1 New corner position.
+	 * @param pos New corner position.
 	 */
-	StageEditorActionPlaceObstacleCorner(const PointF& p0, const PointF& p1)
-		: m_p0{p0}
-		, m_p1{p1}
+	StageEditorActionPlaceObstacleCorner(const PointF& pos)
+		: m_pos{pos}
 	{}
 
 	/**
@@ -112,16 +109,10 @@ public:
 	}
 
 	/**
-	 * @brief Previous corner position.
-	 */
-	const PointF& getP0() const {
-		return m_p0;
-	}
-	/**
 	 * @brief New corner position.
 	 */
-	const PointF& getP1() const {
-		return m_p1;
+	const PointF& getPos() const {
+		return m_pos;
 	}
 };
 

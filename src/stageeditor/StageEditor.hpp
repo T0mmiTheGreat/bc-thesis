@@ -13,7 +13,9 @@
 #define STAGEEDITOR_HPP
 
 #include <memory>
+#include <vector>
 
+#include "types.hpp"
 #include "stageeditor/StageEditorAction.hpp"
 #include "stageeditor/StageEditorHistory.hpp"
 #include "stageeditor/StageState.hpp"
@@ -33,6 +35,7 @@ private:
 	StageState m_stageState;
 	StageEditorHistory m_history;
 	std::shared_ptr<StageEditorAction> m_lastAction;
+	PolygonF::CollectionType m_obstacleCorners;
 
 	/**
 	 * @brief Snaps the coordinates to the grid based on `snapping`.
@@ -44,6 +47,8 @@ private:
 	void getSnappedPoint(const PointF& p, ObjectSnap snapping, PointF& pSnap);
 
 	void addPlayerInternal(const PointF& pos);
+	void addObstacleCornerInternal(const PointF& pos);
+	void completeObstacleInternal();
 public:
 	StageEditor();
 	/**
@@ -69,10 +74,33 @@ public:
 	 * @param snapping How the position should be snapped to grid.
 	 */
 	void addPlayer(const PointF& pos, ObjectSnap snapping);
+	/**
+	 * @brief Adds an obstacle corner to the stage.
+	 * 
+	 * @param x Approximate X coordiante of the corner.
+	 * @param y Approximate Y coordiante of the corner.
+	 * @param snapping How the coordinates should be snapped to grid.
+	 */
+	void addObstacleCorner(double x, double y, ObjectSnap snapping);
+	/**
+	 * @brief Adds an obstacle corner to the stage.
+	 * 
+	 * @param pos Approximate position of the corner.
+	 * @param snapping How the position should be snapped to grid.
+	 */
+	void addObstacleCorner(const PointF& pos, ObjectSnap snapping);
+	/**
+	 * @brief Closes an open obstacle and adds it to the stage.
+	 * 
+	 * @remark If the obstacle cannot be closed, doesn't do anything.
+	 */
+	void completeObstacle();
 	void undo();
 	void redo();
 	bool canUndo();
 	bool canRedo();
+
+	const PolygonF::CollectionType& getObstacleCorners() const;
 };
 
 #endif // STAGEEDITOR_HPP

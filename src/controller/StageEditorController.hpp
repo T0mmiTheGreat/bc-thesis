@@ -24,6 +24,8 @@
 #include "sprite/StatusbarTextSprite.hpp"
 #include "sprite/EditorWorkspaceGridSprite.hpp"
 #include "sprite/PlayerSprite.hpp"
+#include "sprite/ObstacleSprite.hpp"
+#include "sprite/ObstacleEdgesSprite.hpp"
 #include "stageeditor/Common.hpp"
 #include "stageeditor/StageEditor.hpp"
 #include "stageeditor/StageViewport.hpp"
@@ -94,6 +96,7 @@ private:
 	StageEditor m_stageEditor;
 	StageViewport m_viewport;
 
+#pragma region sprites
 	std::array<std::unique_ptr<EditorIconSprite>, MENUICON_COUNT> m_menuIcons;
 	std::unique_ptr<OptionBarSprite> m_menuBarSprite;
 	std::array<std::unique_ptr<EditorIconSprite>, TOOLICON_COUNT> m_toolIcons;
@@ -103,6 +106,12 @@ private:
 
 	std::unique_ptr<EditorWorkspaceGridSprite> m_gridSprite;
 	std::unordered_map<EditorOID, std::unique_ptr<PlayerSprite>> m_playerSprites;
+	std::unordered_map<EditorOID, std::unique_ptr<ObstacleSprite>> m_obstacleSprites;
+
+	// Will be created and destroyed repeatedly. Checking for `nullptr` should
+	// be done.
+	std::unique_ptr<ObstacleEdgesSprite> m_obstacleEdges;
+#pragma endregion sprites
 
 	void createSprites();
 	void positionSprites();
@@ -215,8 +224,13 @@ private:
 	void updatePlayerSprite(EditorOID oid,
 		std::unique_ptr<PlayerSprite>& sprite, const Matrix3x3& tm,
 		double radius);
+	void updateObstacleEdgesSprite();
+	void updateObstacleEdgesSprite(const Matrix3x3& tm);
+	void updateObstacleSprite(EditorOID oid);
 
 	void addPlayerSprite(const PointF& pos, EditorOID oid);
+	void addObstacleEdge(const PointF& p);
+	void addObstacleSprite(EditorOID oid);
 public:
 	StageEditorController(std::shared_ptr<ISysProxy> sysProxy);
 	void startedEvent() override;

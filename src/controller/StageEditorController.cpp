@@ -266,6 +266,12 @@ void StageEditorController::mouseBtnDownWorkspace(MouseBtn btn, int x, int y)
 			mouseBtnDownWorkspaceToolObstacles(btn, x, y);
 			break;
 	}
+
+	if (btn == BTN_MIDDLE) {
+		if (!m_viewport.isDrag()) {
+			m_viewport.beginDrag(PointF(x, y));
+		}
+	}
 }
 
 void StageEditorController::mouseBtnDownWorkspaceToolSelect(MouseBtn btn,
@@ -276,25 +282,41 @@ void StageEditorController::mouseBtnDownWorkspaceToolSelect(MouseBtn btn,
 void StageEditorController::mouseBtnDownWorkspaceToolPlayers(MouseBtn btn,
 	int x, int y)
 {
-	Rect workspaceRect = getWorkspaceRect();
-	Point mouse(x, y);
-	Point mouseRel = mouse.relativeTo(workspaceRect.getTopLeft());
-
 	if (btn == BTN_LEFT) {
+		Rect workspaceRect = getWorkspaceRect();
+		Point mouse(x, y);
+		Point mouseRel = mouse.relativeTo(workspaceRect.getTopLeft());
+
 		PointF mouseProj = static_cast<PointF>(mouseRel);
 		mouseProj.transform(m_viewport.getProjectionToWorkspaceMatrix());
+		
 		m_stageEditor.addPlayer(mouseProj.x, mouseProj.y, StageEditor::SNAP_NONE);
+		
 		updateSpritesByBackend();
-	} else if (btn == BTN_MIDDLE) {
-		if (!m_viewport.isDrag()) {
-			m_viewport.beginDrag(static_cast<PointF>(mouse));
-		}
 	}
 }
 
 void StageEditorController::mouseBtnDownWorkspaceToolObstacles(MouseBtn btn,
 	int x, int y)
 {
+	if (btn == BTN_LEFT) {
+		Rect workspaceRect = getWorkspaceRect();
+		Point mouse(x, y);
+		Point mouseRel = mouse.relativeTo(workspaceRect.getTopLeft());
+
+		PointF mouseProj = static_cast<PointF>(mouseRel);
+		mouseProj.transform(m_viewport.getProjectionToWorkspaceMatrix());
+
+		m_stageEditor.addObstacleCorner(mouseProj.x, mouseProj.y, StageEditor::SNAP_NONE);
+
+		updateSpritesByBackend();
+	} else if (btn == BTN_RIGHT) {
+		m_stageEditor.completeObstacle();
+
+		m_obstacleEdges = nullptr;
+
+		updateSpritesByBackend();
+	}
 }
 
 void StageEditorController::updateSpritesByBackend()
@@ -302,10 +324,28 @@ void StageEditorController::updateSpritesByBackend()
 	const auto lastAction = m_stageEditor.getLastAction();
 
 	switch (lastAction->getType()) {
+
 		case StageEditorAction::ACTION_ADD_PLAYER: {
-			const auto actionAddPlayer = std::dynamic_pointer_cast<StageEditorActionAddPlayer>(lastAction);
+			const auto actionAddPlayer =
+				std::dynamic_pointer_cast<StageEditorActionAddPlayer>(
+					lastAction);
 			addPlayerSprite(actionAddPlayer->getPos(), actionAddPlayer->getOid());
 		} break;
+
+		case StageEditorAction::ACTION_PLACE_OBSTACLE_CORNER: {
+			const auto actionPlaceObstacleCorner =
+				std::dynamic_pointer_cast<StageEditorActionPlaceObstacleCorner>(
+					lastAction);
+			addObstacleEdge(actionPlaceObstacleCorner->getPos());
+		} break;
+
+		case StageEditorAction::ACTION_COMPLETE_OBSTACLE: {
+			const auto actionCompleteObstacle =
+				std::dynamic_pointer_cast<StageEditorActionCompleteObstacle>(
+					lastAction);
+			addObstacleSprite(actionCompleteObstacle->getOid());
+		} break;
+
 	}
 }
 
@@ -338,6 +378,18 @@ void StageEditorController::updateSpritesByViewport()
 		updatePlayerSprite(playerSpritePair.first, playerSpritePair.second,
 			tm, playerRadius);
 	}
+
+
+	// Obstacles
+
+	for (auto& obstacleSpritePair : m_obstacleSprites) {
+		updateObstacleSprite(obstacleSpritePair.first);
+	}
+
+
+	// Open obstacle
+
+	updateObstacleEdgesSprite(tm);
 }
 
 void StageEditorController::updatePlayerSprite(EditorOID oid)
@@ -364,6 +416,45 @@ void StageEditorController::updatePlayerSprite(EditorOID oid,
 	sprite->setRadius(radius);
 }
 
+void StageEditorController::updateObstacleEdgesSprite()
+{
+	Matrix3x3 tm = m_viewport.getProjectionToScreenMatrix();
+
+	updateObstacleEdgesSprite(tm);
+}
+
+void StageEditorController::updateObstacleEdgesSprite(const Matrix3x3& tm)
+{
+	if (m_obstacleEdges != nullptr) {
+		Rect workspaceRect = getWorkspaceRect();
+		PointF corner;
+
+		for (size_t i = 0; i < m_stageEditor.getObstacleCorners().size(); i++) {
+			corner = m_stageEditor.getObstacleCorners()[i];
+			corner.transform(tm);
+			corner.x += workspaceRect.x;
+			corner.y += workspaceRect.y;
+
+			m_obstacleEdges->setCorner(i, corner);
+		}
+	}
+}
+
+void StageEditorController::updateObstacleSprite(EditorOID oid)
+{
+	Rect workspaceRect = getWorkspaceRect();
+	auto& sprite = m_obstacleSprites[oid];
+	Matrix3x3 tm = m_viewport.getProjectionToScreenMatrix();
+	auto obstacleObject = m_stageEditor.getState().obstacles.at(oid);
+	obstacleObject.transform(tm);
+	for (auto& corner : obstacleObject.corners) {
+		corner.x += workspaceRect.x;
+		corner.y += workspaceRect.y;
+	}
+
+	sprite->setShape(obstacleObject);
+}
+
 void StageEditorController::addPlayerSprite(const PointF& pos, EditorOID oid)
 {
 	auto newSprite = std::make_unique<PlayerSprite>(sysProxy);
@@ -372,11 +463,28 @@ void StageEditorController::addPlayerSprite(const PointF& pos, EditorOID oid)
 	updatePlayerSprite(oid);
 }
 
+void StageEditorController::addObstacleEdge(const PointF& p)
+{
+	if (m_obstacleEdges == nullptr) {
+		m_obstacleEdges = std::make_unique<ObstacleEdgesSprite>(sysProxy);
+	}
+
+	m_obstacleEdges->pushCorner(PointF::zero());
+	updateObstacleEdgesSprite();
+}
+
+void StageEditorController::addObstacleSprite(EditorOID oid)
+{
+	auto newSprite = std::make_unique<ObstacleSprite>(sysProxy);
+	m_obstacleSprites[oid] = std::move(newSprite);
+	updateObstacleSprite(oid);
+}
+
 void StageEditorController::startedEvent()
 {
 	createSprites();
 
-	m_activeTool = TOOL_PLAYERS;
+	m_activeTool = TOOL_OBSTACLES;
 }
 
 void StageEditorController::mouseBtnDownEvent(MouseBtn btn, int x, int y)
@@ -465,6 +573,16 @@ void StageEditorController::paintEvent(std::shared_ptr<ICanvas> canvas,
 {
 	// Grid
 	m_gridSprite->repaint(canvas, invalidRect);
+
+	// Open obstacle
+	if (m_obstacleEdges != nullptr) {
+		m_obstacleEdges->repaint(canvas, invalidRect);
+	}
+
+	// Obstacles
+	for (auto& obstacleSprite : m_obstacleSprites) {
+		obstacleSprite.second->repaint(canvas, invalidRect);
+	}
 
 	// Player objects
 	for (auto& playerSprite : m_playerSprites) {
