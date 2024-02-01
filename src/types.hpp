@@ -369,7 +369,7 @@ struct PointGeneric {
 	}
 
 	constexpr bool operator== (const PointGeneric<T>& rhs) const {
-		return (this->x == rhs.x && this->y = rhs.y);
+		return (this->x == rhs.x && this->y == rhs.y);
 	}
 
 	/**
