@@ -733,23 +733,24 @@ typedef RectGeneric<double> RectF;
  * @brief Three-corner polygon (floating point coordinates).
  */
 struct TriangleF {
-	typedef PointF::ValueType ValueType;
+	typedef PointF CornerType;
+	typedef CornerType::ValueType ValueType;
 
 	// In case you didn't know, triangle has 3 corners...
 	static constexpr int CORNER_COUNT = 3;
 
-	std::array<PointF, CORNER_COUNT> corners;
+	std::array<CornerType, CORNER_COUNT> corners;
 
-	constexpr TriangleF(const PointF& pA, const PointF& pB, const PointF& pC)
+	constexpr TriangleF(const CornerType& pA, const CornerType& pB, const CornerType& pC)
 		: corners{pA, pB, pC}
 	{}
 
-	constexpr TriangleF(const PointF (&corners)[3])
+	constexpr TriangleF(const CornerType (&corners)[3])
 		: TriangleF(corners[0], corners[1], corners[2])
 	{}
 
 	constexpr TriangleF()
-		: TriangleF(PointF::zero(), PointF::zero(), PointF::zero())
+		: TriangleF(CornerType::zero(), CornerType::zero(), CornerType::zero())
 	{}
 
 	/**
@@ -779,9 +780,11 @@ struct TriangleF {
  * @brief Polygon (floating point coordinates).
  */
 struct PolygonF {
-	typedef PointF::ValueType ValueType;
+	typedef PointF CornerType;
+	typedef CornerType::ValueType ValueType;
+	typedef std::vector<CornerType> CollectionType;
 
-	std::vector<PointF> corners;
+	CollectionType corners;
 
 	constexpr PolygonF() {}
 
@@ -815,8 +818,8 @@ struct PolygonF {
 		}
 	}
 
-	constexpr PolygonF(std::vector<PointF>&& corners)
-		: corners{corners}
+	constexpr PolygonF(CollectionType&& corners)
+		: corners{std::move(corners)}
 	{}
 
 	/**
