@@ -42,7 +42,7 @@ StageViewport::StageViewport(const Size2dF& stageSize, const Size2dF& dstSize)
 void StageViewport::setStagePos(PointF::ValueType x, PointF::ValueType y)
 {
 	// We consider the stage position to be always [0,0], so instead of moving
-	// the stage, we basically just move the camera.
+	// the stage, we basically just move the "camera".
 	// If we want to move the stage to the right, we need to move the camera to
 	// the left. If we want to move the stage up, we must move the camera down.
 
@@ -71,7 +71,7 @@ void StageViewport::setStageSize(const Size2dF& size)
 	pullLeash();
 }
 
-PointF StageViewport::dstToSrc(const PointF& p)
+PointF StageViewport::screenToStage(const PointF& p)
 {
 	PointF res = p;
 
@@ -86,16 +86,16 @@ PointF StageViewport::dstToSrc(const PointF& p)
 	return res;
 }
 
-RectF StageViewport::dstToSrc(const RectF& r)
+RectF StageViewport::screenToStage(const RectF& r)
 {
 	RectF res(
-		dstToSrc(r.getTopLeft()),
-		dstToSrc(r.getBottomRight())
+		screenToStage(r.getTopLeft()),
+		screenToStage(r.getBottomRight())
 	);
 	return res;
 }
 
-PointF StageViewport::srcToDst(const PointF& p)
+PointF StageViewport::stageToScreen(const PointF& p)
 {
 	// Relative to [0, 0] of the stage
 	PointF res = p.relativeTo(m_srcRect.getTopLeft());
@@ -107,11 +107,11 @@ PointF StageViewport::srcToDst(const PointF& p)
 	return res;
 }
 
-RectF StageViewport::srcToDst(const RectF& r)
+RectF StageViewport::stageToScreen(const RectF& r)
 {
 	RectF res(
-		srcToDst(r.getTopLeft()),
-		srcToDst(r.getBottomRight())
+		stageToScreen(r.getTopLeft()),
+		stageToScreen(r.getBottomRight())
 	);
 	return res;
 }
@@ -126,9 +126,9 @@ void StageViewport::beginDrag(const PointF& where)
 void StageViewport::doDrag(const PointF& where)
 {
 	if (m_isDragging) {
-		// Vector `dragBegin` -> `where`
+		// Vector `dragBegin -> where`
 		PointF dragRelToBegin = where.relativeTo(m_dragBegin);
-		// Project the vector to workspace plane
+		// Project the vector to stage space
 		PointF dragMinusZoom(
 			dragRelToBegin.x / m_zoom,
 			dragRelToBegin.y / m_zoom
@@ -163,11 +163,12 @@ void StageViewport::setZoom(const PointF& towards, ZoomType newZoom)
 
 	// Notice that the rectangle is not normalized, i.e., has negative dimensions.
 	RectF offsetRect(towards, PointF::zero());
-	// After this operation the X and Y position of the rectangle will be the `towards`
-	// point projected to the "stage". By changing the size of this rectangle afterwrds,
-	// we are finding the new position for the src rect -- the `bottomRight` property
-	// of `offsetRect` will be our new position (topLeft) of the src rect.
-	offsetRect = dstToSrc(offsetRect);
+	// After this operation the X and Y position of the rectangle will be the
+	// `towards` point projected to the stage space. By changing the size of
+	// this rectangle afterwrds, we are finding the new position for the src
+	// rect -- the `bottomRight` property of `offsetRect` will be our new
+	// position (topLeft) of the src rect.
+	offsetRect = screenToStage(offsetRect);
 	offsetRect.w *= zoomRatio;
 	offsetRect.h *= zoomRatio;
 
@@ -219,6 +220,8 @@ StageViewport::ZoomType StageViewport::getZoom() const
 
 Matrix3x3 StageViewport::getProjectionToScreenMatrix() const
 {
+	// First translate ("move it to the grid"), then scale ("apply zoom")
+
 	// |  1  0  0 |   | sx  0  0 |   |    sx     0     0 |
 	// |  0  1  0 | x |  0 sy  0 | = |     0    sy     0 |
 	// | tx ty  1 |   |  0  0  1 |   | sx*tx sy*ty     1 |
@@ -230,8 +233,10 @@ Matrix3x3 StageViewport::getProjectionToScreenMatrix() const
 	return res;
 }
 
-Matrix3x3 StageViewport::getProjectionToWorkspaceMatrix() const
+Matrix3x3 StageViewport::getProjectionToStageMatrix() const
 {
+	// First scale ("remove zoom"), then translate ("move from grid to stage")
+
 	// | sx  0  0 |   |  1  0  0 |   | sx  0  0 |
 	// |  0 sy  0 | x |  0  1  0 | = |  0 sy  0 |
 	// |  0  0  1 |   | tx ty  1 |   | tx ty  1 |

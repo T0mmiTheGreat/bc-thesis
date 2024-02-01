@@ -12,6 +12,41 @@
 #ifndef COMMON_HPP
 #define COMMON_HPP
 
+/*
+	Naming:
+	+-------------------------------------------------+
+	| menubar                                         |
+	+---+---------------------------------------------+
+	| t |                                             |
+	| o |                                             |
+	| o |                                             |
+	| l |                 workspace                   |
+	| b |                                             |
+	| a |                                             |
+	| r |                                             |
+	+---+---------------------------------------------+
+	| statusbar                                       |
+	+-------------------------------------------------+
+
+	- The coordinate system of the screen shall be referred to as "screen
+	  space".
+	- The coordinate system where the stage objects are stored shall be
+	  referred to as "stage space".
+
+	- "Projection to workspace" is conversion from stage space to screen space
+	  with the screen coordinate system origin being the top left corner of
+	  the workspace.
+	- "Projection to screen space" is conversion from stage space to screen
+	  space with the screen coordinate system origin being the top left corner
+	  of the screen.
+	- "Projection to stage space" is conversion from screen space to stage
+	  space. Unless explicitly stated, the screen coordinate system origin shall
+	  be the top left corner of the workspace.
+
+	- "Stage position" is the position of the stage grid within workspace in the
+	  screen space coordinates.
+*/
+
 /**
  * @brief Editor object ID.
  * 

@@ -108,8 +108,8 @@ private:
 	std::unordered_map<EditorOID, std::unique_ptr<PlayerSprite>> m_playerSprites;
 	std::unordered_map<EditorOID, std::unique_ptr<ObstacleSprite>> m_obstacleSprites;
 
-	// Will be created and destroyed repeatedly. Checking for `nullptr` should
-	// be done.
+	// Will be created and destroyed repeatedly. Checking for `nullptr` is
+	// recommended.
 	std::unique_ptr<ObstacleEdgesSprite> m_obstacleEdges;
 #pragma endregion sprites
 

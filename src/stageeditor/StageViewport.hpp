@@ -21,13 +21,12 @@ class StageViewport {
 public:
 	typedef double ZoomType;
 private:
-	// Projection of the visible portion of workspace on the screen to the
-	// workspace plane
+	// Projection of the workspace to the stage space
 	RectF m_srcRect;
-	// Size of the visible portion of workspace on the screen
+	// Size of the workspace
 	Size2dF m_dstSize;
 	Size2dF m_stageSize;
-	// The drag origin, within the screen plane
+	// The drag origin, within the screen space
 	PointF m_dragBegin;
 	// The position of src rect at the moment when the dragging started
 	PointF m_srcRectBegin;
@@ -37,12 +36,12 @@ private:
 	/**
 	 * @brief Ensures that the user doesn't go too far away from the stage area.
 	 * 
-	 * @details The visible portion of workspace and the stage area must have
-	 *          at least one common point -- a corner. For example:
+	 * @details The workspace are and the stage area must have at least one
+	 *          common point -- a corner. For example:
 	 * 
 	 *          +------+             +------+
-	 *          |  ws  |             |  sa  +------+
-	 *          +------+------+      |      |  ws  |
+	 *          |  wa  |             |  sa  +------+
+	 *          +------+------+      |      |  wa  |
 	 *                 |  sa  |      +------+------+
 	 *                 |      |
 	 *                 +------+
@@ -62,7 +61,7 @@ public:
 	 * @brief Constructs a new StageViewport object.
 	 * 
 	 * @param stageSize Size of the stage.
-	 * @param dstSize Size of the area designated for the workspace.
+	 * @param dstSize Size of the workspace.
 	 */
 	StageViewport(const Size2dF& stageSize, const Size2dF& dstSize);
 
@@ -89,29 +88,27 @@ public:
 	void setStageSize(const Size2dF& size);
 
 	/**
-	 * @brief Projects the point from the screen plane to the workspace plane.
+	 * @brief Projects the point from the screen space to the stage space.
 	 */
-	PointF dstToSrc(const PointF& p);
+	PointF screenToStage(const PointF& p);
 	/**
-	 * @brief Projects the rectangle from the screen plane to the workspace
-	 *        plane.
+	 * @brief Projects the rectangle from the screen space to the stage space.
 	 */
-	RectF dstToSrc(const RectF& r);
+	RectF screenToStage(const RectF& r);
 	/**
-	 * @brief Projects the point from the workspace plane to the screen plane.
+	 * @brief Projects the point from the stage space to the screen space.
 	 */
-	PointF srcToDst(const PointF& p);
+	PointF stageToScreen(const PointF& p);
 	/**
-	 * @brief Projects the rectangle from the workspace plane to the screen
-	 *        plane.
+	 * @brief Projects the rectangle from the stage space to the screen space.
 	 */
-	RectF srcToDst(const RectF& r);
+	RectF stageToScreen(const RectF& r);
 
 	/**
 	 * @brief Begins the dragging operation.
 	 * 
 	 * @param where The point where the dragging started within the screen
-	 *              plane. This can be completely arbitrary point as long as
+	 *              space. This can be completely arbitrary point as long as
 	 *              the way it's obtained is the same as for the subsequent
 	 *              calls to `doDrag()`. For example, you can pass the absolute
 	 *              position of the mouse if you also pass it to the `doDrag()`
@@ -143,14 +140,13 @@ public:
 	/**
 	 * @brief Sets zoom value.
 	 * 
-	 * @param towards The point on the screen plane to zoom towards.
+	 * @param towards The point in the screen space to zoom towards.
 	 * @param newZoom New zoom value. 1 means normal size, 2 means double size,
 	 *                etc. Must not be 0.
 	 */
 	void setZoom(const PointF& towards, ZoomType newZoom);
 	/**
-	 * @brief Zooms towards or away from the center of the visible portion of
-	 *        workspace.
+	 * @brief Zooms towards or away from the center of the workspace.
 	 * 
 	 * @param newZoom New zoom value. 1 means normal size, 2 means double size,
 	 *                etc. Must not be 0.
@@ -159,7 +155,7 @@ public:
 	/**
 	 * @brief Increases zoom value.
 	 * 
-	 * @param towards The point on the screen plane to zoom towards.
+	 * @param towards The point in the screen space to zoom towards.
 	 * @param factor The zoom factor. Zooming in is multiplying the zoom value
 	 *               by a factor. A factor of 2 makes every object twice as big
 	 *               as with the previous zoom value. Values between 0 and 1
@@ -167,7 +163,7 @@ public:
 	 */
 	void zoomIn(const PointF& towards, ZoomType factor = DEFAULT_ZOOM_FACTOR);
 	/**
-	 * @brief Zooms towards the center of the visible portion of workspace.
+	 * @brief Zooms towards the center of the workspace.
 	 * 
 	 * @param factor The zoom factor. Zooming in is multiplying the zoom value
 	 *               by a factor. A factor of 2 makes every object twice as big
@@ -178,7 +174,7 @@ public:
 	/**
 	 * @brief Decreases zoom value.
 	 * 
-	 * @param towards The point on the screen plane to zoom away from.
+	 * @param towards The point in the screen space to zoom away from.
 	 * @param factor The zoom divisor. Zooming out is dividing the zoom value
 	 *               by a divisor. A divisor of 2 makes every object twice as
 	 *               small as with the previous zoom value. Values between
@@ -186,7 +182,7 @@ public:
 	 */
 	void zoomOut(const PointF& towards, ZoomType factor = DEFAULT_ZOOM_FACTOR);
 	/**
-	 * @brief Zooms away from the center of the visible portion of workspace.
+	 * @brief Zooms away from the center of the workspace.
 	 * 
 	 * @param factor The zoom divisor. Zooming out is dividing the zoom value
 	 *               by a divisor. A divisor of 2 makes every object twice as
@@ -198,8 +194,7 @@ public:
 	/**
 	 * @brief Getter for the src rect read-only property.
 	 * 
-	 * @details Src rect is the projection of the visible portion of workspace
-	 *          on the screen to the workspace plane.
+	 * @details Src rect is the projection of the workspace stage space.
 	 */
 	RectF getSrcRect() const;
 	/**
@@ -207,15 +202,15 @@ public:
 	 */
 	ZoomType getZoom() const;
 	/**
-	 * @brief Creates a transformation matrix for conversion from workspace to
-	 *        screen plane.
+	 * @brief Creates a transformation matrix for conversion from stage space to
+	 *        workspace.
 	 */
 	Matrix3x3 getProjectionToScreenMatrix() const;
 	/**
-	 * @brief Creates a transformation matrix for conversion from screen to
-	 *        workspace plane.
+	 * @brief Creates a transformation matrix for conversion from workspace to
+	 *        stage space.
 	 */
-	Matrix3x3 getProjectionToWorkspaceMatrix() const;
+	Matrix3x3 getProjectionToStageMatrix() const;
 };
 
 #endif // STAGEVIEWPORT_HPP

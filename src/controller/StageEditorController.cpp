@@ -288,7 +288,7 @@ void StageEditorController::mouseBtnDownWorkspaceToolPlayers(MouseBtn btn,
 		Point mouseRel = mouse.relativeTo(workspaceRect.getTopLeft());
 
 		PointF mouseProj = static_cast<PointF>(mouseRel);
-		mouseProj.transform(m_viewport.getProjectionToWorkspaceMatrix());
+		mouseProj.transform(m_viewport.getProjectionToStageMatrix());
 		
 		m_stageEditor.addPlayer(mouseProj.x, mouseProj.y, StageEditor::SNAP_NONE);
 		
@@ -305,7 +305,7 @@ void StageEditorController::mouseBtnDownWorkspaceToolObstacles(MouseBtn btn,
 		Point mouseRel = mouse.relativeTo(workspaceRect.getTopLeft());
 
 		PointF mouseProj = static_cast<PointF>(mouseRel);
-		mouseProj.transform(m_viewport.getProjectionToWorkspaceMatrix());
+		mouseProj.transform(m_viewport.getProjectionToStageMatrix());
 
 		m_stageEditor.addObstacleCorner(mouseProj.x, mouseProj.y, StageEditor::SNAP_NONE);
 
