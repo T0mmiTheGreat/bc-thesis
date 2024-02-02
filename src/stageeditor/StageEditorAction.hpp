@@ -35,9 +35,11 @@
 class StageEditorAction {
 public:
 	enum ActionType {
+		ACTION_NONE,
 		ACTION_ADD_PLAYER,
 		ACTION_PLACE_OBSTACLE_CORNER,
 		ACTION_COMPLETE_OBSTACLE,
+		ACTION_ACTIVATE_TOOL,
 	};
 
 	virtual ~StageEditorAction() {}
@@ -46,6 +48,21 @@ public:
 	 * @brief Returns the action type.
 	 */
 	virtual ActionType getType() const = 0;
+};
+
+/**
+ * @brief No action was performed.
+ * 
+ * @details Pretty sure this will find its use.
+ */
+class StageEditorActionNone : public StageEditorAction {
+public:
+	/**
+	 * @brief Returns the action type.
+	 */
+	ActionType getType() const override {
+		return ACTION_NONE;
+	}
 };
 
 /**
@@ -150,6 +167,43 @@ public:
 	 */
 	EditorOID getOid() const {
 		return m_oid;
+	}
+};
+
+class StageEditorActionActivateTool : public StageEditorAction {
+private:
+	EditorTool m_oldTool;
+	EditorTool m_newTool;
+public:
+	/**
+	 * @brief Constructs a new StageEditorActionActivateTool object.
+	 * 
+	 * @param oldTool The tool which was replaced.
+	 * @param newTool The activated tool.
+	 */
+	StageEditorActionActivateTool(EditorTool oldTool, EditorTool newTool)
+		: m_oldTool{oldTool}
+		, m_newTool{newTool}
+	{}
+
+	/**
+	 * @brief Returns the action type.
+	 */
+	ActionType getType() const override {
+		return ACTION_ACTIVATE_TOOL;
+	}
+
+	/**
+	 * @brief The tool which was replaced.
+	 */
+	EditorTool getPrevTool() const {
+		return m_oldTool;
+	}
+	/**
+	 * @brief The activated tool.
+	 */
+	EditorTool getNewTool() const {
+		return m_newTool;
 	}
 };
 

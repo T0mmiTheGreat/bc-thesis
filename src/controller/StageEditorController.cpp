@@ -97,40 +97,6 @@ void StageEditorController::positionSprites()
 	m_statusBarSprite->setBorders(false, true, false, false);
 }
 
-Rect StageEditorController::getMenuIconRect(int iconIdx)
-{
-	// Get the menu bar position
-	Rect menubarRect = getMenubarRect();
-	Rect res(
-		menubarRect.x + MENUICONS_LEFT_MARGIN, // Add left margin
-		menubarRect.y + MENUICONS_TOP_MARGIN,  // Add top margin
-		MENUICONS_WIDTH, // Set width
-		MENUICONS_HEIGHT // Set height
-	);
-	// Skip preceding icons
-	res.x += iconIdx * (MENUICONS_WIDTH + MENUICONS_SPACING);
-	return res;
-}
-
-Rect StageEditorController::getToolIconRect(int iconIdx)
-{
-	// Get the tool bar position
-	Rect toolbarRect = getToolbarRect();
-	Rect res(
-		toolbarRect.x + TOOLICONS_LEFT_MARGIN, // Add left margin
-		toolbarRect.y + TOOLICONS_TOP_MARGIN,  // Add top margin
-		MENUICONS_WIDTH, // Set width
-		MENUICONS_HEIGHT // Set height
-	);
-	// Skip icons on the left
-	res.x += (iconIdx % TOOLBAR_ITEM_COLUMNS) * (TOOLICONS_WIDTH + TOOLICONS_HORZ_SPACING);
-	// Skip rows
-	// Note: currently there is only one row (3 columns, 3 icons). If this
-	// changes in the future, this note should be deleted
-	res.y += (iconIdx / TOOLBAR_ITEM_COLUMNS) * (TOOLICONS_HEIGHT + TOOLICONS_VERT_SPACING);
-	return res;
-}
-
 void StageEditorController::mouseMoveMenubar(int x, int y)
 {
 	checkMenuIconMouseHover(x, y);
@@ -156,6 +122,7 @@ void StageEditorController::mouseBtnDownMenubar(MouseBtn btn, int x, int y)
 
 void StageEditorController::mouseBtnDownToolbar(MouseBtn btn, int x, int y)
 {
+	checkToolIconClick(x, y);
 }
 
 void StageEditorController::mouseBtnDownStatusbar(MouseBtn btn, int x, int y)
@@ -263,6 +230,18 @@ void StageEditorController::checkWorkspaceDoDrag(int x, int y)
 	}
 }
 
+void StageEditorController::checkToolIconClick(int x, int y)
+{
+	Point mouse(x, y);
+
+	for (int iconIdx = 0; iconIdx < TOOLICON_COUNT; iconIdx++) {
+		if (getToolIconRect(iconIdx).containsPoint(mouse)) {
+			activateTool(iconIdxToTool(iconIdx));
+			break;
+		}
+	}
+}
+
 void StageEditorController::addPlayerObject(int x, int y)
 {
 	// Get the transformation matrix
@@ -328,6 +307,27 @@ void StageEditorController::iconHighlightOffAll()
 	for (auto& icon : m_toolIcons) {
 		iconHighlightOff(icon);
 	}
+}
+
+void StageEditorController::setActiveTool(EditorTool tool)
+{
+	int iconIdx = toolToIconIdx(tool);
+
+	m_activeTool = tool;
+	m_toolIcons[iconIdx]->setCostume(EditorIconSprite::COSTUME_SELECTED);
+}
+
+void StageEditorController::activateTool(EditorTool tool)
+{
+	EditorTool& oldTool = m_activeTool;
+	EditorTool& newTool = tool;
+	int oldIconIdx = toolToIconIdx(oldTool);
+
+	m_toolIcons[oldIconIdx]->setCostume(EditorIconSprite::COSTUME_NORMAL);
+
+	m_stageEditor.activateTool(oldTool, newTool);
+
+	setActiveTool(newTool);
 }
 
 void StageEditorController::updateSpritesByBackend()
@@ -541,11 +541,72 @@ Rect StageEditorController::getWorkspaceRect()
 	return res;
 }
 
+Rect StageEditorController::getMenuIconRect(int iconIdx)
+{
+	// Get the menu bar position
+	Rect menubarRect = getMenubarRect();
+	Rect res(
+		menubarRect.x + MENUICONS_LEFT_MARGIN, // Add left margin
+		menubarRect.y + MENUICONS_TOP_MARGIN,  // Add top margin
+		MENUICONS_WIDTH, // Set width
+		MENUICONS_HEIGHT // Set height
+	);
+	// Skip preceding icons
+	res.x += iconIdx * (MENUICONS_WIDTH + MENUICONS_SPACING);
+	return res;
+}
+
+Rect StageEditorController::getToolIconRect(int iconIdx)
+{
+	// Get the tool bar position
+	Rect toolbarRect = getToolbarRect();
+	Rect res(
+		toolbarRect.x + TOOLICONS_LEFT_MARGIN, // Add left margin
+		toolbarRect.y + TOOLICONS_TOP_MARGIN,  // Add top margin
+		MENUICONS_WIDTH, // Set width
+		MENUICONS_HEIGHT // Set height
+	);
+	// Skip icons on the left
+	res.x += (iconIdx % TOOLBAR_ITEM_COLUMNS) * (TOOLICONS_WIDTH + TOOLICONS_HORZ_SPACING);
+	// Skip rows
+	// Note: currently there is only one row (3 columns, 3 icons). If this
+	// changes in the future, this note should be deleted
+	res.y += (iconIdx / TOOLBAR_ITEM_COLUMNS) * (TOOLICONS_HEIGHT + TOOLICONS_VERT_SPACING);
+	return res;
+}
+
+int StageEditorController::toolToIconIdx(EditorTool tool)
+{
+	switch (tool) {
+		case TOOL_SELECT: return TOOLICON_SELECT_IDX;
+		case TOOL_PLAYERS: return TOOLICON_PLAYER_IDX;
+		case TOOL_OBSTACLES: return TOOLICON_OBSTACLE_IDX;
+		// Don't place the `default` label, or else the compiler won't produce
+		// a warning when there are some enum values missing
+	}
+
+	// Default
+	return -1;
+}
+
+EditorTool StageEditorController::iconIdxToTool(int iconIdx)
+{
+	assert(0 <= iconIdx && iconIdx < TOOLICON_COUNT);
+
+	switch (iconIdx) {
+		case TOOLICON_SELECT_IDX: return TOOL_SELECT;
+		case TOOLICON_PLAYER_IDX: return TOOL_PLAYERS;
+		case TOOLICON_OBSTACLE_IDX: return TOOL_OBSTACLES;
+		// Inaccessible, but need to get rid of the warning
+		default: return EditorTool(-1);
+	}
+}
+
 void StageEditorController::startedEvent()
 {
 	createSprites();
 
-	m_activeTool = TOOL_OBSTACLES;
+	setActiveTool(TOOL_SELECT);
 }
 
 void StageEditorController::mouseBtnDownEvent(MouseBtn btn, int x, int y)

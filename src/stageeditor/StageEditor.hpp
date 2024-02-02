@@ -60,6 +60,16 @@ public:
 	 */
 	const std::shared_ptr<StageEditorAction> getLastAction();
 	/**
+	 * @brief Sets active tool.
+	 * 
+	 * @param oldTool The tool which was replaced.
+	 * @param newTool The activated tool.
+	 * 
+	 * @remark Activation of a tool is an action and must be recorded in the
+	 *         action history so it can be undone.
+	 */
+	void activateTool(EditorTool oldTool, EditorTool newTool);
+	/**
 	 * @brief Adds a player object to the stage.
 	 * 
 	 * @param x Approximate X coordiante of the player object.

@@ -57,6 +57,12 @@
  */
 typedef size_t EditorOID;
 
+enum EditorTool {
+	TOOL_SELECT = 0,
+	TOOL_PLAYERS,
+	TOOL_OBSTACLES,
+};
+
 
 // Number of units taken by half of a player sprite in the editor
 constexpr double EDITOR_PLAYER_RADIUS = 50.0;

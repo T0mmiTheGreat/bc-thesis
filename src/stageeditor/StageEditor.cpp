@@ -73,6 +73,7 @@ StageEditor::StageEditor()
 		.width = STAGE_WIDTH_INITIAL,
 		.height = STAGE_HEIGHT_INITIAL,
 	}
+	, m_lastAction{std::make_shared<StageEditorActionNone>()}
 {}
 
 const StageState& StageEditor::getState()
@@ -83,6 +84,12 @@ const StageState& StageEditor::getState()
 const std::shared_ptr<StageEditorAction> StageEditor::getLastAction()
 {
 	return m_lastAction;
+}
+
+void StageEditor::activateTool(EditorTool oldTool, EditorTool newTool)
+{
+	m_lastAction = std::make_shared<StageEditorActionActivateTool>(oldTool, newTool);
+	m_history.pushAction(m_lastAction);
 }
 
 void StageEditor::addPlayer(double x, double y, ObjectSnap snapping)

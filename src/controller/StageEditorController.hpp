@@ -32,12 +32,6 @@
 
 class StageEditorController : public GeneralControllerBase {
 private:
-	enum EditorTool {
-		TOOL_SELECT = 0,
-		TOOL_PLAYERS,
-		TOOL_OBSTACLES,
-	};
-private:
 #pragma region constants
 	static constexpr int MENUICON_NEW_IDX = 0;
 	static constexpr int MENUICON_OPEN_IDX = MENUICON_NEW_IDX + 1;
@@ -169,6 +163,8 @@ private:
 	void checkToolIconMouseHover(int x, int y);
 	void checkWorkspaceDoDrag(int x, int y);
 
+	void checkToolIconClick(int x, int y);
+
 	void addPlayerObject(int x, int y);
 	void addObstacleCorner(int x, int y);
 	void completeObstacleObject();
@@ -186,6 +182,22 @@ private:
 	 *        COSTUME_NORMAL.
 	 */
 	void iconHighlightOffAll();
+
+	/**
+	 * @brief Sets the active tool.
+	 * 
+	 * @details The difference from `activateTool()` is that this method
+	 *          is not an action, so it won't modify the action history. Also,
+	 *          it won't modify the sprite of the previous selected tool.
+	 */
+	void setActiveTool(EditorTool tool);
+	/**
+	 * @brief Activates a tool.
+	 * 
+	 * @details Deactivates the previous one, modifies the action history,
+	 *          calls `setActiveTool()`.
+	 */
+	void activateTool(EditorTool tool);
 
 	/**
 	 * @brief Updates all sprites after a change in backend (StageEditor).
@@ -241,6 +253,9 @@ private:
 	Rect getWorkspaceRect();
 	Rect getMenuIconRect(int iconIdx);
 	Rect getToolIconRect(int iconIdx);
+
+	static int toolToIconIdx(EditorTool tool);
+	static EditorTool iconIdxToTool(int iconIdx);
 public:
 	StageEditorController(std::shared_ptr<ISysProxy> sysProxy);
 	void startedEvent() override;
