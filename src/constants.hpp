@@ -33,6 +33,7 @@
 #define IMAGE_PATH_ICON_SAVE_AS       IMAGES_PATH "save-as.png"
 #define IMAGE_PATH_ICON_UNDO          IMAGES_PATH "undo.png"
 #define IMAGE_PATH_ICON_REDO          IMAGES_PATH "redo.png"
+#define IMAGE_PATH_ICON_TRASH_CAN     IMAGES_PATH "trash-can.png"
 #define IMAGE_PATH_ICON_SELECT_TOOL   IMAGES_PATH "select-tool.png"
 #define IMAGE_PATH_ICON_PLAYER_TOOL   IMAGES_PATH "player-tool.png"
 #define IMAGE_PATH_ICON_OBSTACLE_TOOL IMAGES_PATH "obstacle-tool.png"

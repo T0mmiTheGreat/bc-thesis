@@ -29,6 +29,7 @@ void StageEditorController::createSprites()
 	m_menuIcons[MENUICON_SAVE_AS_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_SAVE_AS);
 	m_menuIcons[MENUICON_UNDO_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_UNDO);
 	m_menuIcons[MENUICON_REDO_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_REDO);
+	m_menuIcons[MENUICON_TRASH_CAN_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_TRASH_CAN);
 
 	// Menubar line
 	m_menuBarSprite = std::make_unique<OptionBarSprite>(sysProxy);
