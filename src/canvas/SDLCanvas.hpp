@@ -28,6 +28,16 @@ private:
 		std::vector<Sint16>& vy);
 	void fillPolygonInternal(const Sint16* vx, const Sint16* vy, int n);
 	void strokePolygonInternal(const Sint16* vx, const Sint16* vy, int n);
+
+	/**
+	 * @brief Calls SDL_SetRenderDrawBlendMode() based on the stroking color.
+	 */
+	void updateBlendModeByStroke();
+	/**
+	 * @brief Calls SDL_SetRenderDrawBlendMode() based on the filling color.
+	 */
+	void updateBlendModeByFill();
+	void setBlendModeByColor(const Color& color);
 protected:
 	Size2d getImageSize(ImageId img) override;
 public:

@@ -33,6 +33,7 @@ void SDLCanvas::fillPolygonInternal(const Sint16* vx, const Sint16* vy, int n)
 {
 	SDL2pp::Color cl = fillToColor();
 
+	updateBlendModeByFill();
 	filledPolygonRGBA(
 		SDLManager::get().renderer.Get(),
 		vx, vy, n,
@@ -44,11 +45,28 @@ void SDLCanvas::strokePolygonInternal(const Sint16* vx, const Sint16* vy, int n)
 {
 	SDL2pp::Color cl = strokeToColor();
 
+	updateBlendModeByStroke();
 	aapolygonRGBA(
 		SDLManager::get().renderer.Get(),
 		vx, vy, n,
 		cl.r, cl.g, cl.b, cl.a
 	);
+}
+
+void SDLCanvas::updateBlendModeByStroke()
+{
+	setBlendModeByColor(sColor);
+}
+
+void SDLCanvas::updateBlendModeByFill()
+{
+	setBlendModeByColor(fColor);
+}
+
+void SDLCanvas::setBlendModeByColor(const Color& color)
+{
+	SDL_BlendMode mode = (color.a == 0xff ? SDL_BLENDMODE_NONE : SDL_BLENDMODE_BLEND);
+	SDLManager::get().renderer.SetDrawBlendMode(mode);
 }
 
 Size2d SDLCanvas::getImageSize(ImageId img)
@@ -100,6 +118,7 @@ void SDLCanvas::setStrokingColor(Color color)
 void SDLCanvas::strokeLine(int x0, int y0, int x1, int y1)
 {
 	SDLManager::get().renderer.SetDrawColor(strokeToColor());
+	updateBlendModeByStroke();
 	SDLManager::get().renderer.DrawLine(
 		SDL2pp::Point(x0, y0),
 		SDL2pp::Point(x1, y1)
@@ -108,6 +127,7 @@ void SDLCanvas::strokeLine(int x0, int y0, int x1, int y1)
 
 void SDLCanvas::fillEllipse(int x, int y, int rx, int ry)
 {
+	updateBlendModeByFill();
 	filledEllipseRGBA(
 		SDLManager::get().renderer.Get(),
 		x, y, rx, ry,
@@ -117,6 +137,7 @@ void SDLCanvas::fillEllipse(int x, int y, int rx, int ry)
 
 void SDLCanvas::strokeEllipse(int x, int y, int rx, int ry)
 {
+	updateBlendModeByStroke();
 	aaellipseRGBA(
 		SDLManager::get().renderer.Get(),
 		x, y, rx, ry,
@@ -131,6 +152,7 @@ void SDLCanvas::drawEllipse(int x, int y, int rx, int ry)
 
 void SDLCanvas::fillCircle(int x, int y, int r)
 {
+	updateBlendModeByFill();
 	filledCircleRGBA(
 		SDLManager::get().renderer.Get(),
 		x, y, r,
@@ -140,6 +162,7 @@ void SDLCanvas::fillCircle(int x, int y, int r)
 
 void SDLCanvas::strokeCircle(int x, int y, int r)
 {
+	updateBlendModeByStroke();
 	aacircleRGBA(
 		SDLManager::get().renderer.Get(),
 		x, y, r,
@@ -155,12 +178,14 @@ void SDLCanvas::drawCircle(int x, int y, int r)
 void SDLCanvas::fillRectangle(int x, int y, int w, int h)
 {
 	SDLManager::get().renderer.SetDrawColor(fillToColor());
+	updateBlendModeByFill();
 	SDLManager::get().renderer.FillRect(SDL2pp::Rect(x, y, w, h));
 }
 
 void SDLCanvas::strokeRectangle(int x, int y, int w, int h)
 {
 	SDLManager::get().renderer.SetDrawColor(strokeToColor());
+	updateBlendModeByStroke();
 	SDLManager::get().renderer.DrawRect(SDL2pp::Rect(x, y, w, h));
 }
 
@@ -191,6 +216,8 @@ void SDLCanvas::fillText(int x, int y, const std::string& text, FontId font)
 	if (text.empty()) {
 		return;
 	}
+
+	updateBlendModeByFill();
 
 	// Get the font object
 	SDL2pp::Font& fontObj = SDLManager::get().getFont(font);
