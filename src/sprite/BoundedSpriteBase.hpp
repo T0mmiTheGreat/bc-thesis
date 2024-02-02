@@ -22,10 +22,6 @@
 class BoundedSpriteBase : virtual public SpriteBase {
 protected:
 	/**
-	 * @brief Returns the rectangle that represents the bounds of the sprite.
-	 */
-	virtual Rect getBounds() = 0;
-	/**
 	 * @brief Calls `invalidateRect()` with the sprite bounds as the parameter.
 	 * 
 	 * @details `sysProxy->invalidateRect(getBounds())`.
@@ -33,6 +29,10 @@ protected:
 	void invalidateBounds();
 public:
 	BoundedSpriteBase(std::shared_ptr<IPaintingProxy> paintingProxy);
+	/**
+	 * @brief Returns the rectangle that represents the bounds of the sprite.
+	 */
+	virtual Rect getBounds() = 0;
 	/**
 	 * @brief Repaints an area of sprite.
 	 * 

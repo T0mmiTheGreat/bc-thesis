@@ -21,13 +21,12 @@
 class ObstacleSprite : public BoundedSpriteBase {
 private:
 	PolygonF m_shape;
-protected:
+public:
+	ObstacleSprite(std::shared_ptr<IPaintingProxy> paintingProxy);
 	/**
 	 * @brief Returns the rectangle that represents the bounds of the sprite.
 	 */
 	Rect getBounds() override;
-public:
-	ObstacleSprite(std::shared_ptr<IPaintingProxy> paintingProxy);
 	/**
 	 * @brief Repaints an area of sprite.
 	 * 

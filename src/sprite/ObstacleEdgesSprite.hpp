@@ -24,14 +24,13 @@ private:
 	static constexpr Color STROKE_COLOR = Color::obstacle();
 
 	std::vector<PointF> m_corners;
-protected:
+public:
+	ObstacleEdgesSprite(std::shared_ptr<IPaintingProxy> paintingProxy);
+
 	/**
 	 * @brief Returns the rectangle that represents the bounds of the sprite.
 	 */
 	Rect getBounds() override;
-public:
-	ObstacleEdgesSprite(std::shared_ptr<IPaintingProxy> paintingProxy);
-
 	/**
 	 * @brief Repaints an area of sprite.
 	 * 
