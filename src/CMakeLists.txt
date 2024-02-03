@@ -64,6 +64,7 @@ set(SOURCE_FILES
 	playerstate/PlayerStateBase.cpp
 	playerstate/DefaultPlayerState.cpp
 	stageeditor/StageEditor.cpp
+	stageeditor/StageEditorObjects.cpp
 	stageeditor/StageState.cpp
 	stageeditor/StageViewport.cpp
 	stageeditor/StageEditorAction.cpp
@@ -138,6 +139,7 @@ set(HEADER_FILES
 	playerstate/DefaultPlayerState.hpp
 	stageeditor/Common.hpp
 	stageeditor/StageEditor.hpp
+	stageeditor/StageEditorObjects.hpp
 	stageeditor/StageState.hpp
 	stageeditor/StageViewport.hpp
 	stageeditor/StageEditorAction.hpp

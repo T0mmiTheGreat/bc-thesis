@@ -534,7 +534,7 @@ void StageEditorController::updatePlayerSprite(EditorOID oid)
 	tm *= Matrix3x3::createTranslation(-radius, -radius);
 
 	// Get the player position in stage space
-	PointF playerPos = m_stageEditor.getState().players.at(oid);
+	PointF playerPos = m_stageEditor.getState().players.at(oid).pos;
 	// Project to screen space
 	playerPos.transform(tm);
 
@@ -565,7 +565,7 @@ void StageEditorController::updateObstacleSprite(EditorOID oid)
 	Matrix3x3 tm = getStageToScreenMatrix();
 
 	// Get the obstacle in stage space
-	PolygonF obstacleObject = m_stageEditor.getState().obstacles.at(oid);
+	PolygonF obstacleObject = m_stageEditor.getState().obstacles.at(oid).shape;
 	// Project to screen space
 	obstacleObject.transform(tm);
 

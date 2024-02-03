@@ -40,7 +40,7 @@ void StageEditor::addPlayerInternal(const PointF& pos)
 {
 	EditorOID oid = generateEditorOID();
 
-	m_stageState.players[oid] = pos;
+	m_stageState.players.emplace(oid, StageEditorPlayerObject(oid, pos));
 	m_lastAction = std::make_shared<StageEditorActionAddPlayer>(pos, oid);
 	m_history.pushAction(m_lastAction);
 }
@@ -59,7 +59,8 @@ void StageEditor::completeObstacleInternal()
 		EditorOID oid = generateEditorOID();
 		PolygonF shape(std::move(m_obstacleCorners));
 
-		m_stageState.obstacles[oid] = std::move(shape);
+		m_stageState.obstacles.emplace(oid, StageEditorObstacleObject(oid,
+			std::move(shape)));
 
 		m_obstacleCorners = PolygonF::CollectionType();
 
@@ -72,9 +73,9 @@ EditorOID StageEditor::getPlayerObjectAt(const PointF& pos)
 {
 	for (const auto& playerObjPair : m_stageState.players) {
 		const EditorOID& oid = playerObjPair.first;
-		const PointF& playerPos = playerObjPair.second;
+		const StageEditorPlayerObject& player = playerObjPair.second;
 
-		if (pos.sqrDistance(playerPos) <= sqr(EDITOR_PLAYER_RADIUS)) {
+		if (player.containsPoint(pos)) {
 			return oid;
 		}
 	}
@@ -86,7 +87,7 @@ EditorOID StageEditor::getObstacleObjectAt(const PointF& pos)
 {
 	for (const auto& obstacleObjPair : m_stageState.obstacles) {
 		const EditorOID& oid = obstacleObjPair.first;
-		const PolygonF& obstacle = obstacleObjPair.second;
+		const StageEditorObstacleObject& obstacle = obstacleObjPair.second;
 
 		if (obstacle.containsPoint(pos)) {
 			return oid;

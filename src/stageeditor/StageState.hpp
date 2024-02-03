@@ -16,12 +16,13 @@
 
 #include "types.hpp"
 #include "stageeditor/Common.hpp"
+#include "stageeditor/StageEditorObjects.hpp"
 
 struct StageState {
 	int width;
 	int height;
-	std::unordered_map<EditorOID, PolygonF> obstacles;
-	std::unordered_map<EditorOID, PointF> players;
+	std::unordered_map<EditorOID, StageEditorObstacleObject> obstacles;
+	std::unordered_map<EditorOID, StageEditorPlayerObject> players;
 
 	Size2d getSize() const {
 		return Size2d(width, height);
