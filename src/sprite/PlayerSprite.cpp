@@ -56,3 +56,26 @@ void PlayerSprite::setRadius(int value)
 		invalidateBounds();
 	}
 }
+
+void PlayerSprite::setCenterX(int value)
+{
+	setX(value - getRadius());
+}
+
+void PlayerSprite::setCenterY(int value)
+{
+	setY(value - getRadius());
+}
+
+void PlayerSprite::setCenterPos(int x, int y)
+{
+	setPos(x - getRadius(), y - getRadius());
+}
+
+void PlayerSprite::setCenterPos(const Point& pos)
+{
+	Point p = pos;
+	p.x -= getRadius();
+	p.y -= getRadius();
+	setPos(p);
+}

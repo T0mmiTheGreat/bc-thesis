@@ -54,6 +54,23 @@ public:
 	 * @brief Setter for the player radius.
 	 */
 	void setRadius(int value);
+
+	/**
+	 * @brief Modifies the sprite X coordinate by setting the X of its center.
+	 */
+	void setCenterX(int value);
+	/**
+	 * @brief Modifies the sprite Y coordinate by setting the Y of its center.
+	 */
+	void setCenterY(int value);
+	/**
+	 * @brief Modifies the sprite position by setting the position of its center.
+	 */
+	void setCenterPos(int x, int y);
+	/**
+	 * @brief Modifies the sprite position by setting the position of its center.
+	 */
+	void setCenterPos(const Point& pos);
 };
 
 #endif // PLAYERSPRITE_HPP
