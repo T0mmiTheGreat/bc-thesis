@@ -369,8 +369,33 @@ struct PointGeneric {
 		offset(offsetPoint.x, offsetPoint.y);
 	}
 
+	/**
+	 * @brief Returns the squared distance between two points.
+	 * 
+	 * @remark The returned value is the square of the distance. The caller may
+	 *         apply square root on the returned value to get the actual
+	 *         distance, but they may not need to; if, for example, they need
+	 *         to check if the distance is less than some value, a more
+	 *         efficient solution would be to square the value instead of
+	 *         doing costly sqrt operation.
+	 */
+	constexpr double sqrDistance(const PointGeneric<T>& rhs) const {
+		return sqr(this->x - rhs.x) + sqr(this->y - rhs.y);
+	}
+
 	constexpr bool operator== (const PointGeneric<T>& rhs) const {
 		return (this->x == rhs.x && this->y == rhs.y);
+	}
+
+	constexpr PointGeneric<T> operator+ (const PointGeneric<T>& rhs) const {
+		PointGeneric<T> res = *this;
+		res.offset(rhs);
+		return res;
+	}
+
+	constexpr PointGeneric<T> operator- (const PointGeneric<T>& rhs) const {
+		PointGeneric<T> res = this->relativeTo(rhs);
+		return res;
 	}
 
 	/**
