@@ -872,6 +872,70 @@ struct PolygonF {
 	}
 
 	/**
+	 * @brief Returns true if a point is within the bounds of the polygon.
+	 * 
+	 * @remark Inclusive, i.e., returns true even if it lies on the polygon
+	 *         edge.
+	 */
+	constexpr bool containsPoint(const CornerType& pt) const {
+		// Ray casting algorithm -- cast a ray in any direction starting at the
+		// point, then count the number of intersections with the polygon
+		// borders. Odd count means that the point is inside the polygon, even
+		// means it's outside.
+		//
+		//     +----+
+		//    /     '------------+
+		//    \        +--+      |
+		// <~~~\~~~~~~/~~~~\~X   |
+		//      +----+      +----+
+		//
+		//   3 intersections => inside
+		//
+		// To make things easier, instead of ray we will use a line, then count
+		// the intersections only in one direction from the point. The line
+		// will be parallel to the X axis.
+
+		int intersectCount = 0;
+
+		CornerType p0, p1;
+
+		for (size_t cornIdx = 0; cornIdx < cornerCount(); cornIdx++) {
+			// Get the line segment of the edge
+			p0 = corners[cornIdx];
+			p1 = corners[(cornIdx + 1) % cornerCount()];
+			// Order the endpoints by Y coordinate
+			// `p0.y <= p1.y`
+			if (p1.y < p0.y) {
+				std::swap(p0, p1);
+			}
+
+			if (p0.y < pt.y && pt.y < p1.y) {
+				// The line intersects this edge. Also, the line and the edge
+				// are not collinear, because the edge is not parallel to the
+				// Y axis -- `p0.y < p1.y`
+
+				// v1 = p1 - p0
+				// v2 = pt - p0
+				// Make both vectors 3D with the Z coordinate = 0.
+				// v3 = v1 x v2 (cross product)
+				// v3 = (x, y, z) = (0, 0, (v1.x * v2.y) - (v1.y * v2.x))
+				// If z > 0, then the point is "to the right" of the line
+				// segment (edge). If z = 0, the point lies on it.
+
+				CornerType v1 = p1 - p0;
+				CornerType v2 = pt - p0;
+				ValueType crossProduct = (v1.x * v2.y) - (v1.y * v2.x);
+
+				if (crossProduct >= 0) {
+					intersectCount++;
+				}
+			}
+		}
+
+		return isOdd(intersectCount);
+	}
+
+	/**
 	 * @brief Triangulates a polygon (converts it to a collection of triangles).
 	 * 
 	 * @remark The polygon must be simple, i.e., without self-intersecting
