@@ -48,8 +48,6 @@ set(SOURCE_FILES
 	sprite/ObstacleEdgesSprite.cpp
 	sprite/ImageSprite.cpp
 	sprite/EditorIconSprite.cpp
-	sprite/HorizontalLineSprite.cpp
-	sprite/VerticalLineSprite.cpp
 	sprite/OptionBarSprite.cpp
 	sprite/StatusbarTextSprite.cpp
 	sprite/EditorWorkspaceGridSprite.cpp
@@ -116,8 +114,6 @@ set(HEADER_FILES
 	sprite/ObstacleEdgesSprite.hpp
 	sprite/ImageSprite.hpp
 	sprite/EditorIconSprite.hpp
-	sprite/HorizontalLineSprite.hpp
-	sprite/VerticalLineSprite.hpp
 	sprite/OptionBarSprite.hpp
 	sprite/StatusbarTextSprite.hpp
 	sprite/EditorWorkspaceGridSprite.hpp
