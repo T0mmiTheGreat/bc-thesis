@@ -17,10 +17,34 @@
 #include <type_traits>
 #include <vector>
 
-template<typename T>
+template <typename T>
+concept Scalar = std::is_scalar<T>::value;
+
+template <typename T>
+concept Integral = std::is_integral<T>::value;
+
+template <Scalar T>
 inline constexpr T sqr(T x)
 {
 	return x*x;
+}
+
+template <Integral T>
+inline constexpr bool isDivisibleBy(T divident, T divisor)
+{
+	return ((divident % divisor) == 0);
+}
+
+template <Integral T>
+inline constexpr bool isOdd(T x)
+{
+	return !isDivisibleBy(x, 2);
+}
+
+template <Integral T>
+inline constexpr bool isEven(T x)
+{
+	return isDivisibleBy(x, 2);
 }
 
 /**
@@ -28,7 +52,7 @@ inline constexpr T sqr(T x)
  * 
  * @tparam T Scalar type.
  */
-template <typename T>
+template <Scalar T>
 inline constexpr T roundToMultiple(T x, T y)
 {
 	if (std::is_integral_v<T>) {
