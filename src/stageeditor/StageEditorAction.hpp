@@ -12,6 +12,10 @@
 #ifndef STAGEEDITORACTION_HPP
 #define STAGEEDITORACTION_HPP
 
+#include <memory>
+#include <type_traits>
+#include <vector>
+
 #include "types.hpp"
 #include "stageeditor/Common.hpp"
 
@@ -36,10 +40,17 @@ class StageEditorAction {
 public:
 	enum ActionType {
 		ACTION_NONE,
+		ACTION_MULTIPLE,
 		ACTION_ADD_PLAYER,
 		ACTION_PLACE_OBSTACLE_CORNER,
 		ACTION_COMPLETE_OBSTACLE,
 		ACTION_ACTIVATE_TOOL,
+		ACTION_SELECT_PLAYER_OBJECT,
+		ACTION_SELECT_OBSTACLE_OBJECT,
+		ACTION_SELECT_OBSTACLE_CORNER,
+		ACTION_DESELECT_PLAYER_OBJECT,
+		ACTION_DESELECT_OBSTACLE_OBJECT,
+		ACTION_DESELECT_OBSTACLE_CORNER,
 	};
 
 	virtual ~StageEditorAction() {}
@@ -48,6 +59,58 @@ public:
 	 * @brief Returns the action type.
 	 */
 	virtual ActionType getType() const = 0;
+};
+
+/**
+ * @brief Class which inherits from StageEditorAction.
+ */
+template <class T>
+concept StageEditorActionDerived = std::is_base_of<StageEditorAction, T>::value;
+
+/**
+ * @brief Multiple actions performed at once.
+ * 
+ * @note The order of actions is significant.
+ */
+class StageEditorActionMultiple : public StageEditorAction {
+public:
+	typedef std::vector<std::shared_ptr<StageEditorAction>> ActionsCollection;
+private:
+	ActionsCollection m_actions;
+public:
+	/**
+	 * @brief Constructs a new StageEditorActionMultiple object.
+	 * 
+	 * @tparam Args Any descendant of StageEditorAction.
+	 * @param actions Any number of actions.
+	 */
+	template <StageEditorActionDerived... Args>
+	StageEditorActionMultiple(std::shared_ptr<Args>... actions) {
+		m_actions.reserve(sizeof...(actions));
+		(m_actions.push_back(actions), ...);
+	}
+
+	StageEditorActionMultiple(const ActionsCollection& actions)
+		: m_actions{actions}
+	{}
+
+	StageEditorActionMultiple(ActionsCollection&& actions)
+		: m_actions{std::move(actions)}
+	{}
+	
+	/**
+	 * @brief Returns the action type.
+	 */
+	ActionType getType() const override {
+		return ACTION_MULTIPLE;
+	}
+
+	/**
+	 * @brief The actions list (their order is significant).
+	 */
+	const ActionsCollection& getActions() const {
+		return m_actions;
+	}
 };
 
 /**
@@ -204,6 +267,141 @@ public:
 	 */
 	EditorTool getNewTool() const {
 		return m_newTool;
+	}
+};
+
+/**
+ * @brief Abstract class representing action of selection or deselection of
+ *        an object.
+ */
+class StageEditorActionSelectDeselectObject : public StageEditorAction {
+private:
+	EditorOID m_oid;
+public:
+	StageEditorActionSelectDeselectObject(EditorOID oid)
+		: m_oid{oid}
+	{}
+
+	/**
+	 * @brief The object which was selected or deselected.
+	 */
+	EditorOID getOid() const {
+		return m_oid;
+	}
+};
+
+/**
+ * @brief Abstract class representing action of selection or deselection of
+ *        an obstacle corner.
+ */
+class StageEditorActionSelectDeselectObstacleCorner : public StageEditorAction {
+private:
+	EditorOID m_obstacleOid;
+	unsigned m_cornerIdx;
+public:
+	StageEditorActionSelectDeselectObstacleCorner(EditorOID obstacleOid,
+		unsigned cornerIdx)
+		: m_obstacleOid{obstacleOid}
+		, m_cornerIdx{cornerIdx}
+	{}
+
+	/**
+	 * @brief OID of the obstacle which's corner was selected.
+	 */
+	EditorOID getObstacleOid() const {
+		return m_obstacleOid;
+	}
+	/**
+	 * @brief Index of the selected corner.
+	 */
+	unsigned getCornerIdx() const {
+		return m_cornerIdx;
+	}
+};
+
+class StageEditorActionSelectPlayerObject : public StageEditorActionSelectDeselectObject {
+public:
+	StageEditorActionSelectPlayerObject(EditorOID oid)
+		: StageEditorActionSelectDeselectObject(oid)
+	{}
+
+	/**
+	 * @brief Returns the action type.
+	 */
+	ActionType getType() const override {
+		return ACTION_SELECT_PLAYER_OBJECT;
+	}
+};
+
+class StageEditorActionSelectObstacleObject : public StageEditorActionSelectDeselectObject {
+public:
+	StageEditorActionSelectObstacleObject(EditorOID oid)
+		: StageEditorActionSelectDeselectObject(oid)
+	{}
+
+	/**
+	 * @brief Returns the action type.
+	 */
+	ActionType getType() const override {
+		return ACTION_SELECT_OBSTACLE_OBJECT;
+	}
+};
+
+class StageEditorActionSelectObstacleCorner : public StageEditorActionSelectDeselectObstacleCorner {
+public:
+	StageEditorActionSelectObstacleCorner(EditorOID obstacleOid,
+		unsigned cornerIdx)
+		: StageEditorActionSelectDeselectObstacleCorner(obstacleOid, cornerIdx)
+	{}
+
+	/**
+	 * @brief Returns the action type.
+	 */
+	ActionType getType() const override {
+		return ACTION_SELECT_OBSTACLE_CORNER;
+	}
+};
+
+class StageEditorActionDeselectPlayerObject : public StageEditorActionSelectDeselectObject {
+public:
+	StageEditorActionDeselectPlayerObject(EditorOID oid)
+		: StageEditorActionSelectDeselectObject(oid)
+	{}
+
+	/**
+	 * @brief Returns the action type.
+	 */
+	ActionType getType() const override {
+		return ACTION_DESELECT_PLAYER_OBJECT;
+	}
+};
+
+class StageEditorActionDeselectObstacleObject : public StageEditorActionSelectDeselectObject {
+public:
+	StageEditorActionDeselectObstacleObject(EditorOID oid)
+		: StageEditorActionSelectDeselectObject(oid)
+	{}
+
+	/**
+	 * @brief Returns the action type.
+	 */
+	ActionType getType() const override {
+		return ACTION_DESELECT_OBSTACLE_OBJECT;
+	}
+};
+
+class StageEditorActionDeselectObstacleCorner : public StageEditorActionSelectDeselectObstacleCorner {
+public:
+	StageEditorActionDeselectObstacleCorner(EditorOID obstacleOid,
+		unsigned cornerIdx)
+		: StageEditorActionSelectDeselectObstacleCorner(obstacleOid, cornerIdx)
+	{}
+
+	/**
+	 * @brief Returns the action type.
+	 */
+	ActionType getType() const override {
+		return ACTION_DESELECT_OBSTACLE_CORNER;
 	}
 };
 

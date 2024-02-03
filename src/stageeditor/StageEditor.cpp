@@ -68,6 +68,34 @@ void StageEditor::completeObstacleInternal()
 	}
 }
 
+EditorOID StageEditor::getPlayerObjectAt(const PointF& pos)
+{
+	for (const auto& playerObjPair : m_stageState.players) {
+		const EditorOID& oid = playerObjPair.first;
+		const PointF& playerPos = playerObjPair.second;
+
+		if (pos.sqrDistance(playerPos) <= sqr(EDITOR_PLAYER_RADIUS)) {
+			return oid;
+		}
+	}
+
+	return EDITOR_OID_NULL;
+}
+
+EditorOID StageEditor::getObstacleObjectAt(const PointF& pos)
+{
+	for (const auto& obstacleObjPair : m_stageState.obstacles) {
+		const EditorOID& oid = obstacleObjPair.first;
+		const PolygonF& obstacle = obstacleObjPair.second;
+
+		if (obstacle.containsPoint(pos)) {
+			return oid;
+		}
+	}
+
+	return EDITOR_OID_NULL;
+}
+
 StageEditor::StageEditor()
 	: m_stageState{
 		.width = STAGE_WIDTH_INITIAL,
@@ -119,6 +147,90 @@ void StageEditor::addObstacleCorner(const PointF& pos, ObjectSnap snapping)
 void StageEditor::completeObstacle()
 {
 	completeObstacleInternal();
+}
+
+void StageEditor::selectObject(double x, double y)
+{
+	selectObject(PointF(x, y));
+}
+
+void StageEditor::selectObject(const PointF& pos)
+{
+	EditorOID objectId = EDITOR_OID_NULL;
+
+	if ((objectId = getPlayerObjectAt(pos)) != EDITOR_OID_NULL) {
+		// Selected player object
+
+		m_selectedPlayers.push_back(objectId);
+		m_lastAction = std::make_shared<StageEditorActionSelectPlayerObject>(objectId);
+		m_history.pushAction(m_lastAction);
+	} else if ((objectId = getObstacleObjectAt(pos)) != EDITOR_OID_NULL) {
+		// Selected obstacle object
+
+		m_selectedObstacles.push_back(objectId);
+		m_lastAction = std::make_shared<StageEditorActionSelectObstacleObject>(objectId);
+		m_history.pushAction(m_lastAction);
+	} else {
+		// No object selected
+
+		m_lastAction = std::make_shared<StageEditorActionNone>();
+	}
+}
+
+void StageEditor::deselectAllObjects()
+{
+	// The actions performed (all the deselections)
+	std::vector<std::shared_ptr<StageEditorAction>> actionGroup;
+
+	// Lambda expression, which performs deselection (removes selected object
+	// from the selected objects vector) and adds a deselection action to the
+	// `actionGroup` list.
+	// The parameters:
+	//  - `selectedObjsVector`: Vector of selected objects. Should be either
+	//                          `m_selectedPlayers` or `m_selectedObstacles`.
+	//  - `makeAction`: Function, which creates a deselection action based on
+	//                  the provided OID. Should create either
+	//                  `StageEditorActionDeselectPlayerObject` or
+	//                  `StageEditorActionDeselectObstacleObject` (both should
+	//                  be `shared_ptr`).
+	auto f = [&actionGroup](std::vector<EditorOID>& selectedObjsVector,
+		std::shared_ptr<StageEditorAction> (*makeAction)(EditorOID))
+	{
+		std::shared_ptr<StageEditorAction> newAction;
+		while (!selectedObjsVector.empty()) {
+			EditorOID oid = selectedObjsVector.back();
+			newAction = makeAction(oid);
+			actionGroup.push_back(newAction);
+			selectedObjsVector.pop_back();
+		}
+	};
+
+	// Lambda expression, creates `StageEditorActionDeselectPlayerObject`
+	auto makeActionDeselectPlayer = [](EditorOID oid) -> std::shared_ptr<StageEditorAction>
+	{
+		return std::make_shared<StageEditorActionDeselectPlayerObject>(oid);
+	};
+
+	// Lambda expression, creates `StageEditorActionDeselectObstacleObject`
+	auto makeActionDeselectObstacle = [](EditorOID oid) -> std::shared_ptr<StageEditorAction>
+	{
+		return std::make_shared<StageEditorActionDeselectObstacleObject>(oid);
+	};
+	
+	// Fill the `actionGroup` list
+	f(m_selectedPlayers, makeActionDeselectPlayer);
+	f(m_selectedObstacles, makeActionDeselectObstacle);
+
+	if (actionGroup.empty()) {
+		// Didn't deselect anything
+
+		m_lastAction = std::make_shared<StageEditorActionNone>();
+	} else {
+		// Deselected at least one editor object
+
+		m_lastAction = std::make_shared<StageEditorActionMultiple>(std::move(actionGroup));
+		m_history.pushAction(m_lastAction);
+	}
 }
 
 void StageEditor::undo()

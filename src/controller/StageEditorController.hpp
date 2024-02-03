@@ -209,6 +209,30 @@ private:
 	 */
 	void updateSpritesByViewport();
 
+	void updateSpritesByAction(const std::shared_ptr<StageEditorAction> action);
+	void updateSpritesByActionMultiple(
+		const std::shared_ptr<StageEditorAction> action);
+	void updateSpritesByActionAddPlayer(
+		const std::shared_ptr<StageEditorAction> action);
+	void updateSpritesByActionPlaceObstacleCorner(
+		const std::shared_ptr<StageEditorAction> action);
+	void updateSpritesByActionCompleteObstacle(
+		const std::shared_ptr<StageEditorAction> action);
+	void updateSpritesByActionActivateTool(
+		const std::shared_ptr<StageEditorAction> action);
+	void updateSpritesByActionSelectPlayerObject(
+		const std::shared_ptr<StageEditorAction> action);
+	void updateSpritesByActionSelectObstacleObject(
+		const std::shared_ptr<StageEditorAction> action);
+	void updateSpritesByActionSelectObstacleCorner(
+		const std::shared_ptr<StageEditorAction> action);
+	void updateSpritesByActionDeselectPlayerObject(
+		const std::shared_ptr<StageEditorAction> action);
+	void updateSpritesByActionDeselectObstacleObject(
+		const std::shared_ptr<StageEditorAction> action);
+	void updateSpritesByActionDeselectObstacleCorner(
+		const std::shared_ptr<StageEditorAction> action);
+
 	/**
 	 * @brief Updates grid sprite after a change in viewport.
 	 */
@@ -232,6 +256,7 @@ private:
 
 	void addPlayerSprite(EditorOID oid);
 	void addObstacleSprite(EditorOID oid);
+	void deselectAll();
 
 	/**
 	 * @brief Creates matrix for conversion from screen space to stage space.

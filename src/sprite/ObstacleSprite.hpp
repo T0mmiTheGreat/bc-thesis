@@ -19,8 +19,21 @@
 #include "sprite/BoundedSpriteBase.hpp"
 
 class ObstacleSprite : public BoundedSpriteBase {
+public:
+	enum Costume {
+		COSTUME_NORMAL,
+		COSTUME_HIGHLIGHTED,
+	};
 private:
+	static constexpr Color HIGHLIGHT_COLOR = Color::white();
+
+	Costume m_costume;
 	PolygonF m_shape;
+
+	void repaintCostumeNormal(std::shared_ptr<ICanvas> canvas,
+		Rect& invalidRect);
+	void repaintCostumeHighlighted(std::shared_ptr<ICanvas> canvas,
+		Rect& invalidRect);
 public:
 	ObstacleSprite(std::shared_ptr<IPaintingProxy> paintingProxy);
 	/**
@@ -42,6 +55,14 @@ public:
 	const PolygonF& getShape() const;
 	void setShape(const PolygonF& value);
 	void setShape(PolygonF&& value);
+	/**
+	 * @brief Getter for the obstacle costume.
+	 */
+	ObstacleSprite::Costume getCostume() const;
+	/**
+	 * @brief Setter for the obstacle costume.
+	 */
+	void setCostume(ObstacleSprite::Costume value);
 };
 
 #endif // OBSTACLESPRITE_HPP

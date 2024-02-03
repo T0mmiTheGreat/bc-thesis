@@ -11,10 +11,28 @@
 
 #include "sprite/PlayerSprite.hpp"
 
+void PlayerSprite::repaintCostumeNormal(std::shared_ptr<ICanvas> canvas,
+	Rect& invalidRect)
+{
+	canvas->setFillingColor(m_color);
+	canvas->fillCircle(x + m_radius, y + m_radius, m_radius);
+}
+
+void PlayerSprite::repaintCostumeHighlighted(std::shared_ptr<ICanvas> canvas,
+	Rect& invalidRect)
+{
+	repaintCostumeNormal(canvas, invalidRect);
+
+	canvas->setStrokeWidth(1.0);
+	canvas->setStrokingColor(HIGHLIGHT_COLOR);
+	canvas->strokeCircle(x + m_radius, y + m_radius, m_radius);
+}
+
 PlayerSprite::PlayerSprite(std::shared_ptr<IPaintingProxy> paintingProxy)
 	: SpriteBase(paintingProxy)
 	, BoundedSpriteBase(paintingProxy)
 	, PositionedSpriteBase(paintingProxy)
+	, m_costume{COSTUME_NORMAL}
 	, m_color()
 	, m_radius{20}
 {}
@@ -26,8 +44,14 @@ Size2d PlayerSprite::getSize()
 
 void PlayerSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)
 {
-	canvas->setFillingColor(m_color);
-	canvas->fillCircle(x + m_radius, y + m_radius, m_radius);
+	switch (m_costume) {
+		case COSTUME_NORMAL:
+			repaintCostumeNormal(canvas, invalidRect);
+			break;
+		case COSTUME_HIGHLIGHTED:
+			repaintCostumeHighlighted(canvas, invalidRect);
+			break;
+	}
 }
 
 Color PlayerSprite::getColor() const
@@ -53,6 +77,20 @@ void PlayerSprite::setRadius(int value)
 	if (m_radius != value) {
 		invalidateBounds();
 		m_radius = value;
+		invalidateBounds();
+	}
+}
+
+PlayerSprite::Costume PlayerSprite::getCostume() const
+{
+	return m_costume;
+}
+
+void PlayerSprite::setCostume(PlayerSprite::Costume value)
+{
+	if (m_costume != value) {
+		invalidateBounds();
+		m_costume = value;
 		invalidateBounds();
 	}
 }

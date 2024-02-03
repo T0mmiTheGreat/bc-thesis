@@ -16,9 +16,22 @@
 #include "sprite/PositionedSpriteBase.hpp"
 
 class PlayerSprite : public PositionedSpriteBase {
+public:
+	enum Costume {
+		COSTUME_NORMAL,
+		COSTUME_HIGHLIGHTED,
+	};
 private:
+	static constexpr Color HIGHLIGHT_COLOR = Color::white();
+
+	Costume m_costume;
 	Color m_color;
 	int m_radius;
+
+	void repaintCostumeNormal(std::shared_ptr<ICanvas> canvas,
+		Rect& invalidRect);
+	void repaintCostumeHighlighted(std::shared_ptr<ICanvas> canvas,
+		Rect& invalidRect);
 public:
 	PlayerSprite(std::shared_ptr<IPaintingProxy> paintingProxy);
 	/**
@@ -54,6 +67,14 @@ public:
 	 * @brief Setter for the player radius.
 	 */
 	void setRadius(int value);
+	/**
+	 * @brief Getter for the player costume.
+	 */
+	PlayerSprite::Costume getCostume() const;
+	/**
+	 * @brief Setter for the player costume.
+	 */
+	void setCostume(PlayerSprite::Costume value);
 
 	/**
 	 * @brief Modifies the sprite X coordinate by setting the X of its center.

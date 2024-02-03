@@ -154,12 +154,23 @@ void StageEditorController::mouseBtnDownWorkspace(MouseBtn btn, int x, int y)
 void StageEditorController::mouseBtnDownWorkspaceToolSelect(MouseBtn btn,
 	int x, int y)
 {
+	Matrix3x3 tm = getScreenToStageMatrix();
+	PointF selectPos(x, y);
+	selectPos.transform(tm);
+
+	if (!sysProxy->isKeyPressed(KEY_SHIFT)) {
+		deselectAll();
+	}
+
+	m_stageEditor.selectObject(selectPos);
+	updateSpritesByBackend();
 }
 
 void StageEditorController::mouseBtnDownWorkspaceToolPlayers(MouseBtn btn,
 	int x, int y)
 {
 	if (btn == BTN_LEFT) {
+		deselectAll();
 		addPlayerObject(x, y);
 	}
 }
@@ -168,6 +179,7 @@ void StageEditorController::mouseBtnDownWorkspaceToolObstacles(MouseBtn btn,
 	int x, int y)
 {
 	if (btn == BTN_LEFT) {
+		deselectAll();
 		addObstacleCorner(x, y);
 	} else if (btn == BTN_RIGHT) {
 		completeObstacleObject();
@@ -333,29 +345,7 @@ void StageEditorController::activateTool(EditorTool tool)
 
 void StageEditorController::updateSpritesByBackend()
 {
-	const auto lastAction = m_stageEditor.getLastAction();
-
-	switch (lastAction->getType()) {
-
-		case StageEditorAction::ACTION_ADD_PLAYER: {
-			const auto actionAddPlayer =
-				std::dynamic_pointer_cast<StageEditorActionAddPlayer>(
-					lastAction);
-			addPlayerSprite(actionAddPlayer->getOid());
-		} break;
-
-		case StageEditorAction::ACTION_PLACE_OBSTACLE_CORNER: {
-			updateObstacleEdgesSprite();
-		} break;
-
-		case StageEditorAction::ACTION_COMPLETE_OBSTACLE: {
-			const auto actionCompleteObstacle =
-				std::dynamic_pointer_cast<StageEditorActionCompleteObstacle>(
-					lastAction);
-			addObstacleSprite(actionCompleteObstacle->getOid());
-		} break;
-
-	}
+	updateSpritesByAction(m_stageEditor.getLastAction());
 }
 
 void StageEditorController::updateSpritesByViewport()
@@ -379,6 +369,134 @@ void StageEditorController::updateSpritesByViewport()
 
 	// Open obstacle
 	updateObstacleEdgesSprite();
+}
+
+void StageEditorController::updateSpritesByAction(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	switch (action->getType()) {
+		case StageEditorAction::ACTION_NONE: break;
+		case StageEditorAction::ACTION_MULTIPLE:
+			updateSpritesByActionMultiple(action);
+			break;
+		case StageEditorAction::ACTION_ADD_PLAYER:
+			updateSpritesByActionAddPlayer(action);
+			break;
+		case StageEditorAction::ACTION_PLACE_OBSTACLE_CORNER:
+			updateSpritesByActionPlaceObstacleCorner(action);
+			break;
+		case StageEditorAction::ACTION_COMPLETE_OBSTACLE:
+			updateSpritesByActionCompleteObstacle(action);
+			break;
+		case StageEditorAction::ACTION_ACTIVATE_TOOL:
+			updateSpritesByActionActivateTool(action);
+			break;
+		case StageEditorAction::ACTION_SELECT_PLAYER_OBJECT:
+			updateSpritesByActionSelectPlayerObject(action);
+			break;
+		case StageEditorAction::ACTION_SELECT_OBSTACLE_OBJECT:
+			updateSpritesByActionSelectObstacleObject(action);
+			break;
+		case StageEditorAction::ACTION_SELECT_OBSTACLE_CORNER:
+			updateSpritesByActionSelectObstacleCorner(action);
+			break;
+		case StageEditorAction::ACTION_DESELECT_PLAYER_OBJECT:
+			updateSpritesByActionDeselectPlayerObject(action);
+			break;
+		case StageEditorAction::ACTION_DESELECT_OBSTACLE_OBJECT:
+			updateSpritesByActionDeselectObstacleObject(action);
+			break;
+		case StageEditorAction::ACTION_DESELECT_OBSTACLE_CORNER:
+			updateSpritesByActionDeselectObstacleCorner(action);
+			break;
+	}
+}
+
+void StageEditorController::updateSpritesByActionMultiple(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	const auto actionCast =
+		std::dynamic_pointer_cast<StageEditorActionMultiple>(action);
+	
+	for (const auto a : actionCast->getActions()) {
+		updateSpritesByAction(a);
+	}
+}
+
+void StageEditorController::updateSpritesByActionAddPlayer(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	const auto actionCast =
+		std::dynamic_pointer_cast<StageEditorActionAddPlayer>(action);
+	addPlayerSprite(actionCast->getOid());
+}
+
+void StageEditorController::updateSpritesByActionPlaceObstacleCorner(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	updateObstacleEdgesSprite();
+}
+
+void StageEditorController::updateSpritesByActionCompleteObstacle(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	const auto actionCast =
+		std::dynamic_pointer_cast<StageEditorActionCompleteObstacle>(action);
+	addObstacleSprite(actionCast->getOid());
+}
+
+void StageEditorController::updateSpritesByActionActivateTool(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	// Nothing to update
+}
+
+void StageEditorController::updateSpritesByActionSelectPlayerObject(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	const auto actionCast =
+		std::dynamic_pointer_cast<StageEditorActionSelectPlayerObject>(action);
+	m_playerSprites[actionCast->getOid()]->setCostume(
+		PlayerSprite::COSTUME_HIGHLIGHTED);
+}
+
+void StageEditorController::updateSpritesByActionSelectObstacleObject(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	const auto actionCast =
+		std::dynamic_pointer_cast<StageEditorActionSelectObstacleObject>(action);
+	m_obstacleSprites[actionCast->getOid()]->setCostume(
+		ObstacleSprite::COSTUME_HIGHLIGHTED);
+}
+
+void StageEditorController::updateSpritesByActionSelectObstacleCorner(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	// TODO
+}
+
+void StageEditorController::updateSpritesByActionDeselectPlayerObject(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	const auto actionCast =
+		std::dynamic_pointer_cast<StageEditorActionDeselectPlayerObject>(action);
+	m_playerSprites[actionCast->getOid()]->setCostume(
+		PlayerSprite::COSTUME_NORMAL);
+}
+
+void StageEditorController::updateSpritesByActionDeselectObstacleObject(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	const auto actionCast =
+		std::dynamic_pointer_cast<StageEditorActionDeselectObstacleObject>(action);
+	m_obstacleSprites[actionCast->getOid()]->setCostume(
+		ObstacleSprite::COSTUME_NORMAL);
+}
+
+void StageEditorController::updateSpritesByActionDeselectObstacleCorner(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	// TODO
 }
 
 void StageEditorController::updateGridSprite()
@@ -468,6 +586,12 @@ void StageEditorController::addObstacleSprite(EditorOID oid)
 	auto newSprite = std::make_unique<ObstacleSprite>(sysProxy);
 	m_obstacleSprites[oid] = std::move(newSprite);
 	updateObstacleSprite(oid);
+}
+
+void StageEditorController::deselectAll()
+{
+	m_stageEditor.deselectAllObjects();
+	updateSpritesByBackend();
 }
 
 Matrix3x3 StageEditorController::getScreenToStageMatrix()
