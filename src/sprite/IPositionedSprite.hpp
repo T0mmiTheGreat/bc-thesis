@@ -22,7 +22,7 @@
  *          only area within these bounds must be painted. The said X and Y
  *          coordinates must be the top left corner of the bounds.
  */
-class IPositionedSprite : public ISprite {
+class IPositionedSprite : virtual public ISprite {
 public:
 	virtual ~IPositionedSprite() {}
 	/**

@@ -26,7 +26,7 @@
  *          repaint() methods. They MUST call this class's constructor if
  *          they provide their own.
  */
-class SpriteBase : public ISprite {
+class SpriteBase : virtual public ISprite {
 protected:
 	std::shared_ptr<IPaintingProxy> paintingProxy;
 public:

@@ -25,7 +25,7 @@
  *          They MUST call this class's constructor if they provide their own.
  */
 class AnimatedSpriteBase
-	: public IAnimatedSprite
+	: virtual public IAnimatedSprite
 	, virtual public SpriteBase
 {
 private:
