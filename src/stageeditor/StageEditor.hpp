@@ -16,6 +16,7 @@
 #include <vector>
 
 #include "types.hpp"
+#include "stageeditor/Common.hpp"
 #include "stageeditor/StageEditorAction.hpp"
 #include "stageeditor/StageEditorHistory.hpp"
 #include "stageeditor/StageState.hpp"
@@ -33,8 +34,10 @@ private:
 	static constexpr int STAGE_HEIGHT_INITIAL = 720;
 
 	StageState m_stageState;
+	EditorTool m_activeTool;
 	StageEditorHistory m_history;
 	std::shared_ptr<StageEditorAction> m_lastAction;
+	// Corners of the obstacle under construction
 	PolygonF::CollectionType m_obstacleCorners;
 	std::vector<EditorOID> m_selectedPlayers;
 	std::vector<EditorOID> m_selectedObstacles;
@@ -48,108 +51,106 @@ private:
 	 */
 	void getSnappedPoint(const PointF& p, ObjectSnap snapping, PointF& pSnap);
 
-	void addPlayerInternal(const PointF& pos);
-	void addObstacleCornerInternal(const PointF& pos);
-	void completeObstacleInternal();
+	std::shared_ptr<StageEditorAction> addPlayerInternal(const PointF& pos);
+	std::shared_ptr<StageEditorAction> addObstacleCornerInternal(const PointF& pos);
+	std::shared_ptr<StageEditorAction> completeObstacleInternal();
+	std::shared_ptr<StageEditorAction> selectObjectInternal(const PointF& pos);
+	std::shared_ptr<StageEditorAction> deselectAllObjectsInternal();
 	EditorOID getPlayerObjectAt(const PointF& pos);
 	EditorOID getObstacleObjectAt(const PointF& pos);
+
+	/**
+	 * @brief Returns the OID of the player object at the given position,
+	 *        if it's selected.
+	 * 
+	 * @param pos Exact position where the check should be performed.
+	 * @return The player object at the given position, or EDITOR_OID_NULL
+	 *         if there's none.
+	 */
+	EditorOID getSelectedPlayerAt(const PointF& pos);
+	/**
+	 * @brief Returns the OID of the obstacle object at the given position,
+	 *        if it's selected.
+	 * 
+	 * @param pos Exact position where the check should be performed.
+	 * @return The obstacle object at the given position, or EDITOR_OID_NULL
+	 *         if there's none.
+	 */
+	EditorOID getSelectedObstacleAt(const PointF& pos);
+	/**
+	 * @brief Returns true if there is any selected object at the given
+	 *        coordinates.
+	 * 
+	 * @param pos Exact position where the check should be performed.
+	 */
+	bool isSelectedObjectAt(const PointF& pos);
+
+	/**
+	 * @brief Left mouse button pressed over workspace while the "select tool"
+	 *        is active.
+	 */
+	void mouseLeftBtnDownToolSelect(const PointF& pos, ObjectSnap snapping,
+		bool isShiftPressed);
+	/**
+	 * @brief Left mouse button pressed over workspace while the "players tool"
+	 *        is active.
+	 */
+	void mouseLeftBtnDownToolPlayers(const PointF& pos, ObjectSnap snapping,
+		bool isShiftPressed);
+	/**
+	 * @brief Left mouse button pressed over workspace while the "obstacles
+	 *        tool" is active.
+	 */
+	void mouseLeftBtnDownToolObstacles(const PointF& pos, ObjectSnap snapping,
+		bool isShiftPressed);
+	/**
+	 * @brief Right mouse button pressed over workspace while the "obstacles
+	 *        tool" is active.
+	 */
+	void mouseRightBtnDownToolObstacles();
 public:
 	StageEditor();
 	/**
 	 * @brief Returns the current state of the stage.
 	 */
-	const StageState& getState();
+	const StageState& getState() const;
 	/**
 	 * @brief Returns the last performed action.
 	 */
-	const std::shared_ptr<StageEditorAction> getLastAction();
+	const std::shared_ptr<StageEditorAction> getLastAction() const;
+	/**
+	 * @brief Return the currently selected tool.
+	 */
+	EditorTool getActiveTool() const;
+	const PolygonF::CollectionType& getObstacleCorners() const;
+	
 	/**
 	 * @brief Sets active tool.
 	 * 
 	 * @note Updates last action.
 	 * 
-	 * @param oldTool The tool which was replaced.
 	 * @param newTool The activated tool.
-	 * 
-	 * @remark Activation of a tool is an action and must be recorded in the
-	 *         action history so it can be undone.
 	 */
-	void activateTool(EditorTool oldTool, EditorTool newTool);
+	void activateTool(EditorTool newTool);
+
 	/**
-	 * @brief Adds a player object to the stage.
+	 * @brief Left mouse button pressed over workspace.
 	 * 
-	 * @note Updates last action.
-	 * 
-	 * @param x Approximate X coordiante of the player object.
-	 * @param y Approximate Y coordiante of the player object.
+	 * @param pos Mouse position projected to the stage space.
 	 * @param snapping How the coordinates should be snapped to grid.
+	 * @param isShiftPressed Whether the Shift key is pressed at the same time.
 	 */
-	void addPlayer(double x, double y, ObjectSnap snapping);
+	void mouseLeftBtnDown(const PointF& pos, ObjectSnap snapping,
+		bool isShiftPressed);
 	/**
-	 * @brief Adds a player object to the stage.
-	 * 
-	 * @note Updates last action.
-	 * 
-	 * @param pos Approximate position of the player object.
-	 * @param snapping How the position should be snapped to grid.
+	 * @brief Right mouse button pressed over workspace.
 	 */
-	void addPlayer(const PointF& pos, ObjectSnap snapping);
-	/**
-	 * @brief Adds an obstacle corner to the stage.
-	 * 
-	 * @note Updates last action.
-	 * 
-	 * @param x Approximate X coordiante of the corner.
-	 * @param y Approximate Y coordiante of the corner.
-	 * @param snapping How the coordinates should be snapped to grid.
-	 */
-	void addObstacleCorner(double x, double y, ObjectSnap snapping);
-	/**
-	 * @brief Adds an obstacle corner to the stage.
-	 * 
-	 * @note Updates last action.
-	 * 
-	 * @param pos Approximate position of the corner.
-	 * @param snapping How the position should be snapped to grid.
-	 */
-	void addObstacleCorner(const PointF& pos, ObjectSnap snapping);
-	/**
-	 * @brief Closes an open obstacle and adds it to the stage.
-	 * 
-	 * @note Updates last action.
-	 * 
-	 * @remark If the obstacle cannot be closed, doesn't do anything.
-	 */
-	void completeObstacle();
-	/**
-	 * @brief Selects an object at given position, if possible.
-	 * 
-	 * @note Updates last action.
-	 * 
-	 * @param x Exact X coordinate where the check should be performed.
-	 * @param y Exact Y coordinate where the check should be performed.
-	 */
-	void selectObject(double x, double y);
-	/**
-	 * @brief Selects an object at given position, if possible.
-	 * 
-	 * @note Updates last action.
-	 * 
-	 * @param pos Exact position where the check should be performed.
-	 */
-	void selectObject(const PointF& pos);
-	/**
-	 * @brief Deselects all selected objects
-	 * 
-	 * @note Updates last action.
-	 */
-	void deselectAllObjects();
+	void mouseRightBtnDown();
+	
 	void undo();
 	void redo();
 	bool canUndo();
 	bool canRedo();
-
-	const PolygonF::CollectionType& getObstacleCorners() const;
 };
 
 #endif // STAGEEDITOR_HPP

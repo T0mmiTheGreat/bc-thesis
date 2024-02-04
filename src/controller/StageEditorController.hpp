@@ -84,8 +84,6 @@ private:
 	static constexpr Color STATUSBAR_SCOLOR = MENUBAR_SCOLOR;
 #pragma endregion constants
 
-	EditorTool m_activeTool;
-
 	// XXX: Keep the editor and viewport in this order for correct order of
 	//      initialization
 
@@ -112,6 +110,7 @@ private:
 #pragma endregion sprites
 
 	void createSprites();
+	void initializeSprites();
 	void positionSprites();
 
 	/**
@@ -147,21 +146,6 @@ private:
 	 * @brief Mouse button pressed inside workspace.
 	 */
 	void mouseBtnDownWorkspace(MouseBtn btn, int x, int y);
-	/**
-	 * @brief Mouse button pressed inside workspace with the active tool being
-	 *        the "select tool".
-	 */
-	void mouseBtnDownWorkspaceToolSelect(MouseBtn btn, int x, int y);
-	/**
-	 * @brief Mouse button pressed inside workspace with the active tool being
-	 *        the "players tool".
-	 */
-	void mouseBtnDownWorkspaceToolPlayers(MouseBtn btn, int x, int y);
-	/**
-	 * @brief Mouse button pressed inside workspace with the active tool being
-	 *        the "obstacles tool".
-	 */
-	void mouseBtnDownWorkspaceToolObstacles(MouseBtn btn, int x, int y);
 
 	void mouseWheelWorkspace(int dx, int dy);
 
@@ -170,10 +154,6 @@ private:
 	void checkWorkspaceDoDrag(int x, int y);
 
 	void checkToolIconClick(int x, int y);
-
-	void addPlayerObject(int x, int y);
-	void addObstacleCorner(int x, int y);
-	void completeObstacleObject();
 
 	/**
 	 * @brief If the icon has COSTUME_HOVER changes it to COSTUME_NORMAL.
@@ -188,24 +168,20 @@ private:
 	 *        COSTUME_NORMAL.
 	 */
 	void iconHighlightOffAll();
+	/**
+	 * @brief Change the appearance of a tool icon sprite to "selected".
+	 * 
+	 * @param iconIdx Index of the tool icon.
+	 */
+	void toolIconSetSelected(int iconIdx);
+	/**
+	 * @brief Change the appearance of a tool icon sprite to "not selected".
+	 * 
+	 * @param iconIdx Index of the tool icon.
+	 */
+	void toolIconUnsetSelected(int iconIdx);
 
 	void hideBrush();
-
-	/**
-	 * @brief Sets the active tool.
-	 * 
-	 * @details The difference from `activateTool()` is that this method
-	 *          is not an action, so it won't modify the action history. Also,
-	 *          it won't modify the sprite of the previous selected tool.
-	 */
-	void setActiveTool(EditorTool tool);
-	/**
-	 * @brief Activates a tool.
-	 * 
-	 * @details Deactivates the previous one, modifies the action history,
-	 *          calls `setActiveTool()`.
-	 */
-	void activateTool(EditorTool tool);
 
 	/**
 	 * @brief Updates all sprites after a change in backend (StageEditor).
@@ -268,7 +244,6 @@ private:
 
 	void addPlayerSprite(EditorOID oid);
 	void addObstacleSprite(EditorOID oid);
-	void deselectAll();
 
 	/**
 	 * @brief Creates matrix for conversion from screen space to stage space.

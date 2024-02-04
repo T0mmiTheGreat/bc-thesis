@@ -56,9 +56,18 @@ void StageEditorController::createSprites()
 
 	// Brushes
 	m_playerBrush = std::make_unique<PlayerBrushSprite>(sysProxy);
+}
 
+void StageEditorController::initializeSprites()
+{
+	createSprites();
 	positionSprites();
+
+	int activeToolIconIdx = toolToIconIdx(m_stageEditor.getActiveTool());
+	toolIconSetSelected(activeToolIconIdx);
+
 	updateSpritesByViewport();
+	updateToolBrush();
 }
 
 void StageEditorController::positionSprites()
@@ -100,9 +109,6 @@ void StageEditorController::positionSprites()
 	m_statusBarSprite->setFillingColor(STATUSBAR_FCOLOR);
 	m_statusBarSprite->setStrokingColor(STATUSBAR_SCOLOR);
 	m_statusBarSprite->setBorders(false, true, false, false);
-
-	// Brush
-	updateToolBrush();
 }
 
 void StageEditorController::mouseMoveMenubar(int x, int y)
@@ -139,57 +145,27 @@ void StageEditorController::mouseBtnDownStatusbar(MouseBtn btn, int x, int y)
 
 void StageEditorController::mouseBtnDownWorkspace(MouseBtn btn, int x, int y)
 {
-	switch (m_activeTool) {
-		case TOOL_SELECT:
-			mouseBtnDownWorkspaceToolSelect(btn, x, y);
-			break;
-		case TOOL_PLAYERS:
-			mouseBtnDownWorkspaceToolPlayers(btn, x, y);
-			break;
-		case TOOL_OBSTACLES:
-			mouseBtnDownWorkspaceToolObstacles(btn, x, y);
-			break;
-	}
-
-	if (btn == BTN_MIDDLE) {
-		if (!m_viewport.isDrag()) {
-			m_viewport.beginDrag(PointF(x, y));
-		}
-	}
-}
-
-void StageEditorController::mouseBtnDownWorkspaceToolSelect(MouseBtn btn,
-	int x, int y)
-{
 	Matrix3x3 tm = getScreenToStageMatrix();
-	PointF selectPos(x, y);
-	selectPos.transform(tm);
+	PointF pos(x, y);
+	pos.transform(tm);
 
-	if (!sysProxy->isKeyPressed(KEY_SHIFT)) {
-		deselectAll();
-	}
-
-	m_stageEditor.selectObject(selectPos);
-	updateSpritesByBackend();
-}
-
-void StageEditorController::mouseBtnDownWorkspaceToolPlayers(MouseBtn btn,
-	int x, int y)
-{
-	if (btn == BTN_LEFT) {
-		deselectAll();
-		addPlayerObject(x, y);
-	}
-}
-
-void StageEditorController::mouseBtnDownWorkspaceToolObstacles(MouseBtn btn,
-	int x, int y)
-{
-	if (btn == BTN_LEFT) {
-		deselectAll();
-		addObstacleCorner(x, y);
-	} else if (btn == BTN_RIGHT) {
-		completeObstacleObject();
+	switch (btn) {
+		case BTN_LEFT:
+			m_stageEditor.mouseLeftBtnDown(pos, StageEditor::SNAP_NONE,
+				sysProxy->isKeyPressed(KEY_SHIFT));
+			updateSpritesByBackend();
+			break;
+		case BTN_RIGHT:
+			m_stageEditor.mouseRightBtnDown();
+			updateSpritesByBackend();
+			break;
+		case BTN_MIDDLE:
+			if (!m_viewport.isDrag()) {
+				m_viewport.beginDrag(PointF(x, y));
+			}
+			break;
+		case BTN_UNKNOWN: // Warning off
+			break;
 	}
 }
 
@@ -256,51 +232,11 @@ void StageEditorController::checkToolIconClick(int x, int y)
 
 	for (int iconIdx = 0; iconIdx < TOOLICON_COUNT; iconIdx++) {
 		if (getToolIconRect(iconIdx).containsPoint(mouse)) {
-			activateTool(iconIdxToTool(iconIdx));
+			m_stageEditor.activateTool(iconIdxToTool(iconIdx));
+			updateSpritesByBackend();
 			break;
 		}
 	}
-}
-
-void StageEditorController::addPlayerObject(int x, int y)
-{
-	// Get the transformation matrix
-	Matrix3x3 tm = getScreenToStageMatrix();
-
-	// Player position in screen space
-	PointF playerPos(x, y);
-	// Project to stage space
-	playerPos.transform(tm);
-	
-	m_stageEditor.addPlayer(playerPos, StageEditor::SNAP_NONE);
-	
-	updateSpritesByBackend();
-}
-
-void StageEditorController::addObstacleCorner(int x, int y)
-{
-	// Get the transformation matrix
-	Matrix3x3 tm = getScreenToStageMatrix();
-
-	// Corner position in screen space
-	PointF cornerPos(x, y);
-	// Project to stage space
-	cornerPos.transform(tm);
-
-	m_stageEditor.addObstacleCorner(cornerPos, StageEditor::SNAP_NONE);
-
-	updateSpritesByBackend();
-}
-
-void StageEditorController::completeObstacleObject()
-{
-	// Complete in backend
-	m_stageEditor.completeObstacle();
-
-	// Get rid of the open obstacle (it is now closed)
-	m_obstacleEdges->clearCorners();
-
-	updateSpritesByBackend();
 }
 
 void StageEditorController::iconHighlightOff(
@@ -329,6 +265,16 @@ void StageEditorController::iconHighlightOffAll()
 	}
 }
 
+void StageEditorController::toolIconSetSelected(int iconIdx)
+{
+	m_toolIcons[iconIdx]->setCostume(EditorIconSprite::COSTUME_SELECTED);
+}
+
+void StageEditorController::toolIconUnsetSelected(int iconIdx)
+{
+	m_toolIcons[iconIdx]->setCostume(EditorIconSprite::COSTUME_NORMAL);
+}
+
 void StageEditorController::hideBrush()
 {
 	if (m_brushSprite != nullptr) {
@@ -338,27 +284,6 @@ void StageEditorController::hideBrush()
 		}
 		m_brushSprite = nullptr;
 	}
-}
-
-void StageEditorController::setActiveTool(EditorTool tool)
-{
-	int iconIdx = toolToIconIdx(tool);
-
-	m_activeTool = tool;
-	m_toolIcons[iconIdx]->setCostume(EditorIconSprite::COSTUME_SELECTED);
-}
-
-void StageEditorController::activateTool(EditorTool tool)
-{
-	EditorTool& oldTool = m_activeTool;
-	EditorTool& newTool = tool;
-	int oldIconIdx = toolToIconIdx(oldTool);
-
-	m_toolIcons[oldIconIdx]->setCostume(EditorIconSprite::COSTUME_NORMAL);
-
-	m_stageEditor.activateTool(oldTool, newTool);
-
-	setActiveTool(newTool);
 }
 
 void StageEditorController::updateSpritesByBackend()
@@ -471,7 +396,11 @@ void StageEditorController::updateSpritesByActionCompleteObstacle(
 void StageEditorController::updateSpritesByActionActivateTool(
 	const std::shared_ptr<StageEditorAction> action)
 {
-	// Nothing to update
+	const auto actionCast =
+		std::dynamic_pointer_cast<StageEditorActionActivateTool>(action);
+	toolIconUnsetSelected(toolToIconIdx(actionCast->getPrevTool()));
+	toolIconSetSelected(toolToIconIdx(actionCast->getNewTool()));
+	updateToolBrush();
 }
 
 void StageEditorController::updateSpritesByActionSelectPlayerObject(
@@ -598,7 +527,7 @@ void StageEditorController::updateObstacleSprite(EditorOID oid)
 
 void StageEditorController::updateToolBrush()
 {
-	switch (m_activeTool) {
+	switch (m_stageEditor.getActiveTool()) {
 		case TOOL_SELECT:
 			updateToolBrushSelect();
 			break;
@@ -649,12 +578,6 @@ void StageEditorController::addObstacleSprite(EditorOID oid)
 	auto newSprite = std::make_unique<ObstacleSprite>(sysProxy);
 	m_obstacleSprites[oid] = std::move(newSprite);
 	updateObstacleSprite(oid);
-}
-
-void StageEditorController::deselectAll()
-{
-	m_stageEditor.deselectAllObjects();
-	updateSpritesByBackend();
 }
 
 Matrix3x3 StageEditorController::getScreenToStageMatrix()
@@ -792,9 +715,7 @@ EditorTool StageEditorController::iconIdxToTool(int iconIdx)
 
 void StageEditorController::startedEvent()
 {
-	createSprites();
-
-	setActiveTool(TOOL_SELECT);
+	initializeSprites();
 }
 
 void StageEditorController::mouseBtnDownEvent(MouseBtn btn, int x, int y)
