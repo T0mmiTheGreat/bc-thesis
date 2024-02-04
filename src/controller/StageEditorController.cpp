@@ -661,8 +661,8 @@ Rect StageEditorController::getWorkspaceRect()
 	res.y = MENUBAR_HEIGHT;
 	// Width must not go beyond the screen bounds
 	res.w -= res.x;
-	// Height limited by the status bar
-	res.h -= (res.y - STATUSBAR_HEIGHT);
+	// Height limited by menu bar and status bar
+	res.h -= (res.y + STATUSBAR_HEIGHT);
 	return res;
 }
 
