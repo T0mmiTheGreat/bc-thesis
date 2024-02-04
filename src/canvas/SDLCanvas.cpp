@@ -175,6 +175,26 @@ void SDLCanvas::drawCircle(int x, int y, int r)
 	CanvasBase::drawCircle(x, y, r);
 }
 
+void SDLCanvas::dashedCircle(int x, int y, int r)
+{
+	static constexpr int DASH_COUNT = 20;
+	static constexpr int PATTERN_LENGTH = 360 / DASH_COUNT;
+	static constexpr int DASH_LENGTH = PATTERN_LENGTH / 2;
+
+	Color cl = sColor.getModulated(colorMod);
+	
+	updateBlendModeByStroke();
+
+	for (int i = 0, dashStart = 0; i < DASH_COUNT; i++, dashStart += PATTERN_LENGTH) {
+		arcRGBA(
+			SDLManager::get().renderer.Get(),
+			x, y, r,
+			dashStart, dashStart + DASH_LENGTH,
+			cl.r, cl.g, cl.b, cl.a
+		);
+	}
+}
+
 void SDLCanvas::fillRectangle(int x, int y, int w, int h)
 {
 	SDLManager::get().renderer.SetDrawColor(fillToColor());

@@ -26,6 +26,7 @@
 #include "sprite/PlayerSprite.hpp"
 #include "sprite/ObstacleSprite.hpp"
 #include "sprite/ObstacleEdgesSprite.hpp"
+#include "sprite/PlayerBrushSprite.hpp"
 #include "stageeditor/Common.hpp"
 #include "stageeditor/StageEditor.hpp"
 #include "stageeditor/StageViewport.hpp"
@@ -104,6 +105,10 @@ private:
 	std::unordered_map<EditorOID, std::unique_ptr<ObstacleSprite>> m_obstacleSprites;
 
 	std::unique_ptr<ObstacleEdgesSprite> m_obstacleEdges;
+
+	std::unique_ptr<PlayerBrushSprite> m_playerBrush;
+	// Either `m_playerBrush` or nullptr
+	ISprite* m_brushSprite;
 #pragma endregion sprites
 
 	void createSprites();
@@ -184,6 +189,8 @@ private:
 	 */
 	void iconHighlightOffAll();
 
+	void hideBrush();
+
 	/**
 	 * @brief Sets the active tool.
 	 * 
@@ -253,6 +260,11 @@ private:
 	 * @param oid Editor OID of the obstacle object.
 	 */
 	void updateObstacleSprite(EditorOID oid);
+
+	void updateToolBrush();
+	void updateToolBrushSelect();
+	void updateToolBrushPlayers();
+	void updateToolBrushObstacles();
 
 	void addPlayerSprite(EditorOID oid);
 	void addObstacleSprite(EditorOID oid);

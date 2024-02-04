@@ -16,6 +16,7 @@
 StageEditorController::StageEditorController(
 	std::shared_ptr<ISysProxy> sysProxy)
 	: GeneralControllerBase(sysProxy)
+	, m_brushSprite{nullptr}
 	, m_viewport(static_cast<Size2dF>(m_stageEditor.getState().getSize()),
 		static_cast<Size2dF>(getWorkspaceRect().getSize()))
 {}
@@ -52,6 +53,9 @@ void StageEditorController::createSprites()
 
 	// Open obstacle
 	m_obstacleEdges = std::make_unique<ObstacleEdgesSprite>(sysProxy);
+
+	// Brushes
+	m_playerBrush = std::make_unique<PlayerBrushSprite>(sysProxy);
 
 	positionSprites();
 	updateSpritesByViewport();
@@ -96,6 +100,9 @@ void StageEditorController::positionSprites()
 	m_statusBarSprite->setFillingColor(STATUSBAR_FCOLOR);
 	m_statusBarSprite->setStrokingColor(STATUSBAR_SCOLOR);
 	m_statusBarSprite->setBorders(false, true, false, false);
+
+	// Brush
+	updateToolBrush();
 }
 
 void StageEditorController::mouseMoveMenubar(int x, int y)
@@ -322,6 +329,17 @@ void StageEditorController::iconHighlightOffAll()
 	}
 }
 
+void StageEditorController::hideBrush()
+{
+	if (m_brushSprite != nullptr) {
+		if (m_brushSprite == m_playerBrush.get()) {
+			// Repaint
+			m_playerBrush->setPos(0, 0);
+		}
+		m_brushSprite = nullptr;
+	}
+}
+
 void StageEditorController::setActiveTool(EditorTool tool)
 {
 	int iconIdx = toolToIconIdx(tool);
@@ -346,6 +364,8 @@ void StageEditorController::activateTool(EditorTool tool)
 void StageEditorController::updateSpritesByBackend()
 {
 	updateSpritesByAction(m_stageEditor.getLastAction());
+
+	updateToolBrush();
 }
 
 void StageEditorController::updateSpritesByViewport()
@@ -369,6 +389,9 @@ void StageEditorController::updateSpritesByViewport()
 
 	// Open obstacle
 	updateObstacleEdgesSprite();
+
+	// Brush
+	updateToolBrush();
 }
 
 void StageEditorController::updateSpritesByAction(
@@ -571,6 +594,46 @@ void StageEditorController::updateObstacleSprite(EditorOID oid)
 
 	// Modify sprite
 	sprite->setShape(obstacleObject);
+}
+
+void StageEditorController::updateToolBrush()
+{
+	switch (m_activeTool) {
+		case TOOL_SELECT:
+			updateToolBrushSelect();
+			break;
+		case TOOL_PLAYERS:
+			updateToolBrushPlayers();
+			break;
+		case TOOL_OBSTACLES:
+			updateToolBrushObstacles();
+			break;
+	}
+}
+
+void StageEditorController::updateToolBrushSelect()
+{
+	hideBrush();
+}
+
+void StageEditorController::updateToolBrushPlayers()
+{
+	Point mousePos = sysProxy->getMousePos();
+
+	if (!getWorkspaceRect().containsPoint(mousePos)) {
+		hideBrush();
+	} else {
+		m_brushSprite = m_playerBrush.get();
+		
+		m_playerBrush->setCenterPos(mousePos);
+		m_playerBrush->setRadius(static_cast<int>(EDITOR_PLAYER_RADIUS * m_viewport.getZoom()));
+	}
+}
+
+void StageEditorController::updateToolBrushObstacles()
+{
+	// TODO
+	hideBrush();
 }
 
 void StageEditorController::addPlayerSprite(EditorOID oid)
@@ -787,6 +850,8 @@ void StageEditorController::mouseMoveEvent(int x, int y)
 		// Within workspace
 		mouseMoveWorkspace(x, y);
 	}
+
+	updateToolBrush();
 }
 
 void StageEditorController::mouseWheelEvent(int dx, int dy)
@@ -816,6 +881,11 @@ void StageEditorController::paintEvent(std::shared_ptr<ICanvas> canvas,
 	// Player objects
 	for (auto& playerSprite : m_playerSprites) {
 		playerSprite.second->repaint(canvas, invalidRect);
+	}
+
+	// Brush
+	if (m_brushSprite != nullptr) {
+		m_brushSprite->repaint(canvas, invalidRect);
 	}
 
 	// Menu

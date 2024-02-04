@@ -152,6 +152,14 @@ public:
 	 * @param r Radius of the circle.
 	 */
 	virtual void drawCircle(int x, int y, int r) = 0;
+	/**
+	 * @brief Stroke a circular area using dashed pattern.
+	 * 
+	 * @param x X coordinate of the circle center.
+	 * @param y Y coordinate of the circle center.
+	 * @param r Radius of the circle.
+	 */
+	virtual void dashedCircle(int x, int y, int r) = 0;
 	
 	/**
 	 * @brief Fill a rectangular area.
