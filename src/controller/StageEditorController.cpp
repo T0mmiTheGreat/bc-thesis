@@ -391,6 +391,7 @@ void StageEditorController::updateSpritesByActionCompleteObstacle(
 {
 	const auto actionCast =
 		std::dynamic_pointer_cast<StageEditorActionCompleteObstacle>(action);
+	m_obstacleEdges->clearCorners();
 	addObstacleSprite(actionCast->getOid());
 }
 
