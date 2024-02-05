@@ -52,6 +52,7 @@ set(SOURCE_FILES
 	sprite/StatusbarTextSprite.cpp
 	sprite/EditorWorkspaceGridSprite.cpp
 	sprite/PlayerBrushSprite.cpp
+	sprite/ObstacleBrushSprite.cpp
 	core/Core.cpp
 	core/stageobstacles/StageObstacles.cpp
 	core/trajectory/Trajectory.cpp
@@ -119,6 +120,7 @@ set(HEADER_FILES
 	sprite/StatusbarTextSprite.hpp
 	sprite/EditorWorkspaceGridSprite.hpp
 	sprite/PlayerBrushSprite.hpp
+	sprite/ObstacleBrushSprite.hpp
 	paintingproxy/IPaintingProxy.hpp
 	core/ICore.hpp
 	core/Core.hpp

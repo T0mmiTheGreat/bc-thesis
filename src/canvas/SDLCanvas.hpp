@@ -82,6 +82,15 @@ public:
 	 * @param y1 Y coordinate of the end point.
 	 */
 	void strokeLine(int x0, int y0, int x1, int y1) override;
+	/**
+	 * @brief Draw a line using dashed pattern.
+	 * 
+	 * @param x0 X coordinate of the initial point.
+	 * @param y0 Y coordinate of the initial point.
+	 * @param x1 X coordinate of the end point.
+	 * @param y1 Y coordinate of the end point.
+	 */
+	void dashedLine(int x0, int y0, int x1, int y1) override;
 
 	/**
 	 * @brief Fill an elliptical area.

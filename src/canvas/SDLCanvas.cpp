@@ -125,6 +125,88 @@ void SDLCanvas::strokeLine(int x0, int y0, int x1, int y1)
 	);
 }
 
+void SDLCanvas::dashedLine(int x0, int y0, int x1, int y1)
+{
+	// The result is a dashed line with the dash length and the space length
+	// both equal to 10. At (x1, y1) is either trimmed dash or a space. At
+	// (x0, y0) is usually full-length dash, unless the distance between
+	// (x0, y0) and (x1, y1) is less than 10.
+
+	// The algorithm:
+	//   1) Calculate the `dashSpaceCountF` value -- the number of dashes and
+	//      spaces -- by dividing the distance between the end points and
+	//      dividing the distance by the dash length.
+	//   2) Calculate the vector `(dx, dy)` -- vector between dash or space
+	//      endpoints -- by dividing the vector `(x1-x0, y1-y0)` by `nds` value.
+	//   3) Draw the dashes by utilizing the `(dx, dy)` vector (it is rather
+	//      obvious how, and I'm not going to expand on this here).
+
+	// Also equal to space length
+	static constexpr int DASH_LENGTH = 10;
+
+	PointF p0F(x0, y0);
+	PointF p1F(x1, y1);
+
+	// Distance between (x0, y0) -> (x1, y1)
+	double lineLength = sqrt(p0F.sqrDistance(p1F));
+	// Number of dashes + number of spaces. Also includes fraction of the last,
+	// trimmed one.
+	double dashSpaceCountF = lineLength / DASH_LENGTH;
+	// Number of dashes + number of spaces. Also includes the last, trimmed one
+	// (whole, not just fraction).
+	int dashSpaceCount = static_cast<int>(std::ceil(dashSpaceCountF));
+
+	// Vector (x0, y0) -> (x1, y1)
+	PointF v = p1F - p0F;
+	// Length of a dash or space along X axis
+	double dx = v.x / dashSpaceCountF;
+	// Length of a dash or space along Y axis
+	double dy = v.y / dashSpaceCountF;
+
+	SDLManager::get().renderer.SetDrawColor(strokeToColor());
+	updateBlendModeByStroke();
+	SDL2pp::Renderer& renderer = SDLManager::get().renderer;
+
+	// Dash origin
+	PointF dashP0F = p0F;
+	// Dash end point
+	PointF dashP1F;
+
+	// Dash coordinates converted to integers
+	SDL2pp::Point dashP0, dashP1;
+
+	// In one iteration we draw the dash and skip the space
+	for (int i = 0; i < (dashSpaceCount + 1) / 2; i++) {
+		// Place the end point
+		dashP1F = dashP0F;
+		dashP1F.x += dx;
+		dashP1F.y += dy;
+
+		// Must not go past the end point of the line (x1, y1).
+		// We know that the dash origin will never be past the line end point.
+		// That means if the X of the origin and end point of the dash are both
+		// less or both greater than the line end point, the dash end point did
+		// not go past the end point of the line. Same applies for Y.
+		if ((dashP0F.x < p1F.x) != (dashP1F.x < p1F.x)
+		 || (dashP0F.y < p1F.y) != (dashP1F.y < p1F.y)) {
+			dashP1F = p1F;
+		}
+
+		// Cast
+		dashP0.x = static_cast<int>(dashP0F.x);
+		dashP0.y = static_cast<int>(dashP0F.y);
+		dashP1.x = static_cast<int>(dashP1F.x);
+		dashP1.y = static_cast<int>(dashP1F.y);
+		
+		renderer.DrawLine(dashP0, dashP1);
+
+		// Set the next dash origin -- skip the current dash, skip the space
+		// after the dash
+		dashP0F.x = dashP1F.x + dx;
+		dashP0F.y = dashP1F.y + dy;
+	}
+}
+
 void SDLCanvas::fillEllipse(int x, int y, int rx, int ry)
 {
 	updateBlendModeByFill();

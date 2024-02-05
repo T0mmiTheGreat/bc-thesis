@@ -27,6 +27,7 @@
 #include "sprite/ObstacleSprite.hpp"
 #include "sprite/ObstacleEdgesSprite.hpp"
 #include "sprite/PlayerBrushSprite.hpp"
+#include "sprite/ObstacleBrushSprite.hpp"
 #include "stageeditor/Common.hpp"
 #include "stageeditor/StageEditor.hpp"
 #include "stageeditor/StageViewport.hpp"
@@ -105,7 +106,8 @@ private:
 	std::unique_ptr<ObstacleEdgesSprite> m_obstacleEdges;
 
 	std::unique_ptr<PlayerBrushSprite> m_playerBrush;
-	// Either `m_playerBrush` or nullptr
+	std::unique_ptr<ObstacleBrushSprite> m_obstacleBrush;
+	// Either `m_playerBrush`, `m_obstacleBrush`, or nullptr
 	ISprite* m_brushSprite;
 #pragma endregion sprites
 

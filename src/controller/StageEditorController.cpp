@@ -56,6 +56,7 @@ void StageEditorController::createSprites()
 
 	// Brushes
 	m_playerBrush = std::make_unique<PlayerBrushSprite>(sysProxy);
+	m_obstacleBrush = std::make_unique<ObstacleBrushSprite>(sysProxy);
 }
 
 void StageEditorController::initializeSprites()
@@ -561,8 +562,28 @@ void StageEditorController::updateToolBrushPlayers()
 
 void StageEditorController::updateToolBrushObstacles()
 {
-	// TODO
-	hideBrush();
+	Point mousePos = sysProxy->getMousePos();
+
+	if (m_stageEditor.getObstacleCorners().size() == 0) {
+		if (!getWorkspaceRect().containsPoint(mousePos)) {
+			hideBrush();
+		} else {
+			m_brushSprite = m_obstacleBrush.get();
+
+			m_obstacleBrush->setCostume(ObstacleBrushSprite::COSTUME_DOT);
+			m_obstacleBrush->setP0(mousePos);
+		}
+	} else {
+		m_brushSprite = m_obstacleBrush.get();
+
+		Matrix3x3 tm = getStageToScreenMatrix();
+		PointF p0 = m_stageEditor.getObstacleCorners().back();
+		p0.transform(tm);
+
+		m_obstacleBrush->setCostume(ObstacleBrushSprite::COSTUME_NORMAL);
+		m_obstacleBrush->setP0(static_cast<Point>(p0));
+		m_obstacleBrush->setP1(mousePos);
+	}
 }
 
 void StageEditorController::addPlayerSprite(EditorOID oid)
