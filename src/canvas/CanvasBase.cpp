@@ -20,6 +20,7 @@ CanvasBase::CanvasBase()
 
 Size2d CanvasBase::getImageSize(ImageId img)
 {
+	(void)img;
 	return Size2d();
 }
 

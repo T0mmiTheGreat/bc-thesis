@@ -11,20 +11,26 @@
 
 #include "sprite/ObstacleBrushSprite.hpp"
 
+void ObstacleBrushSprite::repaintLineColor(std::shared_ptr<ICanvas> canvas,
+	Rect& invalidRect, const Color& color)
+{
+	canvas->setStrokeWidth(1.0);
+	canvas->setStrokingColor(color);
+	canvas->dashedLine(m_p0.x, m_p0.y, m_p1.x, m_p1.y);
+
+	invalidRect += getBounds();
+}
+
 void ObstacleBrushSprite::repaintNormal(std::shared_ptr<ICanvas> canvas,
 	Rect& invalidRect)
 {
-	canvas->setStrokeWidth(1.0);
-	canvas->setStrokingColor(STROKE_NORMAL);
-	canvas->dashedLine(m_p0.x, m_p0.y, m_p1.x, m_p1.y);
+	repaintLineColor(canvas, invalidRect, STROKE_NORMAL);
 }
 
 void ObstacleBrushSprite::repaintBad(std::shared_ptr<ICanvas> canvas,
 	Rect& invalidRect)
 {
-	canvas->setStrokeWidth(1.0);
-	canvas->setStrokingColor(STROKE_BAD);
-	canvas->dashedLine(m_p0.x, m_p0.y, m_p1.x, m_p1.y);
+	repaintLineColor(canvas, invalidRect, STROKE_BAD);
 }
 
 void ObstacleBrushSprite::repaintDot(std::shared_ptr<ICanvas> canvas,
@@ -44,6 +50,8 @@ void ObstacleBrushSprite::repaintDot(std::shared_ptr<ICanvas> canvas,
 	
 	canvas->setFillingColor(FILL_DOT);
 	canvas->fillPolygon(pog);
+
+	invalidRect += getBounds();
 }
 
 ObstacleBrushSprite::ObstacleBrushSprite(

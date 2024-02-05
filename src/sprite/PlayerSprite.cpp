@@ -16,6 +16,8 @@ void PlayerSprite::repaintCostumeNormal(std::shared_ptr<ICanvas> canvas,
 {
 	canvas->setFillingColor(m_color);
 	canvas->fillCircle(x + m_radius, y + m_radius, m_radius);
+
+	invalidRect += getBounds();
 }
 
 void PlayerSprite::repaintCostumeHighlighted(std::shared_ptr<ICanvas> canvas,
@@ -26,6 +28,8 @@ void PlayerSprite::repaintCostumeHighlighted(std::shared_ptr<ICanvas> canvas,
 	canvas->setStrokeWidth(1.0);
 	canvas->setStrokingColor(HIGHLIGHT_COLOR);
 	canvas->strokeCircle(x + m_radius, y + m_radius, m_radius);
+
+	invalidRect += getBounds();
 }
 
 PlayerSprite::PlayerSprite(std::shared_ptr<IPaintingProxy> paintingProxy)

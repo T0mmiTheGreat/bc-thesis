@@ -384,6 +384,8 @@ StageEditor::StageEditor()
 	: m_stageState{
 		.width = STAGE_WIDTH_INITIAL,
 		.height = STAGE_HEIGHT_INITIAL,
+		.obstacles = std::unordered_map<EditorOID, StageEditorObstacleObject>(),
+		.players = std::unordered_map<EditorOID, StageEditorPlayerObject>(),
 	}
 	, m_activeTool{TOOL_SELECT}
 	, m_lastAction{std::make_shared<StageEditorActionNone>()}
@@ -470,6 +472,8 @@ bool StageEditor::canRedo()
 void StageEditor::mouseLeftBtnDownToolSelect(const PointF& pos,
 	ObjectSnap snapping, bool isShiftPressed)
 {
+	(void)snapping;
+
 	if (isSelectedObjectAt(pos)) {
 		beginDragSelected(pos);
 	} else {
@@ -480,18 +484,25 @@ void StageEditor::mouseLeftBtnDownToolSelect(const PointF& pos,
 void StageEditor::mouseLeftBtnDownToolPlayers(const PointF& pos,
 	ObjectSnap snapping, bool isShiftPressed)
 {
+	(void)isShiftPressed;
+
 	addPlayer(pos, snapping);
 }
 
 void StageEditor::mouseLeftBtnDownToolObstacles(const PointF& pos,
 	ObjectSnap snapping, bool isShiftPressed)
 {
+	(void)isShiftPressed;
+
 	addObstacleCorner(pos, snapping);
 }
 
 void StageEditor::mouseLeftBtnDownToolDelete(const PointF& pos,
 	ObjectSnap snapping, bool isShiftPressed)
 {
+	(void)pos;
+	(void)snapping;
+	(void)isShiftPressed;
 	// TODO
 }
 

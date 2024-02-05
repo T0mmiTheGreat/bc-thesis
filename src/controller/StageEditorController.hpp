@@ -124,10 +124,6 @@ private:
 	 */
 	void mouseMoveToolbar(int x, int y);
 	/**
-	 * @brief Mouse moved above the status bar.
-	 */
-	void mouseMoveStatusbar(int x, int y);
-	/**
 	 * @brief Mouse moved above the workspace.
 	 */
 	void mouseMoveWorkspace(int x, int y);
@@ -140,10 +136,6 @@ private:
 	 * @brief Mouse button pressed inside tool bar.
 	 */
 	void mouseBtnDownToolbar(MouseBtn btn, int x, int y);
-	/**
-	 * @brief Mouse button pressed inside status bar.
-	 */
-	void mouseBtnDownStatusbar(MouseBtn btn, int x, int y);
 	/**
 	 * @brief Mouse button pressed inside workspace.
 	 */
@@ -243,6 +235,7 @@ private:
 	void updateToolBrushSelect();
 	void updateToolBrushPlayers();
 	void updateToolBrushObstacles();
+	void updateToolBrushDelete();
 
 	void addPlayerSprite(EditorOID oid);
 	void addObstacleSprite(EditorOID oid);

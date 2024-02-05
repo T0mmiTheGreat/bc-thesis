@@ -25,6 +25,8 @@ void Core::initTurnData(TurnData& turnData)
 	for (auto playerRef : m_players) {
 		turnData.playerTurns.push_back(PlayerTurn{
 			.playerRef = playerRef,
+			.trajectory = Trajectory(),
+			.playerCollisions = PlayerList(),
 		});
 	}
 }

@@ -29,6 +29,8 @@ void StatusbarTextSprite::repaint(std::shared_ptr<ICanvas> canvas,
 {
 	canvas->setFillingColor(Color::white());
 	canvas->fillText(getX(), getY(), m_text, FONT);
+
+	invalidRect += getBounds();
 }
 
 const std::string & StatusbarTextSprite::getText() const

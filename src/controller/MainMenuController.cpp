@@ -61,7 +61,7 @@ int MainMenuController::getMenuItemAt(int x, int y)
 	// The position passed as `x` and `y` parameters
 	Point pos(x, y);
 
-	for (int i = 0; i < m_menuBtns.size(); i++) {
+	for (size_t i = 0; i < m_menuBtns.size(); i++) {
 		sprBounds = m_menuBtns[i]->getBounds();
 		if (sprBounds.containsPoint(pos)) {
 			// Position within a menu item

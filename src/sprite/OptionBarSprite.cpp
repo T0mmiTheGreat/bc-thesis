@@ -55,6 +55,8 @@ void OptionBarSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect
 	if (m_borders.top) canvas->strokeLine(tl.x, tl.y, tr.x, tr.y);
 	if (m_borders.right) canvas->strokeLine(tr.x, tr.y, br.x, br.y);
 	if (m_borders.bottom) canvas->strokeLine(bl.x, bl.y, br.x, br.y);
+
+	invalidRect += getBounds();
 }
 
 int OptionBarSprite::getBarWidth() const

@@ -39,6 +39,8 @@ private:
 	Point m_p0;
 	Point m_p1;
 
+	void repaintLineColor(std::shared_ptr<ICanvas> canvas, Rect& invalidRect,
+		const Color& color);
 	void repaintNormal(std::shared_ptr<ICanvas> canvas, Rect& invalidRect);
 	void repaintBad(std::shared_ptr<ICanvas> canvas, Rect& invalidRect);
 	void repaintDot(std::shared_ptr<ICanvas> canvas, Rect& invalidRect);

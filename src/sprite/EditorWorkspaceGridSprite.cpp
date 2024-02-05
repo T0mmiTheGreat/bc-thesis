@@ -51,6 +51,8 @@ void EditorWorkspaceGridSprite::repaint(std::shared_ptr<ICanvas> canvas,
 				bottomRight.x, static_cast<int>(y));
 		}
 	}
+
+	invalidRect += bounds;
 }
 
 void EditorWorkspaceGridSprite::setSize(const Size2d& value)

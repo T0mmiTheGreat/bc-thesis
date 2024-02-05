@@ -46,6 +46,8 @@ void ObstacleEdgesSprite::repaint(std::shared_ptr<ICanvas> canvas,
 			const PolygonF::CornerType& p1 = m_corners[i];
 			canvas->strokeLine(p0.x, p0.y, p1.x, p1.y);
 		}
+
+		invalidRect += getBounds();
 	}
 }
 

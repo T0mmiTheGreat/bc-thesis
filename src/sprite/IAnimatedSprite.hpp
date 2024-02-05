@@ -17,7 +17,7 @@
 /**
  * @brief Sprite with some animation.
  */
-class IAnimatedSprite : public ISprite {
+class IAnimatedSprite : virtual public ISprite {
 public:
 	virtual ~IAnimatedSprite() {}
 	/**

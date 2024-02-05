@@ -35,6 +35,8 @@ private:
 	Costume m_costume;
 	int m_radius;
 
+	void repaintColor(std::shared_ptr<ICanvas> canvas, Rect& invalidRect,
+		const Color& color);
 	void repaintNormal(std::shared_ptr<ICanvas> canvas, Rect& invalidRect);
 	void repaintBad(std::shared_ptr<ICanvas> canvas, Rect& invalidRect);
 public:

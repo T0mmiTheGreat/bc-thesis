@@ -16,7 +16,8 @@ std::unique_ptr<IControllerChild> GeneralControllerBase::createReplacement()
 	return nullptr;
 }
 
-GeneralControllerBase::GeneralControllerBase(std::shared_ptr<ISysProxy> sysProxy)
+GeneralControllerBase::GeneralControllerBase(
+	std::shared_ptr<ISysProxy> sysProxy)
 	: swapCallback{nullptr}
 	, sysProxy{sysProxy}
 {}
@@ -45,26 +46,37 @@ void GeneralControllerBase::abortedEvent()
 
 void GeneralControllerBase::keyDownEvent(KeyCode key)
 {
+	(void)key;
 	// Ignore
 }
 
 void GeneralControllerBase::mouseBtnDownEvent(MouseBtn btn, int x, int y)
 {
+	(void)btn;
+	(void)x;
+	(void)y;
 	// Ignore
 }
 
 void GeneralControllerBase::mouseBtnUpEvent(MouseBtn btn, int x, int y)
 {
+	(void)btn;
+	(void)x;
+	(void)y;
 	// Ignore
 }
 
 void GeneralControllerBase::mouseMoveEvent(int x, int y)
 {
+	(void)x;
+	(void)y;
 	// Ignore
 }
 
 void GeneralControllerBase::mouseWheelEvent(int dx, int dy)
 {
+	(void)dx;
+	(void)dy;
 	// Ignore
 }
 
@@ -73,8 +85,11 @@ void GeneralControllerBase::loopEvent()
 	// Ignore
 }
 
-void GeneralControllerBase::paintEvent(std::shared_ptr<ICanvas> canvas, Rect & invalidRect)
+void GeneralControllerBase::paintEvent(std::shared_ptr<ICanvas> canvas,
+	Rect& invalidRect)
 {
+	(void)canvas;
+	(void)invalidRect;
 	// Ignore
 }
 

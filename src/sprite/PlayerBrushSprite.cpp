@@ -11,16 +11,26 @@
 
 #include "sprite/PlayerBrushSprite.hpp"
 
+void PlayerBrushSprite::repaintColor(std::shared_ptr<ICanvas> canvas,
+	Rect& invalidRect, const Color& color)
+{
+	canvas->setStrokeWidth(1.0);
+	canvas->setStrokingColor(color);
+	canvas->dashedCircle(getCenterX(), getCenterY(), getRadius());
+
+	invalidRect += getBounds();
+}
+
 void PlayerBrushSprite::repaintNormal(std::shared_ptr<ICanvas> canvas,
 	Rect& invalidRect)
 {
-	canvas->setStrokeWidth(1.0);
-	canvas->setStrokingColor(STROKE_NORMAL);
-	canvas->dashedCircle(getCenterX(), getCenterY(), getRadius());
+	repaintColor(canvas, invalidRect, STROKE_NORMAL);
 }
 
-void PlayerBrushSprite::repaintBad(std::shared_ptr<ICanvas> canvas, Rect & invalidRect)
+void PlayerBrushSprite::repaintBad(std::shared_ptr<ICanvas> canvas,
+	Rect& invalidRect)
 {
+	repaintColor(canvas, invalidRect, STROKE_BAD);
 }
 
 PlayerBrushSprite::PlayerBrushSprite(

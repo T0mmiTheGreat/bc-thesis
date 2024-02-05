@@ -16,9 +16,9 @@
 StageEditorController::StageEditorController(
 	std::shared_ptr<ISysProxy> sysProxy)
 	: GeneralControllerBase(sysProxy)
-	, m_brushSprite{nullptr}
 	, m_viewport(static_cast<Size2dF>(m_stageEditor.getState().getSize()),
 		static_cast<Size2dF>(getWorkspaceRect().getSize()))
+	, m_brushSprite{nullptr}
 {}
 
 void StageEditorController::createSprites()
@@ -122,10 +122,6 @@ void StageEditorController::mouseMoveToolbar(int x, int y)
 	checkToolIconMouseHover(x, y);
 }
 
-void StageEditorController::mouseMoveStatusbar(int x, int y)
-{
-}
-
 void StageEditorController::mouseMoveWorkspace(int x, int y)
 {
 	checkWorkspaceDoDrag(x, y);
@@ -133,15 +129,16 @@ void StageEditorController::mouseMoveWorkspace(int x, int y)
 
 void StageEditorController::mouseBtnDownMenubar(MouseBtn btn, int x, int y)
 {
+	(void)btn;
+	(void)x;
+	(void)y;
 }
 
 void StageEditorController::mouseBtnDownToolbar(MouseBtn btn, int x, int y)
 {
-	checkToolIconClick(x, y);
-}
-
-void StageEditorController::mouseBtnDownStatusbar(MouseBtn btn, int x, int y)
-{
+	if (btn == BTN_LEFT) {
+		checkToolIconClick(x, y);
+	}
 }
 
 void StageEditorController::mouseBtnDownWorkspace(MouseBtn btn, int x, int y)
@@ -172,6 +169,8 @@ void StageEditorController::mouseBtnDownWorkspace(MouseBtn btn, int x, int y)
 
 void StageEditorController::mouseWheelWorkspace(int dx, int dy)
 {
+	(void)dx;
+
 	if (sysProxy->isKeyPressed(KEY_CTRL) && dy != 0) {
 		// Zoom
 		
@@ -367,7 +366,7 @@ void StageEditorController::updateSpritesByActionMultiple(
 	const auto actionCast =
 		std::dynamic_pointer_cast<StageEditorActionMultiple>(action);
 	
-	for (const auto a : actionCast->getActions()) {
+	for (const auto& a : actionCast->getActions()) {
 		updateSpritesByAction(a);
 	}
 }
@@ -383,6 +382,7 @@ void StageEditorController::updateSpritesByActionAddPlayer(
 void StageEditorController::updateSpritesByActionPlaceObstacleCorner(
 	const std::shared_ptr<StageEditorAction> action)
 {
+	(void)action;
 	updateObstacleEdgesSprite();
 }
 
@@ -543,6 +543,9 @@ void StageEditorController::updateToolBrush()
 		case TOOL_OBSTACLES:
 			updateToolBrushObstacles();
 			break;
+		case TOOL_DELETE:
+			updateToolBrushDelete();
+			break;
 	}
 }
 
@@ -596,6 +599,11 @@ void StageEditorController::updateToolBrushObstacles()
 		m_obstacleBrush->setP0(static_cast<Point>(p0));
 		m_obstacleBrush->setP1(mousePos);
 	}
+}
+
+void StageEditorController::updateToolBrushDelete()
+{
+	hideBrush();
 }
 
 void StageEditorController::addPlayerSprite(EditorOID oid)
@@ -769,7 +777,7 @@ void StageEditorController::mouseBtnDownEvent(MouseBtn btn, int x, int y)
 		mouseBtnDownToolbar(btn, x, y);
 	} else if (statusbarRect.containsPoint(mouse)) {
 		// Within status bar
-		mouseBtnDownStatusbar(btn, x, y);
+		// Nothing
 	} else if (workspaceRect.containsPoint(mouse)) {
 		// Within workspace
 		mouseBtnDownWorkspace(btn, x, y);
@@ -813,7 +821,7 @@ void StageEditorController::mouseMoveEvent(int x, int y)
 		mouseMoveToolbar(x, y);
 	} else if (statusbarRect.containsPoint(mouse)) {
 		// Within status bar
-		mouseMoveStatusbar(x, y);
+		// Nothing
 	} else if (workspaceRect.containsPoint(mouse)) {
 		// Within workspace
 		mouseMoveWorkspace(x, y);

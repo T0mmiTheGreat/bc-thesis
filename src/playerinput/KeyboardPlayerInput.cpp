@@ -14,11 +14,11 @@
 KeyboardPlayerInput::KeyboardPlayerInput(
 	std::shared_ptr<ISysProxyPlayerInput> sysProxy, KeyCode keyLeft,
 	KeyCode keyUp, KeyCode keyRight, KeyCode keyDown)
-	: m_keyLeft{keyLeft}
+	: m_sysProxy{sysProxy}
+	, m_keyLeft{keyLeft}
 	, m_keyUp{keyUp}
 	, m_keyRight{keyRight}
 	, m_keyDown{keyDown}
-	, m_sysProxy{sysProxy}
 {}
 
 KeyboardPlayerInput KeyboardPlayerInput::constructWSAD(

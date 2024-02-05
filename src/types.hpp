@@ -986,7 +986,7 @@ struct PolygonF {
 
 		// This algorithm is basically about finding the minima and maxima in
 		// both X and Y dimensions.
-		for (int i = 1; i < cornerCount(); i++) {
+		for (size_t i = 1; i < cornerCount(); i++) {
 			const PointF& corner = corners[i];
 
 			if (topLeft.x > corner.x) topLeft.x = corner.x;
@@ -1034,7 +1034,7 @@ struct PolygonF {
 	 * @param tm Transformation matrix.
 	 */
 	constexpr void transform(const Matrix3x3& tm) {
-		for (int i = 0; i < cornerCount(); i++) {
+		for (size_t i = 0; i < cornerCount(); i++) {
 			corners[i].transform(tm);
 		}
 	}

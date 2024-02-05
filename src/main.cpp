@@ -20,6 +20,8 @@
 extern "C"
 int main(int argc, char *argv[])
 {
+	(void)argc;
+	(void)argv;
 	auto rootCntl = ControllerFactory::createRootController(SysProxyFactory::createDefault());
 	auto sdlSubs = std::make_shared<SDLSubscriber>(rootCntl);
 	SDLManager::get().assignSubscriber(sdlSubs);

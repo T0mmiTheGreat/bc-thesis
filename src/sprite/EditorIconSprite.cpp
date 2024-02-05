@@ -52,6 +52,8 @@ void EditorIconSprite::paintImg(std::shared_ptr<ICanvas> canvas,
 	Rect dstRect(getX() + IMG_MARGINS, getY() + IMG_MARGINS, FIXED_IMG_WIDTH,
 		FIXED_IMG_HEIGHT);
 	canvas->copyImage(m_img, dstRect);
+
+	invalidRect += getBounds();
 }
 
 void EditorIconSprite::repaintCostumeNormal(std::shared_ptr<ICanvas> canvas,
