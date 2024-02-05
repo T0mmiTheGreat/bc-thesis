@@ -379,7 +379,7 @@ struct PointGeneric {
 	 *         efficient solution would be to square the value instead of
 	 *         doing costly sqrt operation.
 	 */
-	constexpr double sqrDistance(const PointGeneric<T>& rhs) const {
+	constexpr T sqrDistance(const PointGeneric<T>& rhs) const {
 		return sqr(this->x - rhs.x) + sqr(this->y - rhs.y);
 	}
 
