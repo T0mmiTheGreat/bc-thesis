@@ -209,13 +209,13 @@ private:
 		const std::shared_ptr<StageEditorAction> action);
 	void updateSpritesByActionSelectObstacleObject(
 		const std::shared_ptr<StageEditorAction> action);
-	void updateSpritesByActionSelectObstacleCorner(
-		const std::shared_ptr<StageEditorAction> action);
 	void updateSpritesByActionDeselectPlayerObject(
 		const std::shared_ptr<StageEditorAction> action);
 	void updateSpritesByActionDeselectObstacleObject(
 		const std::shared_ptr<StageEditorAction> action);
-	void updateSpritesByActionDeselectObstacleCorner(
+	void updateSpritesByActionMovePlayerObject(
+		const std::shared_ptr<StageEditorAction> action);
+	void updateSpritesByActionMoveObstacleObject(
 		const std::shared_ptr<StageEditorAction> action);
 
 	/**

@@ -47,10 +47,10 @@ public:
 		ACTION_ACTIVATE_TOOL,
 		ACTION_SELECT_PLAYER_OBJECT,
 		ACTION_SELECT_OBSTACLE_OBJECT,
-		ACTION_SELECT_OBSTACLE_CORNER,
 		ACTION_DESELECT_PLAYER_OBJECT,
 		ACTION_DESELECT_OBSTACLE_OBJECT,
-		ACTION_DESELECT_OBSTACLE_CORNER,
+		ACTION_MOVE_PLAYER_OBJECT,
+		ACTION_MOVE_OBSTACLE_OBJECT,
 	};
 
 	virtual ~StageEditorAction() {}
@@ -274,11 +274,16 @@ public:
  * @brief Abstract class representing action of selection or deselection of
  *        an object.
  */
-class StageEditorActionSelectDeselectObject : public StageEditorAction {
+class StageEditorActionSelectDeselectObjectBase : public StageEditorAction {
 private:
 	EditorOID m_oid;
 public:
-	StageEditorActionSelectDeselectObject(EditorOID oid)
+	/**
+	 * @brief Constructs a new StageEditorActionSelectDeselectObjectBase object.
+	 * 
+	 * @param oid The object which was selected or deselected.
+	 */
+	StageEditorActionSelectDeselectObjectBase(EditorOID oid)
 		: m_oid{oid}
 	{}
 
@@ -290,39 +295,15 @@ public:
 	}
 };
 
-/**
- * @brief Abstract class representing action of selection or deselection of
- *        an obstacle corner.
- */
-class StageEditorActionSelectDeselectObstacleCorner : public StageEditorAction {
-private:
-	EditorOID m_obstacleOid;
-	unsigned m_cornerIdx;
+class StageEditorActionSelectPlayerObject : public StageEditorActionSelectDeselectObjectBase {
 public:
-	StageEditorActionSelectDeselectObstacleCorner(EditorOID obstacleOid,
-		unsigned cornerIdx)
-		: m_obstacleOid{obstacleOid}
-		, m_cornerIdx{cornerIdx}
-	{}
-
 	/**
-	 * @brief OID of the obstacle which's corner was selected.
+	 * @brief Constructs a new StageEditorActionSelectPlayerObject object.
+	 * 
+	 * @param oid The object which was selected.
 	 */
-	EditorOID getObstacleOid() const {
-		return m_obstacleOid;
-	}
-	/**
-	 * @brief Index of the selected corner.
-	 */
-	unsigned getCornerIdx() const {
-		return m_cornerIdx;
-	}
-};
-
-class StageEditorActionSelectPlayerObject : public StageEditorActionSelectDeselectObject {
-public:
 	StageEditorActionSelectPlayerObject(EditorOID oid)
-		: StageEditorActionSelectDeselectObject(oid)
+		: StageEditorActionSelectDeselectObjectBase(oid)
 	{}
 
 	/**
@@ -333,10 +314,15 @@ public:
 	}
 };
 
-class StageEditorActionSelectObstacleObject : public StageEditorActionSelectDeselectObject {
+class StageEditorActionSelectObstacleObject : public StageEditorActionSelectDeselectObjectBase {
 public:
+	/**
+	 * @brief Constructs a new StageEditorActionSelectObstacleObject object.
+	 * 
+	 * @param oid The object which was selected.
+	 */
 	StageEditorActionSelectObstacleObject(EditorOID oid)
-		: StageEditorActionSelectDeselectObject(oid)
+		: StageEditorActionSelectDeselectObjectBase(oid)
 	{}
 
 	/**
@@ -347,25 +333,15 @@ public:
 	}
 };
 
-class StageEditorActionSelectObstacleCorner : public StageEditorActionSelectDeselectObstacleCorner {
+class StageEditorActionDeselectPlayerObject : public StageEditorActionSelectDeselectObjectBase {
 public:
-	StageEditorActionSelectObstacleCorner(EditorOID obstacleOid,
-		unsigned cornerIdx)
-		: StageEditorActionSelectDeselectObstacleCorner(obstacleOid, cornerIdx)
-	{}
-
 	/**
-	 * @brief Returns the action type.
+	 * @brief Constructs a new StageEditorActionDeselectPlayerObject object.
+	 * 
+	 * @param oid The object which was deselected.
 	 */
-	ActionType getType() const override {
-		return ACTION_SELECT_OBSTACLE_CORNER;
-	}
-};
-
-class StageEditorActionDeselectPlayerObject : public StageEditorActionSelectDeselectObject {
-public:
 	StageEditorActionDeselectPlayerObject(EditorOID oid)
-		: StageEditorActionSelectDeselectObject(oid)
+		: StageEditorActionSelectDeselectObjectBase(oid)
 	{}
 
 	/**
@@ -376,10 +352,15 @@ public:
 	}
 };
 
-class StageEditorActionDeselectObstacleObject : public StageEditorActionSelectDeselectObject {
+class StageEditorActionDeselectObstacleObject : public StageEditorActionSelectDeselectObjectBase {
 public:
+	/**
+	 * @brief Constructs a new StageEditorActionDeselectObstacleObject object.
+	 * 
+	 * @param oid The object which was deselected.
+	 */
 	StageEditorActionDeselectObstacleObject(EditorOID oid)
-		: StageEditorActionSelectDeselectObject(oid)
+		: StageEditorActionSelectDeselectObjectBase(oid)
 	{}
 
 	/**
@@ -390,18 +371,90 @@ public:
 	}
 };
 
-class StageEditorActionDeselectObstacleCorner : public StageEditorActionSelectDeselectObstacleCorner {
+class StageEditorActionMoveObjectBase : public StageEditorAction {
+private:
+	EditorOID m_oid;
+	double m_dx;
+	double m_dy;
 public:
-	StageEditorActionDeselectObstacleCorner(EditorOID obstacleOid,
-		unsigned cornerIdx)
-		: StageEditorActionSelectDeselectObstacleCorner(obstacleOid, cornerIdx)
+	/**
+	 * @brief Constructs a new StageEditorActionMoveObjectBase object.
+	 * 
+	 * @param oid The object which was moved.
+	 * @param dx Increment in X axis.
+	 * @param dy Increment in Y axis.
+	 */
+	StageEditorActionMoveObjectBase(EditorOID oid, double dx, double dy)
+		: m_oid{oid}
+		, m_dx{dx}
+		, m_dy{dy}
+	{}
+
+	/**
+	 * @brief The object which was moved.
+	 */
+	EditorOID getOid() const {
+		return m_oid;
+	}
+
+	/**
+	 * @brief Increment in X axis.
+	 */
+	double getDx() const {
+		return m_dx;
+	}
+
+	/**
+	 * @brief Increment in Y axis.
+	 */
+	double getDy() const {
+		return m_dy;
+	}
+};
+
+class StageEditorActionMovePlayerObject : public StageEditorActionMoveObjectBase {
+public:
+	/**
+	 * @brief Constructs a new StageEditorActionMovePlayerObject object.
+	 * 
+	 * @param oid The object which was moved.
+	 * @param dx Increment in X axis.
+	 * @param dy Increment in Y axis.
+	 */
+	StageEditorActionMovePlayerObject(EditorOID oid, double dx, double dy)
+		: StageEditorActionMoveObjectBase(oid, dx, dy)
 	{}
 
 	/**
 	 * @brief Returns the action type.
 	 */
 	ActionType getType() const override {
-		return ACTION_DESELECT_OBSTACLE_CORNER;
+		return ACTION_MOVE_PLAYER_OBJECT;
+	}
+};
+
+class StageEditorActionMoveObstacleObject : public StageEditorActionMoveObjectBase {
+private:
+	EditorOID m_oid;
+	PointF m_from;
+	PointF m_to;
+public:
+	/**
+	 * @brief Constructs a new StageEditorActionMoveObstacleObject object.
+	 * 
+	 * @param oid The object which was moved.
+	 * @param dx Increment in X axis.
+	 * @param dy Increment in Y axis.
+	 */
+	StageEditorActionMoveObstacleObject(EditorOID oid, double dx, double dy)
+		: StageEditorActionMoveObjectBase(oid, dx, dy)
+	{}
+
+	/**
+	 * @brief Returns the action type.
+	 */
+	ActionType getType() const override {
+		return ACTION_MOVE_OBSTACLE_OBJECT;
 	}
 };
 

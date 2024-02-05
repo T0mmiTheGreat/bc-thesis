@@ -346,17 +346,17 @@ void StageEditorController::updateSpritesByAction(
 		case StageEditorAction::ACTION_SELECT_OBSTACLE_OBJECT:
 			updateSpritesByActionSelectObstacleObject(action);
 			break;
-		case StageEditorAction::ACTION_SELECT_OBSTACLE_CORNER:
-			updateSpritesByActionSelectObstacleCorner(action);
-			break;
 		case StageEditorAction::ACTION_DESELECT_PLAYER_OBJECT:
 			updateSpritesByActionDeselectPlayerObject(action);
 			break;
 		case StageEditorAction::ACTION_DESELECT_OBSTACLE_OBJECT:
 			updateSpritesByActionDeselectObstacleObject(action);
 			break;
-		case StageEditorAction::ACTION_DESELECT_OBSTACLE_CORNER:
-			updateSpritesByActionDeselectObstacleCorner(action);
+		case StageEditorAction::ACTION_MOVE_PLAYER_OBJECT:
+			updateSpritesByActionMovePlayerObject(action);
+			break;
+		case StageEditorAction::ACTION_MOVE_OBSTACLE_OBJECT:
+			updateSpritesByActionMoveObstacleObject(action);
 			break;
 	}
 }
@@ -423,12 +423,6 @@ void StageEditorController::updateSpritesByActionSelectObstacleObject(
 		ObstacleSprite::COSTUME_HIGHLIGHTED);
 }
 
-void StageEditorController::updateSpritesByActionSelectObstacleCorner(
-	const std::shared_ptr<StageEditorAction> action)
-{
-	// TODO
-}
-
 void StageEditorController::updateSpritesByActionDeselectPlayerObject(
 	const std::shared_ptr<StageEditorAction> action)
 {
@@ -447,10 +441,20 @@ void StageEditorController::updateSpritesByActionDeselectObstacleObject(
 		ObstacleSprite::COSTUME_NORMAL);
 }
 
-void StageEditorController::updateSpritesByActionDeselectObstacleCorner(
+void StageEditorController::updateSpritesByActionMovePlayerObject(
 	const std::shared_ptr<StageEditorAction> action)
 {
-	// TODO
+	const auto actionCast =
+		std::dynamic_pointer_cast<StageEditorActionMovePlayerObject>(action);
+	updatePlayerSprite(actionCast->getOid());
+}
+
+void StageEditorController::updateSpritesByActionMoveObstacleObject(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	const auto actionCast =
+		std::dynamic_pointer_cast<StageEditorActionMoveObstacleObject>(action);
+	updateObstacleSprite(actionCast->getOid());
 }
 
 void StageEditorController::updateGridSprite()
@@ -552,6 +556,7 @@ void StageEditorController::updateToolBrushPlayers()
 	Point mousePos = sysProxy->getMousePos();
 
 	if (!getWorkspaceRect().containsPoint(mousePos)) {
+		// Don't draw anything if the mouse does not move over workspace
 		hideBrush();
 	} else {
 		m_brushSprite = m_playerBrush.get();
@@ -567,14 +572,20 @@ void StageEditorController::updateToolBrushObstacles()
 
 	if (m_stageEditor.getObstacleCorners().size() == 0) {
 		if (!getWorkspaceRect().containsPoint(mousePos)) {
+			// Don't draw anything if the mouse does not move over workspace
+
 			hideBrush();
 		} else {
+			// Draw just a dot
+
 			m_brushSprite = m_obstacleBrush.get();
 
 			m_obstacleBrush->setCostume(ObstacleBrushSprite::COSTUME_DOT);
 			m_obstacleBrush->setP0(mousePos);
 		}
 	} else {
+		// Draw a dashed edge
+
 		m_brushSprite = m_obstacleBrush.get();
 
 		Matrix3x3 tm = getStageToScreenMatrix();
@@ -767,8 +778,20 @@ void StageEditorController::mouseBtnDownEvent(MouseBtn btn, int x, int y)
 
 void StageEditorController::mouseBtnUpEvent(MouseBtn btn, int x, int y)
 {
-	if (btn == BTN_MIDDLE) {
-		m_viewport.endDrag();
+	switch (btn) {
+		case BTN_LEFT: {
+			Matrix3x3 tm = getScreenToStageMatrix();
+			PointF pos(x, y);
+			pos.transform(tm);
+			m_stageEditor.mouseLeftBtnUp(pos, StageEditor::SNAP_NONE);
+			updateSpritesByBackend();
+		} break;
+		case BTN_MIDDLE:
+			m_viewport.endDrag();
+			break;
+		case BTN_RIGHT:
+		case BTN_UNKNOWN:
+			break;
 	}
 }
 

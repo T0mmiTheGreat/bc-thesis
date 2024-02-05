@@ -36,7 +36,7 @@ void StageEditor::getSnappedPoint(const PointF& p, ObjectSnap snapping,
 	}
 }
 
-std::shared_ptr<StageEditorAction> StageEditor::addPlayerInternal(const PointF& pos)
+std::shared_ptr<StageEditorAction> StageEditor::addPlayerAction(const PointF& pos)
 {
 	EditorOID oid = generateEditorOID();
 
@@ -45,14 +45,14 @@ std::shared_ptr<StageEditorAction> StageEditor::addPlayerInternal(const PointF& 
 	return res;
 }
 
-std::shared_ptr<StageEditorAction> StageEditor::addObstacleCornerInternal(const PointF& pos)
+std::shared_ptr<StageEditorAction> StageEditor::addObstacleCornerAction(const PointF& pos)
 {
 	m_obstacleCorners.push_back(pos);
 	auto res = std::make_shared<StageEditorActionPlaceObstacleCorner>(pos);
 	return res;
 }
 
-std::shared_ptr<StageEditorAction> StageEditor::completeObstacleInternal()
+std::shared_ptr<StageEditorAction> StageEditor::completeObstacleAction()
 {
 	// Must be a valid Euclidean polygon
 	if (m_obstacleCorners.size() < 3) {
@@ -71,7 +71,7 @@ std::shared_ptr<StageEditorAction> StageEditor::completeObstacleInternal()
 	}
 }
 
-std::shared_ptr<StageEditorAction> StageEditor::selectObjectInternal(const PointF& pos)
+std::shared_ptr<StageEditorAction> StageEditor::selectObjectAction(const PointF& pos)
 {
 	EditorOID objectId = EDITOR_OID_NULL;
 
@@ -94,7 +94,7 @@ std::shared_ptr<StageEditorAction> StageEditor::selectObjectInternal(const Point
 	}
 }
 
-std::shared_ptr<StageEditorAction> StageEditor::deselectAllObjectsInternal()
+std::shared_ptr<StageEditorAction> StageEditor::deselectAllObjectsAction()
 {
 	// The actions performed (all the deselections)
 	std::vector<std::shared_ptr<StageEditorAction>> actionGroup;
@@ -150,6 +150,74 @@ std::shared_ptr<StageEditorAction> StageEditor::deselectAllObjectsInternal()
 	}
 }
 
+std::shared_ptr<StageEditorAction> StageEditor::movePlayerObjectAction(
+	EditorOID oid, double dx, double dy)
+{
+	if (dx == 0 && dy == 0) {
+		return std::make_shared<StageEditorActionNone>();
+	} else {
+		auto& player = m_stageState.players.at(oid);
+
+		player.pos.x += dx;
+		player.pos.y += dy;
+
+		auto res = std::make_shared<StageEditorActionMovePlayerObject>(oid,
+			dx, dy);
+		return res;
+	}
+}
+
+std::shared_ptr<StageEditorAction> StageEditor::moveObstacleObjectAction(
+	EditorOID oid, double dx, double dy)
+{
+	if (dx == 0 && dy == 0) {
+		return std::make_shared<StageEditorActionNone>();
+	} else {
+		auto& obstacle = m_stageState.obstacles.at(oid);
+
+		for (auto& corner : obstacle.shape.corners) {
+			corner.x += dx;
+			corner.y += dy;
+		}
+
+		auto res = std::make_shared<StageEditorActionMoveObstacleObject>(oid,
+			dx, dy);
+		return res;
+	}
+}
+
+std::shared_ptr<StageEditorAction> StageEditor::moveSelectedObjectsAction(
+	double dx, double dy)
+{
+	if (dx == 0 && dy == 0) {
+		return std::make_shared<StageEditorActionNone>();
+	} else {
+		// The actions performed (all the moves)
+		std::vector<std::shared_ptr<StageEditorAction>> actionGroup;
+		std::shared_ptr<StageEditorAction> newAction;
+
+		for (EditorOID oid : m_selectedPlayers) {
+			newAction = movePlayerObjectAction(oid, dx, dy);
+			actionGroup.push_back(newAction);
+		}
+
+		for (EditorOID oid : m_selectedObstacles) {
+			newAction = moveObstacleObjectAction(oid, dx, dy);
+			actionGroup.push_back(newAction);
+		}
+
+		if (actionGroup.size() == 0) {
+			// No objects were selected => no objects were moved
+
+			return std::make_shared<StageEditorActionNone>();
+		} else {
+			auto res = std::make_shared<StageEditorActionMultiple>(
+				std::move(actionGroup));
+			return res;
+		}
+	}
+}
+
 EditorOID StageEditor::getPlayerObjectAt(const PointF& pos)
 {
 	for (const auto& playerObjPair : m_stageState.players) {
@@ -178,6 +246,140 @@ EditorOID StageEditor::getObstacleObjectAt(const PointF& pos)
 	return EDITOR_OID_NULL;
 }
 
+void StageEditor::addPlayer(const PointF & pos, ObjectSnap snapping)
+{
+	// Snap position to grid
+	PointF posSnap;
+	getSnappedPoint(pos, snapping, posSnap);
+
+	// Deselect objects, if any are selected
+	auto actionDeselect = deselectAllObjectsAction();
+
+	// Add player
+	auto actionAddPlayer = addPlayerAction(pos);
+
+	if (actionDeselect->getType() == StageEditorAction::ACTION_NONE) {
+		// No objects were deselected; just added a player
+
+		m_lastAction = actionAddPlayer;
+	} else {
+		// Deselected objects and added a player
+
+		m_lastAction = std::make_shared<StageEditorActionMultiple>(
+			actionDeselect, actionAddPlayer);
+	}
+
+	// Add to actions history
+	m_history.pushAction(m_lastAction);
+}
+
+void StageEditor::addObstacleCorner(const PointF & pos, ObjectSnap snapping)
+{
+	// Snap position to grid
+	PointF posSnap;
+	getSnappedPoint(pos, snapping, posSnap);
+
+	// Deselect objects, if any are selected
+	auto actionDeselect = deselectAllObjectsAction();
+
+	// Add obstacle corner
+	auto actionAddCorner = addObstacleCornerAction(pos);
+
+	if (actionDeselect->getType() == StageEditorAction::ACTION_NONE) {
+		// No objects were deselected; just added an obstacle corner
+
+		m_lastAction = actionAddCorner;
+	} else {
+		// Deselected objects and added an obstacle corner
+
+		m_lastAction = std::make_shared<StageEditorActionMultiple>(
+			actionDeselect, actionAddCorner);
+	}
+
+	// Add to actions history
+	m_history.pushAction(m_lastAction);
+}
+
+void StageEditor::completeObstacle()
+{
+	// Complete obstacle
+	m_lastAction = completeObstacleAction();
+
+	// Add to actions history
+	m_history.pushAction(m_lastAction);
+}
+
+void StageEditor::selectObject(const PointF& pos, bool keepCurrent)
+{
+	std::vector<std::shared_ptr<StageEditorAction>> actionsGroup;
+
+	if (!keepCurrent) {
+		// Deselect objects, if any are selected
+		auto actionDeselect = deselectAllObjectsAction();
+		if (actionDeselect->getType() != StageEditorAction::ACTION_NONE) {
+			// Objects were deselected
+
+			actionsGroup.push_back(actionDeselect);
+		}
+		// Else no objects were deselected
+	}
+	// Else keep the selected objects
+
+	// Select object
+	auto actionSelect = selectObjectAction(pos);
+	if (actionSelect->getType() != StageEditorAction::ACTION_NONE) {
+		// Object was selected
+
+		actionsGroup.push_back(actionSelect);
+	}
+	// Else no object was selected
+
+	if (actionsGroup.size() == 0) {
+		// No selections nor deselections
+
+		m_lastAction = std::make_shared<StageEditorActionNone>();
+	} else if (actionsGroup.size() == 1) {
+		// Either only deselected all objects or only selected one object
+
+		m_lastAction = actionsGroup[0];
+		m_history.pushAction(m_lastAction);
+	} else {
+		// Deselected all objects and then selected one
+
+		m_lastAction = std::make_shared<StageEditorActionMultiple>(
+			std::move(actionsGroup));
+		m_history.pushAction(m_lastAction);
+	}
+}
+
+void StageEditor::beginDragSelected(const PointF& pos)
+{
+	if (!m_isDragging) {
+		m_dragStart = pos;
+		m_isDragging = true;
+	}
+	m_lastAction = std::make_shared<StageEditorActionNone>();
+}
+
+void StageEditor::endDragSelected(const PointF& pos, ObjectSnap snapping)
+{
+	if (m_isDragging) {
+		PointF offsetPoint = pos.relativeTo(m_dragStart);
+		PointF offsetPointSnap;
+		getSnappedPoint(offsetPoint, snapping, offsetPointSnap);
+
+		m_lastAction = moveSelectedObjectsAction(offsetPoint.x, offsetPoint.y);
+
+		if (m_lastAction->getType() != StageEditorAction::ACTION_NONE) {
+			m_history.pushAction(m_lastAction);
+		}
+
+		m_isDragging = false;
+	} else {
+		m_lastAction = std::make_shared<StageEditorActionNone>();
+	}
+}
+
 StageEditor::StageEditor()
 	: m_stageState{
 		.width = STAGE_WIDTH_INITIAL,
@@ -185,6 +387,7 @@ StageEditor::StageEditor()
 	}
 	, m_activeTool{TOOL_SELECT}
 	, m_lastAction{std::make_shared<StageEditorActionNone>()}
+	, m_isDragging{false}
 {}
 
 const StageState& StageEditor::getState() const
@@ -233,7 +436,8 @@ EditorOID StageEditor::getSelectedObstacleAt(const PointF& pos)
 
 bool StageEditor::isSelectedObjectAt(const PointF& pos)
 {
-return false;
+	return (getSelectedPlayerAt(pos) != EDITOR_OID_NULL)
+		|| (getSelectedObstacleAt(pos) != EDITOR_OID_NULL);
 }
 
 void StageEditor::activateTool(EditorTool newTool)
@@ -266,101 +470,23 @@ bool StageEditor::canRedo()
 void StageEditor::mouseLeftBtnDownToolSelect(const PointF& pos,
 	ObjectSnap snapping, bool isShiftPressed)
 {
-	std::vector<std::shared_ptr<StageEditorAction>> actionsGroup;
-
-	if (!isShiftPressed) {
-		// Deselect objects, if any are selected
-		auto actionDeselect = deselectAllObjectsInternal();
-		if (actionDeselect->getType() != StageEditorAction::ACTION_NONE) {
-			// Objects were deselected
-
-			actionsGroup.push_back(actionDeselect);
-		}
-		// Else no objects were deselected
-	}
-	// Else keep the selected objects
-
-	// Select object
-	auto actionSelect = selectObjectInternal(pos);
-	if (actionSelect->getType() != StageEditorAction::ACTION_NONE) {
-		// Object was selected
-
-		actionsGroup.push_back(actionSelect);
-	}
-	// Else no object was selected
-
-	if (actionsGroup.size() == 0) {
-		// No selections nor deselections
-
-		m_lastAction = std::make_shared<StageEditorActionNone>();
-	} else if (actionsGroup.size() == 1) {
-		// Either only deselected all objects or only selected one object
-
-		m_lastAction = actionsGroup[0];
-		m_history.pushAction(m_lastAction);
+	if (isSelectedObjectAt(pos)) {
+		beginDragSelected(pos);
 	} else {
-		// Deselected all objects and then selected one
-
-		m_lastAction = std::make_shared<StageEditorActionMultiple>(
-			std::move(actionsGroup));
-		m_history.pushAction(m_lastAction);
+		selectObject(pos, isShiftPressed);
 	}
 }
 
 void StageEditor::mouseLeftBtnDownToolPlayers(const PointF& pos,
 	ObjectSnap snapping, bool isShiftPressed)
 {
-	// Snap position to grid
-	PointF posSnap;
-	getSnappedPoint(pos, snapping, posSnap);
-
-	// Deselect objects, if any are selected
-	auto actionDeselect = deselectAllObjectsInternal();
-
-	// Add player
-	auto actionAddPlayer = addPlayerInternal(pos);
-
-	if (actionDeselect->getType() == StageEditorAction::ACTION_NONE) {
-		// No objects were deselected; just added a player
-
-		m_lastAction = actionAddPlayer;
-	} else {
-		// Deselected objects and added a player
-
-		m_lastAction = std::make_shared<StageEditorActionMultiple>(
-			actionDeselect, actionAddPlayer);
-	}
-
-	// Add to actions history
-	m_history.pushAction(m_lastAction);
+	addPlayer(pos, snapping);
 }
 
 void StageEditor::mouseLeftBtnDownToolObstacles(const PointF& pos,
 	ObjectSnap snapping, bool isShiftPressed)
 {
-	// Snap position to grid
-	PointF posSnap;
-	getSnappedPoint(pos, snapping, posSnap);
-
-	// Deselect objects, if any are selected
-	auto actionDeselect = deselectAllObjectsInternal();
-
-	// Add obstacle corner
-	auto actionAddCorner = addObstacleCornerInternal(pos);
-
-	if (actionDeselect->getType() == StageEditorAction::ACTION_NONE) {
-		// No objects were deselected; just added a player
-
-		m_lastAction = actionAddCorner;
-	} else {
-		// Deselected objects and added a player
-
-		m_lastAction = std::make_shared<StageEditorActionMultiple>(
-			actionDeselect, actionAddCorner);
-	}
-
-	// Add to actions history
-	m_history.pushAction(m_lastAction);
+	addObstacleCorner(pos, snapping);
 }
 
 void StageEditor::mouseLeftBtnDownToolDelete(const PointF& pos,
@@ -369,13 +495,15 @@ void StageEditor::mouseLeftBtnDownToolDelete(const PointF& pos,
 	// TODO
 }
 
+void StageEditor::mouseLeftBtnUpToolSelect(const PointF& pos,
+	ObjectSnap snapping)
+{
+	endDragSelected(pos, snapping);
+}
+
 void StageEditor::mouseRightBtnDownToolObstacles()
 {
-	// Complete obstacle
-	m_lastAction = completeObstacleInternal();
-
-	// Add to actions history
-	m_history.pushAction(m_lastAction);
+	completeObstacle();
 }
 
 void StageEditor::mouseLeftBtnDown(const PointF& pos, ObjectSnap snapping,
@@ -394,6 +522,13 @@ void StageEditor::mouseLeftBtnDown(const PointF& pos, ObjectSnap snapping,
 		case TOOL_DELETE:
 			mouseLeftBtnDownToolDelete(pos, snapping, isShiftPressed);
 			break;
+	}
+}
+
+void StageEditor::mouseLeftBtnUp(const PointF& pos, ObjectSnap snapping)
+{
+	if (m_activeTool == TOOL_SELECT) {
+		mouseLeftBtnUpToolSelect(pos, snapping);
 	}
 }
 

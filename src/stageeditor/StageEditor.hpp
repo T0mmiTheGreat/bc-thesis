@@ -41,6 +41,9 @@ private:
 	PolygonF::CollectionType m_obstacleCorners;
 	std::vector<EditorOID> m_selectedPlayers;
 	std::vector<EditorOID> m_selectedObstacles;
+	// The position of the mouse in stage space where the dragging began
+	PointF m_dragStart;
+	bool m_isDragging;
 
 	/**
 	 * @brief Snaps the coordinates to the grid based on `snapping`.
@@ -51,13 +54,71 @@ private:
 	 */
 	void getSnappedPoint(const PointF& p, ObjectSnap snapping, PointF& pSnap);
 
-	std::shared_ptr<StageEditorAction> addPlayerInternal(const PointF& pos);
-	std::shared_ptr<StageEditorAction> addObstacleCornerInternal(const PointF& pos);
-	std::shared_ptr<StageEditorAction> completeObstacleInternal();
-	std::shared_ptr<StageEditorAction> selectObjectInternal(const PointF& pos);
-	std::shared_ptr<StageEditorAction> deselectAllObjectsInternal();
+	std::shared_ptr<StageEditorAction> addPlayerAction(const PointF& pos);
+	std::shared_ptr<StageEditorAction> addObstacleCornerAction(const PointF& pos);
+	std::shared_ptr<StageEditorAction> completeObstacleAction();
+	std::shared_ptr<StageEditorAction> selectObjectAction(const PointF& pos);
+	std::shared_ptr<StageEditorAction> deselectAllObjectsAction();
+	std::shared_ptr<StageEditorAction> movePlayerObjectAction(EditorOID oid,
+		double dx, double dy);
+	std::shared_ptr<StageEditorAction> moveObstacleObjectAction(EditorOID oid,
+		double dx, double dy);
+	std::shared_ptr<StageEditorAction> moveSelectedObjectsAction(double dx,
+		double dy);
 	EditorOID getPlayerObjectAt(const PointF& pos);
 	EditorOID getObstacleObjectAt(const PointF& pos);
+
+	/**
+	 * @brief Creates a new player object.
+	 * 
+	 * @note Updates last action.
+	 * 
+	 * @details Adds a player object to the player list in the stage state,
+	 *          and deselects all selected objects, if any.
+	 */
+	void addPlayer(const PointF& pos, ObjectSnap snapping);
+	/**
+	 * @brief Adds a corner to the currently constructed obstacle.
+	 * 
+	 * @note Updates last action.
+	 * 
+	 * @details Modifies the `m_obstacleCorners` variable by adding a new
+	 *          corner, and deselects all selected objects, if any.
+	 */
+	void addObstacleCorner(const PointF& pos, ObjectSnap snapping);
+	/**
+	 * @brief Finishes construction of an obstacle.
+	 * 
+	 * @note Updates last action.
+	 * 
+	 * @details Creates an obstacle object from the `m_obstacleCorners`
+	 *          variable, adds it to the obstacle list in the stage state,
+	 *          and deselects all selected objects, if any.
+	 */
+	void completeObstacle();
+	/**
+	 * @brief Selects an object at given coordinates.
+	 * 
+	 * @note Updates last action.
+	 * 
+	 * @details If there's any object at `pos`, adds its OID to the respective
+	 *          selected objects list.
+	 * 
+	 * @param pos 
+	 * @param deselectPrevious If false, the currently selected objects will
+	 *                         be deselected.
+	 */
+	void selectObject(const PointF& pos, bool keepCurrent);
+	/**
+	 * @brief Begins a dragging operation.
+	 * 
+	 * @note Updates last action.
+	 * 
+	 * @details Records the position in the `m_dragStart` variable and changes
+	 *          the `m_isDragging` variable to true.
+	 */
+	void beginDragSelected(const PointF& pos);
+	void endDragSelected(const PointF& pos, ObjectSnap snapping);
 
 	/**
 	 * @brief Returns the OID of the player object at the given position,
@@ -109,6 +170,13 @@ private:
 	 */
 	void mouseLeftBtnDownToolDelete(const PointF& pos, ObjectSnap snapping,
 		bool isShiftPressed);
+
+	/**
+	 * @brief Left mouse button released over workspace while the "select tool"
+	 *        is active.
+	 */
+	void mouseLeftBtnUpToolSelect(const PointF& pos, ObjectSnap snapping);
+
 	/**
 	 * @brief Right mouse button pressed over workspace while the "obstacles
 	 *        tool" is active.
@@ -142,6 +210,8 @@ public:
 	/**
 	 * @brief Left mouse button pressed over workspace.
 	 * 
+	 * @note Updates last action.
+	 * 
 	 * @param pos Mouse position projected to the stage space.
 	 * @param snapping How the coordinates should be snapped to grid.
 	 * @param isShiftPressed Whether the Shift key is pressed at the same time.
@@ -149,7 +219,18 @@ public:
 	void mouseLeftBtnDown(const PointF& pos, ObjectSnap snapping,
 		bool isShiftPressed);
 	/**
+	 * @brief Left mouse button released over workspace.
+	 * 
+	 * @note Updates last action.
+	 * 
+	 * @param pos Mouse position projected to the stage space.
+	 * @param snapping How the coordinates should be snapped to grid.
+	 */
+	void mouseLeftBtnUp(const PointF& pos, ObjectSnap snapping);
+	/**
 	 * @brief Right mouse button pressed over workspace.
+	 * 
+	 * @note Updates last action.
 	 */
 	void mouseRightBtnDown();
 	
