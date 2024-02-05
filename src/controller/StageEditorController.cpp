@@ -30,7 +30,6 @@ void StageEditorController::createSprites()
 	m_menuIcons[MENUICON_SAVE_AS_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_SAVE_AS);
 	m_menuIcons[MENUICON_UNDO_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_UNDO);
 	m_menuIcons[MENUICON_REDO_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_REDO);
-	m_menuIcons[MENUICON_TRASH_CAN_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_TRASH_CAN);
 
 	// Menubar line
 	m_menuBarSprite = std::make_unique<OptionBarSprite>(sysProxy);
@@ -39,6 +38,7 @@ void StageEditorController::createSprites()
 	m_toolIcons[TOOLICON_SELECT_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_SELECT_TOOL);
 	m_toolIcons[TOOLICON_PLAYER_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_PLAYER_TOOL);
 	m_toolIcons[TOOLICON_OBSTACLE_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_OBSTACLE_TOOL);
+	m_toolIcons[TOOLICON_TRASH_CAN_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_TRASH_CAN);
 
 	// Toolbar line
 	m_toolBarSprite = std::make_unique<OptionBarSprite>(sysProxy);
@@ -713,6 +713,7 @@ int StageEditorController::toolToIconIdx(EditorTool tool)
 		case TOOL_SELECT: return TOOLICON_SELECT_IDX;
 		case TOOL_PLAYERS: return TOOLICON_PLAYER_IDX;
 		case TOOL_OBSTACLES: return TOOLICON_OBSTACLE_IDX;
+		case TOOL_DELETE: return TOOLICON_TRASH_CAN_IDX;
 		// Don't place the `default` label, or else the compiler won't produce
 		// a warning when there are some enum values missing
 	}
@@ -729,6 +730,7 @@ EditorTool StageEditorController::iconIdxToTool(int iconIdx)
 		case TOOLICON_SELECT_IDX: return TOOL_SELECT;
 		case TOOLICON_PLAYER_IDX: return TOOL_PLAYERS;
 		case TOOLICON_OBSTACLE_IDX: return TOOL_OBSTACLES;
+		case TOOLICON_TRASH_CAN_IDX: return TOOL_DELETE;
 		// Inaccessible, but need to get rid of the warning
 		default: return EditorTool(-1);
 	}

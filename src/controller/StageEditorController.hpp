@@ -41,8 +41,7 @@ private:
 	static constexpr int MENUICON_SAVE_AS_IDX = MENUICON_SAVE_IDX + 1;
 	static constexpr int MENUICON_UNDO_IDX = MENUICON_SAVE_AS_IDX + 1;
 	static constexpr int MENUICON_REDO_IDX = MENUICON_UNDO_IDX + 1;
-	static constexpr int MENUICON_TRASH_CAN_IDX = MENUICON_REDO_IDX + 1;
-	static constexpr int MENUICON_COUNT = MENUICON_TRASH_CAN_IDX + 1;
+	static constexpr int MENUICON_COUNT = MENUICON_REDO_IDX + 1;
 
 	static constexpr int MENUICONS_WIDTH = EditorIconSprite::FIXED_WIDTH;
 	static constexpr int MENUICONS_HEIGHT = EditorIconSprite::FIXED_HEIGHT;
@@ -59,7 +58,8 @@ private:
 	static constexpr int TOOLICON_SELECT_IDX = 0;
 	static constexpr int TOOLICON_PLAYER_IDX = TOOLICON_SELECT_IDX + 1;
 	static constexpr int TOOLICON_OBSTACLE_IDX = TOOLICON_PLAYER_IDX + 1;
-	static constexpr int TOOLICON_COUNT = TOOLICON_OBSTACLE_IDX + 1;
+	static constexpr int TOOLICON_TRASH_CAN_IDX = TOOLICON_OBSTACLE_IDX + 1;
+	static constexpr int TOOLICON_COUNT = TOOLICON_TRASH_CAN_IDX + 1;
 
 	static constexpr int TOOLICONS_WIDTH = EditorIconSprite::FIXED_WIDTH;
 	static constexpr int TOOLICONS_HEIGHT = EditorIconSprite::FIXED_HEIGHT;

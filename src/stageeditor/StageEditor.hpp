@@ -104,6 +104,12 @@ private:
 	void mouseLeftBtnDownToolObstacles(const PointF& pos, ObjectSnap snapping,
 		bool isShiftPressed);
 	/**
+	 * @brief Left mouse button pressed over workspace while the "delete tool"
+	 *        is active.
+	 */
+	void mouseLeftBtnDownToolDelete(const PointF& pos, ObjectSnap snapping,
+		bool isShiftPressed);
+	/**
 	 * @brief Right mouse button pressed over workspace while the "obstacles
 	 *        tool" is active.
 	 */

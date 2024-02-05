@@ -61,6 +61,7 @@ enum EditorTool {
 	TOOL_SELECT = 0,
 	TOOL_PLAYERS,
 	TOOL_OBSTACLES,
+	TOOL_DELETE,
 };
 
 

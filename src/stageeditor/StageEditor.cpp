@@ -363,6 +363,12 @@ void StageEditor::mouseLeftBtnDownToolObstacles(const PointF& pos,
 	m_history.pushAction(m_lastAction);
 }
 
+void StageEditor::mouseLeftBtnDownToolDelete(const PointF& pos,
+	ObjectSnap snapping, bool isShiftPressed)
+{
+	// TODO
+}
+
 void StageEditor::mouseRightBtnDownToolObstacles()
 {
 	// Complete obstacle
@@ -384,6 +390,9 @@ void StageEditor::mouseLeftBtnDown(const PointF& pos, ObjectSnap snapping,
 			break;
 		case TOOL_OBSTACLES:
 			mouseLeftBtnDownToolObstacles(pos, snapping, isShiftPressed);
+			break;
+		case TOOL_DELETE:
+			mouseLeftBtnDownToolDelete(pos, snapping, isShiftPressed);
 			break;
 	}
 }
