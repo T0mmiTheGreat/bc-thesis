@@ -260,6 +260,17 @@ private:
 
 	static int toolToIconIdx(EditorTool tool);
 	static EditorTool iconIdxToTool(int iconIdx);
+
+	/**
+	 * @brief Chooses the snapping value based on the zoom of the viewport.
+	 */
+	ObjectSnap getSnappingByViewportZoom();
+	/**
+	 * @brief Chooses the snapping value based on the zoom of the viewport.
+	 * 
+	 * @param solidsFrequency EditorWorkspaceGridSprite property.
+	 */
+	ObjectSnap getSnappingByViewportZoom(unsigned& solidsFrequency);
 public:
 	StageEditorController(std::shared_ptr<ISysProxy> sysProxy);
 	void startedEvent() override;

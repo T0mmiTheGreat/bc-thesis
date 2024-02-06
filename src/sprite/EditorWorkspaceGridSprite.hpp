@@ -20,18 +20,13 @@
 #include "sprite/PositionedSpriteBase.hpp"
 
 class EditorWorkspaceGridSprite : public PositionedSpriteBase {
-public:
-	enum Costume {
-		COSTUME_DASH_SOLID,  // Every 10th line will be solid
-		COSTUME_DASH_ONLY,   // All lines will be dashed
-	};
 private:
 	static constexpr Color GRID_BORDER_COLOR = Color::grayscale(0x4a);
 	static constexpr uint8_t GRID_CELL_ALPHA = 0x60;
 	static constexpr Color GRID_CELL_COLOR = Color(GRID_BORDER_COLOR)
 		.setAlpha(GRID_CELL_ALPHA);
 
-	Costume m_costume;
+	unsigned m_solidsFrequency;
 	double m_xSpacing;
 	double m_ySpacing;
 	Size2d m_size;
@@ -59,8 +54,22 @@ public:
 	 */
 	void repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
 
-	EditorWorkspaceGridSprite::Costume getCostume() const;
-	void setCostume(EditorWorkspaceGridSprite::Costume value);
+	/**
+	 * @brief Getter for the solids frequency.
+	 * 
+	 * @details Within the grid the cell borders are mostly painted as dashed
+	 *          lines with periodically occuring solid lines. The "solids
+	 *          frequency" indicates how often the solid lines should occur.
+	 *          Value 1 means every line will be solid, 2 means every other,
+	 *          etc. To paint only dashed lines, set the value to 0.
+	 */
+	unsigned getSolidsFrequency() const;
+	/**
+	 * @brief Setter for the solids frequency.
+	 * 
+	 * @copydetail EditorWorkspaceGridSprite::getSolidsFrequency()
+	 */
+	void setSolidsFrequency(unsigned value);
 	void setSize(const Size2d& value);
 	void setSize(Size2d&& value);
 	double getXSpacing() const;

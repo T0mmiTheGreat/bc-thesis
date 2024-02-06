@@ -57,6 +57,14 @@
  */
 typedef size_t EditorOID;
 
+/**
+ * @brief Snapping objects to the grid.
+ * 
+ * @details Snapping is a helper feature which tries to position operations
+ *          done by mouse to cell corners of some virtual grid.
+ */
+typedef unsigned ObjectSnap;
+
 enum EditorTool {
 	TOOL_SELECT = 0,
 	TOOL_PLAYERS,
@@ -69,6 +77,8 @@ enum EditorTool {
 constexpr double EDITOR_PLAYER_RADIUS = 50.0;
 
 constexpr EditorOID EDITOR_OID_NULL = 0;
+
+constexpr ObjectSnap OBJECT_SNAP_NONE = 0;
 
 
 /**

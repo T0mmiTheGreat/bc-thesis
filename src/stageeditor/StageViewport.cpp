@@ -248,14 +248,3 @@ Matrix3x3 StageViewport::getProjectionToStageMatrix() const
 	);
 	return res;
 }
-
-StageEditor::ObjectSnap StageViewport::getSnapping() const
-{
-	if (m_zoom < 0.8) {
-		return StageEditor::SNAP_STEP100;
-	} else if (m_zoom < 5) {
-		return StageEditor::SNAP_STEP10;
-	} else {
-		return StageEditor::SNAP_STEP1;
-	}
-}

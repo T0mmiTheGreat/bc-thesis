@@ -16,6 +16,7 @@ EditorWorkspaceGridSprite::EditorWorkspaceGridSprite(
 	: SpriteBase(paintingProxy)
 	, BoundedSpriteBase(paintingProxy)
 	, PositionedSpriteBase(paintingProxy)
+	, m_solidsFrequency{0}
 	, m_xSpacing{0.0}
 	, m_ySpacing{0.0}
 	, m_size()
@@ -44,11 +45,14 @@ void EditorWorkspaceGridSprite::repaint(std::shared_ptr<ICanvas> canvas,
 	if (m_xSpacing != 0.0) {
 		// When lineIdx reaches 10 and costume is COSTUME_DASH_SOLID, paint
 		// solid line
-		int lineIdx = 0;
+		unsigned lineIdx = 0;
 
 		for (double x = bounds.x; x < bottomRight.x; x += m_xSpacing) {
 			lineIdx++;
-			if (lineIdx == 10 && m_costume == COSTUME_DASH_SOLID) {
+			// If `m_solidsFrequency == 0`, nothing should be painted, and it
+			// won't, because `lineIdx` will not be 0 here (unless integer
+			// overflow...)
+			if (lineIdx == m_solidsFrequency) {
 				// Solid line
 
 				canvas->strokeLine(static_cast<int>(x), bounds.y,
@@ -68,11 +72,14 @@ void EditorWorkspaceGridSprite::repaint(std::shared_ptr<ICanvas> canvas,
 	if (m_ySpacing != 0.0) {
 		// When lineIdx reaches 10 and costume is COSTUME_DASH_SOLID, paint
 		// solid line
-		int lineIdx = 0;
+		unsigned lineIdx = 0;
 
 		for (double y = bounds.y; y < bottomRight.y; y += m_ySpacing) {
 			lineIdx++;
-			if (lineIdx == 10 && m_costume == COSTUME_DASH_SOLID) {
+			// If `m_solidsFrequency == 0`, nothing should be painted, and it
+			// won't, because `lineIdx` will not be 0 here (unless integer
+			// overflow...
+			if (lineIdx == m_solidsFrequency) {
 				// Solid line
 
 				canvas->strokeLine(bounds.x, static_cast<int>(y),
@@ -91,17 +98,16 @@ void EditorWorkspaceGridSprite::repaint(std::shared_ptr<ICanvas> canvas,
 	invalidRect += bounds;
 }
 
-EditorWorkspaceGridSprite::Costume EditorWorkspaceGridSprite::getCostume() const
+unsigned EditorWorkspaceGridSprite::getSolidsFrequency() const
 {
-	return m_costume;
+	return m_solidsFrequency;
 }
 
-void EditorWorkspaceGridSprite::setCostume(
-	EditorWorkspaceGridSprite::Costume value)
+void EditorWorkspaceGridSprite::setSolidsFrequency(unsigned value)
 {
-	if (m_costume != value) {
+	if (m_solidsFrequency != value) {
 		invalidateBounds();
-		m_costume = value;
+		m_solidsFrequency = value;
 		invalidateBounds();
 	}
 }

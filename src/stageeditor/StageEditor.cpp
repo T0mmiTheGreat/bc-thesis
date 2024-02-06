@@ -19,23 +19,8 @@
 void StageEditor::getSnappedPoint(const PointF& p, ObjectSnap snapping,
 	PointF& pSnap)
 {
-	switch (snapping) {
-		case SNAP_NONE:
-			pSnap = p;
-			break;
-		case SNAP_STEP1:
-			pSnap.x = roundToMultiple(p.x, 1.0);
-			pSnap.y = roundToMultiple(p.y, 1.0);
-			break;
-		case SNAP_STEP10:
-			pSnap.x = roundToMultiple(p.x, 10.0);
-			pSnap.y = roundToMultiple(p.y, 10.0);
-			break;
-		case SNAP_STEP100:
-			pSnap.x = roundToMultiple(p.x, 100.0);
-			pSnap.y = roundToMultiple(p.y, 100.0);
-			break;
-	}
+	pSnap.x = roundToMultiple(p.x, static_cast<PointF::ValueType>(snapping));
+	pSnap.y = roundToMultiple(p.y, static_cast<PointF::ValueType>(snapping));
 }
 
 std::shared_ptr<StageEditorAction> StageEditor::createActionNone()

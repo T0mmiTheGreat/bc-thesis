@@ -150,7 +150,7 @@ void StageEditorController::mouseBtnDownWorkspace(MouseBtn btn, int x, int y)
 	switch (btn) {
 		case BTN_LEFT: {
 			const auto lastAction = m_stageEditor.mouseLeftBtnDown(pos,
-				StageEditor::SNAP_NONE, sysProxy->isKeyPressed(KEY_SHIFT));
+				OBJECT_SNAP_NONE, sysProxy->isKeyPressed(KEY_SHIFT));
 			updateSpritesByAction(lastAction);
 		} break;
 		case BTN_RIGHT: {
@@ -464,32 +464,16 @@ void StageEditorController::updateGridSprite()
 	gridRect.transform(tm);
 
 	// Calculate the size of spaces between horizontal/vertical lines.
-	StageEditor::ObjectSnap snapping = m_viewport.getSnapping();
-	double lineSpacingFactor = 1.0;
-	switch (snapping) {
-		case StageEditor::SNAP_NONE: break;
-		case StageEditor::SNAP_STEP1:
-			lineSpacingFactor = 1.0;
-			break;
-		case StageEditor::SNAP_STEP10:
-			lineSpacingFactor = 10.0;
-			break;
-		case StageEditor::SNAP_STEP100:
-			lineSpacingFactor = 100.0;
-			break;
-	}
-	double lineSpacing = m_viewport.getZoom() * lineSpacingFactor;
+	unsigned solidsFrequency;
+	ObjectSnap snapping = getSnappingByViewportZoom(solidsFrequency);
+	double lineSpacing = m_viewport.getZoom() * snapping;
 
 	// Modify sprite
 	m_gridSprite->setPos(gridRect.x, gridRect.y);
 	m_gridSprite->setSize(gridRect.getSize());
 	m_gridSprite->setXSpacing(lineSpacing);
 	m_gridSprite->setYSpacing(lineSpacing);
-	if (snapping == StageEditor::SNAP_STEP100) {
-		m_gridSprite->setCostume(EditorWorkspaceGridSprite::COSTUME_DASH_ONLY);
-	} else {
-		m_gridSprite->setCostume(EditorWorkspaceGridSprite::COSTUME_DASH_SOLID);
-	}
+	m_gridSprite->setSolidsFrequency(solidsFrequency);
 }
 
 void StageEditorController::updatePlayerSprite(EditorOID oid)
@@ -771,6 +755,51 @@ EditorTool StageEditorController::iconIdxToTool(int iconIdx)
 	}
 }
 
+ObjectSnap StageEditorController::getSnappingByViewportZoom()
+{
+	// /dev/null (we don't need the `solidsFrequency` value)
+	unsigned devnull;
+	return getSnappingByViewportZoom(devnull);
+}
+
+ObjectSnap StageEditorController::getSnappingByViewportZoom(unsigned& solidsFrequency)
+{
+	// FIXME: This algorithm surely needs some improvements...
+
+	static constexpr double MIN_SPACING = 12.0;
+
+	StageViewport::ZoomType zoom = m_viewport.getZoom();
+
+	// Between two dashed lines there have to be at least 12 pixels.
+	// line spacing = zoom * snapping
+	// line spacing >= 12
+	// zoom * snapping >= 12
+	// snapping >= 12/zoom
+	// zoom >= 12/snapping
+	//
+	// The snapping is one of
+	// {x: x = s * 10^n; s.memberOf({1, 2, 5}); n.memberOf(N_0)}
+	// That is e.g., 1, 2, 5, 10, 20, 50, ...
+
+	double snap1 = 1, snap2 = 2, snap5 = 5;
+	while (true) {
+		if (zoom >= MIN_SPACING/snap1) {
+			solidsFrequency = 10;
+			return static_cast<ObjectSnap>(snap1);
+		} else if (zoom >= MIN_SPACING/snap2) {
+			solidsFrequency = 5;
+			return static_cast<ObjectSnap>(snap2);
+		} else if (zoom >= MIN_SPACING/snap5) {
+			solidsFrequency = 2;
+			return static_cast<ObjectSnap>(snap5);
+		} else {
+			snap1 *= 10.0;
+			snap2 *= 10.0;
+			snap5 *= 10.0;
+		}
+	}
+}
+
 void StageEditorController::startedEvent()
 {
 	initializeSprites();
@@ -807,7 +836,7 @@ void StageEditorController::mouseBtnUpEvent(MouseBtn btn, int x, int y)
 			PointF pos(x, y);
 			pos.transform(tm);
 			const auto lastAction = m_stageEditor.mouseLeftBtnUp(pos,
-				StageEditor::SNAP_NONE);
+				OBJECT_SNAP_NONE);
 			updateSpritesByAction(lastAction);
 		} break;
 		case BTN_MIDDLE:

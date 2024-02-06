@@ -23,13 +23,6 @@
 #include "stageeditor/StageState.hpp"
 
 class StageEditor {
-public:
-	enum ObjectSnap {
-		SNAP_NONE = 0, // Do not snap
-		SNAP_STEP1,    // Snap every step
-		SNAP_STEP10,   // Snap every 10 steps
-		SNAP_STEP100,  // Snap every 100 steps
-	};
 private:
 	static constexpr int STAGE_WIDTH_INITIAL = 1280;
 	static constexpr int STAGE_HEIGHT_INITIAL = 720;

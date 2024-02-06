@@ -13,7 +13,6 @@
 #define STAGEVIEWPORT_HPP
 
 #include "types.hpp"
-#include "stageeditor/StageEditor.hpp"
 
 /**
  * @brief Class which takes care of drag and zoom logic.
@@ -212,10 +211,6 @@ public:
 	 *        stage space.
 	 */
 	Matrix3x3 getProjectionToStageMatrix() const;
-	/**
-	 * @brief Chooses the snapping level based on the zoom value.
-	 */
-	StageEditor::ObjectSnap getSnapping() const;
 };
 
 #endif // STAGEVIEWPORT_HPP
