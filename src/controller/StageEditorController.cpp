@@ -148,15 +148,16 @@ void StageEditorController::mouseBtnDownWorkspace(MouseBtn btn, int x, int y)
 	pos.transform(tm);
 
 	switch (btn) {
-		case BTN_LEFT:
-			m_stageEditor.mouseLeftBtnDown(pos, StageEditor::SNAP_NONE,
-				sysProxy->isKeyPressed(KEY_SHIFT));
-			updateSpritesByBackend();
-			break;
-		case BTN_RIGHT:
-			m_stageEditor.mouseRightBtnDown();
-			updateSpritesByBackend();
-			break;
+		case BTN_LEFT: {
+			const auto lastAction = m_stageEditor.mouseLeftBtnDown(pos,
+				StageEditor::SNAP_NONE, sysProxy->isKeyPressed(KEY_SHIFT));
+			updateSpritesByAction(lastAction);
+		} break;
+		case BTN_RIGHT: {
+			const std::shared_ptr<StageEditorAction> lastAction = 
+				m_stageEditor.mouseRightBtnDown();
+			updateSpritesByAction(lastAction);
+		} break;
 		case BTN_MIDDLE:
 			if (!m_viewport.isDrag()) {
 				m_viewport.beginDrag(PointF(x, y));
@@ -232,8 +233,9 @@ void StageEditorController::checkToolIconClick(int x, int y)
 
 	for (int iconIdx = 0; iconIdx < TOOLICON_COUNT; iconIdx++) {
 		if (getToolIconRect(iconIdx).containsPoint(mouse)) {
-			m_stageEditor.activateTool(iconIdxToTool(iconIdx));
-			updateSpritesByBackend();
+			const auto lastAction = m_stageEditor.activateTool(iconIdxToTool(
+				iconIdx));
+			updateSpritesByAction(lastAction);
 			break;
 		}
 	}
@@ -284,13 +286,6 @@ void StageEditorController::hideBrush()
 		}
 		m_brushSprite = nullptr;
 	}
-}
-
-void StageEditorController::updateSpritesByBackend()
-{
-	updateSpritesByAction(m_stageEditor.getLastAction());
-
-	updateToolBrush();
 }
 
 void StageEditorController::updateSpritesByViewport()
@@ -393,6 +388,7 @@ void StageEditorController::updateSpritesByActionCompleteObstacle(
 		std::dynamic_pointer_cast<StageEditorActionCompleteObstacle>(action);
 	m_obstacleEdges->clearCorners();
 	addObstacleSprite(actionCast->getOid());
+	updateToolBrush();
 }
 
 void StageEditorController::updateSpritesByActionActivateTool(
@@ -791,8 +787,9 @@ void StageEditorController::mouseBtnUpEvent(MouseBtn btn, int x, int y)
 			Matrix3x3 tm = getScreenToStageMatrix();
 			PointF pos(x, y);
 			pos.transform(tm);
-			m_stageEditor.mouseLeftBtnUp(pos, StageEditor::SNAP_NONE);
-			updateSpritesByBackend();
+			const auto lastAction = m_stageEditor.mouseLeftBtnUp(pos,
+				StageEditor::SNAP_NONE);
+			updateSpritesByAction(lastAction);
 		} break;
 		case BTN_MIDDLE:
 			m_viewport.endDrag();

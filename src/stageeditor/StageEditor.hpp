@@ -13,6 +13,7 @@
 #define STAGEEDITOR_HPP
 
 #include <memory>
+#include <unordered_set>
 #include <vector>
 
 #include "types.hpp"
@@ -36,11 +37,10 @@ private:
 	StageState m_stageState;
 	EditorTool m_activeTool;
 	StageEditorHistory m_history;
-	std::shared_ptr<StageEditorAction> m_lastAction;
 	// Corners of the obstacle under construction
 	PolygonF::CollectionType m_obstacleCorners;
-	std::vector<EditorOID> m_selectedPlayers;
-	std::vector<EditorOID> m_selectedObstacles;
+	std::unordered_set<EditorOID> m_selectedPlayers;
+	std::unordered_set<EditorOID> m_selectedObstacles;
 	// The position of the mouse in stage space where the dragging began
 	PointF m_dragStart;
 	bool m_isDragging;
@@ -54,52 +54,91 @@ private:
 	 */
 	void getSnappedPoint(const PointF& p, ObjectSnap snapping, PointF& pSnap);
 
-	std::shared_ptr<StageEditorAction> addPlayerAction(const PointF& pos);
-	std::shared_ptr<StageEditorAction> addObstacleCornerAction(const PointF& pos);
-	std::shared_ptr<StageEditorAction> completeObstacleAction();
-	std::shared_ptr<StageEditorAction> selectObjectAction(const PointF& pos);
-	std::shared_ptr<StageEditorAction> deselectAllObjectsAction();
-	std::shared_ptr<StageEditorAction> movePlayerObjectAction(EditorOID oid,
-		double dx, double dy);
-	std::shared_ptr<StageEditorAction> moveObstacleObjectAction(EditorOID oid,
-		double dx, double dy);
-	std::shared_ptr<StageEditorAction> moveSelectedObjectsAction(double dx,
+	std::shared_ptr<StageEditorAction> createActionNone();
+	std::shared_ptr<StageEditorAction> createActionAddPlayer(const PointF& pos);
+	std::shared_ptr<StageEditorAction> createActionPlaceObstacleCorner(
+		const PointF& pos);
+	std::shared_ptr<StageEditorAction> createActionCompleteObstacle();
+	std::shared_ptr<StageEditorAction> createActionSelectObject(
+		const PointF& pos);
+	std::shared_ptr<StageEditorAction> createActionDeselectAll();
+	std::shared_ptr<StageEditorAction> createActionMoveSelectedObjects(double dx,
 		double dy);
+
+	/**
+	 * @brief Creates one action from multiple actions.
+	 * 
+	 * @details The action is created using the following rules:
+	 *            - If no action is passed, or all actions are of type
+	 *              ACTION_NONE, StageEditorActionNone is returned.
+	 *            - If one action is passed, or all actions except one are of
+	 *              type ACTION_NONE, the one action is returned.
+	 *            - If multiple actions are passed and at least two of them are
+	 *              not of type ACTION_NONE, StageEditorActionMultiple is
+	 *              returned containing only those actions which are not NONE.
+	 * 
+	 * @tparam Args StageEditorAction descendant.
+	 * @param actions The actions to merge.
+	 */
+	template <StageEditorActionDerived... Args>
+	std::shared_ptr<StageEditorAction> getMergedActions(
+		std::shared_ptr<Args>&... actions);
+	/**
+	 * @brief Creates one action from multiple actions.
+	 * 
+	 * @copydetail StageEditor::getMergedActions(Args&...)
+	 * 
+	 * @param actions The actions to merge.
+	 */
+	std::shared_ptr<StageEditorAction> getMergedActions(
+		std::vector<std::shared_ptr<StageEditorAction>> actions);
+
+	void doAction(const std::shared_ptr<StageEditorAction> action);
+	void doActionMultiple(const std::shared_ptr<StageEditorAction> action);
+	void doActionAddPlayer(const std::shared_ptr<StageEditorAction> action);
+	void doActionPlaceObstacleCorner(const std::shared_ptr<StageEditorAction> action);
+	void doActionCompleteObstacle(const std::shared_ptr<StageEditorAction> action);
+	void doActionActivateTool(const std::shared_ptr<StageEditorAction> action);
+	void doActionSelectPlayerObject(const std::shared_ptr<StageEditorAction> action);
+	void doActionSelectObstacleObject(const std::shared_ptr<StageEditorAction> action);
+	void doActionDeselectPlayerObject(const std::shared_ptr<StageEditorAction> action);
+	void doActionDeselectObstacleObject(const std::shared_ptr<StageEditorAction> action);
+	void doActionMovePlayerObject(const std::shared_ptr<StageEditorAction> action);
+	void doActionMoveObstacleObject(const std::shared_ptr<StageEditorAction> action);
+
 	EditorOID getPlayerObjectAt(const PointF& pos);
 	EditorOID getObstacleObjectAt(const PointF& pos);
 
 	/**
 	 * @brief Creates a new player object.
 	 * 
-	 * @note Updates last action.
-	 * 
 	 * @details Adds a player object to the player list in the stage state,
 	 *          and deselects all selected objects, if any.
+	 * 
+	 * @return The action performed.
 	 */
-	void addPlayer(const PointF& pos, ObjectSnap snapping);
+	const std::shared_ptr<StageEditorAction> addPlayer(const PointF& pos, ObjectSnap snapping);
 	/**
 	 * @brief Adds a corner to the currently constructed obstacle.
 	 * 
-	 * @note Updates last action.
-	 * 
 	 * @details Modifies the `m_obstacleCorners` variable by adding a new
 	 *          corner, and deselects all selected objects, if any.
+	 * 
+	 * @return The action performed.
 	 */
-	void addObstacleCorner(const PointF& pos, ObjectSnap snapping);
+	const std::shared_ptr<StageEditorAction> addObstacleCorner(const PointF& pos, ObjectSnap snapping);
 	/**
 	 * @brief Finishes construction of an obstacle.
-	 * 
-	 * @note Updates last action.
 	 * 
 	 * @details Creates an obstacle object from the `m_obstacleCorners`
 	 *          variable, adds it to the obstacle list in the stage state,
 	 *          and deselects all selected objects, if any.
+	 * 
+	 * @return The action performed.
 	 */
-	void completeObstacle();
+	const std::shared_ptr<StageEditorAction> completeObstacle();
 	/**
 	 * @brief Selects an object at given coordinates.
-	 * 
-	 * @note Updates last action.
 	 * 
 	 * @details If there's any object at `pos`, adds its OID to the respective
 	 *          selected objects list.
@@ -107,18 +146,28 @@ private:
 	 * @param pos 
 	 * @param deselectPrevious If false, the currently selected objects will
 	 *                         be deselected.
+	 * 
+	 * @return The action performed.
 	 */
-	void selectObject(const PointF& pos, bool keepCurrent);
+	const std::shared_ptr<StageEditorAction> selectObject(const PointF& pos, bool keepCurrent);
 	/**
 	 * @brief Begins a dragging operation.
 	 * 
-	 * @note Updates last action.
-	 * 
 	 * @details Records the position in the `m_dragStart` variable and changes
 	 *          the `m_isDragging` variable to true.
+	 * 
+	 * @return The action performed.
 	 */
-	void beginDragSelected(const PointF& pos);
-	void endDragSelected(const PointF& pos, ObjectSnap snapping);
+	const std::shared_ptr<StageEditorAction> beginDragSelected(const PointF& pos);
+	/**
+	 * @brief Finishes a dragging operation.
+	 * 
+	 * @details Moves all selected objects and changes the `m_isDragging`
+	 *          variable to false.
+	 * 
+	 * @return The action performed.
+	 */
+	const std::shared_ptr<StageEditorAction> endDragSelected(const PointF& pos, ObjectSnap snapping);
 
 	/**
 	 * @brief Returns the OID of the player object at the given position,
@@ -149,49 +198,58 @@ private:
 	/**
 	 * @brief Left mouse button pressed over workspace while the "select tool"
 	 *        is active.
+	 * 
+	 * @return The action performed.
 	 */
-	void mouseLeftBtnDownToolSelect(const PointF& pos, ObjectSnap snapping,
-		bool isShiftPressed);
+	const std::shared_ptr<StageEditorAction> mouseLeftBtnDownToolSelect(
+		const PointF& pos, ObjectSnap snapping, bool isShiftPressed);
 	/**
 	 * @brief Left mouse button pressed over workspace while the "players tool"
 	 *        is active.
+	 * 
+	 * @return The action performed.
 	 */
-	void mouseLeftBtnDownToolPlayers(const PointF& pos, ObjectSnap snapping,
-		bool isShiftPressed);
+	const std::shared_ptr<StageEditorAction> mouseLeftBtnDownToolPlayers(
+		const PointF& pos, ObjectSnap snapping, bool isShiftPressed);
 	/**
 	 * @brief Left mouse button pressed over workspace while the "obstacles
 	 *        tool" is active.
+	 * 
+	 * @return The action performed.
 	 */
-	void mouseLeftBtnDownToolObstacles(const PointF& pos, ObjectSnap snapping,
-		bool isShiftPressed);
+	const std::shared_ptr<StageEditorAction> mouseLeftBtnDownToolObstacles(
+		const PointF& pos, ObjectSnap snapping, bool isShiftPressed);
 	/**
 	 * @brief Left mouse button pressed over workspace while the "delete tool"
 	 *        is active.
+	 * 
+	 * @return The action performed.
 	 */
-	void mouseLeftBtnDownToolDelete(const PointF& pos, ObjectSnap snapping,
-		bool isShiftPressed);
+	const std::shared_ptr<StageEditorAction> mouseLeftBtnDownToolDelete(
+		const PointF& pos, ObjectSnap snapping, bool isShiftPressed);
 
 	/**
 	 * @brief Left mouse button released over workspace while the "select tool"
 	 *        is active.
+	 * 
+	 * @return The action performed.
 	 */
-	void mouseLeftBtnUpToolSelect(const PointF& pos, ObjectSnap snapping);
+	const std::shared_ptr<StageEditorAction> mouseLeftBtnUpToolSelect(
+		const PointF& pos, ObjectSnap snapping);
 
 	/**
 	 * @brief Right mouse button pressed over workspace while the "obstacles
 	 *        tool" is active.
+	 * 
+	 * @return The action performed.
 	 */
-	void mouseRightBtnDownToolObstacles();
+	const std::shared_ptr<StageEditorAction> mouseRightBtnDownToolObstacles();
 public:
 	StageEditor();
 	/**
 	 * @brief Returns the current state of the stage.
 	 */
 	const StageState& getState() const;
-	/**
-	 * @brief Returns the last performed action.
-	 */
-	const std::shared_ptr<StageEditorAction> getLastAction() const;
 	/**
 	 * @brief Return the currently selected tool.
 	 */
@@ -201,38 +259,38 @@ public:
 	/**
 	 * @brief Sets active tool.
 	 * 
-	 * @note Updates last action.
-	 * 
 	 * @param newTool The activated tool.
+	 * 
+	 * @return The action performed.
 	 */
-	void activateTool(EditorTool newTool);
+	const std::shared_ptr<StageEditorAction> activateTool(EditorTool newTool);
 
 	/**
 	 * @brief Left mouse button pressed over workspace.
 	 * 
-	 * @note Updates last action.
-	 * 
 	 * @param pos Mouse position projected to the stage space.
 	 * @param snapping How the coordinates should be snapped to grid.
 	 * @param isShiftPressed Whether the Shift key is pressed at the same time.
+	 * 
+	 * @return The action performed.
 	 */
-	void mouseLeftBtnDown(const PointF& pos, ObjectSnap snapping,
+	const std::shared_ptr<StageEditorAction> mouseLeftBtnDown(const PointF& pos, ObjectSnap snapping,
 		bool isShiftPressed);
 	/**
 	 * @brief Left mouse button released over workspace.
 	 * 
-	 * @note Updates last action.
-	 * 
 	 * @param pos Mouse position projected to the stage space.
 	 * @param snapping How the coordinates should be snapped to grid.
+	 * 
+	 * @return The action performed.
 	 */
-	void mouseLeftBtnUp(const PointF& pos, ObjectSnap snapping);
+	const std::shared_ptr<StageEditorAction> mouseLeftBtnUp(const PointF& pos, ObjectSnap snapping);
 	/**
 	 * @brief Right mouse button pressed over workspace.
 	 * 
-	 * @note Updates last action.
+	 * @return The action performed.
 	 */
-	void mouseRightBtnDown();
+	const std::shared_ptr<StageEditorAction> mouseRightBtnDown();
 	
 	void undo();
 	void redo();

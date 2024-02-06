@@ -178,10 +178,6 @@ private:
 	void hideBrush();
 
 	/**
-	 * @brief Updates all sprites after a change in backend (StageEditor).
-	 */
-	void updateSpritesByBackend();
-	/**
 	 * @brief Updates all sprites after a change in viewport.
 	 */
 	void updateSpritesByViewport();
