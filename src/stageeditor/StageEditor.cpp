@@ -112,32 +112,28 @@ std::shared_ptr<StageEditorAction> StageEditor::createActionDeselectAll()
 std::shared_ptr<StageEditorAction> StageEditor::createActionMoveSelectedObjects(
 	double dx, double dy)
 {
-	if (dx == 0 && dy == 0) {
-		return createActionNone();
-	} else {
-		// The actions performed (all the moves)
-		std::vector<std::shared_ptr<StageEditorAction>> actionGroup;
-		std::shared_ptr<StageEditorAction> newAction;
+	// The actions performed (all the moves)
+	std::vector<std::shared_ptr<StageEditorAction>> actionGroup;
+	std::shared_ptr<StageEditorAction> newAction;
 
-		// Move players
-		for (EditorOID oid : m_selectedPlayers) {
-			newAction = std::make_shared<StageEditorActionMovePlayerObject>(
-				oid, dx, dy);
-			actionGroup.push_back(newAction);
-		}
-
-		// Move obstacles
-		for (EditorOID oid : m_selectedObstacles) {
-			newAction = std::make_shared<StageEditorActionMoveObstacleObject>(
-				oid, dx, dy);
-			actionGroup.push_back(newAction);
-		}
-
-		// Merge
-		auto res = getMergedActions(actionGroup);
-
-		return res;
+	// Move players
+	for (EditorOID oid : m_selectedPlayers) {
+		newAction = std::make_shared<StageEditorActionMovePlayerObject>(
+			oid, dx, dy);
+		actionGroup.push_back(newAction);
 	}
+
+	// Move obstacles
+	for (EditorOID oid : m_selectedObstacles) {
+		newAction = std::make_shared<StageEditorActionMoveObstacleObject>(
+			oid, dx, dy);
+		actionGroup.push_back(newAction);
+	}
+
+	// Merge
+	auto res = getMergedActions(actionGroup);
+
+	return res;
 }
 
 template <StageEditorActionDerived... Args>
