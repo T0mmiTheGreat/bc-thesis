@@ -19,8 +19,12 @@
 void StageEditor::getSnappedPoint(const PointF& p, ObjectSnap snapping,
 	PointF& pSnap)
 {
-	pSnap.x = roundToMultiple(p.x, static_cast<PointF::ValueType>(snapping));
-	pSnap.y = roundToMultiple(p.y, static_cast<PointF::ValueType>(snapping));
+	if (snapping != OBJECT_SNAP_NONE) {
+		pSnap.x = roundToMultiple(p.x, static_cast<PointF::ValueType>(snapping));
+		pSnap.y = roundToMultiple(p.y, static_cast<PointF::ValueType>(snapping));
+	} else {
+		pSnap = p;
+	}
 }
 
 std::shared_ptr<StageEditorAction> StageEditor::createActionNone()
@@ -383,7 +387,7 @@ const std::shared_ptr<StageEditorAction> StageEditor::addPlayer(
 	auto actionDeselect = createActionDeselectAll();
 
 	// Add player
-	auto actionAddPlayer = createActionAddPlayer(pos);
+	auto actionAddPlayer = createActionAddPlayer(posSnap);
 
 	// Merge
 	auto res = getMergedActions(actionDeselect, actionAddPlayer);
@@ -410,7 +414,7 @@ const std::shared_ptr<StageEditorAction> StageEditor::addObstacleCorner(
 	auto actionDeselect = createActionDeselectAll();
 
 	// Place obstacle corner
-	auto actionPlaceCorner = createActionPlaceObstacleCorner(pos);
+	auto actionPlaceCorner = createActionPlaceObstacleCorner(posSnap);
 
 	// Merge
 	auto res = getMergedActions(actionDeselect, actionPlaceCorner);
@@ -492,7 +496,8 @@ const std::shared_ptr<StageEditorAction> StageEditor::endDragSelected(
 		PointF offsetPointSnap;
 		getSnappedPoint(offsetPoint, snapping, offsetPointSnap);
 
-		auto res = createActionMoveSelectedObjects(offsetPoint.x, offsetPoint.y);
+		auto res = createActionMoveSelectedObjects(offsetPointSnap.x,
+			offsetPointSnap.y);
 
 		if (res->getType() != StageEditorAction::ACTION_NONE) {
 			// Perform

@@ -149,8 +149,10 @@ void StageEditorController::mouseBtnDownWorkspace(MouseBtn btn, int x, int y)
 
 	switch (btn) {
 		case BTN_LEFT: {
-			const auto lastAction = m_stageEditor.mouseLeftBtnDown(pos,
-				OBJECT_SNAP_NONE, sysProxy->isKeyPressed(KEY_SHIFT));
+			ObjectSnap snapping = (sysProxy->isKeyPressed(KEY_ALT) ?
+				OBJECT_SNAP_NONE : getSnappingByViewportZoom());
+			const auto lastAction = m_stageEditor.mouseLeftBtnDown(pos, snapping,
+				sysProxy->isKeyPressed(KEY_SHIFT));
 			updateSpritesByAction(lastAction);
 		} break;
 		case BTN_RIGHT: {
@@ -835,8 +837,9 @@ void StageEditorController::mouseBtnUpEvent(MouseBtn btn, int x, int y)
 			Matrix3x3 tm = getScreenToStageMatrix();
 			PointF pos(x, y);
 			pos.transform(tm);
-			const auto lastAction = m_stageEditor.mouseLeftBtnUp(pos,
-				OBJECT_SNAP_NONE);
+			ObjectSnap snapping = (sysProxy->isKeyPressed(KEY_ALT) ?
+				OBJECT_SNAP_NONE : getSnappingByViewportZoom());
+			const auto lastAction = m_stageEditor.mouseLeftBtnUp(pos, snapping);
 			updateSpritesByAction(lastAction);
 		} break;
 		case BTN_MIDDLE:
