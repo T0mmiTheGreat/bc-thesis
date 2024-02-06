@@ -33,26 +33,77 @@ void EditorWorkspaceGridSprite::repaint(std::shared_ptr<ICanvas> canvas,
 	Rect bounds = getBounds();
 	Point bottomRight = bounds.getBottomRight();
 
-	canvas->setStrokingColor(GRID_COLOR);
+	// Border
+	canvas->setStrokingColor(GRID_BORDER_COLOR);
 	canvas->strokeRectangle(bounds.x, bounds.y, bounds.w, bounds.h);
+
+	// Set color for cells
+	canvas->setStrokingColor(GRID_CELL_COLOR);
 
 	// Vertical lines
 	if (m_xSpacing != 0.0) {
+		// When lineIdx reaches 10 and costume is COSTUME_DASH_SOLID, paint
+		// solid line
+		int lineIdx = 0;
+
 		for (double x = bounds.x; x < bottomRight.x; x += m_xSpacing) {
-			canvas->strokeLine(static_cast<int>(x), bounds.y,
-				static_cast<int>(x), bottomRight.y);
+			lineIdx++;
+			if (lineIdx == 10 && m_costume == COSTUME_DASH_SOLID) {
+				// Solid line
+
+				canvas->strokeLine(static_cast<int>(x), bounds.y,
+					static_cast<int>(x), bottomRight.y);
+
+				lineIdx = 0;
+			} else {
+				// Dashed line
+
+				canvas->dashedLine(static_cast<int>(x), bounds.y,
+					static_cast<int>(x), bottomRight.y);
+			}
 		}
 	}
 
 	// Horizontal lines
 	if (m_ySpacing != 0.0) {
+		// When lineIdx reaches 10 and costume is COSTUME_DASH_SOLID, paint
+		// solid line
+		int lineIdx = 0;
+
 		for (double y = bounds.y; y < bottomRight.y; y += m_ySpacing) {
-			canvas->strokeLine(bounds.x, static_cast<int>(y),
-				bottomRight.x, static_cast<int>(y));
+			lineIdx++;
+			if (lineIdx == 10 && m_costume == COSTUME_DASH_SOLID) {
+				// Solid line
+
+				canvas->strokeLine(bounds.x, static_cast<int>(y),
+					bottomRight.x, static_cast<int>(y));
+
+				lineIdx = 0;
+			} else {
+				// Dashed line
+
+				canvas->dashedLine(bounds.x, static_cast<int>(y),
+					bottomRight.x, static_cast<int>(y));
+			}
 		}
 	}
 
 	invalidRect += bounds;
+}
+
+EditorWorkspaceGridSprite::Costume EditorWorkspaceGridSprite::getCostume() const
+{
+	return m_costume;
+}
+
+void EditorWorkspaceGridSprite::setCostume(
+	EditorWorkspaceGridSprite::Costume value)
+{
+	if (m_costume != value) {
+		invalidateBounds();
+		m_costume = value;
+		invalidateBounds();
+	}
 }
 
 void EditorWorkspaceGridSprite::setSize(const Size2d& value)

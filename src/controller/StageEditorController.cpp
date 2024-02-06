@@ -464,13 +464,32 @@ void StageEditorController::updateGridSprite()
 	gridRect.transform(tm);
 
 	// Calculate the size of spaces between horizontal/vertical lines.
-	double lineSpacing = m_viewport.getZoom() * 100.0; // FIXME
+	StageEditor::ObjectSnap snapping = m_viewport.getSnapping();
+	double lineSpacingFactor = 1.0;
+	switch (snapping) {
+		case StageEditor::SNAP_NONE: break;
+		case StageEditor::SNAP_STEP1:
+			lineSpacingFactor = 1.0;
+			break;
+		case StageEditor::SNAP_STEP10:
+			lineSpacingFactor = 10.0;
+			break;
+		case StageEditor::SNAP_STEP100:
+			lineSpacingFactor = 100.0;
+			break;
+	}
+	double lineSpacing = m_viewport.getZoom() * lineSpacingFactor;
 
 	// Modify sprite
 	m_gridSprite->setPos(gridRect.x, gridRect.y);
 	m_gridSprite->setSize(gridRect.getSize());
 	m_gridSprite->setXSpacing(lineSpacing);
 	m_gridSprite->setYSpacing(lineSpacing);
+	if (snapping == StageEditor::SNAP_STEP100) {
+		m_gridSprite->setCostume(EditorWorkspaceGridSprite::COSTUME_DASH_ONLY);
+	} else {
+		m_gridSprite->setCostume(EditorWorkspaceGridSprite::COSTUME_DASH_SOLID);
+	}
 }
 
 void StageEditorController::updatePlayerSprite(EditorOID oid)

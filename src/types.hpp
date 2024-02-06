@@ -1067,6 +1067,12 @@ struct Color {
 		: Color(0, 0, 0, 0)
 	{}
 	/**
+	 * @brief Duplicates a color.
+	 */
+	constexpr Color(const Color& other)
+		: Color(other.r, other.g, other.b, other.a)
+	{}
+	/**
 	 * @brief Constructs a color.
 	 * 
 	 * @param r Intensity of red channel.
@@ -1144,6 +1150,8 @@ struct Color {
 			(this->b == rhs.b) &&
 			(this->a == rhs.a);
 	}
+
+	constexpr Color& operator= (const Color&) = default;
 
 	static constexpr uint8_t modulateChannel(uint8_t ch, uint8_t mod) {
 		return (static_cast<unsigned>(ch) * static_cast<unsigned>(mod)) / 0xffU;

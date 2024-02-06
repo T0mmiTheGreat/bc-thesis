@@ -20,9 +20,18 @@
 #include "sprite/PositionedSpriteBase.hpp"
 
 class EditorWorkspaceGridSprite : public PositionedSpriteBase {
+public:
+	enum Costume {
+		COSTUME_DASH_SOLID,  // Every 10th line will be solid
+		COSTUME_DASH_ONLY,   // All lines will be dashed
+	};
 private:
-	static constexpr Color GRID_COLOR = Color::grayscale(0x4a);
+	static constexpr Color GRID_BORDER_COLOR = Color::grayscale(0x4a);
+	static constexpr uint8_t GRID_CELL_ALPHA = 0x60;
+	static constexpr Color GRID_CELL_COLOR = Color(GRID_BORDER_COLOR)
+		.setAlpha(GRID_CELL_ALPHA);
 
+	Costume m_costume;
 	double m_xSpacing;
 	double m_ySpacing;
 	Size2d m_size;
@@ -50,6 +59,8 @@ public:
 	 */
 	void repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
 
+	EditorWorkspaceGridSprite::Costume getCostume() const;
+	void setCostume(EditorWorkspaceGridSprite::Costume value);
 	void setSize(const Size2d& value);
 	void setSize(Size2d&& value);
 	double getXSpacing() const;

@@ -142,7 +142,7 @@ void SDLCanvas::dashedLine(int x0, int y0, int x1, int y1)
 	//      obvious how, and I'm not going to expand on this here).
 
 	// Also equal to space length
-	static constexpr int DASH_LENGTH = 10;
+	static constexpr int DASH_LENGTH = 5;
 
 	PointF p0F(x0, y0);
 	PointF p1F(x1, y1);
