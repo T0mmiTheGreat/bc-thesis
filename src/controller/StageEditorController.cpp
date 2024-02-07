@@ -143,13 +143,11 @@ void StageEditorController::mouseBtnDownToolbar(MouseBtn btn, int x, int y)
 
 void StageEditorController::mouseBtnDownWorkspace(MouseBtn btn, int x, int y)
 {
-	Matrix3x3 tm = getScreenToStageMatrix();
-	PointF pos(x, y);
-	pos.transform(tm);
-
 	switch (btn) {
 		case BTN_LEFT: {
+			PointF pos = getMouseInStageSpace(x, y);
 			ObjectSnap snapping = getSnapping();
+
 			const auto lastAction = m_stageEditor.mouseLeftBtnDown(pos, snapping,
 				sysProxy->isKeyPressed(KEY_SHIFT));
 			updateSpritesByAction(lastAction);
@@ -582,16 +580,21 @@ void StageEditorController::updateDraggedSprites()
 
 void StageEditorController::updateDraggedPlayerSprite(EditorOID oid)
 {
-	Point mouse = sysProxy->getMousePos();
-	Matrix3x3 tmStage = getScreenToStageMatrix();
-	PointF pos = static_cast<PointF>(mouse);
-	pos.transform(tmStage);
+	// I am not able to find an abstraction good enough to prevent copy-pasting
+	// between this method and `updateDraggedObstacleSprite()`. The
+	// `updateToolBrush*()` methods seem to be fairly similar too...
+
+	// Get the mouse position in stage space
+	PointF pos = getMouseInStageSpace();
+	// Get the mouse snapping
 	ObjectSnap snapping = getSnapping();
 
 	bool isSuccess;
+	// Predict
 	auto predictedAction = m_stageEditor.predictEndDragPlayerObject(oid, pos, snapping, isSuccess);
 
 	if (predictedAction->getType() == StageEditorAction::ACTION_MOVE_PLAYER_OBJECT) {
+		// Downcast
 		auto predictedActionCast =
 			std::dynamic_pointer_cast<StageEditorActionMovePlayerObject>(
 				predictedAction);
@@ -600,13 +603,16 @@ void StageEditorController::updateDraggedPlayerSprite(EditorOID oid)
 		double dx = predictedActionCast->getDx();
 		double dy = predictedActionCast->getDy();
 
+		// Calculate the new position in stage space
 		PointF newPos = m_stageEditor.getState().players.at(oid).pos;
 		newPos.x += dx;
 		newPos.y += dy;
 
 		Matrix3x3 tmScreen = getStageToScreenMatrix();
+		// Project the new position to screen space
 		PointF newPosScreen = newPos.getTransformed(tmScreen);
 
+		// Modify sprite
 		const auto& draggedPlayer = m_draggedPlayerSprites.at(oid);
 		draggedPlayer->setCenterPos(static_cast<Point>(newPosScreen));
 		draggedPlayer->setRadius(getPlayerSpriteRadius());
@@ -616,16 +622,21 @@ void StageEditorController::updateDraggedPlayerSprite(EditorOID oid)
 
 void StageEditorController::updateDraggedObstacleSprite(EditorOID oid)
 {
-	Point mouse = sysProxy->getMousePos();
-	Matrix3x3 tmStage = getScreenToStageMatrix();
-	PointF pos = static_cast<PointF>(mouse);
-	pos.transform(tmStage);
+	// I am not able to find an abstraction good enough to prevent copy-pasting
+	// between this method and `updateDraggedPlayerSprite()`. The
+	// `updateToolBrush*()` methods seem to be fairly similar too...
+
+	// Get the mouse position in stage space
+	PointF pos = getMouseInStageSpace();
+	// Get the mouse snapping
 	ObjectSnap snapping = getSnapping();
 
 	bool isSuccess;
+	// Predict
 	auto predictedAction = m_stageEditor.predictEndDragObstacleObject(oid, pos, snapping, isSuccess);
 
 	if (predictedAction->getType() == StageEditorAction::ACTION_MOVE_OBSTACLE_OBJECT) {
+		// Downcast
 		auto predictedActionCast =
 			std::dynamic_pointer_cast<StageEditorActionMoveObstacleObject>(
 				predictedAction);
@@ -634,6 +645,7 @@ void StageEditorController::updateDraggedObstacleSprite(EditorOID oid)
 		double dx = predictedActionCast->getDx();
 		double dy = predictedActionCast->getDy();
 
+		// Calculate the new shape in stage space
 		PolygonF newShape = m_stageEditor.getState().obstacles.at(oid).shape;
 		for (auto& corner : newShape.corners) {
 			corner.x += dx;
@@ -641,8 +653,10 @@ void StageEditorController::updateDraggedObstacleSprite(EditorOID oid)
 		}
 
 		Matrix3x3 tmScreen = getStageToScreenMatrix();
+		// Project the new shape to screen space
 		PolygonF newShapeScreen = newShape.getTransformed(tmScreen);
 
+		// Modify sprite
 		const auto& draggedObstacle = m_draggedObstacleSprites.at(oid);
 		draggedObstacle->setShape(std::move(newShapeScreen));
 		draggedObstacle->setColor(isSuccess ? Color::ghost() : Color::badGhost());
@@ -685,10 +699,8 @@ void StageEditorController::updateToolBrushPlayers()
 		// Set the brush sprite
 		m_brushSprite = m_playerBrush.get();
 		
-		Matrix3x3 tmStage = getScreenToStageMatrix();
 		// Get the mouse position in stage space
-		PointF pos = static_cast<PointF>(mousePos);
-		pos.transform(tmStage);
+		PointF pos = getMouseInStageSpace();
 		// Get the mouse snapping
 		ObjectSnap snapping = getSnapping();
 
@@ -720,10 +732,8 @@ void StageEditorController::updateToolBrushObstacles()
 {
 	Point mousePos = sysProxy->getMousePos();
 		
-	Matrix3x3 tmStage = getScreenToStageMatrix();
 	// Get the mouse position in stage space
-	PointF pos = static_cast<PointF>(mousePos);
-	pos.transform(tmStage);
+	PointF pos = getMouseInStageSpace();
 	// Get the mouse snapping
 	ObjectSnap snapping = getSnapping();
 
@@ -985,6 +995,28 @@ int StageEditorController::getPlayerSpriteRadius()
 	return static_cast<int>(EDITOR_PLAYER_RADIUS * m_viewport.getZoom());
 }
 
+PointF StageEditorController::getMouseInStageSpace()
+{
+	return getMouseInStageSpace(sysProxy->getMousePos());
+}
+
+PointF StageEditorController::getMouseInStageSpace(const Point& mouse)
+{
+	Rect workspaceRect = getWorkspaceRect();
+	PointF mouseViewport(
+		mouse.x - workspaceRect.x,
+		mouse.y - workspaceRect.y
+	);
+	
+	PointF res = m_viewport.screenToStage(mouseViewport);
+	return res;
+}
+
+PointF StageEditorController::getMouseInStageSpace(int x, int y)
+{
+	return getMouseInStageSpace(Point(x, y));
+}
+
 void StageEditorController::startedEvent()
 {
 	initializeSprites();
@@ -1017,9 +1049,7 @@ void StageEditorController::mouseBtnUpEvent(MouseBtn btn, int x, int y)
 {
 	switch (btn) {
 		case BTN_LEFT: {
-			Matrix3x3 tm = getScreenToStageMatrix();
-			PointF pos(x, y);
-			pos.transform(tm);
+			PointF pos = getMouseInStageSpace(x, y);
 			ObjectSnap snapping = getSnapping();
 			const auto lastAction = m_stageEditor.mouseLeftBtnUp(pos, snapping);
 			updateSpritesByAction(lastAction);

@@ -305,6 +305,24 @@ private:
 	 * @brief Calculates the player sprite radius based on viewport zoom.
 	 */
 	int getPlayerSpriteRadius();
+
+	/**
+	 * @brief Calculates the position of the mouse in stage space.
+	 */
+	PointF getMouseInStageSpace();
+	/**
+	 * @brief Calculates the position of the mouse in stage space.
+	 * 
+	 * @param mouse Mouse position in screen space.
+	 */
+	PointF getMouseInStageSpace(const Point& mouse);
+	/**
+	 * @brief Calculates the position of the mouse in stage space.
+	 * 
+	 * @param x Mouse X position in screen space.
+	 * @param y Mouse Y position in screen space.
+	 */
+	PointF getMouseInStageSpace(int x, int y);
 public:
 	StageEditorController(std::shared_ptr<ISysProxy> sysProxy);
 	void startedEvent() override;

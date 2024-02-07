@@ -355,9 +355,7 @@ void StageEditor::doActionMovePlayerObject(
 	double dy = actionCast->getDy();
 
 	auto& player = m_stageState.players.at(oid);
-
-	player.pos.x += dx;
-	player.pos.y += dy;
+	player.moveBy(dx, dy);
 }
 
 void StageEditor::doActionMoveObstacleObject(
@@ -371,11 +369,7 @@ void StageEditor::doActionMoveObstacleObject(
 	double dy = actionCast->getDy();
 
 	auto& obstacle = m_stageState.obstacles.at(oid);
-
-	for (auto& corner : obstacle.shape.corners) {
-		corner.x += dx;
-		corner.y += dy;
-	}
+	obstacle.moveBy(dx, dy);
 }
 
 EditorOID StageEditor::getPlayerObjectAt(const PointF& pos)

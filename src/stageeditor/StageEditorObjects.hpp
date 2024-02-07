@@ -27,7 +27,12 @@ public:
 	StageEditorObjectBase(EditorOID oid)
 		: m_oid{oid}
 	{}
+
+	// Makes the class abstract. Definition is in the .cpp file
 	virtual ~StageEditorObjectBase() = 0;
+
+	virtual void moveBy(double dx, double dy) = 0;
+	virtual bool containsPoint(const PointF& pt) const = 0;
 
 	EditorOID getOid() const {
 		return m_oid;
@@ -52,11 +57,16 @@ public:
 		, pos(pos)
 	{}
 
+	constexpr void moveBy(double dx, double dy) override {
+		pos.x += dx;
+		pos.y += dy;
+	}
+
 	constexpr double getRadius() const {
 		return EDITOR_PLAYER_RADIUS;
 	}
 
-	constexpr bool containsPoint(const PointF& pt) const {
+	constexpr bool containsPoint(const PointF& pt) const override {
 		double sqrDist = pos.sqrDistance(pt);
 		return (sqrDist <= sqr(getRadius()));
 	}
@@ -80,7 +90,14 @@ public:
 		, shape(shape)
 	{}
 
-	constexpr bool containsPoint(const PointF& pt) const {
+	constexpr void moveBy(double dx, double dy) override {
+		for (auto& corner : shape.corners) {
+			corner.x += dx;
+			corner.y += dy;
+		}
+	}
+
+	constexpr bool containsPoint(const PointF& pt) const override {
 		return shape.containsPoint(pt);
 	}
 };
