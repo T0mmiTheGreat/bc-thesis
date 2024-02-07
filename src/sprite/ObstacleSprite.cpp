@@ -25,7 +25,7 @@ void ObstacleSprite::repaintCostumeNormal(std::shared_ptr<ICanvas> canvas,
 	Rect& invalidRect)
 {
 	if (m_shape.cornerCount() != 0) {
-		canvas->setFillingColor(Color::obstacle());
+		canvas->setFillingColor(m_color);
 		canvas->fillPolygon(m_shape);
 
 		invalidRect += getBounds();
@@ -61,6 +61,20 @@ void ObstacleSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)
 		case COSTUME_HIGHLIGHTED:
 			repaintCostumeHighlighted(canvas, invalidRect);
 			break;
+	}
+}
+
+Color ObstacleSprite::getColor() const
+{
+	return m_color;
+}
+
+void ObstacleSprite::setColor(const Color& value)
+{
+	if (m_color != value) {
+		invalidateBounds();
+		m_color = value;
+		invalidateBounds();
 	}
 }
 

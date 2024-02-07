@@ -14,6 +14,7 @@
 
 #include <memory>
 #include <type_traits>
+#include <unordered_set>
 #include <vector>
 
 #include "types.hpp"
@@ -49,6 +50,7 @@ public:
 		ACTION_SELECT_OBSTACLE_OBJECT,
 		ACTION_DESELECT_PLAYER_OBJECT,
 		ACTION_DESELECT_OBSTACLE_OBJECT,
+		ACTION_BEGIN_DRAG_SELECTED,
 		ACTION_MOVE_PLAYER_OBJECT,
 		ACTION_MOVE_OBSTACLE_OBJECT,
 	};
@@ -371,6 +373,57 @@ public:
 	}
 };
 
+class StageEditorBeginDragSelected : public StageEditorAction {
+private:
+	PointF m_where;
+	std::unordered_set<EditorOID> m_playerOids;
+	std::unordered_set<EditorOID> m_obstacleOids;
+public:
+	/**
+	 * @brief Constructs a new StageEditorBeginDragSelected object.
+	 * 
+	 * @param where Position where the drag started.
+	 * @param playerOids OIDs of the selected players.
+	 * @param obstacleOids OIDs of the selected obstacles.
+	 */
+	StageEditorBeginDragSelected(
+		const PointF& where,
+		const std::unordered_set<EditorOID>& playerOids,
+		const std::unordered_set<EditorOID>& obstacleOids)
+		: m_where(where)
+		, m_playerOids{playerOids}
+		, m_obstacleOids{obstacleOids}
+	{}
+
+	/**
+	 * @brief Returns the action type.
+	 */
+	ActionType getType() const override {
+		return ACTION_BEGIN_DRAG_SELECTED;
+	}
+
+	/**
+	 * @brief Position where the drag started.
+	 */
+	const PointF& getWhere() const {
+		return m_where;
+	}
+
+	/**
+	 * @brief OIDs of the selected players.
+	 */
+	const std::unordered_set<EditorOID>& getPlayerOids() const {
+		return m_playerOids;
+	}
+
+	/**
+	 * @brief OIDs of the selected obstacles.
+	 */
+	const std::unordered_set<EditorOID>& getObstacleOids() const {
+		return m_obstacleOids;
+	}
+};
+
 class StageEditorActionMoveObjectBase : public StageEditorAction {
 private:
 	EditorOID m_oid;
@@ -434,10 +487,6 @@ public:
 };
 
 class StageEditorActionMoveObstacleObject : public StageEditorActionMoveObjectBase {
-private:
-	EditorOID m_oid;
-	PointF m_from;
-	PointF m_to;
 public:
 	/**
 	 * @brief Constructs a new StageEditorActionMoveObstacleObject object.

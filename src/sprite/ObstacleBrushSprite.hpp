@@ -29,9 +29,8 @@ public:
 		COSTUME_DOT,    // Before starting a new obstacle. `p1` is ignored.
 	};
 private:
-	static constexpr uint8_t SPRITE_ALPHA = 0xa4;
-	static constexpr Color STROKE_NORMAL = Color::white().setAlpha(SPRITE_ALPHA);
-	static constexpr Color STROKE_BAD = Color::red().setAlpha(SPRITE_ALPHA);
+	static constexpr Color STROKE_NORMAL = Color::ghost();
+	static constexpr Color STROKE_BAD = Color::badGhost();
 	static constexpr Color FILL_DOT = STROKE_NORMAL;
 	static constexpr int DOT_RADIUS = 6;
 

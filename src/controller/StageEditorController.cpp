@@ -149,8 +149,7 @@ void StageEditorController::mouseBtnDownWorkspace(MouseBtn btn, int x, int y)
 
 	switch (btn) {
 		case BTN_LEFT: {
-			ObjectSnap snapping = (sysProxy->isKeyPressed(KEY_ALT) ?
-				OBJECT_SNAP_NONE : getSnappingByViewportZoom());
+			ObjectSnap snapping = getSnapping();
 			const auto lastAction = m_stageEditor.mouseLeftBtnDown(pos, snapping,
 				sysProxy->isKeyPressed(KEY_SHIFT));
 			updateSpritesByAction(lastAction);
@@ -348,6 +347,9 @@ void StageEditorController::updateSpritesByAction(
 		case StageEditorAction::ACTION_DESELECT_OBSTACLE_OBJECT:
 			updateSpritesByActionDeselectObstacleObject(action);
 			break;
+		case StageEditorAction::ACTION_BEGIN_DRAG_SELECTED:
+			updateSpritesByActionBeginDragSelected(action);
+			break;
 		case StageEditorAction::ACTION_MOVE_PLAYER_OBJECT:
 			updateSpritesByActionMovePlayerObject(action);
 			break;
@@ -439,12 +441,41 @@ void StageEditorController::updateSpritesByActionDeselectObstacleObject(
 		ObstacleSprite::COSTUME_NORMAL);
 }
 
+void StageEditorController::updateSpritesByActionBeginDragSelected(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	const auto actionCast =
+		std::dynamic_pointer_cast<StageEditorBeginDragSelected>(action);
+	
+	for (EditorOID oid : actionCast->getPlayerOids()) {
+		m_draggedPlayerSprites[oid] = std::move(m_playerSprites[oid]);
+		m_playerSprites.erase(oid);
+		m_draggedPlayerSprites[oid]->setColor(Color::ghost());
+		m_draggedPlayerSprites[oid]->setCostume(PlayerSprite::COSTUME_NORMAL);
+	}
+	
+	for (EditorOID oid : actionCast->getObstacleOids()) {
+		m_draggedObstacleSprites[oid] = std::move(m_obstacleSprites[oid]);
+		m_obstacleSprites.erase(oid);
+		m_draggedObstacleSprites[oid]->setColor(Color::ghost());
+		m_draggedObstacleSprites[oid]->setCostume(ObstacleSprite::COSTUME_NORMAL);
+	}
+}
+
 void StageEditorController::updateSpritesByActionMovePlayerObject(
 	const std::shared_ptr<StageEditorAction> action)
 {
 	const auto actionCast =
 		std::dynamic_pointer_cast<StageEditorActionMovePlayerObject>(action);
-	updatePlayerSprite(actionCast->getOid());
+
+	EditorOID oid = actionCast->getOid();
+
+	m_playerSprites[oid] = std::move(m_draggedPlayerSprites[oid]);
+	m_draggedPlayerSprites.erase(oid);
+	m_playerSprites[oid]->setColor(Color::playerDefault());
+	m_playerSprites[oid]->setCostume(PlayerSprite::COSTUME_HIGHLIGHTED);
+
+	updatePlayerSprite(oid);
 }
 
 void StageEditorController::updateSpritesByActionMoveObstacleObject(
@@ -452,7 +483,15 @@ void StageEditorController::updateSpritesByActionMoveObstacleObject(
 {
 	const auto actionCast =
 		std::dynamic_pointer_cast<StageEditorActionMoveObstacleObject>(action);
-	updateObstacleSprite(actionCast->getOid());
+
+	EditorOID oid = actionCast->getOid();
+
+	m_obstacleSprites[oid] = std::move(m_draggedObstacleSprites[oid]);
+	m_draggedObstacleSprites.erase(oid);
+	m_obstacleSprites[oid]->setColor(Color::obstacle());
+	m_obstacleSprites[oid]->setCostume(ObstacleSprite::COSTUME_HIGHLIGHTED);
+
+	updateObstacleSprite(oid);
 }
 
 void StageEditorController::updateGridSprite()
@@ -483,8 +522,7 @@ void StageEditorController::updatePlayerSprite(EditorOID oid)
 	// Get the sprite
 	auto& sprite = m_playerSprites[oid];
 
-	// Get the player sprite radius
-	double radius = EDITOR_PLAYER_RADIUS * m_viewport.getZoom();
+	int radius = getPlayerSpriteRadius();
 
 	// Get the transformation matrix
 	Matrix3x3 tm = getStageToScreenMatrix();
@@ -532,6 +570,85 @@ void StageEditorController::updateObstacleSprite(EditorOID oid)
 	sprite->setShape(obstacleObject);
 }
 
+void StageEditorController::updateDraggedSprites()
+{
+	for (const auto& pair : m_draggedPlayerSprites) {
+		updateDraggedPlayerSprite(pair.first);
+	}
+	for (const auto& pair : m_draggedObstacleSprites) {
+		updateDraggedObstacleSprite(pair.first);
+	}
+}
+
+void StageEditorController::updateDraggedPlayerSprite(EditorOID oid)
+{
+	Point mouse = sysProxy->getMousePos();
+	Matrix3x3 tmStage = getScreenToStageMatrix();
+	PointF pos = static_cast<PointF>(mouse);
+	pos.transform(tmStage);
+	ObjectSnap snapping = getSnapping();
+
+	bool isSuccess;
+	auto predictedAction = m_stageEditor.predictEndDragPlayerObject(oid, pos, snapping, isSuccess);
+
+	if (predictedAction->getType() == StageEditorAction::ACTION_MOVE_PLAYER_OBJECT) {
+		auto predictedActionCast =
+			std::dynamic_pointer_cast<StageEditorActionMovePlayerObject>(
+				predictedAction);
+		
+		EditorOID oid = predictedActionCast->getOid();
+		double dx = predictedActionCast->getDx();
+		double dy = predictedActionCast->getDy();
+
+		PointF newPos = m_stageEditor.getState().players.at(oid).pos;
+		newPos.x += dx;
+		newPos.y += dy;
+
+		Matrix3x3 tmScreen = getStageToScreenMatrix();
+		PointF newPosScreen = newPos.getTransformed(tmScreen);
+
+		const auto& draggedPlayer = m_draggedPlayerSprites.at(oid);
+		draggedPlayer->setCenterPos(static_cast<Point>(newPosScreen));
+		draggedPlayer->setRadius(getPlayerSpriteRadius());
+		draggedPlayer->setColor(isSuccess ? Color::ghost() : Color::badGhost());
+	}
+}
+
+void StageEditorController::updateDraggedObstacleSprite(EditorOID oid)
+{
+	Point mouse = sysProxy->getMousePos();
+	Matrix3x3 tmStage = getScreenToStageMatrix();
+	PointF pos = static_cast<PointF>(mouse);
+	pos.transform(tmStage);
+	ObjectSnap snapping = getSnapping();
+
+	bool isSuccess;
+	auto predictedAction = m_stageEditor.predictEndDragObstacleObject(oid, pos, snapping, isSuccess);
+
+	if (predictedAction->getType() == StageEditorAction::ACTION_MOVE_OBSTACLE_OBJECT) {
+		auto predictedActionCast =
+			std::dynamic_pointer_cast<StageEditorActionMoveObstacleObject>(
+				predictedAction);
+		
+		EditorOID oid = predictedActionCast->getOid();
+		double dx = predictedActionCast->getDx();
+		double dy = predictedActionCast->getDy();
+
+		PolygonF newShape = m_stageEditor.getState().obstacles.at(oid).shape;
+		for (auto& corner : newShape.corners) {
+			corner.x += dx;
+			corner.y += dy;
+		}
+
+		Matrix3x3 tmScreen = getStageToScreenMatrix();
+		PolygonF newShapeScreen = newShape.getTransformed(tmScreen);
+
+		const auto& draggedObstacle = m_draggedObstacleSprites.at(oid);
+		draggedObstacle->setShape(std::move(newShapeScreen));
+		draggedObstacle->setColor(isSuccess ? Color::ghost() : Color::badGhost());
+	}
+}
+
 void StageEditorController::updateToolBrush()
 {
 	switch (m_stageEditor.getActiveTool()) {
@@ -553,6 +670,8 @@ void StageEditorController::updateToolBrush()
 void StageEditorController::updateToolBrushSelect()
 {
 	hideBrush();
+
+	updateDraggedSprites();
 }
 
 void StageEditorController::updateToolBrushPlayers()
@@ -563,16 +682,66 @@ void StageEditorController::updateToolBrushPlayers()
 		// Don't draw anything if the mouse does not move over workspace
 		hideBrush();
 	} else {
+		// Set the brush sprite
 		m_brushSprite = m_playerBrush.get();
 		
-		m_playerBrush->setCenterPos(mousePos);
-		m_playerBrush->setRadius(static_cast<int>(EDITOR_PLAYER_RADIUS * m_viewport.getZoom()));
+		Matrix3x3 tmStage = getScreenToStageMatrix();
+		// Get the mouse position in stage space
+		PointF pos = static_cast<PointF>(mousePos);
+		pos.transform(tmStage);
+		// Get the mouse snapping
+		ObjectSnap snapping = getSnapping();
+
+		bool isSuccess;
+		// Predict
+		auto predictedAction = m_stageEditor.predictAddPlayer(pos, snapping,
+			isSuccess);
+		assert(predictedAction->getType() == StageEditorAction::ACTION_ADD_PLAYER);
+
+		// Downcast
+		auto predictedActionCast =
+			std::dynamic_pointer_cast<StageEditorActionAddPlayer>(
+				predictedAction);
+
+		Matrix3x3 tmScreen = getStageToScreenMatrix();
+		// Project to screen space
+		PointF playerPosScreen = predictedActionCast->getPos();
+		playerPosScreen.transform(tmScreen);
+		
+		// Modify sprite
+		m_playerBrush->setCenterPos(static_cast<Point>(playerPosScreen));
+		m_playerBrush->setRadius(getPlayerSpriteRadius());
+		m_playerBrush->setCostume(isSuccess ? PlayerBrushSprite::COSTUME_NORMAL
+			: PlayerBrushSprite::COSTUME_BAD);
 	}
 }
 
 void StageEditorController::updateToolBrushObstacles()
 {
 	Point mousePos = sysProxy->getMousePos();
+		
+	Matrix3x3 tmStage = getScreenToStageMatrix();
+	// Get the mouse position in stage space
+	PointF pos = static_cast<PointF>(mousePos);
+	pos.transform(tmStage);
+	// Get the mouse snapping
+	ObjectSnap snapping = getSnapping();
+
+	bool isSuccess;
+	// Predict
+	auto predictedAction = m_stageEditor.predictPlaceObstacleCorner(pos,
+		snapping, isSuccess);
+	assert(predictedAction->getType() == StageEditorAction::ACTION_PLACE_OBSTACLE_CORNER);
+	
+	// Downcast
+	auto predictedActionCast =
+		std::dynamic_pointer_cast<StageEditorActionPlaceObstacleCorner>(
+			predictedAction);
+
+	Matrix3x3 tmScreen = getStageToScreenMatrix();
+	// Project to screen space
+	PointF cornerPosScreen = predictedActionCast->getPos();
+	cornerPosScreen.transform(tmScreen);
 
 	if (m_stageEditor.getObstacleCorners().size() == 0) {
 		if (!getWorkspaceRect().containsPoint(mousePos)) {
@@ -585,7 +754,7 @@ void StageEditorController::updateToolBrushObstacles()
 			m_brushSprite = m_obstacleBrush.get();
 
 			m_obstacleBrush->setCostume(ObstacleBrushSprite::COSTUME_DOT);
-			m_obstacleBrush->setP0(mousePos);
+			m_obstacleBrush->setP0(static_cast<Point>(cornerPosScreen));
 		}
 	} else {
 		// Draw a dashed edge
@@ -596,9 +765,11 @@ void StageEditorController::updateToolBrushObstacles()
 		PointF p0 = m_stageEditor.getObstacleCorners().back();
 		p0.transform(tm);
 
-		m_obstacleBrush->setCostume(ObstacleBrushSprite::COSTUME_NORMAL);
 		m_obstacleBrush->setP0(static_cast<Point>(p0));
-		m_obstacleBrush->setP1(mousePos);
+		m_obstacleBrush->setP1(static_cast<Point>(cornerPosScreen));
+		m_obstacleBrush->setCostume(isSuccess
+			? ObstacleBrushSprite::COSTUME_NORMAL
+			: ObstacleBrushSprite::COSTUME_BAD);
 	}
 }
 
@@ -618,6 +789,7 @@ void StageEditorController::addPlayerSprite(EditorOID oid)
 void StageEditorController::addObstacleSprite(EditorOID oid)
 {
 	auto newSprite = std::make_unique<ObstacleSprite>(sysProxy);
+	newSprite->setColor(Color::obstacle());
 	m_obstacleSprites[oid] = std::move(newSprite);
 	updateObstacleSprite(oid);
 }
@@ -802,6 +974,17 @@ ObjectSnap StageEditorController::getSnappingByViewportZoom(unsigned& solidsFreq
 	}
 }
 
+ObjectSnap StageEditorController::getSnapping()
+{
+	return (sysProxy->isKeyPressed(KEY_ALT) ? OBJECT_SNAP_NONE
+		: getSnappingByViewportZoom());
+}
+
+int StageEditorController::getPlayerSpriteRadius()
+{
+	return static_cast<int>(EDITOR_PLAYER_RADIUS * m_viewport.getZoom());
+}
+
 void StageEditorController::startedEvent()
 {
 	initializeSprites();
@@ -837,8 +1020,7 @@ void StageEditorController::mouseBtnUpEvent(MouseBtn btn, int x, int y)
 			Matrix3x3 tm = getScreenToStageMatrix();
 			PointF pos(x, y);
 			pos.transform(tm);
-			ObjectSnap snapping = (sysProxy->isKeyPressed(KEY_ALT) ?
-				OBJECT_SNAP_NONE : getSnappingByViewportZoom());
+			ObjectSnap snapping = getSnapping();
 			const auto lastAction = m_stageEditor.mouseLeftBtnUp(pos, snapping);
 			updateSpritesByAction(lastAction);
 		} break;
@@ -902,8 +1084,18 @@ void StageEditorController::paintEvent(std::shared_ptr<ICanvas> canvas,
 		obstacleSprite.second->repaint(canvas, invalidRect);
 	}
 
-	// Player objects
+	// Players
 	for (auto& playerSprite : m_playerSprites) {
+		playerSprite.second->repaint(canvas, invalidRect);
+	}
+
+	// Dragged obstacles
+	for (auto& obstacleSprite : m_draggedObstacleSprites) {
+		obstacleSprite.second->repaint(canvas, invalidRect);
+	}
+
+	// Dragged players
+	for (auto& playerSprite : m_draggedPlayerSprites) {
 		playerSprite.second->repaint(canvas, invalidRect);
 	}
 

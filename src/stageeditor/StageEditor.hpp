@@ -55,6 +55,12 @@ private:
 	std::shared_ptr<StageEditorAction> createActionSelectObject(
 		const PointF& pos);
 	std::shared_ptr<StageEditorAction> createActionDeselectAll();
+	std::shared_ptr<StageEditorAction> createActionBeginDragSelected(
+		const PointF& where);
+	std::shared_ptr<StageEditorAction> createActionMovePlayerObject(
+		EditorOID oid, double dx, double dy);
+	std::shared_ptr<StageEditorAction> createActionMoveObstacleObject(
+		EditorOID oid, double dx, double dy);
 	std::shared_ptr<StageEditorAction> createActionMoveSelectedObjects(double dx,
 		double dy);
 
@@ -96,6 +102,7 @@ private:
 	void doActionSelectObstacleObject(const std::shared_ptr<StageEditorAction> action);
 	void doActionDeselectPlayerObject(const std::shared_ptr<StageEditorAction> action);
 	void doActionDeselectObstacleObject(const std::shared_ptr<StageEditorAction> action);
+	void doActionBeginDragSelected(const std::shared_ptr<StageEditorAction> action);
 	void doActionMovePlayerObject(const std::shared_ptr<StageEditorAction> action);
 	void doActionMoveObstacleObject(const std::shared_ptr<StageEditorAction> action);
 
@@ -248,6 +255,8 @@ public:
 	 */
 	EditorTool getActiveTool() const;
 	const PolygonF::CollectionType& getObstacleCorners() const;
+	const std::unordered_set<EditorOID>& getSelectedPlayers() const;
+	const std::unordered_set<EditorOID>& getSelectedObstacles() const;
 	
 	/**
 	 * @brief Sets active tool.
@@ -284,6 +293,69 @@ public:
 	 * @return The action performed.
 	 */
 	const std::shared_ptr<StageEditorAction> mouseRightBtnDown();
+
+	/**
+	 * @brief Checks what would happen if a player was added.
+	 * 
+	 * @details This method is used for tool brush outline. When a "players
+	 *          tool" is active, a circle appears where the player object would
+	 *          be placed when the user clicks the mouse.
+	 * 
+	 * @param pos Mouse position projected to the stage space.
+	 * @param snapping How the coordinates should be snapped to grid.
+	 * @param isSuccess Whether the action would succeed.
+	 * @return The action that would be performed.
+	 */
+	const std::shared_ptr<StageEditorAction> predictAddPlayer(const PointF& pos,
+		ObjectSnap snapping, bool& isSuccess);
+	/**
+	 * @brief Checks what would happen if an obstacle corner was added.
+	 * 
+	 * @details This method is used for tool brush outline. When an "obstacles
+	 *          tool" is active, a dot appears where the first corner would
+	 *          be placed if the user clicks the mouse. If there is at least
+	 *          one corner placed already, instead, a line appears between the
+	 *          last placed corner and the position where the next corner would
+	 *          be placed if the user clicks the mouse.
+	 * 
+	 * @param pos Mouse position projected to the stage space.
+	 * @param snapping How the coordinates should be snapped to grid.
+	 * @param isSuccess Whether the action would succeed.
+	 * @return The action that would be performed.
+	 */
+	const std::shared_ptr<StageEditorAction> predictPlaceObstacleCorner(
+		const PointF& pos, ObjectSnap snapping, bool& isSuccess);
+	/**
+	 * @brief Checks what would happen if a player object was dropped
+	 *        after dragging.
+	 * 
+	 * @details This method is used for drag preview. When the dragging is
+	 *          active (mouse had been pressed over a selected object and hasn't
+	 *          been released yet), the dragged objects move along with the
+	 *          moving cursor.
+	 * 
+	 * @param oid OID of the player object.
+	 * @param pos Mouse position projected to the stage space.
+	 * @param snapping How the coordinates should be snapped to grid.
+	 * @param isSuccess Whether the action would succeed.
+	 * @return The action that would be performed.
+	 */
+	const std::shared_ptr<StageEditorAction> predictEndDragPlayerObject(
+		EditorOID oid, const PointF& pos, ObjectSnap snapping, bool& isSuccess);
+	/**
+	 * @brief Checks what would happen if an obstacle object was dropped
+	 *        after dragging.
+	 * 
+	 * @copydetail StageEditor::predictEndDragPlayerObject()
+	 * 
+	 * @param oid OID of the player object.
+	 * @param pos Mouse position projected to the stage space.
+	 * @param snapping How the coordinates should be snapped to grid.
+	 * @param isSuccess Whether the action would succeed.
+	 * @return The action that would be performed.
+	 */
+	const std::shared_ptr<StageEditorAction> predictEndDragObstacleObject(
+		EditorOID oid, const PointF& pos, ObjectSnap snapping, bool& isSuccess);
 	
 	void undo();
 	void redo();

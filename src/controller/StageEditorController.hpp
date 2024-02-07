@@ -109,6 +109,9 @@ private:
 	std::unique_ptr<ObstacleBrushSprite> m_obstacleBrush;
 	// Either `m_playerBrush`, `m_obstacleBrush`, or nullptr
 	ISprite* m_brushSprite;
+	
+	std::unordered_map<EditorOID, std::unique_ptr<PlayerSprite>> m_draggedPlayerSprites;
+	std::unordered_map<EditorOID, std::unique_ptr<ObstacleSprite>> m_draggedObstacleSprites;
 #pragma endregion sprites
 
 	void createSprites();
@@ -201,6 +204,8 @@ private:
 		const std::shared_ptr<StageEditorAction> action);
 	void updateSpritesByActionDeselectObstacleObject(
 		const std::shared_ptr<StageEditorAction> action);
+	void updateSpritesByActionBeginDragSelected(
+		const std::shared_ptr<StageEditorAction> action);
 	void updateSpritesByActionMovePlayerObject(
 		const std::shared_ptr<StageEditorAction> action);
 	void updateSpritesByActionMoveObstacleObject(
@@ -226,6 +231,24 @@ private:
 	 * @param oid Editor OID of the obstacle object.
 	 */
 	void updateObstacleSprite(EditorOID oid);
+	/**
+	 * @brief Updates dragged sprites after a change in backend or viewport.
+	 */
+	void updateDraggedSprites();
+	/**
+	 * @brief Updates dragged player sprite after a change in backend or
+	 *        viewport.
+	 * 
+	 * @param oid Editor OID of the player object.
+	 */
+	void updateDraggedPlayerSprite(EditorOID oid);
+	/**
+	 * @brief Updates dragged obstacle sprite after a change in backend or
+	 *        viewport.
+	 * 
+	 * @param oid Editor OID of the obstacle object.
+	 */
+	void updateDraggedObstacleSprite(EditorOID oid);
 
 	void updateToolBrush();
 	void updateToolBrushSelect();
@@ -271,6 +294,17 @@ private:
 	 * @param solidsFrequency EditorWorkspaceGridSprite property.
 	 */
 	ObjectSnap getSnappingByViewportZoom(unsigned& solidsFrequency);
+
+	/**
+	 * @brief Chooses the snapping value based on the zoom of the viewport AND
+	 *        the state of the `Alt` key.
+	 */
+	ObjectSnap getSnapping();
+
+	/**
+	 * @brief Calculates the player sprite radius based on viewport zoom.
+	 */
+	int getPlayerSpriteRadius();
 public:
 	StageEditorController(std::shared_ptr<ISysProxy> sysProxy);
 	void startedEvent() override;

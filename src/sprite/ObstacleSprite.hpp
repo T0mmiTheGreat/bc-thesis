@@ -28,6 +28,7 @@ private:
 	static constexpr Color HIGHLIGHT_COLOR = Color::white();
 
 	Costume m_costume;
+	Color m_color;
 	PolygonF m_shape;
 
 	void repaintCostumeNormal(std::shared_ptr<ICanvas> canvas,
@@ -52,6 +53,14 @@ public:
 	 */
 	void repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
 
+	/**
+	 * @brief Getter for the player color.
+	 */
+	Color getColor() const;
+	/**
+	 * @brief Setter for the player color.
+	 */
+	void setColor(const Color& value);
 	const PolygonF& getShape() const;
 	void setShape(const PolygonF& value);
 	void setShape(PolygonF&& value);

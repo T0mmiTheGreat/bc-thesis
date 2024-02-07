@@ -109,6 +109,29 @@ std::shared_ptr<StageEditorAction> StageEditor::createActionDeselectAll()
 	return res;
 }
 
+std::shared_ptr<StageEditorAction> StageEditor::createActionBeginDragSelected(
+	const PointF& where)
+{
+	auto res = std::make_shared<StageEditorBeginDragSelected>(where,
+		m_selectedPlayers, m_selectedObstacles);
+	return res;
+}
+
+std::shared_ptr<StageEditorAction> StageEditor::createActionMovePlayerObject(
+	EditorOID oid, double dx, double dy)
+{
+	auto res = std::make_shared<StageEditorActionMovePlayerObject>(oid, dx, dy);
+	return res;
+}
+
+std::shared_ptr<StageEditorAction> StageEditor::createActionMoveObstacleObject(
+	EditorOID oid, double dx, double dy)
+{
+	auto res = std::make_shared<StageEditorActionMoveObstacleObject>(oid, dx,
+		dy);
+	return res;
+}
+
 std::shared_ptr<StageEditorAction> StageEditor::createActionMoveSelectedObjects(
 	double dx, double dy)
 {
@@ -118,15 +141,13 @@ std::shared_ptr<StageEditorAction> StageEditor::createActionMoveSelectedObjects(
 
 	// Move players
 	for (EditorOID oid : m_selectedPlayers) {
-		newAction = std::make_shared<StageEditorActionMovePlayerObject>(
-			oid, dx, dy);
+		newAction = createActionMovePlayerObject(oid, dx, dy);
 		actionGroup.push_back(newAction);
 	}
 
 	// Move obstacles
 	for (EditorOID oid : m_selectedObstacles) {
-		newAction = std::make_shared<StageEditorActionMoveObstacleObject>(
-			oid, dx, dy);
+		newAction = createActionMoveObstacleObject(oid, dx, dy);
 		actionGroup.push_back(newAction);
 	}
 
@@ -199,6 +220,9 @@ void StageEditor::doAction(const std::shared_ptr<StageEditorAction> action)
 			break;
 		case StageEditorAction::ACTION_DESELECT_OBSTACLE_OBJECT:
 			doActionDeselectObstacleObject(action);
+			break;
+		case StageEditorAction::ACTION_BEGIN_DRAG_SELECTED:
+			doActionBeginDragSelected(action);
 			break;
 		case StageEditorAction::ACTION_MOVE_PLAYER_OBJECT:
 			doActionMovePlayerObject(action);
@@ -308,6 +332,16 @@ void StageEditor::doActionDeselectObstacleObject(
 	EditorOID oid = actionCast->getOid();
 
 	m_selectedObstacles.erase(oid);
+}
+
+void StageEditor::doActionBeginDragSelected(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	auto actionCast =
+		std::dynamic_pointer_cast<StageEditorBeginDragSelected>(action);
+	
+	m_dragStart = actionCast->getWhere();
+	m_isDragging = true;
 }
 
 void StageEditor::doActionMovePlayerObject(
@@ -477,11 +511,16 @@ const std::shared_ptr<StageEditorAction> StageEditor::selectObject(
 const std::shared_ptr<StageEditorAction> StageEditor::beginDragSelected(
 	const PointF& pos)
 {
+	std::shared_ptr<StageEditorAction> res;
+
 	if (!m_isDragging) {
-		m_dragStart = pos;
-		m_isDragging = true;
+		res = createActionBeginDragSelected(pos);
+		doAction(res);
+	} else {
+		res = createActionNone();
 	}
-	return createActionNone();
+
+	return res;
 }
 
 const std::shared_ptr<StageEditorAction> StageEditor::endDragSelected(
@@ -535,6 +574,16 @@ EditorTool StageEditor::getActiveTool() const
 const PolygonF::CollectionType& StageEditor::getObstacleCorners() const
 {
 	return m_obstacleCorners;
+}
+
+const std::unordered_set<EditorOID>& StageEditor::getSelectedPlayers() const
+{
+	return m_selectedPlayers;
+}
+
+const std::unordered_set<EditorOID>& StageEditor::getSelectedObstacles() const
+{
+	return m_selectedObstacles;
 }
 
 EditorOID StageEditor::getSelectedPlayerAt(const PointF& pos)
@@ -686,5 +735,67 @@ const std::shared_ptr<StageEditorAction> StageEditor::mouseRightBtnDown()
 		return mouseRightBtnDownToolObstacles();
 	} else {
 		return createActionNone();
+	}
+}
+
+const std::shared_ptr<StageEditorAction> StageEditor::predictAddPlayer(
+	const PointF& pos, ObjectSnap snapping, bool& isSuccess)
+{
+	PointF posSnapped;
+	getSnappedPoint(pos, snapping, posSnapped);
+
+	auto res = createActionAddPlayer(posSnapped);
+	isSuccess = true;  // FIXME
+	return res;
+}
+
+const std::shared_ptr<StageEditorAction> StageEditor::predictPlaceObstacleCorner(
+	const PointF& pos, ObjectSnap snapping, bool& isSuccess)
+{
+	PointF posSnapped;
+	getSnappedPoint(pos, snapping, posSnapped);
+
+	auto res = createActionPlaceObstacleCorner(posSnapped);
+	isSuccess = true;  // FIXME
+	return res;
+}
+
+const std::shared_ptr<StageEditorAction> StageEditor::predictEndDragPlayerObject(
+	EditorOID oid, const PointF& pos, ObjectSnap snapping, bool& isSuccess)
+{
+	if (!m_selectedPlayers.contains(oid) || !m_isDragging) {
+		isSuccess = false;
+		return createActionNone();
+	} else {
+		PointF offsetPoint = pos - m_dragStart;
+		PointF offsetPointSnapped;
+		getSnappedPoint(offsetPoint, snapping, offsetPointSnapped);
+
+		double dx = offsetPointSnapped.x;
+		double dy = offsetPointSnapped.y;
+
+		auto res = createActionMovePlayerObject(oid, dx, dy);
+		isSuccess = true;  // FIXME
+		return res;
+	}
+}
+
+const std::shared_ptr<StageEditorAction> StageEditor::predictEndDragObstacleObject(
+	EditorOID oid, const PointF& pos, ObjectSnap snapping, bool& isSuccess)
+{
+	if (!m_selectedObstacles.contains(oid) || !m_isDragging) {
+		isSuccess = false;
+		return createActionNone();
+	} else {
+		PointF offsetPoint = pos - m_dragStart;
+		PointF offsetPointSnapped;
+		getSnappedPoint(offsetPoint, snapping, offsetPointSnapped);
+
+		double dx = offsetPointSnapped.x;
+		double dy = offsetPointSnapped.y;
+
+		auto res = createActionMoveObstacleObject(oid, dx, dy);
+		isSuccess = true;  // FIXME
+		return res;
 	}
 }

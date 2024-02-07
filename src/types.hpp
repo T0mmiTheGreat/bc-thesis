@@ -1142,6 +1142,11 @@ struct Color {
 		}
 	}
 	static constexpr Color obstacle() { return Color::grayscale(0x80); }
+	static constexpr uint8_t GHOST_ALPHA = 0xa4;
+	// Used in editor for brushes, dragged objects, etc.
+	static constexpr Color ghost() { return Color::white().setAlpha(GHOST_ALPHA); }
+	// Used in editor for brushes, dragged objects, etc.
+	static constexpr Color badGhost() { return Color::red().setAlpha(GHOST_ALPHA); }
 
 	constexpr bool operator== (const Color& rhs) const {
 		return

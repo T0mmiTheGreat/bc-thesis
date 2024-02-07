@@ -28,9 +28,8 @@ public:
 		COSTUME_BAD,    // Player object may not be placed
 	};
 private:
-	static constexpr uint8_t SPRITE_ALPHA = 0xa4;
-	static constexpr Color STROKE_NORMAL = Color::white().setAlpha(SPRITE_ALPHA);
-	static constexpr Color STROKE_BAD = Color::red().setAlpha(SPRITE_ALPHA);
+	static constexpr Color STROKE_NORMAL = Color::ghost();
+	static constexpr Color STROKE_BAD = Color::badGhost();
 
 	Costume m_costume;
 	int m_radius;
