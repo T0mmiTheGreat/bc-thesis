@@ -909,7 +909,7 @@ struct PolygonF {
 				std::swap(p0, p1);
 			}
 
-			if (p0.y < pt.y && pt.y < p1.y) {
+			if (p0.y <= pt.y && pt.y < p1.y) {
 				// The line intersects this edge. Also, the line and the edge
 				// are not collinear, because the edge is not parallel to the
 				// Y axis -- `p0.y < p1.y`
