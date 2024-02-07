@@ -67,8 +67,16 @@ public:
 	}
 
 	constexpr bool containsPoint(const PointF& pt) const override {
-		double sqrDist = pos.sqrDistance(pt);
-		return (sqrDist <= sqr(getRadius()));
+		double sqrDist = this->pos.sqrDistance(pt);
+		return (sqrDist <= sqr(this->getRadius()));
+	}
+
+	constexpr bool collidesWithPlayer(const StageEditorPlayerObject& player)
+		const
+	{
+		double sqrMinDistance = sqr(this->getRadius() + player.getRadius());
+		double sqrCurrDistance = this->pos.sqrDistance(player.pos);
+		return (sqrCurrDistance < sqrMinDistance);
 	}
 };
 
@@ -99,6 +107,14 @@ public:
 
 	constexpr bool containsPoint(const PointF& pt) const override {
 		return shape.containsPoint(pt);
+	}
+
+	constexpr bool collidesWithPlayer(const StageEditorPlayerObject& player)
+		const
+	{
+		double sqrMinDistance = sqr(player.getRadius());
+		double sqrCurrDistance = this->shape.sqrDistance(player.pos);
+		return (sqrCurrDistance < sqrMinDistance);
 	}
 };
 

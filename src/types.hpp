@@ -872,6 +872,24 @@ struct PolygonF {
 	}
 
 	/**
+	 * @brief Returns a list of the polygon edges.
+	 */
+	constexpr std::vector<std::pair<CornerType, CornerType>> getEdges() const {
+		std::vector<std::pair<CornerType, CornerType>> res;
+
+		if (cornerCount() > 1) {
+			res.reserve(cornerCount());
+			for (size_t cornIdx = 0; cornIdx < cornerCount(); cornIdx++) {
+				auto& p0 = corners[cornIdx];
+				auto& p1 = corners[(cornIdx + 1) % cornerCount()];
+				res.push_back(std::make_pair(p0, p1));
+			}
+		}
+
+		return res;
+	}
+
+	/**
 	 * @brief Returns true if a point is within the bounds of the polygon.
 	 * 
 	 * @remark Inclusive, i.e., returns true even if it lies on the polygon
@@ -895,14 +913,16 @@ struct PolygonF {
 		// the intersections only in one direction from the point. The line
 		// will be parallel to the X axis.
 
+		if (!isValidEuclidean()) {
+			return false;
+		}
+
 		int intersectCount = 0;
 
-		CornerType p0, p1;
-
-		for (size_t cornIdx = 0; cornIdx < cornerCount(); cornIdx++) {
+		for (auto edge : getEdges()) {
 			// Get the line segment of the edge
-			p0 = corners[cornIdx];
-			p1 = corners[(cornIdx + 1) % cornerCount()];
+			CornerType& p0 = edge.first;
+			CornerType& p1 = edge.second;
 			// Order the endpoints by Y coordinate
 			// `p0.y <= p1.y`
 			if (p1.y < p0.y) {
@@ -1048,6 +1068,42 @@ struct PolygonF {
 		PolygonF res(*this);
 		res.transform(tm);
 		return res;
+	}
+
+	/**
+	 * @brief Returns the squared distance between this polygon's bounds and
+	 *        a point.
+	 * 
+	 * @remark The returned value is the square of the distance. The caller may
+	 *         apply square root on the returned value if they need to.
+	 */
+	constexpr ValueType sqrDistanceBounds(const PointF& pt) const {
+		ValueType minDist = INFINITY, dist;
+		for (auto edge : getEdges()) {
+			CornerType& p0 = edge.first;
+			CornerType& p1 = edge.second;
+
+			dist = sqrDistancePointLineSegment(pt.x, pt.y, p0.x, p0.y, p1.x,
+				p1.y);
+			
+			if (minDist > dist) {
+				minDist = dist;
+			}
+		}
+
+		return minDist;
+	}
+
+	/**
+	 * @brief Returns the squared distance between this polygon and a point.
+	 * 
+	 * @remark The distance is 0 if the point lies inside the polygon bounds.
+	 * 
+	 * @remark The returned value is the square of the distance. The caller may
+	 *         apply square root on the returned value if they need to.
+	 */
+	constexpr ValueType sqrDistance(const PointF& pt) const {
+		return (containsPoint(pt) ? 0 : sqrDistanceBounds(pt));
 	}
 };
 

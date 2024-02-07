@@ -19,6 +19,49 @@
 #include <CGAL/mark_domain_in_triangulation.h>
 #include <CGAL/Polygon_2.h>
 
+double sqrDistancePointLineSegment(double px, double py, double ls0x, double ls0y, double ls1x, double ls1y)
+{
+	typedef CGAL::Simple_cartesian<double> Kernel;
+	typedef CGAL::Point_2<Kernel>          Point_2;
+	typedef CGAL::Segment_2<Kernel>        Segment_2;
+
+	Point_2 pt(px, py);
+	Segment_2 ls(Point_2(ls0x, ls0y), Point_2(ls1x, ls1y));
+
+	return CGAL::squared_distance(pt, ls);
+}
+
+bool isLineSegmentsCross(double lsAp0x, double lsAp0y, double lsAp1x,
+	double lsAp1y, double lsBp0x, double lsBp0y, double lsBp1x, double lsBp1y)
+{
+	typedef CGAL::Simple_cartesian<double> Kernel;
+	typedef CGAL::Point_2<Kernel>          Point_2;
+	typedef CGAL::Segment_2<Kernel>        Segment_2;
+
+	Segment_2 lsA(Point_2(lsAp0x, lsAp0y), Point_2(lsAp1x, lsAp1y));
+	Segment_2 lsB(Point_2(lsBp0x, lsBp0y), Point_2(lsBp1x, lsBp1y));
+
+	return static_cast<bool>(CGAL::intersection(lsA, lsB));
+}
+
+bool areVectorsAntiparallel(double v1x, double v1y, double v2x, double v2y)
+{
+	// Algorithm: Two 2D vectors are antiparallel if there is a vector which is
+	// perpendicular (normal) to both of them. So find the vector which is perp
+	// to the first vector and finc out whether that vector is perp to the
+	// second one too. This can be done using dot product; for two perp vectors
+	// the dot product is equal to 0.
+
+	// Normal vector
+	double v1nx = -v1y;
+	double v1ny = v1x;
+
+	// Dot product
+	double dot = (v1nx * v2x) + (v1ny * v2y);
+
+	return (dot == 0.0);
+}
+
 void triangulatePolygon(std::vector<std::array<double,2>> corners,
 	std::vector<std::array<std::array<double,2>,3>> triangles)
 {

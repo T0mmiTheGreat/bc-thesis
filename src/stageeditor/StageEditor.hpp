@@ -244,6 +244,27 @@ private:
 	 * @return The action performed.
 	 */
 	const std::shared_ptr<StageEditorAction> mouseRightBtnDownToolObstacles();
+
+	/**
+	 * @brief Checks whether a new player object may be placed at the given
+	 *        position.
+	 */
+	bool canPlacePlayer(const PointF& pos);
+	/**
+	 * @brief Checks whether a new obstacle corner may be placed at the given
+	 *        position.
+	 */
+	bool canPlaceCorner(const PointF& pos);
+	/**
+	 * @brief Checks whether a selected player object may be placed at the
+	 *        given position.
+	 */
+	bool canMoveSelectedPlayer(const PointF& newPos);
+	/**
+	 * @brief Checks whether a selected player object may be placed at the
+	 *        given position.
+	 */
+	bool canMoveSelectedObstacle(const PointF& newPos);
 public:
 	StageEditor();
 	/**

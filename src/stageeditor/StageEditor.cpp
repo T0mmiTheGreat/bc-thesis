@@ -407,24 +407,28 @@ const std::shared_ptr<StageEditorAction> StageEditor::addPlayer(
 	PointF posSnap;
 	getSnappedPoint(pos, snapping, posSnap);
 
-	// Deselect objects, if any are selected
-	auto actionDeselect = createActionDeselectAll();
+	if (!canPlacePlayer(posSnap)) {
+		return createActionNone();
+	} else {
+		// Deselect objects, if any are selected
+		auto actionDeselect = createActionDeselectAll();
 
-	// Add player
-	auto actionAddPlayer = createActionAddPlayer(posSnap);
+		// Add player
+		auto actionAddPlayer = createActionAddPlayer(posSnap);
 
-	// Merge
-	auto res = getMergedActions(actionDeselect, actionAddPlayer);
+		// Merge
+		auto res = getMergedActions(actionDeselect, actionAddPlayer);
 
-	if (res->getType() != StageEditorAction::ACTION_NONE) {
-		// Perform
-		doAction(res);
+		if (res->getType() != StageEditorAction::ACTION_NONE) {
+			// Perform
+			doAction(res);
 
-		// Add to actions history
-		m_history.pushAction(res);
+			// Add to actions history
+			m_history.pushAction(res);
+		}
+
+		return res;
 	}
-
-	return res;
 }
 
 const std::shared_ptr<StageEditorAction> StageEditor::addObstacleCorner(
@@ -434,24 +438,28 @@ const std::shared_ptr<StageEditorAction> StageEditor::addObstacleCorner(
 	PointF posSnap;
 	getSnappedPoint(pos, snapping, posSnap);
 
-	// Deselect objects, if any are selected
-	auto actionDeselect = createActionDeselectAll();
+	if (!canPlaceCorner(posSnap)) {
+		return createActionNone();
+	} else {
+		// Deselect objects, if any are selected
+		auto actionDeselect = createActionDeselectAll();
 
-	// Place obstacle corner
-	auto actionPlaceCorner = createActionPlaceObstacleCorner(posSnap);
+		// Place obstacle corner
+		auto actionPlaceCorner = createActionPlaceObstacleCorner(posSnap);
 
-	// Merge
-	auto res = getMergedActions(actionDeselect, actionPlaceCorner);
+		// Merge
+		auto res = getMergedActions(actionDeselect, actionPlaceCorner);
 
-	if (res->getType() != StageEditorAction::ACTION_NONE) {
-		// Perform
-		doAction(res);
+		if (res->getType() != StageEditorAction::ACTION_NONE) {
+			// Perform
+			doAction(res);
 
-		// Add to actions history
-		m_history.pushAction(res);
+			// Add to actions history
+			m_history.pushAction(res);
+		}
+
+		return res;
 	}
-
-	return res;
 }
 
 const std::shared_ptr<StageEditorAction> StageEditor::completeObstacle()
@@ -691,6 +699,105 @@ const std::shared_ptr<StageEditorAction> StageEditor::mouseRightBtnDownToolObsta
 	return completeObstacle();
 }
 
+bool StageEditor::canPlacePlayer(const PointF& pos)
+{
+	StageEditorPlayerObject tmpPlayer(EDITOR_OID_NULL, pos);
+
+	// Check collisions with other players
+	for (const auto& playerPair : m_stageState.players) {
+		const auto& player = playerPair.second;
+		if (tmpPlayer.collidesWithPlayer(player)) {
+			return false;
+		}
+	}
+
+	// Check collisions with obstacles
+	for (const auto& obstaclePair : m_stageState.obstacles) {
+		const auto& obstacle = obstaclePair.second;
+		if (obstacle.collidesWithPlayer(tmpPlayer)) {
+			return false;
+		}
+	}
+
+	// No collisions
+	return true;
+}
+
+bool StageEditor::canPlaceCorner(const PointF& pos)
+{
+	if (m_obstacleCorners.empty()) {
+		// The first corner can be always placed
+
+		return true;
+	} else {
+		if (pos == m_obstacleCorners.back()) {
+			// Two corners cannot be on the same position
+
+			return false;
+		}
+
+		PointF edgeP0 = m_obstacleCorners.back();
+		PointF edgeP1 = pos;
+		StageEditorObstacleObject tmpObstacle(EDITOR_OID_NULL,
+			PolygonF(edgeP0, edgeP1));
+
+		// Check collisions with already placed edges (except the last edge,
+		// which has slightly different rules)
+		if (m_obstacleCorners.size() > 1) {
+			for (size_t cornerIdx = 0; cornerIdx < m_obstacleCorners.size() - 2; cornerIdx++) {
+				const PointF& placedEdgeP0 = m_obstacleCorners[cornerIdx];
+				const PointF& placedEdgeP1 = m_obstacleCorners[cornerIdx + 1];
+
+				if (isLineSegmentsCross(edgeP0.x, edgeP0.y, edgeP1.x, edgeP1.y,
+					placedEdgeP0.x, placedEdgeP0.y, placedEdgeP1.x, placedEdgeP1.y))
+				{
+					// Crossing with already placed edge
+
+					return false;
+				}
+			}
+		}
+		// Check collision with the last edge
+		const PointF& lastEdgeP0 = m_obstacleCorners[m_obstacleCorners.size() - 2];
+		const PointF& lastEdgeP1 = m_obstacleCorners.back();
+		if (areVectorsAntiparallel(edgeP1.x - edgeP0.x, edgeP1.y - edgeP0.y,
+			lastEdgeP1.x - lastEdgeP0.x, lastEdgeP1.y - lastEdgeP0.y))
+		{
+			// The problem is this:
+			//
+			// placedEdgeP0  edgeP1  placedEdgeP1 = edgeP0
+			//      +-----------+=================+
+
+			return false;
+		}
+
+		// Check collisions with players
+		for (const auto& playerPair : m_stageState.players) {
+			const auto& player = playerPair.second;
+			if (tmpObstacle.collidesWithPlayer(player)) {
+				// Collides with player
+
+				return false;
+			}
+		}
+
+		// No collisions => can be placed
+		return true;
+	}
+}
+
+bool StageEditor::canMoveSelectedPlayer(const PointF& newPos)
+{
+	(void)newPos;
+return false;
+}
+
+bool StageEditor::canMoveSelectedObstacle(const PointF& newPos)
+{
+	(void)newPos;
+return false;
+}
+
 const std::shared_ptr<StageEditorAction> StageEditor::mouseLeftBtnDown(
 	const PointF& pos, ObjectSnap snapping, bool isShiftPressed)
 {
@@ -739,7 +846,7 @@ const std::shared_ptr<StageEditorAction> StageEditor::predictAddPlayer(
 	getSnappedPoint(pos, snapping, posSnapped);
 
 	auto res = createActionAddPlayer(posSnapped);
-	isSuccess = true;  // FIXME
+	isSuccess = canPlacePlayer(posSnapped);
 	return res;
 }
 
@@ -750,7 +857,7 @@ const std::shared_ptr<StageEditorAction> StageEditor::predictPlaceObstacleCorner
 	getSnappedPoint(pos, snapping, posSnapped);
 
 	auto res = createActionPlaceObstacleCorner(posSnapped);
-	isSuccess = true;  // FIXME
+	isSuccess = canPlaceCorner(posSnapped);
 	return res;
 }
 
