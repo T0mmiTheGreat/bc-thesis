@@ -841,7 +841,14 @@ bool StageEditor::canPlaceCorner(const PointF& pos)
 
 bool StageEditor::canCompleteObstacle()
 {
-	return canConstructEdge(m_obstacleCorners.front(), true);
+	if (!canConstructEdge(m_obstacleCorners.front(), true)) {
+		return false;
+	} else {
+		StageEditorObstacleObject tmpObstacle(EDITOR_OID_NULL,
+			PolygonF(m_obstacleCorners));
+		
+		return canPlaceObstacle(tmpObstacle);
+	}
 }
 
 bool StageEditor::canMoveSelectedPlayer(EditorOID oid, double dx, double dy)
