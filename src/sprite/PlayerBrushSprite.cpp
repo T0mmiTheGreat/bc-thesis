@@ -12,23 +12,23 @@
 #include "sprite/PlayerBrushSprite.hpp"
 
 void PlayerBrushSprite::repaintColor(std::shared_ptr<ICanvas> canvas,
-	Rect& invalidRect, const Color& color)
+	const Rect& invalidRect, const Color& color)
 {
+	(void)invalidRect;
+
 	canvas->setStrokeWidth(1.0);
 	canvas->setStrokingColor(color);
 	canvas->dashedCircle(getCenterX(), getCenterY(), getRadius());
-
-	invalidRect += getBounds();
 }
 
 void PlayerBrushSprite::repaintNormal(std::shared_ptr<ICanvas> canvas,
-	Rect& invalidRect)
+	const Rect& invalidRect)
 {
 	repaintColor(canvas, invalidRect, STROKE_NORMAL);
 }
 
 void PlayerBrushSprite::repaintBad(std::shared_ptr<ICanvas> canvas,
-	Rect& invalidRect)
+	const Rect& invalidRect)
 {
 	repaintColor(canvas, invalidRect, STROKE_BAD);
 }
@@ -48,7 +48,7 @@ Size2d PlayerBrushSprite::getSize()
 }
 
 void PlayerBrushSprite::repaint(std::shared_ptr<ICanvas> canvas,
-	Rect& invalidRect)
+	const Rect& invalidRect)
 {
 	switch (m_costume) {
 		case COSTUME_NORMAL:

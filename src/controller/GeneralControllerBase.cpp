@@ -24,7 +24,7 @@ GeneralControllerBase::GeneralControllerBase(
 
 void GeneralControllerBase::startedEvent()
 {
-	// Ignore
+	sysProxy->invalidateRect();
 }
 
 void GeneralControllerBase::finishedEvent()
@@ -86,7 +86,7 @@ void GeneralControllerBase::loopEvent()
 }
 
 void GeneralControllerBase::paintEvent(std::shared_ptr<ICanvas> canvas,
-	Rect& invalidRect)
+	const Rect& invalidRect)
 {
 	(void)canvas;
 	(void)invalidRect;

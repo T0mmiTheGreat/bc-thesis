@@ -138,11 +138,10 @@ void LogoSprite::loopEvent()
 	loopEventAnimation();
 }
 
-void LogoSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)
+void LogoSprite::repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
 {
-	// Paint
+	(void)invalidRect;
+
 	canvas->setFillingColor(Color(m_opacity, m_opacity, m_opacity));
 	canvas->fillText(getX(), getY(), LOGO_TEXT, LOGO_FONT);
-	// We might have repainted an area bigger than invalidRect
-	invalidRect += getBounds();
 }

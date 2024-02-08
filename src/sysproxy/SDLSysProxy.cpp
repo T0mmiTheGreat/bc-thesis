@@ -65,7 +65,7 @@ Size2d SDLSysProxy::getImageSize(ImageId img)
 
 Size2d SDLSysProxy::getPaintAreaSize()
 {
-	return SDLManager::sdlPointToSize(SDLManager::get().renderer.GetOutputSize());
+	return SDLManager::sdlPointToSize(SDLManager::get().getPaintAreaSize());
 }
 
 void SDLSysProxy::quit()

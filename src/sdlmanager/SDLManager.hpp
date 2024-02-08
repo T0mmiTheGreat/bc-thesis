@@ -112,6 +112,9 @@ public:
 	SDL2pp::Point getImageSize(ImageId id) const {
 		return m_images[id].GetSize();
 	}
+	SDL2pp::Point getPaintAreaSize() const {
+		return renderer.GetOutputSize();
+	}
 
 	/**
 	 * @brief Assigns a SDL event subscriber.

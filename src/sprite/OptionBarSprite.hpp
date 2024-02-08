@@ -73,7 +73,7 @@ public:
 	 *         but it must modify the invalidRect value to mach the area it
 	 *         painted.
 	 */
-	void repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
+	void repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override;
 
 	/**
 	 * @brief Getter for the barWidth property.

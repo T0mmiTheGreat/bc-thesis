@@ -40,7 +40,7 @@ public:
 	InGameController(std::shared_ptr<ISysProxy> sysProxy);
 	void startedEvent() override;
 	void loopEvent() override;
-	void paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
+	void paintEvent(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override;
 };
 
 #endif // INGAMECONTROLLER_HPP

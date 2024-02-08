@@ -108,11 +108,10 @@ public:
 	 * @param canvas Canvas to paint onto.
 	 * @param invalidRect Area to repaint.
 	 * 
-	 * @remark The recipent may choose to repaint area larger than invalidRect,
-	 *         but they must modify the invalidRect value to mach the area they
-	 *         painted.
+	 * @remark The recipent may choose to repaint area larger than invalidRect.
+	 *         Everything outside will be clipped.
 	 */
-	virtual void paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) = 0;
+	virtual void paintEvent(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) = 0;
 };
 
 #endif // ICONTROLLEREVENTSUBSCRIBER_HPP

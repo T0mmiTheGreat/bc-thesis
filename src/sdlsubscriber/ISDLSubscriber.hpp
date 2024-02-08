@@ -23,7 +23,7 @@ public:
 	/**
 	 * @brief Event acquired by polling events.
 	 */
-	virtual void generalEvent(SDL_Event& ev) = 0;
+	virtual void generalEvent(const SDL_Event& ev) = 0;
 	/**
 	 * @brief Request to paint.
 	 * 
@@ -32,7 +32,7 @@ public:
 	 * 
 	 * @param invalidRect Area to repaint.
 	 */
-	virtual void paintEvent(SDL_Rect& invalidRect) = 0;
+	virtual void paintEvent(const SDL_Rect& invalidRect) = 0;
 	/**
 	 * @brief Event that happens every event loop iteration.
 	 */

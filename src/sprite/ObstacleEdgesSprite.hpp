@@ -41,7 +41,7 @@ public:
 	 *         but it must modify the invalidRect value to mach the area it
 	 *         painted.
 	 */
-	void repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
+	void repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override;
 
 	void setCorners(const std::vector<PointF>& value);
 	void setCorners(std::vector<PointF>&& value);

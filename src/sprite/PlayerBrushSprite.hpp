@@ -34,10 +34,10 @@ private:
 	Costume m_costume;
 	int m_radius;
 
-	void repaintColor(std::shared_ptr<ICanvas> canvas, Rect& invalidRect,
+	void repaintColor(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect,
 		const Color& color);
-	void repaintNormal(std::shared_ptr<ICanvas> canvas, Rect& invalidRect);
-	void repaintBad(std::shared_ptr<ICanvas> canvas, Rect& invalidRect);
+	void repaintNormal(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect);
+	void repaintBad(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect);
 public:
 	PlayerBrushSprite(std::shared_ptr<IPaintingProxy> paintingProxy);
 	/**
@@ -55,7 +55,7 @@ public:
 	 * @param canvas Canvas to paint onto.
 	 * @param invalidRect Area to repaint.
 	 */
-	void repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
+	void repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override;
 
 	/**
 	 * @brief Getter for the sprite costume.

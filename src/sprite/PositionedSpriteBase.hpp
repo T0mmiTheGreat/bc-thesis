@@ -23,13 +23,6 @@ class PositionedSpriteBase : public IPositionedSprite, virtual public BoundedSpr
 protected:
 	int x;
 	int y;
-
-	/**
-	 * @brief The sprite position has changed.
-	 * 
-	 * @details Descendants should call this method if they override it.
-	 */
-	virtual void posChangedEvent(int oldX, int oldY, int newX, int newY);
 public:
 	PositionedSpriteBase(std::shared_ptr<IPaintingProxy> paintingProxy);
 	/**
@@ -117,7 +110,7 @@ public:
 	 *         but it must modify the invalidRect value to mach the area it
 	 *         painted.
 	 */
-	virtual void repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override = 0;
+	virtual void repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override = 0;
 };
 
 #endif // POSITIONEDSPRITEBASE_HPP

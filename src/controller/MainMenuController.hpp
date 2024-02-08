@@ -56,7 +56,7 @@ public:
 	void mouseBtnDownEvent(MouseBtn btn, int x, int y) override;
 	void mouseMoveEvent(int x, int y) override;
 	void loopEvent() override;
-	void paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
+	void paintEvent(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override;
 };
 
 #endif // MAINMENUCONTROLLER_HPP

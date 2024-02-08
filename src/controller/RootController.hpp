@@ -35,7 +35,7 @@ public:
 	void mouseMoveEvent(int x, int y) override;
 	void mouseWheelEvent(int dx, int dy) override;
 	void loopEvent() override;
-	void paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
+	void paintEvent(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override;
 	void run() override;
 
 	void setChildController(std::unique_ptr<IControllerChild> value);

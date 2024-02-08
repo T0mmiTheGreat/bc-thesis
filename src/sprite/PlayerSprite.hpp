@@ -29,9 +29,9 @@ private:
 	int m_radius;
 
 	void repaintCostumeNormal(std::shared_ptr<ICanvas> canvas,
-		Rect& invalidRect);
+		const Rect& invalidRect);
 	void repaintCostumeHighlighted(std::shared_ptr<ICanvas> canvas,
-		Rect& invalidRect);
+		const Rect& invalidRect);
 public:
 	PlayerSprite(std::shared_ptr<IPaintingProxy> paintingProxy);
 	/**
@@ -49,7 +49,7 @@ public:
 	 * @param canvas Canvas to paint onto.
 	 * @param invalidRect Area to repaint.
 	 */
-	void repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
+	void repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override;
 
 	/**
 	 * @brief Getter for the player color.

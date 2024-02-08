@@ -11,14 +11,6 @@
 
 #include "sprite/PositionedSpriteBase.hpp"
 
-void PositionedSpriteBase::posChangedEvent(int oldX, int oldY, int newX,
-	int newY)
-{
-	Size2d spriteSize = getSize();
-	paintingProxy->invalidateRect(Rect(oldX, oldY, spriteSize.w, spriteSize.h));
-	paintingProxy->invalidateRect(Rect(newX, newY, spriteSize.w, spriteSize.h));
-}
-
 PositionedSpriteBase::PositionedSpriteBase(
 	std::shared_ptr<IPaintingProxy> paintingProxy)
 	: BoundedSpriteBase(paintingProxy)
@@ -59,14 +51,10 @@ void PositionedSpriteBase::setY(int value)
 void PositionedSpriteBase::setPos(int x, int y)
 {
 	if (getX() != x || getY() != y) {
-		// Remember old values
-		int oldX = this->x;
-		int oldY = this->y;
-		// Set new values
+		invalidateBounds();
 		this->x = x;
 		this->y = y;
-		// Notify
-		posChangedEvent(oldX, oldY, x, y);
+		invalidateBounds();
 	}
 }
 

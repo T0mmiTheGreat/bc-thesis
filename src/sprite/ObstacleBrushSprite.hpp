@@ -38,11 +38,11 @@ private:
 	Point m_p0;
 	Point m_p1;
 
-	void repaintLineColor(std::shared_ptr<ICanvas> canvas, Rect& invalidRect,
+	void repaintLineColor(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect,
 		const Color& color);
-	void repaintNormal(std::shared_ptr<ICanvas> canvas, Rect& invalidRect);
-	void repaintBad(std::shared_ptr<ICanvas> canvas, Rect& invalidRect);
-	void repaintDot(std::shared_ptr<ICanvas> canvas, Rect& invalidRect);
+	void repaintNormal(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect);
+	void repaintBad(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect);
+	void repaintDot(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect);
 public:
 	ObstacleBrushSprite(std::shared_ptr<IPaintingProxy> paintingProxy);
 	/**
@@ -59,7 +59,7 @@ public:
 	 *         but it must modify the invalidRect value to mach the area it
 	 *         painted.
 	 */
-	void repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
+	void repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override;
 
 	/**
 	 * @brief Getter for the sprite costume.

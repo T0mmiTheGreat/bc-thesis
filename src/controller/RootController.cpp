@@ -69,7 +69,7 @@ void RootController::loopEvent()
 	m_childController->loopEvent();
 }
 
-void RootController::paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)
+void RootController::paintEvent(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
 {
 	// Propagate
 	m_childController->paintEvent(canvas, invalidRect);

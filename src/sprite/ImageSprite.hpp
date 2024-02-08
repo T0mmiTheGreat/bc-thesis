@@ -45,7 +45,7 @@ public:
 	 * @param canvas Canvas to paint onto.
 	 * @param invalidRect Area to repaint.
 	 */
-	virtual void repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
+	virtual void repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override;
 	/**
 	 * @brief Getter for the sprite image.
 	 */

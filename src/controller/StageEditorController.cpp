@@ -1021,6 +1021,7 @@ PointF StageEditorController::getMouseInStageSpace(int x, int y)
 
 void StageEditorController::startedEvent()
 {
+	GeneralControllerBase::startedEvent();
 	initializeSprites();
 }
 
@@ -1103,7 +1104,7 @@ void StageEditorController::mouseWheelEvent(int dx, int dy)
 }
 
 void StageEditorController::paintEvent(std::shared_ptr<ICanvas> canvas,
-	Rect& invalidRect)
+	const Rect& invalidRect)
 {
 	// Grid
 	m_gridSprite->repaint(canvas, invalidRect);

@@ -74,15 +74,22 @@ void SDLManager::runEventLoop()
 
 		// Painting
 		if (this->needsRepaint()) {
+			// Crop the invalid rect to window
+			SDL_Rect viewport = renderer.GetViewport();
+			SDL_IntersectRect(&m_invalidRect, &viewport, &m_invalidRect);
+
 			// Clear
 			renderer.SetTarget();
-			renderer.SetDrawColor();
-			renderer.Clear();
+			renderer.SetDrawBlendMode(SDL_BLENDMODE_NONE);
+			renderer.SetDrawColor(0, 0, 0, 0xff);
+			renderer.FillRect(m_invalidRect);
+			renderer.SetClipRect(m_invalidRect);
 
 			// Paint
 			m_subscriber->paintEvent(this->m_invalidRect);
 
 			// Present
+			renderer.SetClipRect();  // Glitches without this, IDK why
 			renderer.Present();
 
 			// The screen is now valid - set invalid rect area to 0
@@ -96,7 +103,12 @@ void SDLManager::runEventLoop()
 
 void SDLManager::invalidateRect(SDL_Rect& rect)
 {
-	SDL_UnionRect(&m_invalidRect, &rect, &m_invalidRect);
+	if (SDL_RectEmpty(&rect)) return;
+	if (SDL_RectEmpty(&m_invalidRect)) {
+		m_invalidRect = rect;
+	} else {
+		SDL_UnionRect(&m_invalidRect, &rect, &m_invalidRect);
+	}
 }
 
 KeyCode SDLManager::sdlKeycodeToEnum(SDL_Keycode sdlk)

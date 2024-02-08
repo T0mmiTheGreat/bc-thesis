@@ -22,11 +22,10 @@ Size2d MainMenuTitleSprite::getSize()
 	return paintingProxy->getTextSize(TITLE_TEXT, TITLE_FONT);
 }
 
-void MainMenuTitleSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)
+void MainMenuTitleSprite::repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
 {
-	// Paint
+	(void)invalidRect;
+
 	canvas->setFillingColor(Color::white());
 	canvas->fillText(x, y, TITLE_TEXT, TITLE_FONT);
-	// We might have repainted an area bigger than invalidRect
-	invalidRect += getBounds();
 }

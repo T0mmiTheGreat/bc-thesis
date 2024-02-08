@@ -33,7 +33,7 @@ public:
 	 *         but it must modify the invalidRect value to mach the area it
 	 *         painted.
 	 */
-	virtual void repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) = 0;
+	virtual void repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) = 0;
 };
 
 #endif // ISPRITE_HPP

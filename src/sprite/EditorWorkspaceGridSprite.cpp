@@ -29,8 +29,10 @@ Size2d EditorWorkspaceGridSprite::getSize()
 }
 
 void EditorWorkspaceGridSprite::repaint(std::shared_ptr<ICanvas> canvas,
-	Rect& invalidRect)
+	const Rect& invalidRect)
 {
+	(void)invalidRect;
+
 	Rect bounds = getBounds();
 	Point bottomRight = bounds.getBottomRight();
 
@@ -94,8 +96,6 @@ void EditorWorkspaceGridSprite::repaint(std::shared_ptr<ICanvas> canvas,
 			}
 		}
 	}
-
-	invalidRect += bounds;
 }
 
 unsigned EditorWorkspaceGridSprite::getSolidsFrequency() const

@@ -23,8 +23,10 @@ Size2d MainMenuItemSprite::getSize()
 	return Size2d(RECT_WIDTH_SCALED, RECT_HEIGHT_SCALED);
 }
 
-void MainMenuItemSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)
+void MainMenuItemSprite::repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
 {
+	(void)invalidRect;
+
 	Size2d spriteSize = getSize();
 
 	// Bounds
@@ -41,9 +43,6 @@ void MainMenuItemSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidR
 	int textX = x + ((spriteSize.w - textSize.w) / 2);
 	int textY = y + ((spriteSize.h - textSize.h) / 2);
 	canvas->fillText(textX, textY, m_text, FONT);
-
-	// We might have repainted an area bigger than invalidRect
-	invalidRect += getBounds();
 }
 
 const std::string& MainMenuItemSprite::getText() const

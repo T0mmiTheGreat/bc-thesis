@@ -330,7 +330,7 @@ public:
 	void mouseBtnUpEvent(MouseBtn btn, int x, int y) override;
 	void mouseMoveEvent(int x, int y) override;
 	void mouseWheelEvent(int dx, int dy) override;
-	void paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
+	void paintEvent(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override;
 };
 
 #endif // STAGEEDITORCONTROLLER_HPP

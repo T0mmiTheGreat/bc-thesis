@@ -130,7 +130,7 @@ void MainMenuController::loopEvent()
 	GeneralControllerBase::loopEvent();
 }
 
-void MainMenuController::paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)
+void MainMenuController::paintEvent(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
 {
 	GeneralControllerBase::paintEvent(canvas, invalidRect);
 	for (auto& btn : m_menuBtns) {

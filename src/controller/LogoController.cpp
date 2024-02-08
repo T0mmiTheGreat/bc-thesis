@@ -47,7 +47,7 @@ void LogoController::loopEvent()
 	}
 }
 
-void LogoController::paintEvent(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)
+void LogoController::paintEvent(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
 {
 	GeneralControllerBase::paintEvent(canvas, invalidRect);
 	m_sprite->repaint(canvas, invalidRect);

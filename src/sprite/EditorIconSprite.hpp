@@ -28,11 +28,11 @@ private:
 	ImageId m_img;
 	Costume m_costume;
 
-	void paintImg(std::shared_ptr<ICanvas> canvas, Rect& invalidRect);
-	void repaintCostumeNormal(std::shared_ptr<ICanvas> canvas, Rect& invalidRect);
-	void repaintCostumeHover(std::shared_ptr<ICanvas> canvas, Rect& invalidRect);
-	void repaintCostumeSelected(std::shared_ptr<ICanvas> canvas, Rect& invalidRect);
-	void repaintCostumeDisabled(std::shared_ptr<ICanvas> canvas, Rect& invalidRect);
+	void paintImg(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect);
+	void repaintCostumeNormal(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect);
+	void repaintCostumeHover(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect);
+	void repaintCostumeSelected(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect);
+	void repaintCostumeDisabled(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect);
 public:
 	// For convenience, this sprite has fixed width and height (i.e., doesn't
 	// depend on the actual image dimensions)
@@ -60,7 +60,7 @@ public:
 	 * @param canvas Canvas to paint onto.
 	 * @param invalidRect Area to repaint.
 	 */
-	void repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect) override;
+	void repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override;
 	
 	/**
 	 * @brief Getter for the `m_costume`.

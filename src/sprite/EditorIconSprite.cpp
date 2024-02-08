@@ -26,7 +26,7 @@ Size2d EditorIconSprite::getSize()
 }
 
 void EditorIconSprite::repaint(std::shared_ptr<ICanvas> canvas,
-	Rect& invalidRect)
+	const Rect& invalidRect)
 {
 	switch (m_costume) {
 		case COSTUME_NORMAL:
@@ -42,28 +42,26 @@ void EditorIconSprite::repaint(std::shared_ptr<ICanvas> canvas,
 			repaintCostumeDisabled(canvas, invalidRect);
 			break;
 	}
-
-	invalidRect += getBounds();
 }
 
 void EditorIconSprite::paintImg(std::shared_ptr<ICanvas> canvas,
-	Rect& invalidRect)
+	const Rect& invalidRect)
 {
+	(void)invalidRect;
+
 	Rect dstRect(getX() + IMG_MARGINS, getY() + IMG_MARGINS, FIXED_IMG_WIDTH,
 		FIXED_IMG_HEIGHT);
 	canvas->copyImage(m_img, dstRect);
-
-	invalidRect += getBounds();
 }
 
 void EditorIconSprite::repaintCostumeNormal(std::shared_ptr<ICanvas> canvas,
-	Rect& invalidRect)
+	const Rect& invalidRect)
 {
 	paintImg(canvas, invalidRect);
 }
 
 void EditorIconSprite::repaintCostumeHover(std::shared_ptr<ICanvas> canvas,
-	Rect& invalidRect)
+	const Rect& invalidRect)
 {
 	Rect bounds = getBounds();
 
@@ -74,7 +72,7 @@ void EditorIconSprite::repaintCostumeHover(std::shared_ptr<ICanvas> canvas,
 }
 
 void EditorIconSprite::repaintCostumeSelected(std::shared_ptr<ICanvas> canvas,
-	Rect& invalidRect)
+	const Rect& invalidRect)
 {
 	Rect bounds = getBounds();
 
@@ -84,7 +82,7 @@ void EditorIconSprite::repaintCostumeSelected(std::shared_ptr<ICanvas> canvas,
 }
 
 void EditorIconSprite::repaintCostumeDisabled(std::shared_ptr<ICanvas> canvas,
-	Rect& invalidRect)
+	const Rect& invalidRect)
 {
 	canvas->setColorMod(Color(0xff, 0xff, 0xff, 0x80));
 	paintImg(canvas, invalidRect);

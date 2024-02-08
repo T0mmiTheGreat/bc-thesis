@@ -12,24 +12,22 @@
 #include "sprite/PlayerSprite.hpp"
 
 void PlayerSprite::repaintCostumeNormal(std::shared_ptr<ICanvas> canvas,
-	Rect& invalidRect)
+	const Rect& invalidRect)
 {
+	(void)invalidRect;
+
 	canvas->setFillingColor(m_color);
 	canvas->fillCircle(x + m_radius, y + m_radius, m_radius);
-
-	invalidRect += getBounds();
 }
 
 void PlayerSprite::repaintCostumeHighlighted(std::shared_ptr<ICanvas> canvas,
-	Rect& invalidRect)
+	const Rect& invalidRect)
 {
 	repaintCostumeNormal(canvas, invalidRect);
 
 	canvas->setStrokeWidth(1.0);
 	canvas->setStrokingColor(HIGHLIGHT_COLOR);
 	canvas->strokeCircle(x + m_radius, y + m_radius, m_radius);
-
-	invalidRect += getBounds();
 }
 
 PlayerSprite::PlayerSprite(std::shared_ptr<IPaintingProxy> paintingProxy)
@@ -46,7 +44,7 @@ Size2d PlayerSprite::getSize()
 	return Size2d(m_radius*2, m_radius*2);
 }
 
-void PlayerSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)
+void PlayerSprite::repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
 {
 	switch (m_costume) {
 		case COSTUME_NORMAL:

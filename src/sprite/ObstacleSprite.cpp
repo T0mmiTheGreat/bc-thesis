@@ -22,18 +22,18 @@ Rect ObstacleSprite::getBounds()
 }
 
 void ObstacleSprite::repaintCostumeNormal(std::shared_ptr<ICanvas> canvas,
-	Rect& invalidRect)
+	const Rect& invalidRect)
 {
+	(void)invalidRect;
+
 	if (m_shape.cornerCount() != 0) {
 		canvas->setFillingColor(m_color);
 		canvas->fillPolygon(m_shape);
-
-		invalidRect += getBounds();
 	}
 }
 
 void ObstacleSprite::repaintCostumeHighlighted(std::shared_ptr<ICanvas> canvas,
-	Rect& invalidRect)
+	const Rect& invalidRect)
 {
 	repaintCostumeNormal(canvas, invalidRect);
 
@@ -41,8 +41,6 @@ void ObstacleSprite::repaintCostumeHighlighted(std::shared_ptr<ICanvas> canvas,
 		canvas->setStrokeWidth(1.0);
 		canvas->setStrokingColor(HIGHLIGHT_COLOR);
 		canvas->strokePolygon(m_shape);
-
-		invalidRect += getBounds();
 	}
 }
 
@@ -52,7 +50,7 @@ ObstacleSprite::ObstacleSprite(std::shared_ptr<IPaintingProxy> paintingProxy)
 	, m_costume{COSTUME_NORMAL}
 {}
 
-void ObstacleSprite::repaint(std::shared_ptr<ICanvas> canvas, Rect& invalidRect)
+void ObstacleSprite::repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
 {
 	switch (m_costume) {
 		case COSTUME_NORMAL:

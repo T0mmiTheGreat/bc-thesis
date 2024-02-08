@@ -13,7 +13,14 @@
 
 void BoundedSpriteBase::invalidateBounds()
 {
-	paintingProxy->invalidateRect(getBounds());
+	// Sprites are allowed off-by-one pixel errors
+	Rect boundsRect = getBounds();
+	boundsRect.x -= 1;
+	boundsRect.y -= 1;
+	boundsRect.w += 2;
+	boundsRect.h += 2;
+
+	paintingProxy->invalidateRect(boundsRect);
 }
 
 BoundedSpriteBase::BoundedSpriteBase(

@@ -36,8 +36,10 @@ ObstacleEdgesSprite::ObstacleEdgesSprite(
 {}
 
 void ObstacleEdgesSprite::repaint(std::shared_ptr<ICanvas> canvas,
-	Rect& invalidRect)
+	const Rect& invalidRect)
 {
+	(void)invalidRect;
+
 	if (!m_corners.empty()) {
 		canvas->setStrokeWidth(1.0);
 		canvas->setStrokingColor(STROKE_COLOR);
@@ -46,8 +48,6 @@ void ObstacleEdgesSprite::repaint(std::shared_ptr<ICanvas> canvas,
 			const PolygonF::CornerType& p1 = m_corners[i];
 			canvas->strokeLine(p0.x, p0.y, p1.x, p1.y);
 		}
-
-		invalidRect += getBounds();
 	}
 }
 

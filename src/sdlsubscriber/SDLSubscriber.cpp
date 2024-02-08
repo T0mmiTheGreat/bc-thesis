@@ -14,7 +14,7 @@
 #include "canvas/CanvasFactory.hpp"
 #include "SDLSubscriber.hpp"
 
-void SDLSubscriber::generalEvent(SDL_Event& ev)
+void SDLSubscriber::generalEvent(const SDL_Event& ev)
 {
 	if (auto lockedSubscriber = m_subscriber.lock()) {
 		switch (ev.type) {
@@ -40,9 +40,10 @@ void SDLSubscriber::generalEvent(SDL_Event& ev)
 	}
 }
 
-void SDLSubscriber::paintEvent(SDL_Rect& invalidRect)
+void SDLSubscriber::paintEvent(const SDL_Rect& invalidRect)
 {
 	if (auto lockedSubscriber = m_subscriber.lock()) {
+		// Send event
 		Rect r = SDLManager::sdlRectToRect(invalidRect);
 		lockedSubscriber->paintEvent(CanvasFactory::createSdlCanvas(), r);
 	}
