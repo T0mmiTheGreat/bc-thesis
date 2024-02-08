@@ -402,7 +402,7 @@ const std::shared_ptr<StageEditorAction> StageEditor::addPlayer(
 	PointF posSnap;
 	getSnappedPoint(pos, snapping, posSnap);
 
-	if (!canPlacePlayer(posSnap)) {
+	if (!canCreatePlayer(posSnap)) {
 		return createActionNone();
 	} else {
 		// Deselect objects, if any are selected
@@ -533,8 +533,13 @@ const std::shared_ptr<StageEditorAction> StageEditor::endDragSelected(
 		PointF offsetPointSnap;
 		getSnappedPoint(offsetPoint, snapping, offsetPointSnap);
 
-		auto res = createActionMoveSelectedObjects(offsetPointSnap.x,
-			offsetPointSnap.y);
+		std::shared_ptr<StageEditorAction> res;
+		if (canMoveSelectedObjects(offsetPointSnap.x, offsetPointSnap.y)){
+			res = createActionMoveSelectedObjects(offsetPointSnap.x,
+				offsetPointSnap.y);
+		} else {
+			res = createActionMoveSelectedObjects(0.0, 0.0);
+		}
 
 		if (res->getType() != StageEditorAction::ACTION_NONE) {
 			// Perform
@@ -699,28 +704,74 @@ const std::shared_ptr<StageEditorAction> StageEditor::mouseRightBtnDownToolObsta
 	return completeObstacle();
 }
 
-bool StageEditor::canPlacePlayer(const PointF& pos)
+bool StageEditor::canPlacePlayer(const StageEditorPlayerObject& player)
 {
-	StageEditorPlayerObject tmpPlayer(EDITOR_OID_NULL, pos);
+	std::unordered_set<EditorOID> dontIgnore;
+	return canPlacePlayer(player, dontIgnore, dontIgnore);
+}
 
+bool StageEditor::canPlacePlayer(const StageEditorPlayerObject& player,
+	const std::unordered_set<EditorOID>& ignoredPlayers,
+	const std::unordered_set<EditorOID>& ignoredObstacles)
+{
 	// Check collisions with other players
 	for (const auto& playerPair : m_stageState.players) {
-		const auto& player = playerPair.second;
-		if (tmpPlayer.collidesWithPlayer(player)) {
+		EditorOID oid = playerPair.first;
+		const auto& object = playerPair.second;
+
+		if (ignoredPlayers.contains(oid)) continue;
+
+		if (object.collidesWithPlayer(player)) {
 			return false;
 		}
 	}
 
 	// Check collisions with obstacles
 	for (const auto& obstaclePair : m_stageState.obstacles) {
-		const auto& obstacle = obstaclePair.second;
-		if (obstacle.collidesWithPlayer(tmpPlayer)) {
+		EditorOID oid = obstaclePair.first;
+		const auto& object = obstaclePair.second;
+
+		if (ignoredObstacles.contains(oid)) continue;
+
+		if (object.collidesWithPlayer(player)) {
+			return false;
+		}
+	}
+
+	// No collisions
+	return true;	
+}
+
+bool StageEditor::canPlaceObstacle(const StageEditorObstacleObject& obstacle)
+{
+	std::unordered_set<EditorOID> dontIgnore;
+	return canPlaceObstacle(obstacle, dontIgnore);
+}
+
+bool StageEditor::canPlaceObstacle(const StageEditorObstacleObject& obstacle,
+	const std::unordered_set<EditorOID>& ignoredPlayers)
+{
+	// Check collisions with players
+	for (const auto& playerPair : m_stageState.players) {
+		EditorOID oid = playerPair.first;
+		const auto& object = playerPair.second;
+
+		if (ignoredPlayers.contains(oid)) continue;
+
+		if (obstacle.collidesWithPlayer(object)) {
 			return false;
 		}
 	}
 
 	// No collisions
 	return true;
+}
+
+bool StageEditor::canCreatePlayer(const PointF& pos)
+{
+	StageEditorPlayerObject tmpPlayer(EDITOR_OID_NULL, pos);
+
+	return canPlacePlayer(tmpPlayer);
 }
 
 bool StageEditor::canConstructEdge(const PointF& pos, bool isClosing)
@@ -778,18 +829,8 @@ bool StageEditor::canConstructEdge(const PointF& pos, bool isClosing)
 			}
 		}
 
-		// Check collisions with players
-		for (const auto& playerPair : m_stageState.players) {
-			const auto& player = playerPair.second;
-			if (tmpObstacle.collidesWithPlayer(player)) {
-				// Collides with player
-
-				return false;
-			}
-		}
-
-		// No collisions => can be placed
-		return true;
+		// Finally, check collisions with players
+		return canPlaceObstacle(tmpObstacle);
 	}
 }
 
@@ -803,16 +844,40 @@ bool StageEditor::canCompleteObstacle()
 	return canConstructEdge(m_obstacleCorners.front(), true);
 }
 
-bool StageEditor::canMoveSelectedPlayer(const PointF& newPos)
+bool StageEditor::canMoveSelectedPlayer(EditorOID oid, double dx, double dy)
 {
-	(void)newPos;
-return false;
+	StageEditorPlayerObject tmpPlayer(m_stageState.players.at(oid));
+	tmpPlayer.moveBy(dx, dy);
+
+	return canPlacePlayer(tmpPlayer, m_selectedPlayers, m_selectedObstacles);
 }
 
-bool StageEditor::canMoveSelectedObstacle(const PointF& newPos)
+bool StageEditor::canMoveSelectedObstacle(EditorOID oid, double dx, double dy)
 {
-	(void)newPos;
-return false;
+	StageEditorObstacleObject tmpObstacle(m_stageState.obstacles.at(oid));
+	tmpObstacle.moveBy(dx, dy);
+
+	return canPlaceObstacle(tmpObstacle, m_selectedPlayers);
+}
+
+bool StageEditor::canMoveSelectedObjects(double dx, double dy)
+{
+	// Check can move selected players
+	for (EditorOID oid : m_selectedPlayers) {
+		if (!canMoveSelectedPlayer(oid, dx, dy)) {
+			return false;
+		}
+	}
+	
+	// Check can move selected obstacles
+	for (EditorOID oid : m_selectedObstacles) {
+		if (!canMoveSelectedObstacle(oid, dx, dy)) {
+			return false;
+		}
+	}
+
+	// Can move all objects
+	return true;
 }
 
 const std::shared_ptr<StageEditorAction> StageEditor::mouseLeftBtnDown(
@@ -863,7 +928,7 @@ const std::shared_ptr<StageEditorAction> StageEditor::predictAddPlayer(
 	getSnappedPoint(pos, snapping, posSnapped);
 
 	auto res = createActionAddPlayer(posSnapped);
-	isSuccess = canPlacePlayer(posSnapped);
+	isSuccess = canCreatePlayer(posSnapped);
 	return res;
 }
 
@@ -893,7 +958,7 @@ const std::shared_ptr<StageEditorAction> StageEditor::predictEndDragPlayerObject
 		double dy = offsetPointSnapped.y;
 
 		auto res = createActionMovePlayerObject(oid, dx, dy);
-		isSuccess = true;  // FIXME
+		isSuccess = canMoveSelectedPlayer(oid, dx, dy);
 		return res;
 	}
 }
@@ -913,7 +978,7 @@ const std::shared_ptr<StageEditorAction> StageEditor::predictEndDragObstacleObje
 		double dy = offsetPointSnapped.y;
 
 		auto res = createActionMoveObstacleObject(oid, dx, dy);
-		isSuccess = true;  // FIXME
+		isSuccess = canMoveSelectedObstacle(oid, dx, dy);
 		return res;
 	}
 }

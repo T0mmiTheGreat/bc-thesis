@@ -246,10 +246,36 @@ private:
 	const std::shared_ptr<StageEditorAction> mouseRightBtnDownToolObstacles();
 
 	/**
+	 * @brief Checks whether the given player object has valid position.
+	 */
+	bool canPlacePlayer(const StageEditorPlayerObject& player);
+	/**
+	 * @brief Checks whether the given player object has valid position.
+	 * 
+	 * @param player 
+	 * @param ignoredPlayers Player objects to ignore collisions with.
+	 * @param ignoredObstacles Obstacle objects to ignore collisions with.
+	 */
+	bool canPlacePlayer(const StageEditorPlayerObject& player,
+		const std::unordered_set<EditorOID>& ignoredPlayers,
+		const std::unordered_set<EditorOID>& ignoredObstacles);
+	/**
+	 * @brief Checks whether the given obstacle object has valid position.
+	 */
+	bool canPlaceObstacle(const StageEditorObstacleObject& obstacle);
+	/**
+	 * @brief Checks whether the given obstacle object has valid position.
+	 * 
+	 * @param obstacle 
+	 * @param ignoredPlayers Player objects to ignore collisions with.
+	 */
+	bool canPlaceObstacle(const StageEditorObstacleObject& obstacle,
+		const std::unordered_set<EditorOID>& ignoredPlayers);
+	/**
 	 * @brief Checks whether a new player object can be placed at the given
 	 *        position.
 	 */
-	bool canPlacePlayer(const PointF& pos);
+	bool canCreatePlayer(const PointF& pos);
 	/**
 	 * @brief Checks whether an edge can be constructed from the last point of
 	 *        `m_obstacleEdges` to `pos`.
@@ -271,15 +297,20 @@ private:
 	 */
 	bool canCompleteObstacle();
 	/**
-	 * @brief Checks whether a selected player object can be placed at the
-	 *        given position.
+	 * @brief Checks whether a selected player object's position can be changed
+	 *        by `(dx, dy)`.
 	 */
-	bool canMoveSelectedPlayer(const PointF& newPos);
+	bool canMoveSelectedPlayer(EditorOID oid, double dx, double dy);
 	/**
-	 * @brief Checks whether a selected player object may be placed at the
-	 *        given position.
+	 * @brief Checks whether a selected obstacle object's position can be
+	 *        changed by `(dx, dy)`.
 	 */
-	bool canMoveSelectedObstacle(const PointF& newPos);
+	bool canMoveSelectedObstacle(EditorOID oid, double dx, double dy);
+	/**
+	 * @brief Checks whether the position of every selected object can be
+	 *        changed by `(dx, dy)`.
+	 */
+	bool canMoveSelectedObjects(double dx, double dy);
 public:
 	StageEditor();
 	/**
