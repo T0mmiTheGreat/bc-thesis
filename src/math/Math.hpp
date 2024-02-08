@@ -48,7 +48,22 @@ inline constexpr bool isEven(T x)
 }
 
 /**
- * @brief Rounds `x` to the neares multiple of `y`.
+ * @brief Returns 1 if `x` is positive, -1 if `x` is negative or 0 if it's zero.
+ */
+template <Scalar T>
+inline constexpr T sign(T x)
+{
+	if (x > 0) {
+		return 1;
+	} else if (x < 0) {
+		return -1;
+	} else {
+		return 0;
+	}
+}
+
+/**
+ * @brief Rounds `x` to the nearest multiple of `y`.
  * 
  * @tparam T Scalar type.
  */

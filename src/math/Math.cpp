@@ -46,20 +46,30 @@ bool isLineSegmentsCross(double lsAp0x, double lsAp0y, double lsAp1x,
 
 bool areVectorsAntiparallel(double v1x, double v1y, double v2x, double v2y)
 {
-	// Algorithm: Two 2D vectors are antiparallel if there is a vector which is
-	// perpendicular (normal) to both of them. So find the vector which is perp
-	// to the first vector and finc out whether that vector is perp to the
-	// second one too. This can be done using dot product; for two perp vectors
-	// the dot product is equal to 0.
+	// Algorithm: Two 2D vectors are antiparallel if they are not paralell and
+	// there is a vector which is perpendicular (normal) to both of them. So
+	// find the vector which is perp to the first vector and find out whether
+	// that vector is perp to the second one too. This can be done using dot
+	// product; for two perp vectors the dot product is equal to 0.
 
-	// Normal vector
-	double v1nx = -v1y;
-	double v1ny = v1x;
+	if (sign(v1x) != -sign(v2x) || sign(v1y) != -sign(v2y)) {
+		// Antiparallel vectors go in opposite directions. That means if X or Y
+		// coordinate of the first vector is positive, the respective coordinate
+		// of the second vector must be negative (and vice versa), and if it's
+		// zero, the respective coordinate must be zero too.
+		// Also, `-0 == 0`.
 
-	// Dot product
-	double dot = (v1nx * v2x) + (v1ny * v2y);
+		return false;
+	} else {
+		// Normal vector
+		double v1nx = -v1y;
+		double v1ny = v1x;
 
-	return (dot == 0.0);
+		// Dot product
+		double dot = (v1nx * v2x) + (v1ny * v2y);
+
+		return (dot == 0.0);
+	}
 }
 
 void triangulatePolygon(std::vector<std::array<double,2>> corners,
