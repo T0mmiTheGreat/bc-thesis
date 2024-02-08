@@ -49,16 +49,11 @@ std::shared_ptr<StageEditorAction> StageEditor::createActionPlaceObstacleCorner(
 
 std::shared_ptr<StageEditorAction> StageEditor::createActionCompleteObstacle()
 {
-	// Must be a valid Euclidean polygon
-	if (m_obstacleCorners.size() < 3) {
-		return std::make_shared<StageEditorActionNone>();
-	} else {
-		EditorOID oid = generateEditorOID();
-		PolygonF shape = m_obstacleCorners;
+	EditorOID oid = generateEditorOID();
+	PolygonF shape = m_obstacleCorners;
 
-		auto res = std::make_shared<StageEditorActionCompleteObstacle>(shape, oid);
-		return res;
-	}
+	auto res = std::make_shared<StageEditorActionCompleteObstacle>(shape, oid);
+	return res;
 }
 
 std::shared_ptr<StageEditorAction> StageEditor::createActionSelectObject(
@@ -465,7 +460,12 @@ const std::shared_ptr<StageEditorAction> StageEditor::addObstacleCorner(
 const std::shared_ptr<StageEditorAction> StageEditor::completeObstacle()
 {
 	// Complete obstacle
-	auto res = createActionCompleteObstacle();
+	std::shared_ptr<StageEditorAction> res;
+	if (canCompleteObstacle()) {
+		res = createActionCompleteObstacle();
+	} else {
+		res = createActionNone();
+	}
 	
 	if (res->getType() != StageEditorAction::ACTION_NONE) {
 		// Perform
@@ -723,31 +723,51 @@ bool StageEditor::canPlacePlayer(const PointF& pos)
 	return true;
 }
 
-bool StageEditor::canPlaceCorner(const PointF& pos)
+bool StageEditor::canConstructEdge(const PointF& pos, bool isClosing)
 {
-	if (m_obstacleCorners.empty()) {
-		// The first corner can be always placed
+	if (isClosing && m_obstacleCorners.size() < 3) {
+		// Cannot close an obstacle if its shape is not a valid Euclidean
+		// polygon
+
+		return false;
+	} else if (!isClosing && m_obstacleCorners.empty()) {
+		// The first corner can always be placed
 
 		return true;
 	} else {
-		if (pos == m_obstacleCorners.back()) {
-			// Two corners cannot be on the same position
+		// The edge end points
+		PointF edgeP0 = m_obstacleCorners.back();
+		PointF edgeP1 = (isClosing ? m_obstacleCorners.front() : pos);
+
+		if (edgeP0 == edgeP1) {
+			// Cannot construct edge of zero length
 
 			return false;
 		}
 
-		PointF edgeP0 = m_obstacleCorners.back();
-		PointF edgeP1 = pos;
+		// For convenience we will treat it as a degenerate obstacle
 		StageEditorObstacleObject tmpObstacle(EDITOR_OID_NULL,
 			PolygonF(edgeP0, edgeP1));
+		
+		// Check collisions with already placed edges
+		for (size_t cornerIdx = 0; cornerIdx < m_obstacleCorners.size() - 1; cornerIdx++) {
+			const PointF& placedEdgeP0 = m_obstacleCorners[cornerIdx];
+			const PointF& placedEdgeP1 = m_obstacleCorners[cornerIdx + 1];
 
-		// Check collisions with already placed edges (except the last edge,
-		// which has slightly different rules)
-		if (m_obstacleCorners.size() > 1) {
-			for (size_t cornerIdx = 0; cornerIdx < m_obstacleCorners.size() - 2; cornerIdx++) {
-				const PointF& placedEdgeP0 = m_obstacleCorners[cornerIdx];
-				const PointF& placedEdgeP1 = m_obstacleCorners[cornerIdx + 1];
+			if ((isClosing && cornerIdx == 0) // Closing the obstacle + this is the first edge
+			    || cornerIdx == m_obstacleCorners.size() - 2) // This is the last edge
+			{
+				if (areVectorsAntiparallel(edgeP1.x - edgeP0.x, edgeP1.y - edgeP0.y,
+					placedEdgeP1.x - placedEdgeP0.x, placedEdgeP1.y - placedEdgeP0.y))
+				{
+					// The problem is this:
+					//
+					// placedEdgeP0  edgeP1  placedEdgeP1 = edgeP0
+					//      +-----------+=================+
 
+					return false;
+				}
+			} else {
 				if (isLineSegmentsCross(edgeP0.x, edgeP0.y, edgeP1.x, edgeP1.y,
 					placedEdgeP0.x, placedEdgeP0.y, placedEdgeP1.x, placedEdgeP1.y))
 				{
@@ -756,19 +776,6 @@ bool StageEditor::canPlaceCorner(const PointF& pos)
 					return false;
 				}
 			}
-		}
-		// Check collision with the last edge
-		const PointF& lastEdgeP0 = m_obstacleCorners[m_obstacleCorners.size() - 2];
-		const PointF& lastEdgeP1 = m_obstacleCorners.back();
-		if (areVectorsAntiparallel(edgeP1.x - edgeP0.x, edgeP1.y - edgeP0.y,
-			lastEdgeP1.x - lastEdgeP0.x, lastEdgeP1.y - lastEdgeP0.y))
-		{
-			// The problem is this:
-			//
-			// placedEdgeP0  edgeP1  placedEdgeP1 = edgeP0
-			//      +-----------+=================+
-
-			return false;
 		}
 
 		// Check collisions with players
@@ -784,6 +791,16 @@ bool StageEditor::canPlaceCorner(const PointF& pos)
 		// No collisions => can be placed
 		return true;
 	}
+}
+
+bool StageEditor::canPlaceCorner(const PointF& pos)
+{
+	return canConstructEdge(pos, false);
+}
+
+bool StageEditor::canCompleteObstacle()
+{
+	return canConstructEdge(m_obstacleCorners.front(), true);
 }
 
 bool StageEditor::canMoveSelectedPlayer(const PointF& newPos)

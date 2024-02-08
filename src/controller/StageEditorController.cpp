@@ -317,7 +317,8 @@ void StageEditorController::updateSpritesByAction(
 	const std::shared_ptr<StageEditorAction> action)
 {
 	switch (action->getType()) {
-		case StageEditorAction::ACTION_NONE: break;
+		case StageEditorAction::ACTION_NONE:
+			break;
 		case StageEditorAction::ACTION_MULTIPLE:
 			updateSpritesByActionMultiple(action);
 			break;
@@ -381,6 +382,7 @@ void StageEditorController::updateSpritesByActionPlaceObstacleCorner(
 {
 	(void)action;
 	updateObstacleEdgesSprite();
+	updateToolBrush();
 }
 
 void StageEditorController::updateSpritesByActionCompleteObstacle(

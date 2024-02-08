@@ -246,17 +246,32 @@ private:
 	const std::shared_ptr<StageEditorAction> mouseRightBtnDownToolObstacles();
 
 	/**
-	 * @brief Checks whether a new player object may be placed at the given
+	 * @brief Checks whether a new player object can be placed at the given
 	 *        position.
 	 */
 	bool canPlacePlayer(const PointF& pos);
 	/**
-	 * @brief Checks whether a new obstacle corner may be placed at the given
+	 * @brief Checks whether an edge can be constructed from the last point of
+	 *        `m_obstacleEdges` to `pos`.
+	 * 
+	 * @param pos 
+	 * @param isClosing Whether the new edge is the last one (completes the
+	 *                  obstacle). If `true`, the `pos` parameter is ignored
+	 *                  and replaced by the first element of `m_obstacleCorners`.
+	 */
+	bool canConstructEdge(const PointF& pos, bool isClosing);
+	/**
+	 * @brief Checks whether a new obstacle corner can be placed at the given
 	 *        position.
 	 */
 	bool canPlaceCorner(const PointF& pos);
 	/**
-	 * @brief Checks whether a selected player object may be placed at the
+	 * @brief Checks whether an obstacle can be created from the current state
+	 *        of `m_obstacleCorners`.
+	 */
+	bool canCompleteObstacle();
+	/**
+	 * @brief Checks whether a selected player object can be placed at the
 	 *        given position.
 	 */
 	bool canMoveSelectedPlayer(const PointF& newPos);
