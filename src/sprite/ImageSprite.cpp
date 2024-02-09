@@ -37,7 +37,7 @@ Size2d ImageSprite::getSize()
 	return m_imgBounds.getSize();
 }
 
-void ImageSprite::repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
+void ImageSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
 {
 	(void)invalidRect;
 

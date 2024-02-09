@@ -38,6 +38,9 @@ private:
 		const Color& color);
 	void repaintNormal(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect);
 	void repaintBad(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect);
+protected:
+	void repaintAsVisible(std::shared_ptr<ICanvas> canvas,
+		const Rect& invalidRect) override;
 public:
 	PlayerBrushSprite(std::shared_ptr<IPaintingProxy> paintingProxy);
 	/**
@@ -49,13 +52,6 @@ public:
 	 *          to gain performance.
 	 */
 	Size2d getSize() override;
-	/**
-	 * @brief Repaints an area of sprite.
-	 * 
-	 * @param canvas Canvas to paint onto.
-	 * @param invalidRect Area to repaint.
-	 */
-	void repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override;
 
 	/**
 	 * @brief Getter for the sprite costume.

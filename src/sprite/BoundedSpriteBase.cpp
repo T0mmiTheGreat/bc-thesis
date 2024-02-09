@@ -11,9 +11,9 @@
 
 #include "sprite/BoundedSpriteBase.hpp"
 
-void BoundedSpriteBase::invalidateBounds()
+void BoundedSpriteBase::invalidate()
 {
-	// Sprites are allowed off-by-one pixel errors
+	// Descendants are allowed off-by-one pixel errors
 	Rect boundsRect = getBounds();
 	boundsRect.x -= 1;
 	boundsRect.y -= 1;

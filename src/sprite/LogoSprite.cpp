@@ -95,7 +95,7 @@ void LogoSprite::loopEventAnimation()
 		}
 
 		// Request repaint
-		invalidateBounds();
+		invalidate();
 	}
 }
 
@@ -130,7 +130,7 @@ void LogoSprite::stopAnimation()
 {
 	AnimatedSpriteBase::stopAnimation();
 	m_opacity = 0;
-	invalidateBounds();
+	invalidate();
 }
 
 void LogoSprite::loopEvent()
@@ -138,7 +138,7 @@ void LogoSprite::loopEvent()
 	loopEventAnimation();
 }
 
-void LogoSprite::repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
+void LogoSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
 {
 	(void)invalidRect;
 

@@ -51,10 +51,10 @@ void PositionedSpriteBase::setY(int value)
 void PositionedSpriteBase::setPos(int x, int y)
 {
 	if (getX() != x || getY() != y) {
-		invalidateBounds();
+		invalidate();
 		this->x = x;
 		this->y = y;
-		invalidateBounds();
+		invalidate();
 	}
 }
 

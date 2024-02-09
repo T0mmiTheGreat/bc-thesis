@@ -23,6 +23,21 @@ class PositionedSpriteBase : public IPositionedSprite, virtual public BoundedSpr
 protected:
 	int x;
 	int y;
+	
+	/**
+	 * @brief Repaints an area of sprite.
+	 * 
+	 * @details This method is called from `repaint()` after it has been
+	 *          observed that the "is visible" property is `true`.
+	 * 
+	 * @param canvas Canvas to paint onto.
+	 * @param invalidRect Area to repaint.
+	 * 
+	 * @remark The sprite may choose to repaint area larger than invalidRect.
+	 *         Everything outside will be clipped.
+	 */
+	virtual void repaintAsVisible(std::shared_ptr<ICanvas> canvas,
+		const Rect& invalidRect) override = 0;
 public:
 	PositionedSpriteBase(std::shared_ptr<IPaintingProxy> paintingProxy);
 	/**
@@ -100,17 +115,6 @@ public:
 	 *          to gain performance.
 	 */
 	virtual Size2d getSize() override = 0;
-	/**
-	 * @brief Repaints an area of sprite.
-	 * 
-	 * @param canvas Canvas to paint onto.
-	 * @param invalidRect Area to repaint.
-	 * 
-	 * @remark The sprite may choose to repaint area larger than invalidRect,
-	 *         but it must modify the invalidRect value to mach the area it
-	 *         painted.
-	 */
-	virtual void repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override = 0;
 };
 
 #endif // POSITIONEDSPRITEBASE_HPP

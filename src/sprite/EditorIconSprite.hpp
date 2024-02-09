@@ -33,6 +33,9 @@ private:
 	void repaintCostumeHover(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect);
 	void repaintCostumeSelected(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect);
 	void repaintCostumeDisabled(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect);
+	
+	void repaintAsVisible(std::shared_ptr<ICanvas> canvas,
+		const Rect& invalidRect) override;
 public:
 	// For convenience, this sprite has fixed width and height (i.e., doesn't
 	// depend on the actual image dimensions)
@@ -54,13 +57,6 @@ public:
 	 *          to gain performance.
 	 */
 	Size2d getSize() override;
-	/**
-	 * @brief Repaints an area of sprite.
-	 * 
-	 * @param canvas Canvas to paint onto.
-	 * @param invalidRect Area to repaint.
-	 */
-	void repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override;
 	
 	/**
 	 * @brief Getter for the `m_costume`.

@@ -35,7 +35,7 @@ ObstacleEdgesSprite::ObstacleEdgesSprite(
 	, BoundedSpriteBase(paintingProxy)
 {}
 
-void ObstacleEdgesSprite::repaint(std::shared_ptr<ICanvas> canvas,
+void ObstacleEdgesSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas,
 	const Rect& invalidRect)
 {
 	(void)invalidRect;
@@ -59,16 +59,16 @@ void ObstacleEdgesSprite::setCorners(const std::vector<PointF>& value)
 
 void ObstacleEdgesSprite::setCorners(std::vector<PointF>&& value)
 {
-	invalidateBounds();
+	invalidate();
 	m_corners = std::move(value);
 	// If its empty then there's nothing to invalidate
 	if (!m_corners.empty()) {
-		invalidateBounds();
+		invalidate();
 	}
 }
 
 void ObstacleEdgesSprite::clearCorners()
 {
-	invalidateBounds();
+	invalidate();
 	m_corners.clear();
 }

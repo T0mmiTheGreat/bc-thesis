@@ -44,7 +44,7 @@ Size2d PlayerSprite::getSize()
 	return Size2d(m_radius*2, m_radius*2);
 }
 
-void PlayerSprite::repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
+void PlayerSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
 {
 	switch (m_costume) {
 		case COSTUME_NORMAL:
@@ -65,7 +65,7 @@ void PlayerSprite::setColor(const Color& value)
 {
 	if (m_color != value) {
 		m_color = value;
-		invalidateBounds();
+		invalidate();
 	}
 }
 
@@ -77,9 +77,9 @@ int PlayerSprite::getRadius() const
 void PlayerSprite::setRadius(int value)
 {
 	if (m_radius != value) {
-		invalidateBounds();
+		invalidate();
 		m_radius = value;
-		invalidateBounds();
+		invalidate();
 	}
 }
 
@@ -91,9 +91,9 @@ PlayerSprite::Costume PlayerSprite::getCostume() const
 void PlayerSprite::setCostume(PlayerSprite::Costume value)
 {
 	if (m_costume != value) {
-		invalidateBounds();
+		invalidate();
 		m_costume = value;
-		invalidateBounds();
+		invalidate();
 	}
 }
 

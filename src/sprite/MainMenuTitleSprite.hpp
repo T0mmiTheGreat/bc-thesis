@@ -23,6 +23,9 @@ private:
 	const std::string TITLE_TEXT = "MAIN TITLE";
 	// The font of the title text
 	const FontId TITLE_FONT = FONT_SEGOEPR_66;
+protected:
+	void repaintAsVisible(std::shared_ptr<ICanvas> canvas,
+		const Rect& invalidRect) override;
 public:
 	MainMenuTitleSprite(std::shared_ptr<IPaintingProxy> paintingProxy);
 
@@ -35,13 +38,6 @@ public:
 	 *          to gain performance.
 	 */
 	Size2d getSize() override;
-	/**
-	 * @brief Repaints an area of sprite.
-	 * 
-	 * @param canvas Canvas to paint onto.
-	 * @param invalidRect Area to repaint.
-	 */
-	void repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override;
 };
 
 #endif // MAINMENUTITLESPRITE_HPP

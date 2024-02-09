@@ -25,7 +25,7 @@ Size2d EditorIconSprite::getSize()
 	return Size2d(FIXED_WIDTH, FIXED_HEIGHT);
 }
 
-void EditorIconSprite::repaint(std::shared_ptr<ICanvas> canvas,
+void EditorIconSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas,
 	const Rect& invalidRect)
 {
 	switch (m_costume) {
@@ -96,7 +96,7 @@ EditorIconSprite::Costume EditorIconSprite::getCostume() const
 
 void EditorIconSprite::setCostume(Costume costume)
 {
-	invalidateBounds();
+	invalidate();
 	m_costume = costume;
-	invalidateBounds();
+	invalidate();
 }

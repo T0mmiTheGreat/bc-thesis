@@ -28,7 +28,7 @@ Size2d EditorWorkspaceGridSprite::getSize()
 	return m_size;
 }
 
-void EditorWorkspaceGridSprite::repaint(std::shared_ptr<ICanvas> canvas,
+void EditorWorkspaceGridSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas,
 	const Rect& invalidRect)
 {
 	Rect bounds = getBounds();
@@ -119,9 +119,9 @@ unsigned EditorWorkspaceGridSprite::getSolidsFrequency() const
 void EditorWorkspaceGridSprite::setSolidsFrequency(unsigned value)
 {
 	if (m_solidsFrequency != value) {
-		invalidateBounds();
+		invalidate();
 		m_solidsFrequency = value;
-		invalidateBounds();
+		invalidate();
 	}
 }
 
@@ -134,9 +134,9 @@ void EditorWorkspaceGridSprite::setSize(const Size2d& value)
 void EditorWorkspaceGridSprite::setSize(Size2d&& value)
 {
 	if (m_size != value) {
-		invalidateBounds();
+		invalidate();
 		m_size = std::move(value);
-		invalidateBounds();
+		invalidate();
 	}
 }
 
@@ -148,9 +148,9 @@ double EditorWorkspaceGridSprite::getXSpacing() const
 void EditorWorkspaceGridSprite::setXSpacing(double value)
 {
 	if (m_xSpacing != value) {
-		invalidateBounds();
+		invalidate();
 		m_xSpacing = value;
-		invalidateBounds();
+		invalidate();
 	}
 }
 
@@ -162,8 +162,8 @@ double EditorWorkspaceGridSprite::getYSpacing() const
 void EditorWorkspaceGridSprite::setYSpacing(double value)
 {
 	if (m_ySpacing != value) {
-		invalidateBounds();
+		invalidate();
 		m_ySpacing = value;
-		invalidateBounds();
+		invalidate();
 	}
 }

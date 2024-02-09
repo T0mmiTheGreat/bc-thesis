@@ -50,7 +50,7 @@ ObstacleSprite::ObstacleSprite(std::shared_ptr<IPaintingProxy> paintingProxy)
 	, m_costume{COSTUME_NORMAL}
 {}
 
-void ObstacleSprite::repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
+void ObstacleSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
 {
 	switch (m_costume) {
 		case COSTUME_NORMAL:
@@ -70,9 +70,9 @@ Color ObstacleSprite::getColor() const
 void ObstacleSprite::setColor(const Color& value)
 {
 	if (m_color != value) {
-		invalidateBounds();
+		invalidate();
 		m_color = value;
-		invalidateBounds();
+		invalidate();
 	}
 }
 
@@ -91,9 +91,9 @@ void ObstacleSprite::setShape(PolygonF&& value)
 {
 	assert(value.isValidEuclidean());
 
-	invalidateBounds();
+	invalidate();
 	m_shape = std::move(value);
-	invalidateBounds();
+	invalidate();
 }
 
 ObstacleSprite::Costume ObstacleSprite::getCostume() const
@@ -104,8 +104,8 @@ ObstacleSprite::Costume ObstacleSprite::getCostume() const
 void ObstacleSprite::setCostume(ObstacleSprite::Costume value)
 {
 	if (m_costume != value) {
-		invalidateBounds();
+		invalidate();
 		m_costume = value;
-		invalidateBounds();
+		invalidate();
 	}
 }

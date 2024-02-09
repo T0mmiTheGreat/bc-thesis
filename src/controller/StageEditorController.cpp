@@ -521,8 +521,6 @@ void StageEditorController::updateSpritesByActionDeletePlayerObject(
 	
 	EditorOID oid = actionCast->getObject().getOid();
 
-	// Cause repaint
-	m_playerSprites[oid]->setColor(Color::black().setAlpha(0));
 	m_playerSprites.erase(oid);
 }
 
@@ -534,8 +532,6 @@ void StageEditorController::updateSpritesByActionDeleteObstacleObject(
 	
 	EditorOID oid = actionCast->getObject().getOid();
 
-	// Cause repaint
-	m_obstacleSprites[oid]->setColor(Color::black().setAlpha(0));
 	m_obstacleSprites.erase(oid);
 }
 

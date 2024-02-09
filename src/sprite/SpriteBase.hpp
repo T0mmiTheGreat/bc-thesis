@@ -22,26 +22,84 @@
 /**
  * @brief Base class for all sprites.
  * 
- * @details Every descendant MUST provide implementation of getSize() and
- *          repaint() methods. They MUST call this class's constructor if
- *          they provide their own.
+ * @remark Descendants should not override `repaint()` method to provide their
+ *         "painting logic", but instead use override `repaintAsVisible()`. It
+ *         is called from the `repaint()` after it has been checked that the
+ *         sprite is visible.
+ * 
+ *         Descendants should not call the `invalidateRect()` method directly
+ *         from the `paintingProxy` object, but instead use this class's (and
+ *         its descendants') `invalidate()` and `invalidateRect()` methods.
+ *         They may override this method to provide their own invalidation
+ *         logic, but they should still prefer the inherited methods over the
+ *         direct `paintingProxy->invalidateRect()` call.
  */
 class SpriteBase : virtual public ISprite {
 protected:
 	std::shared_ptr<IPaintingProxy> paintingProxy;
+	bool isVisible;
+	
+	/**
+	 * @brief Repaints an area of sprite.
+	 * 
+	 * @details This method is called from `repaint()` after it has been
+	 *          observed that the "is visible" property is `true`.
+	 * 
+	 * @param canvas Canvas to paint onto.
+	 * @param invalidRect Area to repaint.
+	 * 
+	 * @remark The sprite may choose to repaint area larger than invalidRect.
+	 *         Everything outside will be clipped.
+	 */
+	virtual void repaintAsVisible(std::shared_ptr<ICanvas> canvas,
+		const Rect& invalidRect) = 0;
+	/**
+	 * @brief Invalidates the area taken by the sprite.
+	 */
+	virtual void invalidate();
+	/**
+	 * @brief Invalidates the whole screen.
+	 */
+	virtual void invalidateRect();
+	/**
+	 * @brief Invalidates a rectangular area on the screen.
+	 */
+	virtual void invalidateRect(const Rect& rect);
 public:
 	SpriteBase(std::shared_ptr<IPaintingProxy> paintingProxy);
+	virtual ~SpriteBase();
+	/**
+	 * @brief Getter for the "is visible" property.
+	 * 
+	 * @details This read-write property indicates whether the sprite is shown.
+	 *          If the value is `false`, the sprite will not be painted when
+	 *          repainting takes place.
+	 */
+	virtual bool getIsVisible() override;
+	/**
+	 * @brief Setter for the "is visible" property.
+	 * 
+	 * @copydetail SpriteBase::getIsVisible()
+	 */
+	virtual void setIsVisible(bool value) override;
+	/**
+	 * @brief Forces the sprite to update.
+	 * 
+	 * @details Calling this method will make the sprite invalidate the area
+	 *          on the screen taken by the sprite.
+	 */
+	virtual void forceUpdate() override;
 	/**
 	 * @brief Repaints an area of sprite.
 	 * 
 	 * @param canvas Canvas to paint onto.
 	 * @param invalidRect Area to repaint.
 	 * 
-	 * @remark The sprite may choose to repaint area larger than invalidRect,
-	 *         but it must modify the invalidRect value to mach the area it
-	 *         painted.
+	 * @remark The sprite may choose to repaint area larger than invalidRect.
+	 *         Everything outside will be clipped.
 	 */
-	virtual void repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override = 0;
+	virtual void repaint(std::shared_ptr<ICanvas> canvas,
+		const Rect& invalidRect) override;
 };
 
 #endif // SPRITEBASE_HPP

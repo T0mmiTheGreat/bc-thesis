@@ -26,6 +26,9 @@ private:
 
 	static Rect calculateImgBounds(
 		std::shared_ptr<IPaintingProxy> paintingProxy, ImageId img);
+	
+	void repaintAsVisible(std::shared_ptr<ICanvas> canvas,
+		const Rect& invalidRect) override;
 public:
 	ImageSprite(std::shared_ptr<IPaintingProxy> paintingProxy, ImageId img);
 	ImageSprite(std::shared_ptr<IPaintingProxy> paintingProxy, ImageId img,
@@ -39,13 +42,6 @@ public:
 	 *          to gain performance.
 	 */
 	virtual Size2d getSize() override;
-	/**
-	 * @brief Repaints an area of sprite.
-	 * 
-	 * @param canvas Canvas to paint onto.
-	 * @param invalidRect Area to repaint.
-	 */
-	virtual void repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override;
 	/**
 	 * @brief Getter for the sprite image.
 	 */

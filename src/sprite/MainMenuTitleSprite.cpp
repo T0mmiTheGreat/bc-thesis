@@ -22,7 +22,7 @@ Size2d MainMenuTitleSprite::getSize()
 	return paintingProxy->getTextSize(TITLE_TEXT, TITLE_FONT);
 }
 
-void MainMenuTitleSprite::repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
+void MainMenuTitleSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
 {
 	(void)invalidRect;
 

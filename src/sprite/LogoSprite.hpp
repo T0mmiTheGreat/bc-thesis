@@ -77,6 +77,9 @@ private:
 	 * @brief Fade out animation processing.
 	 */
 	void frameEventAnimFadeout();
+protected:
+	void repaintAsVisible(std::shared_ptr<ICanvas> canvas,
+		const Rect& invalidRect) override;
 public:
 	LogoSprite(std::shared_ptr<IPaintingProxy> paintingProxy);
 
@@ -111,13 +114,6 @@ public:
 	 * @details This method is mainly used to progress any running animations.
 	 */
 	void loopEvent() override;
-	/**
-	 * @brief Repaints an area of sprite.
-	 * 
-	 * @param canvas Canvas to paint onto.
-	 * @param invalidRect Area to repaint.
-	 */
-	void repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override;
 };
 
 #endif // LOGOSPRITE_HPP

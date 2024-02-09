@@ -32,6 +32,9 @@ private:
 		const Rect& invalidRect);
 	void repaintCostumeHighlighted(std::shared_ptr<ICanvas> canvas,
 		const Rect& invalidRect);
+protected:
+	void repaintAsVisible(std::shared_ptr<ICanvas> canvas,
+		const Rect& invalidRect) override;
 public:
 	PlayerSprite(std::shared_ptr<IPaintingProxy> paintingProxy);
 	/**
@@ -43,13 +46,6 @@ public:
 	 *          to gain performance.
 	 */
 	Size2d getSize() override;
-	/**
-	 * @brief Repaints an area of sprite.
-	 * 
-	 * @param canvas Canvas to paint onto.
-	 * @param invalidRect Area to repaint.
-	 */
-	void repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override;
 
 	/**
 	 * @brief Getter for the player color.

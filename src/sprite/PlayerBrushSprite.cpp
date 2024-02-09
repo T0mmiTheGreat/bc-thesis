@@ -47,7 +47,7 @@ Size2d PlayerBrushSprite::getSize()
 	return res;
 }
 
-void PlayerBrushSprite::repaint(std::shared_ptr<ICanvas> canvas,
+void PlayerBrushSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas,
 	const Rect& invalidRect)
 {
 	switch (m_costume) {
@@ -68,9 +68,9 @@ PlayerBrushSprite::Costume PlayerBrushSprite::getCostume() const
 void PlayerBrushSprite::setCostume(PlayerBrushSprite::Costume value)
 {
 	if (m_costume != value) {
-		invalidateBounds();
+		invalidate();
 		m_costume = value;
-		invalidateBounds();
+		invalidate();
 	}
 }
 
@@ -82,9 +82,9 @@ int PlayerBrushSprite::getRadius() const
 void PlayerBrushSprite::setRadius(int value)
 {
 	if (m_radius != value) {
-		invalidateBounds();
+		invalidate();
 		m_radius = value;
-		invalidateBounds();
+		invalidate();
 	}
 }
 

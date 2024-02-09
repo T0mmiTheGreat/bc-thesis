@@ -23,7 +23,7 @@ Size2d MainMenuItemSprite::getSize()
 	return Size2d(RECT_WIDTH_SCALED, RECT_HEIGHT_SCALED);
 }
 
-void MainMenuItemSprite::repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
+void MainMenuItemSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
 {
 	(void)invalidRect;
 

@@ -24,7 +24,7 @@ Size2d StatusbarTextSprite::getSize()
 	return paintingProxy->getTextSize(m_text, FONT);
 }
 
-void StatusbarTextSprite::repaint(std::shared_ptr<ICanvas> canvas,
+void StatusbarTextSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas,
 	const Rect& invalidRect)
 {
 	(void)invalidRect;
@@ -40,7 +40,7 @@ const std::string & StatusbarTextSprite::getText() const
 
 void StatusbarTextSprite::setText(const std::string& value)
 {
-	invalidateBounds();
+	invalidate();
 	m_text = value;
-	invalidateBounds();
+	invalidate();
 }

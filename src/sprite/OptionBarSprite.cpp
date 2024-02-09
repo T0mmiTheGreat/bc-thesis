@@ -31,7 +31,7 @@ Size2d OptionBarSprite::getSize()
 	return res;
 }
 
-void OptionBarSprite::repaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
+void OptionBarSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
 {
 	(void)invalidRect;
 
@@ -67,9 +67,9 @@ int OptionBarSprite::getBarWidth() const
 void OptionBarSprite::setBarWidth(int value)
 {
 	if (m_barWidth != value) {
-		invalidateBounds();
+		invalidate();
 		m_barWidth = value;
-		invalidateBounds();
+		invalidate();
 	}
 }
 
@@ -81,9 +81,9 @@ int OptionBarSprite::getBarHeight() const
 void OptionBarSprite::setBarHeight(int value)
 {
 	if (m_barHeight != value) {
-		invalidateBounds();
+		invalidate();
 		m_barHeight = value;
-		invalidateBounds();
+		invalidate();
 	}
 }
 
@@ -101,9 +101,9 @@ void OptionBarSprite::setBorders(const OptionBarSprite::Borders& value)
 void OptionBarSprite::setBorders(OptionBarSprite::Borders&& value)
 {
 	if (m_borders != value) {
-		invalidateBounds();
+		invalidate();
 		m_borders = std::move(value);
-		invalidateBounds();
+		invalidate();
 	}
 }
 
@@ -120,9 +120,9 @@ const Color& OptionBarSprite::getFillingColor() const
 void OptionBarSprite::setFillingColor(const Color& value)
 {
 	if (m_fColor != value) {
-		invalidateBounds();
+		invalidate();
 		m_fColor = value;
-		invalidateBounds();
+		invalidate();
 	}
 }
 
@@ -134,8 +134,8 @@ const Color& OptionBarSprite::getStrokingColor() const
 void OptionBarSprite::setStrokingColor(const Color& value)
 {
 	if (m_sColor != value) {
-		invalidateBounds();
+		invalidate();
 		m_sColor = value;
-		invalidateBounds();
+		invalidate();
 	}
 }

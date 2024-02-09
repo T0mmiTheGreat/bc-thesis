@@ -92,7 +92,7 @@ Rect ObstacleBrushSprite::getBounds()
 	return Rect();
 }
 
-void ObstacleBrushSprite::repaint(std::shared_ptr<ICanvas> canvas,
+void ObstacleBrushSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas,
 	const Rect& invalidRect)
 {
 	switch (m_costume) {
@@ -116,9 +116,9 @@ ObstacleBrushSprite::Costume ObstacleBrushSprite::getCostume() const
 void ObstacleBrushSprite::setCostume(ObstacleBrushSprite::Costume value)
 {
 	if (m_costume != value) {
-		invalidateBounds();
+		invalidate();
 		m_costume = value;
-		invalidateBounds();
+		invalidate();
 	}
 }
 
@@ -130,9 +130,9 @@ const Point& ObstacleBrushSprite::getP0() const
 void ObstacleBrushSprite::setP0(const Point& value)
 {
 	if (m_p0 != value) {
-		invalidateBounds();
+		invalidate();
 		m_p0 = value;
-		invalidateBounds();
+		invalidate();
 	}
 }
 
@@ -144,8 +144,8 @@ const Point& ObstacleBrushSprite::getP1() const
 void ObstacleBrushSprite::setP1(const Point& value)
 {
 	if (m_p1 != value) {
-		invalidateBounds();
+		invalidate();
 		m_p1 = value;
-		invalidateBounds();
+		invalidate();
 	}
 }
