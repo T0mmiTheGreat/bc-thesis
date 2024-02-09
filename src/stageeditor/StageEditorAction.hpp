@@ -45,6 +45,7 @@ public:
 		ACTION_ADD_PLAYER,
 		ACTION_PLACE_OBSTACLE_CORNER,
 		ACTION_COMPLETE_OBSTACLE,
+		ACTION_ABORT_OBSTACLE,
 		ACTION_ACTIVATE_TOOL,
 		ACTION_SELECT_PLAYER_OBJECT,
 		ACTION_SELECT_OBSTACLE_OBJECT,
@@ -232,6 +233,38 @@ public:
 	 */
 	EditorOID getOid() const {
 		return m_oid;
+	}
+};
+
+/**
+ * @brief Construction of an obstacle has been aborted, removing all placed
+ *        corners of the unfinished obstacle.
+ */
+class StageEditorActionAbortObstacle : public StageEditorAction {
+private:
+	std::vector<PointF> m_obstacleCorners;
+public:
+	/**
+	 * @brief Constructs a new StageEditorActionAbortObstacle object.
+	 * 
+	 * @param obstacleCorners Corners of the aborted obstacle.
+	 */
+	StageEditorActionAbortObstacle(const std::vector<PointF>& obstacleCorners)
+		: m_obstacleCorners{obstacleCorners}
+	{}
+
+	/**
+	 * @brief Returns the action type.
+	 */
+	ActionType getType() const override {
+		return ACTION_ABORT_OBSTACLE;
+	}
+
+	/**
+	 * @brief Corners of the aborted obstacle.
+	 */
+	const std::vector<PointF>& getObstacleCorners() const {
+		return m_obstacleCorners;
 	}
 };
 

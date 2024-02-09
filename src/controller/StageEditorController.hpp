@@ -194,6 +194,8 @@ private:
 		const std::shared_ptr<StageEditorAction> action);
 	void updateSpritesByActionCompleteObstacle(
 		const std::shared_ptr<StageEditorAction> action);
+	void updateSpritesByActionAbortObstacle(
+		const std::shared_ptr<StageEditorAction> action);
 	void updateSpritesByActionActivateTool(
 		const std::shared_ptr<StageEditorAction> action);
 	void updateSpritesByActionSelectPlayerObject(

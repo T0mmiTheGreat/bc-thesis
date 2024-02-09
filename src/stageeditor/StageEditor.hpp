@@ -52,6 +52,9 @@ private:
 	std::shared_ptr<StageEditorAction> createActionPlaceObstacleCorner(
 		const PointF& pos);
 	std::shared_ptr<StageEditorAction> createActionCompleteObstacle();
+	std::shared_ptr<StageEditorAction> createActionAbortObstacle();
+	std::shared_ptr<StageEditorAction> createActionActivateTool(
+		EditorTool newTool);
 	std::shared_ptr<StageEditorAction> createActionSelectObject(
 		const PointF& pos);
 	std::shared_ptr<StageEditorAction> createActionDeselectAll();
@@ -97,6 +100,7 @@ private:
 	void doActionAddPlayer(const std::shared_ptr<StageEditorAction> action);
 	void doActionPlaceObstacleCorner(const std::shared_ptr<StageEditorAction> action);
 	void doActionCompleteObstacle(const std::shared_ptr<StageEditorAction> action);
+	void doActionAbortObstacle(const std::shared_ptr<StageEditorAction> action);
 	void doActionActivateTool(const std::shared_ptr<StageEditorAction> action);
 	void doActionSelectPlayerObject(const std::shared_ptr<StageEditorAction> action);
 	void doActionSelectObstacleObject(const std::shared_ptr<StageEditorAction> action);
@@ -137,6 +141,16 @@ private:
 	 * @return The action performed.
 	 */
 	const std::shared_ptr<StageEditorAction> completeObstacle();
+	/**
+	 * @brief Activates a tool.
+	 * 
+	 * @details Activation takes place only if the new tool is different than
+	 *          the current active tool. Also, it aborts the construction of
+	 *          an obstacle if it's active.
+	 * 
+	 * @return The action performed.
+	 */
+	const std::shared_ptr<StageEditorAction> activateTool(EditorTool tool);
 	/**
 	 * @brief Selects an object at given coordinates.
 	 * 
@@ -326,13 +340,13 @@ public:
 	const std::unordered_set<EditorOID>& getSelectedObstacles() const;
 	
 	/**
-	 * @brief Sets active tool.
+	 * @brief Left mouse button pressed over a tool button.
 	 * 
-	 * @param newTool The activated tool.
+	 * @param tool The tool ID.
 	 * 
 	 * @return The action performed.
 	 */
-	const std::shared_ptr<StageEditorAction> activateTool(EditorTool newTool);
+	const std::shared_ptr<StageEditorAction> toolLeftBtnDown(EditorTool tool);
 
 	/**
 	 * @brief Left mouse button pressed over workspace.

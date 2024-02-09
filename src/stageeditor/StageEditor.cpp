@@ -56,6 +56,25 @@ std::shared_ptr<StageEditorAction> StageEditor::createActionCompleteObstacle()
 	return res;
 }
 
+std::shared_ptr<StageEditorAction> StageEditor::createActionAbortObstacle()
+{
+	if (m_obstacleCorners.empty()) {
+		return createActionNone();
+	} else {
+		auto res = std::make_shared<StageEditorActionAbortObstacle>(
+			m_obstacleCorners);
+		return res;
+	}
+}
+
+std::shared_ptr<StageEditorAction> StageEditor::createActionActivateTool(
+	EditorTool newTool)
+{
+	auto res = std::make_shared<StageEditorActionActivateTool>(m_activeTool,
+		newTool);
+	return res;
+}
+
 std::shared_ptr<StageEditorAction> StageEditor::createActionSelectObject(
 	const PointF& pos)
 {
@@ -201,6 +220,9 @@ void StageEditor::doAction(const std::shared_ptr<StageEditorAction> action)
 		case StageEditorAction::ACTION_COMPLETE_OBSTACLE:
 			doActionCompleteObstacle(action);
 			break;
+		case StageEditorAction::ACTION_ABORT_OBSTACLE:
+			doActionAbortObstacle(action);
+			break;
 		case StageEditorAction::ACTION_ACTIVATE_TOOL:
 			doActionActivateTool(action);
 			break;
@@ -271,6 +293,15 @@ void StageEditor::doActionCompleteObstacle(
 
 	m_stageState.obstacles.emplace(oid, StageEditorObstacleObject(oid, shape));
 
+	m_obstacleCorners.clear();
+}
+
+void StageEditor::doActionAbortObstacle(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	auto actionCast =
+		std::dynamic_pointer_cast<StageEditorActionAbortObstacle>(action);
+	
 	m_obstacleCorners.clear();
 }
 
@@ -478,6 +509,36 @@ const std::shared_ptr<StageEditorAction> StageEditor::completeObstacle()
 	return res;
 }
 
+const std::shared_ptr<StageEditorAction> StageEditor::activateTool(
+	EditorTool tool)
+{
+	std::shared_ptr<StageEditorAction> res;
+
+	if (m_activeTool == tool) {
+		// Do nothing
+
+		res = createActionNone();
+	} else {
+		// Abort obstacle
+		auto actionAbortObstacle = createActionAbortObstacle();
+
+		// Activate tool
+		auto actionActivateTool = createActionActivateTool(tool);
+
+		res = getMergedActions(actionAbortObstacle, actionActivateTool);
+	}
+
+	if (res->getType() != StageEditorAction::ACTION_NONE) {
+		// Perform
+		doAction(res);
+
+		// Add to actions history
+		m_history.pushAction(res);
+	}
+
+	return res;
+}
+
 const std::shared_ptr<StageEditorAction> StageEditor::selectObject(
 	const PointF& pos, bool keepCurrent)
 {
@@ -621,18 +682,6 @@ bool StageEditor::isSelectedObjectAt(const PointF& pos)
 {
 	return (getSelectedPlayerAt(pos) != EDITOR_OID_NULL)
 		|| (getSelectedObstacleAt(pos) != EDITOR_OID_NULL);
-}
-
-const std::shared_ptr<StageEditorAction> StageEditor::activateTool(
-	EditorTool newTool)
-{
-	auto res = std::make_shared<StageEditorActionActivateTool>(m_activeTool, newTool);
-	
-	m_activeTool = newTool;
-	
-	m_history.pushAction(res);
-
-	return res;
 }
 
 void StageEditor::undo()
@@ -885,6 +934,12 @@ bool StageEditor::canMoveSelectedObjects(double dx, double dy)
 
 	// Can move all objects
 	return true;
+}
+
+const std::shared_ptr<StageEditorAction> StageEditor::toolLeftBtnDown(
+	EditorTool tool)
+{
+	return activateTool(tool);
 }
 
 const std::shared_ptr<StageEditorAction> StageEditor::mouseLeftBtnDown(

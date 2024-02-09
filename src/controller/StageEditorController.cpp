@@ -232,8 +232,8 @@ void StageEditorController::checkToolIconClick(int x, int y)
 
 	for (int iconIdx = 0; iconIdx < TOOLICON_COUNT; iconIdx++) {
 		if (getToolIconRect(iconIdx).containsPoint(mouse)) {
-			const auto lastAction = m_stageEditor.activateTool(iconIdxToTool(
-				iconIdx));
+			const auto lastAction = m_stageEditor.toolLeftBtnDown(
+				iconIdxToTool(iconIdx));
 			updateSpritesByAction(lastAction);
 			break;
 		}
@@ -331,6 +331,9 @@ void StageEditorController::updateSpritesByAction(
 		case StageEditorAction::ACTION_COMPLETE_OBSTACLE:
 			updateSpritesByActionCompleteObstacle(action);
 			break;
+		case StageEditorAction::ACTION_ABORT_OBSTACLE:
+			updateSpritesByActionAbortObstacle(action);
+			break;
 		case StageEditorAction::ACTION_ACTIVATE_TOOL:
 			updateSpritesByActionActivateTool(action);
 			break;
@@ -392,6 +395,16 @@ void StageEditorController::updateSpritesByActionCompleteObstacle(
 		std::dynamic_pointer_cast<StageEditorActionCompleteObstacle>(action);
 	m_obstacleEdges->clearCorners();
 	addObstacleSprite(actionCast->getOid());
+	updateToolBrush();
+}
+
+void StageEditorController::updateSpritesByActionAbortObstacle(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	const auto actionCast =
+		std::dynamic_pointer_cast<StageEditorActionAbortObstacle>(action);
+	
+	m_obstacleEdges->clearCorners();
 	updateToolBrush();
 }
 
