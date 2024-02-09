@@ -31,10 +31,13 @@ Size2d EditorWorkspaceGridSprite::getSize()
 void EditorWorkspaceGridSprite::repaint(std::shared_ptr<ICanvas> canvas,
 	const Rect& invalidRect)
 {
-	(void)invalidRect;
-
 	Rect bounds = getBounds();
 	Point bottomRight = bounds.getBottomRight();
+
+	double iRectLeft   = invalidRect.x;
+	double iRectTop    = invalidRect.y;
+	double iRectRight  = invalidRect.getRight();
+	double iRectBottom = invalidRect.getBottom();
 
 	// Border
 	canvas->setStrokingColor(GRID_BORDER_COLOR);
@@ -45,54 +48,64 @@ void EditorWorkspaceGridSprite::repaint(std::shared_ptr<ICanvas> canvas,
 
 	// Vertical lines
 	if (m_xSpacing != 0.0) {
-		// When lineIdx reaches 10 and costume is COSTUME_DASH_SOLID, paint
-		// solid line
 		unsigned lineIdx = 0;
 
 		for (double x = bounds.x; x < bottomRight.x; x += m_xSpacing) {
 			lineIdx++;
-			// If `m_solidsFrequency == 0`, nothing should be painted, and it
-			// won't, because `lineIdx` will not be 0 here (unless integer
-			// overflow...)
+
+			// Paint only if the line is within invalid rect
+			if (iRectLeft <= x && x <= iRectRight) {
+				// If `m_solidsFrequency == 0`, no solid lines should be painted,
+				// and they won't, because `lineIdx` will not be 0 here (unless
+				// integer overflow...)
+				if (lineIdx == m_solidsFrequency) {
+					// Solid line
+
+					canvas->strokeLine(static_cast<int>(x), bounds.y,
+						static_cast<int>(x), bottomRight.y);
+				} else {
+					// Dashed line
+
+					canvas->dashedLine(static_cast<int>(x), bounds.y,
+						static_cast<int>(x), bottomRight.y);
+				}
+			}
+
+			// Reset counter
 			if (lineIdx == m_solidsFrequency) {
-				// Solid line
-
-				canvas->strokeLine(static_cast<int>(x), bounds.y,
-					static_cast<int>(x), bottomRight.y);
-
 				lineIdx = 0;
-			} else {
-				// Dashed line
-
-				canvas->dashedLine(static_cast<int>(x), bounds.y,
-					static_cast<int>(x), bottomRight.y);
 			}
 		}
 	}
 
 	// Horizontal lines
 	if (m_ySpacing != 0.0) {
-		// When lineIdx reaches 10 and costume is COSTUME_DASH_SOLID, paint
-		// solid line
 		unsigned lineIdx = 0;
 
 		for (double y = bounds.y; y < bottomRight.y; y += m_ySpacing) {
 			lineIdx++;
-			// If `m_solidsFrequency == 0`, nothing should be painted, and it
-			// won't, because `lineIdx` will not be 0 here (unless integer
-			// overflow...
+
+			// Paint only if the line is within invalid rect
+			if (iRectTop <= y && y <= iRectBottom) {
+				// If `m_solidsFrequency == 0`, no solid lines should be painted,
+				// and they won't, because `lineIdx` will not be 0 here (unless
+				// integer overflow...)
+				if (lineIdx == m_solidsFrequency) {
+					// Solid line
+
+					canvas->strokeLine(bounds.x, static_cast<int>(y),
+						bottomRight.x, static_cast<int>(y));
+				} else {
+					// Dashed line
+
+					canvas->dashedLine(bounds.x, static_cast<int>(y),
+						bottomRight.x, static_cast<int>(y));
+				}
+			}
+
+			// Reset counter
 			if (lineIdx == m_solidsFrequency) {
-				// Solid line
-
-				canvas->strokeLine(bounds.x, static_cast<int>(y),
-					bottomRight.x, static_cast<int>(y));
-
 				lineIdx = 0;
-			} else {
-				// Dashed line
-
-				canvas->dashedLine(bounds.x, static_cast<int>(y),
-					bottomRight.x, static_cast<int>(y));
 			}
 		}
 	}
