@@ -19,15 +19,42 @@
 
 #include "canvas/CanvasBase.hpp"
 
+// Use different (optimized) algorithm when drawing an axis-aligned dashed line.
+// I disabled it because it doesn't seem to make much difference and it's copy-
+// -pasted code, so it's more "dangerous"
+//#define OPTIMIZE_ISO_DASHED_LINE
+
 /**
  * @brief Concrete implementation of ICanvas for the SDL library.
  */
 class SDLCanvas : public CanvasBase {
 private:
+	// Also equal to length of the space between dashes
+	static constexpr int DASHED_LINE_DASH_LENGTH = 5;
+
 	void polygonToVertexArrays(const PolygonF& pog, std::vector<Sint16>& vx,
 		std::vector<Sint16>& vy);
 	void fillPolygonInternal(const Sint16* vx, const Sint16* vy, int n);
 	void strokePolygonInternal(const Sint16* vx, const Sint16* vy, int n);
+
+#ifdef OPTIMIZE_ISO_DASHED_LINE
+	/**
+	 * @brief Draws a dashed line which is parallel to X axis.
+	 * 
+	 * @param x0 X coordinate of the initial point.
+	 * @param x1 X coordinate of the end point.
+	 * @param y Y coordinate of the line.
+	 */
+	void dashedHLine(int x0, int x1, int y);
+	/**
+	 * @brief Draws a dashed line which is parallel to Y axis.
+	 * 
+	 * @param x X coordinate of the line.
+	 * @param y0 Y coordinate of the initial point.
+	 * @param y1 Y coordinate of the end point.
+	 */
+	void dashedVLine(int x, int y0, int y1);
+#endif // OPTIMIZE_ISO_DASHED_LINE
 
 	/**
 	 * @brief Calls SDL_SetRenderDrawBlendMode() based on the stroking color.

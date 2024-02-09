@@ -53,6 +53,66 @@ void SDLCanvas::strokePolygonInternal(const Sint16* vx, const Sint16* vy, int n)
 	);
 }
 
+#ifdef OPTIMIZE_ISO_DASHED_LINE
+void SDLCanvas::dashedHLine(int x0, int x1, int y)
+{
+	// Order by X
+	if (x0 > x1) std::swap(x0, x1);
+
+	// Set up drawing
+	SDLManager::get().renderer.SetDrawColor(strokeToColor());
+	updateBlendModeByStroke();
+	SDL2pp::Renderer& renderer = SDLManager::get().renderer;
+
+	int dashStartX = x0, dashEndX;
+
+	while (dashStartX <= x1) {
+		// Find the end point of the dash
+		dashEndX = dashStartX + DASHED_LINE_DASH_LENGTH;
+		if (dashEndX > x1) {
+			// Don't go past `x1`
+
+			dashEndX = x1;
+		}
+
+		// Draw
+		renderer.DrawLine(dashStartX, y, dashEndX, y);
+
+		// Find the origin of the next dash
+		dashStartX = dashEndX + DASHED_LINE_DASH_LENGTH;
+	}
+}
+
+void SDLCanvas::dashedVLine(int x, int y0, int y1)
+{
+	// Order by Y
+	if (y0 > y1) std::swap(y0, y1);
+
+	// Set up drawing
+	SDLManager::get().renderer.SetDrawColor(strokeToColor());
+	updateBlendModeByStroke();
+	SDL2pp::Renderer& renderer = SDLManager::get().renderer;
+
+	int dashStartY = y0, dashEndY;
+
+	while (dashStartY <= y1) {
+		// Find the end point of the dash
+		dashEndY = dashStartY + DASHED_LINE_DASH_LENGTH;
+		if (dashEndY > y1) {
+			// Don't go past `y1`
+
+			dashEndY = y1;
+		}
+
+		// Draw
+		renderer.DrawLine(x, dashStartY, x, dashEndY);
+
+		// Find the origin of the next dash
+		dashStartY = dashEndY + DASHED_LINE_DASH_LENGTH;
+	}
+}
+#endif // OPTIMIZE_ISO_DASHED_LINE
+
 void SDLCanvas::updateBlendModeByStroke()
 {
 	setBlendModeByColor(sColor);
@@ -128,9 +188,9 @@ void SDLCanvas::strokeLine(int x0, int y0, int x1, int y1)
 void SDLCanvas::dashedLine(int x0, int y0, int x1, int y1)
 {
 	// The result is a dashed line with the dash length and the space length
-	// both equal to 10. At (x1, y1) is either trimmed dash or a space. At
+	// both equal to 5. At (x1, y1) is either trimmed dash or a space. At
 	// (x0, y0) is usually full-length dash, unless the distance between
-	// (x0, y0) and (x1, y1) is less than 10.
+	// (x0, y0) and (x1, y1) is less than 5.
 
 	// The algorithm:
 	//   1) Calculate the `dashSpaceCountF` value -- the number of dashes and
@@ -141,8 +201,19 @@ void SDLCanvas::dashedLine(int x0, int y0, int x1, int y1)
 	//   3) Draw the dashes by utilizing the `(dx, dy)` vector (it is rather
 	//      obvious how, and I'm not going to expand on this here).
 
-	// Also equal to space length
-	static constexpr int DASH_LENGTH = 5;
+#ifdef OPTIMIZE_ISO_DASHED_LINE
+	// Optimize for horizontal line
+	if (y0 == y1) {
+		dashedHLine(x0, x1, y0);
+		return;
+	}
+
+	// Optimize for vertical line
+	if (x0 == x1) {
+		dashedVLine(x0, y0, y1);
+		return;
+	}
+#endif // OPTIMIZE_ISO_DASHED_LINE
 
 	PointF p0F(x0, y0);
 	PointF p1F(x1, y1);
@@ -151,7 +222,7 @@ void SDLCanvas::dashedLine(int x0, int y0, int x1, int y1)
 	double lineLength = sqrt(p0F.sqrDistance(p1F));
 	// Number of dashes + number of spaces. Also includes fraction of the last,
 	// trimmed one.
-	double dashSpaceCountF = lineLength / DASH_LENGTH;
+	double dashSpaceCountF = lineLength / DASHED_LINE_DASH_LENGTH;
 	// Number of dashes + number of spaces. Also includes the last, trimmed one
 	// (whole, not just fraction).
 	int dashSpaceCount = static_cast<int>(std::ceil(dashSpaceCountF));
