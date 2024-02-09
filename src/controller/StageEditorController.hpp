@@ -212,6 +212,10 @@ private:
 		const std::shared_ptr<StageEditorAction> action);
 	void updateSpritesByActionMoveObstacleObject(
 		const std::shared_ptr<StageEditorAction> action);
+	void updateSpritesByActionDeletePlayerObject(
+		const std::shared_ptr<StageEditorAction> action);
+	void updateSpritesByActionDeleteObstacleObject(
+		const std::shared_ptr<StageEditorAction> action);
 
 	/**
 	 * @brief Updates grid sprite after a change in viewport.

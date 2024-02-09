@@ -19,6 +19,7 @@
 
 #include "types.hpp"
 #include "stageeditor/Common.hpp"
+#include "stageeditor/StageEditorObjects.hpp"
 
 /**
  * @brief Base class for stage editor actions.
@@ -54,6 +55,8 @@ public:
 		ACTION_BEGIN_DRAG_SELECTED,
 		ACTION_MOVE_PLAYER_OBJECT,
 		ACTION_MOVE_OBSTACLE_OBJECT,
+		ACTION_DELETE_PLAYER_OBJECT,
+		ACTION_DELETE_OBSTACLE_OBJECT,
 	};
 
 	virtual ~StageEditorAction() {}
@@ -323,6 +326,11 @@ public:
 	{}
 
 	/**
+	 * @brief Returns the action type.
+	 */
+	virtual ActionType getType() const = 0;
+
+	/**
 	 * @brief The object which was selected or deselected.
 	 */
 	EditorOID getOid() const {
@@ -330,7 +338,24 @@ public:
 	}
 };
 
-class StageEditorActionSelectPlayerObject : public StageEditorActionSelectDeselectObjectBase {
+class StageEditorActionSelectObjectBase : public StageEditorActionSelectDeselectObjectBase {
+public:
+	/**
+	 * @brief Constructs a new StageEditorActionSelectObjectBase object.
+	 * 
+	 * @param oid The object which was selected or deselected.
+	 */
+	StageEditorActionSelectObjectBase(EditorOID oid)
+		: StageEditorActionSelectDeselectObjectBase(oid)
+	{}
+
+	/**
+	 * @brief Returns the action type.
+	 */
+	virtual ActionType getType() const = 0;
+};
+
+class StageEditorActionSelectPlayerObject : public StageEditorActionSelectObjectBase {
 public:
 	/**
 	 * @brief Constructs a new StageEditorActionSelectPlayerObject object.
@@ -338,7 +363,7 @@ public:
 	 * @param oid The object which was selected.
 	 */
 	StageEditorActionSelectPlayerObject(EditorOID oid)
-		: StageEditorActionSelectDeselectObjectBase(oid)
+		: StageEditorActionSelectObjectBase(oid)
 	{}
 
 	/**
@@ -349,7 +374,7 @@ public:
 	}
 };
 
-class StageEditorActionSelectObstacleObject : public StageEditorActionSelectDeselectObjectBase {
+class StageEditorActionSelectObstacleObject : public StageEditorActionSelectObjectBase {
 public:
 	/**
 	 * @brief Constructs a new StageEditorActionSelectObstacleObject object.
@@ -357,7 +382,7 @@ public:
 	 * @param oid The object which was selected.
 	 */
 	StageEditorActionSelectObstacleObject(EditorOID oid)
-		: StageEditorActionSelectDeselectObjectBase(oid)
+		: StageEditorActionSelectObjectBase(oid)
 	{}
 
 	/**
@@ -368,7 +393,24 @@ public:
 	}
 };
 
-class StageEditorActionDeselectPlayerObject : public StageEditorActionSelectDeselectObjectBase {
+class StageEditorActionDeselectObjectBase : public StageEditorActionSelectDeselectObjectBase {
+public:
+	/**
+	 * @brief Constructs a new StageEditorActionSelectObjectBase object.
+	 * 
+	 * @param oid The object which was selected or deselected.
+	 */
+	StageEditorActionDeselectObjectBase(EditorOID oid)
+		: StageEditorActionSelectDeselectObjectBase(oid)
+	{}
+
+	/**
+	 * @brief Returns the action type.
+	 */
+	virtual ActionType getType() const = 0;
+};
+
+class StageEditorActionDeselectPlayerObject : public StageEditorActionDeselectObjectBase {
 public:
 	/**
 	 * @brief Constructs a new StageEditorActionDeselectPlayerObject object.
@@ -376,7 +418,7 @@ public:
 	 * @param oid The object which was deselected.
 	 */
 	StageEditorActionDeselectPlayerObject(EditorOID oid)
-		: StageEditorActionSelectDeselectObjectBase(oid)
+		: StageEditorActionDeselectObjectBase(oid)
 	{}
 
 	/**
@@ -387,7 +429,7 @@ public:
 	}
 };
 
-class StageEditorActionDeselectObstacleObject : public StageEditorActionSelectDeselectObjectBase {
+class StageEditorActionDeselectObstacleObject : public StageEditorActionDeselectObjectBase {
 public:
 	/**
 	 * @brief Constructs a new StageEditorActionDeselectObstacleObject object.
@@ -395,7 +437,7 @@ public:
 	 * @param oid The object which was deselected.
 	 */
 	StageEditorActionDeselectObstacleObject(EditorOID oid)
-		: StageEditorActionSelectDeselectObjectBase(oid)
+		: StageEditorActionDeselectObjectBase(oid)
 	{}
 
 	/**
@@ -477,6 +519,11 @@ public:
 	{}
 
 	/**
+	 * @brief Returns the action type.
+	 */
+	virtual ActionType getType() const = 0;
+
+	/**
 	 * @brief The object which was moved.
 	 */
 	EditorOID getOid() const {
@@ -537,6 +584,89 @@ public:
 	 */
 	ActionType getType() const override {
 		return ACTION_MOVE_OBSTACLE_OBJECT;
+	}
+};
+
+class StageEditorActionDeleteObjectBase : public StageEditorAction {
+public:
+	/**
+	 * @brief Returns the action type.
+	 */
+	virtual ActionType getType() const = 0;
+
+	/**
+	 * @brief The deleted object.
+	 */
+	virtual const StageEditorObjectBase& getObject() const = 0;
+};
+
+class StageEditorActionDeletePlayerObject : public StageEditorActionDeleteObjectBase {
+private:
+	StageEditorPlayerObject m_playerObject;
+public:
+	/**
+	 * @brief Constructs a new StageEditorActionDeletePlayerObject object.
+	 * 
+	 * @param playerObject The deleted player object.
+	 */
+	StageEditorActionDeletePlayerObject(const StageEditorPlayerObject& playerObject)
+		: m_playerObject{playerObject}
+	{}
+	
+	/**
+	 * @brief Returns the action type.
+	 */
+	ActionType getType() const override {
+		return ACTION_DELETE_PLAYER_OBJECT;
+	}
+
+	/**
+	 * @brief The deleted object.
+	 */
+	const StageEditorObjectBase& getObject() const override {
+		return getPlayerObject();
+	}
+
+	/**
+	 * @brief The deleted player object.
+	 */
+	const StageEditorPlayerObject& getPlayerObject() const {
+		return m_playerObject;
+	}
+};
+
+class StageEditorActionDeleteObstacleObject : public StageEditorActionDeleteObjectBase {
+private:
+	StageEditorObstacleObject m_obstacleObject;
+public:
+	/**
+	 * @brief Constructs a new StageEditorActionDeleteObstacleObject object.
+	 * 
+	 * @param obstacleObject The deleted obstacle object.
+	 */
+	StageEditorActionDeleteObstacleObject(const StageEditorObstacleObject& obstacleObject)
+		: m_obstacleObject{obstacleObject}
+	{}
+	
+	/**
+	 * @brief Returns the action type.
+	 */
+	ActionType getType() const override {
+		return ACTION_DELETE_OBSTACLE_OBJECT;
+	}
+
+	/**
+	 * @brief The deleted object.
+	 */
+	const StageEditorObjectBase& getObject() const override {
+		return getObstacleObject();
+	}
+
+	/**
+	 * @brief The deleted obstacle object.
+	 */
+	const StageEditorObstacleObject& getObstacleObject() const {
+		return m_obstacleObject;
 	}
 };
 

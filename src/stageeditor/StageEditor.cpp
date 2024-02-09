@@ -97,6 +97,40 @@ std::shared_ptr<StageEditorAction> StageEditor::createActionSelectObject(
 	}
 }
 
+std::shared_ptr<StageEditorAction> StageEditor::createActionDeselectPlayerObject(
+	EditorOID oid)
+{
+	auto res = std::make_shared<StageEditorActionDeselectPlayerObject>(oid);
+	return res;
+}
+
+std::shared_ptr<StageEditorAction> StageEditor::createActionDeselectObstacleObject(
+	EditorOID oid)
+{
+	auto res = std::make_shared<StageEditorActionDeselectObstacleObject>(oid);
+	return res;
+}
+
+std::shared_ptr<StageEditorAction> StageEditor::createActionDeselectPlayerIfSelected(
+	EditorOID oid)
+{
+	if (m_selectedPlayers.contains(oid)) {
+		return createActionDeselectPlayerObject(oid);
+	} else {
+		return createActionNone();
+	}
+}
+
+std::shared_ptr<StageEditorAction> StageEditor::createActionDeselectObstacleIfSelected(
+	EditorOID oid)
+{
+	if (m_selectedObstacles.contains(oid)) {
+		return createActionDeselectObstacleObject(oid);
+	} else {
+		return createActionNone();
+	}
+}
+
 std::shared_ptr<StageEditorAction> StageEditor::createActionDeselectAll()
 {
 	// The actions performed (all the deselections)
@@ -105,15 +139,13 @@ std::shared_ptr<StageEditorAction> StageEditor::createActionDeselectAll()
 
 	// Deselection of players
 	for (auto oid : m_selectedPlayers) {
-		newAction = std::make_shared<StageEditorActionDeselectPlayerObject>(
-			oid);
+		newAction = createActionDeselectPlayerObject(oid);
 		actionGroup.push_back(newAction);
 	}
 
 	// Deselection of obstacles
 	for (auto oid : m_selectedObstacles) {
-		newAction = std::make_shared<StageEditorActionDeselectObstacleObject>(
-			oid);
+		newAction = createActionDeselectObstacleObject(oid);
 		actionGroup.push_back(newAction);
 	}
 
@@ -162,6 +194,46 @@ std::shared_ptr<StageEditorAction> StageEditor::createActionMoveSelectedObjects(
 	// Move obstacles
 	for (EditorOID oid : m_selectedObstacles) {
 		newAction = createActionMoveObstacleObject(oid, dx, dy);
+		actionGroup.push_back(newAction);
+	}
+
+	// Merge
+	auto res = getMergedActions(actionGroup);
+
+	return res;
+}
+
+std::shared_ptr<StageEditorAction> StageEditor::createActionDeletePlayerObject(
+	EditorOID oid)
+{
+	auto res = std::make_shared<StageEditorActionDeletePlayerObject>(
+		m_stageState.players.at(oid));
+	return res;
+}
+
+std::shared_ptr<StageEditorAction> StageEditor::createActionDeleteObstacleObject(
+	EditorOID oid)
+{
+	auto res = std::make_shared<StageEditorActionDeleteObstacleObject>(
+		m_stageState.obstacles.at(oid));
+	return res;
+}
+
+std::shared_ptr<StageEditorAction> StageEditor::createActionDeleteSelectedObjects()
+{
+	// The actions performed (all the deletions)
+	std::vector<std::shared_ptr<StageEditorAction>> actionGroup;
+	std::shared_ptr<StageEditorAction> newAction;
+
+	// Delete players
+	for (EditorOID oid : m_selectedPlayers) {
+		newAction = createActionDeletePlayerObject(oid);
+		actionGroup.push_back(newAction);
+	}
+
+	// Delete obstacles
+	for (EditorOID oid : m_selectedObstacles) {
+		newAction = createActionDeleteObstacleObject(oid);
 		actionGroup.push_back(newAction);
 	}
 
@@ -246,6 +318,12 @@ void StageEditor::doAction(const std::shared_ptr<StageEditorAction> action)
 			break;
 		case StageEditorAction::ACTION_MOVE_OBSTACLE_OBJECT:
 			doActionMoveObstacleObject(action);
+			break;
+		case StageEditorAction::ACTION_DELETE_PLAYER_OBJECT:
+			doActionDeletePlayerObject(action);
+			break;
+		case StageEditorAction::ACTION_DELETE_OBSTACLE_OBJECT:
+			doActionDeleteObstacleObject(action);
 			break;
 	}
 }
@@ -396,6 +474,28 @@ void StageEditor::doActionMoveObstacleObject(
 
 	auto& obstacle = m_stageState.obstacles.at(oid);
 	obstacle.moveBy(dx, dy);
+}
+
+void StageEditor::doActionDeletePlayerObject(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	auto actionCast =
+		std::dynamic_pointer_cast<StageEditorActionDeletePlayerObject>(action);
+	
+	EditorOID oid = actionCast->getObject().getOid();
+
+	m_stageState.players.erase(oid);
+}
+
+void StageEditor::doActionDeleteObstacleObject(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	auto actionCast =
+		std::dynamic_pointer_cast<StageEditorActionDeleteObstacleObject>(action);
+	
+	EditorOID oid = actionCast->getObject().getOid();
+
+	m_stageState.obstacles.erase(oid);
 }
 
 EditorOID StageEditor::getPlayerObjectAt(const PointF& pos)
@@ -618,6 +718,70 @@ const std::shared_ptr<StageEditorAction> StageEditor::endDragSelected(
 	}
 }
 
+const std::shared_ptr<StageEditorAction> StageEditor::deleteSelected()
+{
+	// First deselect them
+	auto actionDeselect = createActionDeselectAll();
+
+	// Then delete them
+	auto actionDelete = createActionDeleteSelectedObjects();
+
+	// Merge
+	auto res = getMergedActions(actionDeselect, actionDelete);
+
+	if (res->getType() != StageEditorAction::ACTION_NONE) {
+		// Perform
+		doAction(res);
+
+		// Add to actions history
+		m_history.pushAction(res);
+	}
+
+	return res;
+}
+
+const std::shared_ptr<StageEditorAction> StageEditor::deleteObject(
+	const PointF& pos)
+{
+	EditorOID oid;
+
+	std::shared_ptr<StageEditorAction> actionDeselect, actionDelete, res;
+
+	if ((oid = getPlayerObjectAt(pos)) != EDITOR_OID_NULL) {
+		// Deleted player object
+
+		// It could be selected...
+		actionDeselect = createActionDeselectPlayerIfSelected(oid);
+		// Delete
+		actionDelete = createActionDeletePlayerObject(oid);
+		// Merge
+		res = getMergedActions(actionDeselect, actionDelete);
+	} else if ((oid = getObstacleObjectAt(pos)) != EDITOR_OID_NULL) {
+		// Deleted obstacle object
+
+		// It could be selected...
+		actionDeselect = createActionDeselectObstacleIfSelected(oid);
+		// Delete
+		actionDelete = createActionDeleteObstacleObject(oid);
+		// Merge
+		res = getMergedActions(actionDeselect, actionDelete);
+	} else {
+		// Didn't delete anything
+
+		res = createActionNone();
+	}
+
+	if (res->getType() != StageEditorAction::ACTION_NONE) {
+		// Perform
+		doAction(res);
+
+		// Add to actions history
+		m_history.pushAction(res);
+	}
+
+	return res;
+}
+
 StageEditor::StageEditor()
 	: m_stageState{
 		.width = STAGE_WIDTH_INITIAL,
@@ -735,11 +899,14 @@ const std::shared_ptr<StageEditorAction> StageEditor::mouseLeftBtnDownToolObstac
 const std::shared_ptr<StageEditorAction> StageEditor::mouseLeftBtnDownToolDelete(
 	const PointF& pos, ObjectSnap snapping, bool isShiftPressed)
 {
-	(void)pos;
 	(void)snapping;
 	(void)isShiftPressed;
-	return createActionNone();
-	// TODO
+	
+	if (isSelectedObjectAt(pos)) {
+		return deleteSelected();
+	} else {
+		return deleteObject(pos);
+	}
 }
 
 const std::shared_ptr<StageEditorAction> StageEditor::mouseLeftBtnUpToolSelect(

@@ -358,6 +358,12 @@ void StageEditorController::updateSpritesByAction(
 		case StageEditorAction::ACTION_MOVE_OBSTACLE_OBJECT:
 			updateSpritesByActionMoveObstacleObject(action);
 			break;
+		case StageEditorAction::ACTION_DELETE_PLAYER_OBJECT:
+			updateSpritesByActionDeletePlayerObject(action);
+			break;
+		case StageEditorAction::ACTION_DELETE_OBSTACLE_OBJECT:
+			updateSpritesByActionDeleteObstacleObject(action);
+			break;
 	}
 }
 
@@ -505,6 +511,32 @@ void StageEditorController::updateSpritesByActionMoveObstacleObject(
 	m_obstacleSprites[oid]->setCostume(ObstacleSprite::COSTUME_HIGHLIGHTED);
 
 	updateObstacleSprite(oid);
+}
+
+void StageEditorController::updateSpritesByActionDeletePlayerObject(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	const auto actionCast =
+		std::dynamic_pointer_cast<StageEditorActionDeletePlayerObject>(action);
+	
+	EditorOID oid = actionCast->getObject().getOid();
+
+	// Cause repaint
+	m_playerSprites[oid]->setColor(Color::black().setAlpha(0));
+	m_playerSprites.erase(oid);
+}
+
+void StageEditorController::updateSpritesByActionDeleteObstacleObject(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	const auto actionCast =
+		std::dynamic_pointer_cast<StageEditorActionDeleteObstacleObject>(action);
+	
+	EditorOID oid = actionCast->getObject().getOid();
+
+	// Cause repaint
+	m_obstacleSprites[oid]->setColor(Color::black().setAlpha(0));
+	m_obstacleSprites.erase(oid);
 }
 
 void StageEditorController::updateGridSprite()

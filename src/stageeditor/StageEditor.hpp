@@ -57,6 +57,14 @@ private:
 		EditorTool newTool);
 	std::shared_ptr<StageEditorAction> createActionSelectObject(
 		const PointF& pos);
+	std::shared_ptr<StageEditorAction> createActionDeselectPlayerObject(
+		EditorOID oid);
+	std::shared_ptr<StageEditorAction> createActionDeselectObstacleObject(
+		EditorOID oid);
+	std::shared_ptr<StageEditorAction> createActionDeselectPlayerIfSelected(
+		EditorOID oid);
+	std::shared_ptr<StageEditorAction> createActionDeselectObstacleIfSelected(
+		EditorOID oid);
 	std::shared_ptr<StageEditorAction> createActionDeselectAll();
 	std::shared_ptr<StageEditorAction> createActionBeginDragSelected(
 		const PointF& where);
@@ -66,6 +74,11 @@ private:
 		EditorOID oid, double dx, double dy);
 	std::shared_ptr<StageEditorAction> createActionMoveSelectedObjects(double dx,
 		double dy);
+	std::shared_ptr<StageEditorAction> createActionDeletePlayerObject(
+		EditorOID oid);
+	std::shared_ptr<StageEditorAction> createActionDeleteObstacleObject(
+		EditorOID oid);
+	std::shared_ptr<StageEditorAction> createActionDeleteSelectedObjects();
 
 	/**
 	 * @brief Creates one action from multiple actions.
@@ -109,6 +122,8 @@ private:
 	void doActionBeginDragSelected(const std::shared_ptr<StageEditorAction> action);
 	void doActionMovePlayerObject(const std::shared_ptr<StageEditorAction> action);
 	void doActionMoveObstacleObject(const std::shared_ptr<StageEditorAction> action);
+	void doActionDeletePlayerObject(const std::shared_ptr<StageEditorAction> action);
+	void doActionDeleteObstacleObject(const std::shared_ptr<StageEditorAction> action);
 
 	EditorOID getPlayerObjectAt(const PointF& pos);
 	EditorOID getObstacleObjectAt(const PointF& pos);
@@ -182,6 +197,8 @@ private:
 	 * @return The action performed.
 	 */
 	const std::shared_ptr<StageEditorAction> endDragSelected(const PointF& pos, ObjectSnap snapping);
+	const std::shared_ptr<StageEditorAction> deleteSelected();
+	const std::shared_ptr<StageEditorAction> deleteObject(const PointF& pos);
 
 	/**
 	 * @brief Returns the OID of the player object at the given position,
