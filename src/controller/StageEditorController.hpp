@@ -345,7 +345,7 @@ private:
 	 */
 	PointF getMouseInStageSpace(int x, int y);
 protected:
-	std::unique_ptr<IControllerChild> createReplacement() override;
+	std::shared_ptr<IControllerChild> createReplacement() override;
 public:
 	StageEditorController(std::shared_ptr<ISysProxy> sysProxy);
 	void startedEvent() override;

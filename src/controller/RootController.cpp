@@ -80,13 +80,13 @@ void RootController::run()
 	m_sysProxy->runEventLoop();
 }
 
-void RootController::setChildController(std::unique_ptr<IControllerChild> value)
+void RootController::setChildController(std::shared_ptr<IControllerChild> value)
 {
 	if (value != nullptr) {
 		// Set child controller
 		m_childController = std::move(value);
 		// Assign swap callback to the controller
-		m_childController->setSwapCallback([this](std::unique_ptr<IControllerChild> newValue) {
+		m_childController->setSwapCallback([this](std::shared_ptr<IControllerChild> newValue) {
 			this->setChildController(std::move(newValue));
 		});
 		// If the event loop is already running, send the started event straight

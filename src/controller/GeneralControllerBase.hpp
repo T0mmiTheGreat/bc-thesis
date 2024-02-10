@@ -44,7 +44,7 @@ protected:
 	 *          of calling the callback, descendants only need to provide the
 	 *          correct replacement.
 	 */
-	virtual std::unique_ptr<IControllerChild> createReplacement();
+	virtual std::shared_ptr<IControllerChild> createReplacement();
 public:
 	/**
 	 * @brief Constructs a new GeneralControllerBase object.

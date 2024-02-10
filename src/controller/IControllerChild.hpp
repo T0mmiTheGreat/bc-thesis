@@ -19,7 +19,7 @@
 
 class IControllerChild;
 
-typedef std::function<void(std::unique_ptr<IControllerChild>)> SwapCallback;
+typedef std::function<void(std::shared_ptr<IControllerChild>)> SwapCallback;
 
 /**
  * @brief Controller that may be child for another controller.

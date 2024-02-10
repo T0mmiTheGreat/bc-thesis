@@ -13,7 +13,7 @@
 
 #include "controller/ControllerFactory.hpp"
 
-std::unique_ptr<IControllerChild> InitialController::createReplacement()
+std::shared_ptr<IControllerChild> InitialController::createReplacement()
 {
 	//return ControllerFactory::createInGameController(sysProxy);
 	//return ControllerFactory::createLogoController(sysProxy);

@@ -23,7 +23,7 @@
 
 class RootController : public ControllerBase, public IRootController {
 private:
-	std::unique_ptr<IControllerChild> m_childController;
+	std::shared_ptr<IControllerChild> m_childController;
 	std::shared_ptr<ISysProxy> m_sysProxy;
 public:
 	RootController(std::shared_ptr<ISysProxy> sysProxy);
@@ -38,7 +38,7 @@ public:
 	void paintEvent(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override;
 	void run() override;
 
-	void setChildController(std::unique_ptr<IControllerChild> value);
+	void setChildController(std::shared_ptr<IControllerChild> value);
 };
 
 #endif // ROOTCONTROLLER_HPP

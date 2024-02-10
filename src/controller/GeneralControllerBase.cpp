@@ -11,7 +11,7 @@
 
 #include "controller/GeneralControllerBase.hpp"
 
-std::unique_ptr<IControllerChild> GeneralControllerBase::createReplacement()
+std::shared_ptr<IControllerChild> GeneralControllerBase::createReplacement()
 {
 	return nullptr;
 }

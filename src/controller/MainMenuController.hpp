@@ -49,7 +49,7 @@ private:
 	 */
 	int getMenuItemAt(int x, int y);
 protected:
-	std::unique_ptr<IControllerChild> createReplacement() override;
+	std::shared_ptr<IControllerChild> createReplacement() override;
 public:
 	MainMenuController(std::shared_ptr<ISysProxy> sysProxy);
 	void startedEvent() override;

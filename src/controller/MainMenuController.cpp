@@ -73,7 +73,7 @@ int MainMenuController::getMenuItemAt(int x, int y)
 	return -1;
 }
 
-std::unique_ptr<IControllerChild> MainMenuController::createReplacement()
+std::shared_ptr<IControllerChild> MainMenuController::createReplacement()
 {
 	switch (m_selectedItem) {
 		case MENU_PLAY_BTN_IDX:

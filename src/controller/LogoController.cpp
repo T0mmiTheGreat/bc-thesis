@@ -15,7 +15,7 @@
 
 #include "controller/ControllerFactory.hpp"
 
-std::unique_ptr<IControllerChild> LogoController::createReplacement()
+std::shared_ptr<IControllerChild> LogoController::createReplacement()
 {
 	return ControllerFactory::createMainMenuController(sysProxy);
 }

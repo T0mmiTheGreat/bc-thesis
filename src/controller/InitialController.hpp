@@ -16,7 +16,7 @@
 
 class InitialController : public GeneralControllerBase {
 protected:
-	std::unique_ptr<IControllerChild> createReplacement();
+	std::shared_ptr<IControllerChild> createReplacement();
 public:
 	InitialController(std::shared_ptr<ISysProxy> sysProxy) : GeneralControllerBase(sysProxy) {}
 	void loopEvent() override;

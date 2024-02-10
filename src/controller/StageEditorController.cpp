@@ -1171,7 +1171,7 @@ PointF StageEditorController::getMouseInStageSpace(int x, int y)
 	return getMouseInStageSpace(Point(x, y));
 }
 
-std::unique_ptr<IControllerChild> StageEditorController::createReplacement()
+std::shared_ptr<IControllerChild> StageEditorController::createReplacement()
 {
 	return ControllerFactory::createMainMenuController(sysProxy);
 }

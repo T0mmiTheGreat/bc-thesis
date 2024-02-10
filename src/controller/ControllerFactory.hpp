@@ -36,35 +36,35 @@ public:
 	 * @param sysProxy Proxy for communication with the system manager
 	 *                 (dependency injection). 
 	 */
-	static std::unique_ptr<IControllerChild> createInitialController(std::shared_ptr<ISysProxy> sysProxy);
+	static std::shared_ptr<IControllerChild> createInitialController(std::shared_ptr<ISysProxy> sysProxy);
 	/**
 	 * @brief Constructs a new LogoController object.
 	 * 
 	 * @param sysProxy Proxy for communication with the system manager
 	 *                 (dependency injection). 
 	 */
-	static std::unique_ptr<IControllerChild> createLogoController(std::shared_ptr<ISysProxy> sysProxy);
+	static std::shared_ptr<IControllerChild> createLogoController(std::shared_ptr<ISysProxy> sysProxy);
 	/**
 	 * @brief Constructs a new MainMenuController object.
 	 * 
 	 * @param sysProxy Proxy for communication with the system manager
 	 *                 (dependency injection). 
 	 */
-	static std::unique_ptr<IControllerChild> createMainMenuController(std::shared_ptr<ISysProxy> sysProxy);
+	static std::shared_ptr<IControllerChild> createMainMenuController(std::shared_ptr<ISysProxy> sysProxy);
 	/**
 	 * @brief Constructs a new InGameController object.
 	 * 
 	 * @param sysProxy Proxy for communication with the system manager
 	 *                 (dependency injection). 
 	 */
-	static std::unique_ptr<IControllerChild> createInGameController(std::shared_ptr<ISysProxy> sysProxy);
+	static std::shared_ptr<IControllerChild> createInGameController(std::shared_ptr<ISysProxy> sysProxy);
 	/**
 	 * @brief Constructs a new StageEditorController object.
 	 * 
 	 * @param sysProxy Proxy for communication with the system manager
 	 *                 (dependency injection). 
 	 */
-	static std::unique_ptr<IControllerChild> createStageEditorController(std::shared_ptr<ISysProxy> sysProxy);
+	static std::shared_ptr<IControllerChild> createStageEditorController(std::shared_ptr<ISysProxy> sysProxy);
 };
 
 #endif // CONTROLLERFACTORY_HPP
