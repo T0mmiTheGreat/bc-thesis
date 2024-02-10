@@ -48,10 +48,10 @@ private:
 	void getSnappedPoint(const PointF& p, ObjectSnap snapping, PointF& pSnap);
 
 	std::shared_ptr<StageEditorAction> createActionNone();
-	std::shared_ptr<StageEditorAction> createActionAddPlayer(const PointF& pos);
+	std::shared_ptr<StageEditorAction> createActionAddPlayerObject(const PointF& pos);
 	std::shared_ptr<StageEditorAction> createActionPlaceObstacleCorner(
 		const PointF& pos);
-	std::shared_ptr<StageEditorAction> createActionCompleteObstacle();
+	std::shared_ptr<StageEditorAction> createActionAddObstacleObject();
 	std::shared_ptr<StageEditorAction> createActionAbortObstacle();
 	std::shared_ptr<StageEditorAction> createActionActivateTool(
 		EditorTool newTool);
@@ -110,10 +110,10 @@ private:
 
 	void doAction(const std::shared_ptr<StageEditorAction> action);
 	void doActionMultiple(const std::shared_ptr<StageEditorAction> action);
-	void doActionAddPlayer(const std::shared_ptr<StageEditorAction> action);
+	void doActionAddPlayerObject(const std::shared_ptr<StageEditorAction> action);
+	void doActionAddObstacleObject(const std::shared_ptr<StageEditorAction> action);
 	void doActionPlaceObstacleCorner(const std::shared_ptr<StageEditorAction> action);
-	void doActionCompleteObstacle(const std::shared_ptr<StageEditorAction> action);
-	void doActionAbortObstacle(const std::shared_ptr<StageEditorAction> action);
+	void doActionUnplaceObstacleCorner(const std::shared_ptr<StageEditorAction> action);
 	void doActionActivateTool(const std::shared_ptr<StageEditorAction> action);
 	void doActionSelectPlayerObject(const std::shared_ptr<StageEditorAction> action);
 	void doActionSelectObstacleObject(const std::shared_ptr<StageEditorAction> action);
@@ -455,8 +455,8 @@ public:
 	const std::shared_ptr<StageEditorAction> predictEndDragObstacleObject(
 		EditorOID oid, const PointF& pos, ObjectSnap snapping, bool& isSuccess);
 	
-	void undo();
-	void redo();
+	const std::shared_ptr<StageEditorAction> undo();
+	const std::shared_ptr<StageEditorAction> redo();
 	bool canUndo();
 	bool canRedo();
 };

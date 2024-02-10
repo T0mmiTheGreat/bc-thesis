@@ -69,6 +69,7 @@ void StageEditorController::initializeSprites()
 
 	updateSpritesByViewport();
 	updateToolBrush();
+	updateUndoRedoIcons();
 }
 
 void StageEditorController::positionSprites()
@@ -129,9 +130,9 @@ void StageEditorController::mouseMoveWorkspace(int x, int y)
 
 void StageEditorController::mouseBtnDownMenubar(MouseBtn btn, int x, int y)
 {
-	(void)btn;
-	(void)x;
-	(void)y;
+	if (btn == BTN_LEFT) {
+		checkMenuIconClick(x, y);
+	}
 }
 
 void StageEditorController::mouseBtnDownToolbar(MouseBtn btn, int x, int y)
@@ -226,6 +227,18 @@ void StageEditorController::checkWorkspaceDoDrag(int x, int y)
 	}
 }
 
+void StageEditorController::checkMenuIconClick(int x, int y)
+{
+	Point mouse(x, y);
+
+	for (int iconIdx = 0; iconIdx < MENUICON_COUNT; iconIdx++) {
+		if (getMenuIconRect(iconIdx).containsPoint(mouse)) {
+			menuIconClick(iconIdx);
+			break;
+		}
+	}
+}
+
 void StageEditorController::checkToolIconClick(int x, int y)
 {
 	Point mouse(x, y);
@@ -237,6 +250,68 @@ void StageEditorController::checkToolIconClick(int x, int y)
 			updateSpritesByAction(lastAction);
 			break;
 		}
+	}
+}
+
+void StageEditorController::menuIconClick(int iconIdx)
+{
+	switch (iconIdx) {
+		case MENUICON_NEW_IDX:
+			menuIconNewClick();
+			break;
+		case MENUICON_OPEN_IDX:
+			menuIconOpenClick();
+			break;
+		case MENUICON_SAVE_IDX:
+			menuIconSaveClick();
+			break;
+		case MENUICON_SAVE_AS_IDX:
+			menuIconSaveAsClick();
+			break;
+		case MENUICON_UNDO_IDX:
+			menuIconUndoClick();
+			break;
+		case MENUICON_REDO_IDX:
+			menuIconRedoClick();
+			break;
+	}
+}
+
+void StageEditorController::menuIconNewClick()
+{
+	// TODO
+}
+
+void StageEditorController::menuIconOpenClick()
+{
+	// TODO
+}
+
+void StageEditorController::menuIconSaveClick()
+{
+	// TODO
+}
+
+void StageEditorController::menuIconSaveAsClick()
+{
+	// TODO
+}
+
+void StageEditorController::menuIconUndoClick()
+{
+	if (m_stageEditor.canUndo()) {
+		auto lastAction = m_stageEditor.undo();
+		updateSpritesByAction(lastAction);
+		updateUndoRedoIcons();
+	}
+}
+
+void StageEditorController::menuIconRedoClick()
+{
+	if (m_stageEditor.canRedo()) {
+		auto lastAction = m_stageEditor.redo();
+		updateSpritesByAction(lastAction);
+		updateUndoRedoIcons();
 	}
 }
 
@@ -276,6 +351,17 @@ void StageEditorController::toolIconUnsetSelected(int iconIdx)
 	m_toolIcons[iconIdx]->setCostume(EditorIconSprite::COSTUME_NORMAL);
 }
 
+void StageEditorController::menuIconSetEnabled(int iconIdx, bool value)
+{
+	if (!value) {
+		m_menuIcons[iconIdx]->setCostume(EditorIconSprite::COSTUME_DISABLED);
+	} else {
+		Point mouse = sysProxy->getMousePos();
+		m_menuIcons[iconIdx]->setCostume(EditorIconSprite::COSTUME_NORMAL);
+		checkMenuIconMouseHover(mouse.x, mouse.y);
+	}
+}
+
 void StageEditorController::hideBrush()
 {
 	if (m_brushSprite != nullptr) {
@@ -313,6 +399,12 @@ void StageEditorController::updateSpritesByViewport()
 	updateToolBrush();
 }
 
+void StageEditorController::updateUndoRedoIcons()
+{
+	menuIconSetEnabled(MENUICON_UNDO_IDX, m_stageEditor.canUndo());
+	menuIconSetEnabled(MENUICON_REDO_IDX, m_stageEditor.canRedo());
+}
+
 void StageEditorController::updateSpritesByAction(
 	const std::shared_ptr<StageEditorAction> action)
 {
@@ -322,17 +414,17 @@ void StageEditorController::updateSpritesByAction(
 		case StageEditorAction::ACTION_MULTIPLE:
 			updateSpritesByActionMultiple(action);
 			break;
-		case StageEditorAction::ACTION_ADD_PLAYER:
-			updateSpritesByActionAddPlayer(action);
+		case StageEditorAction::ACTION_ADD_PLAYER_OBJECT:
+			updateSpritesByActionAddPlayerObject(action);
+			break;
+		case StageEditorAction::ACTION_ADD_OBSTACLE_OBJECT:
+			updateSpritesByActionAddObstacleObject(action);
 			break;
 		case StageEditorAction::ACTION_PLACE_OBSTACLE_CORNER:
 			updateSpritesByActionPlaceObstacleCorner(action);
 			break;
-		case StageEditorAction::ACTION_COMPLETE_OBSTACLE:
-			updateSpritesByActionCompleteObstacle(action);
-			break;
-		case StageEditorAction::ACTION_ABORT_OBSTACLE:
-			updateSpritesByActionAbortObstacle(action);
+		case StageEditorAction::ACTION_UNPLACE_OBSTACLE_CORNER:
+			updateSpritesByActionUnplaceObstacleCorner(action);
 			break;
 		case StageEditorAction::ACTION_ACTIVATE_TOOL:
 			updateSpritesByActionActivateTool(action);
@@ -365,6 +457,8 @@ void StageEditorController::updateSpritesByAction(
 			updateSpritesByActionDeleteObstacleObject(action);
 			break;
 	}
+
+	updateUndoRedoIcons();
 }
 
 void StageEditorController::updateSpritesByActionMultiple(
@@ -378,12 +472,20 @@ void StageEditorController::updateSpritesByActionMultiple(
 	}
 }
 
-void StageEditorController::updateSpritesByActionAddPlayer(
+void StageEditorController::updateSpritesByActionAddPlayerObject(
 	const std::shared_ptr<StageEditorAction> action)
 {
 	const auto actionCast =
-		std::dynamic_pointer_cast<StageEditorActionAddPlayer>(action);
-	addPlayerSprite(actionCast->getOid());
+		std::dynamic_pointer_cast<StageEditorActionAddPlayerObject>(action);
+	addPlayerSprite(actionCast->getPlayerObject().getOid());
+}
+
+void StageEditorController::updateSpritesByActionAddObstacleObject(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	const auto actionCast =
+		std::dynamic_pointer_cast<StageEditorActionAddObstacleObject>(action);
+	addObstacleSprite(actionCast->getObstacleObject().getOid());
 }
 
 void StageEditorController::updateSpritesByActionPlaceObstacleCorner(
@@ -394,23 +496,11 @@ void StageEditorController::updateSpritesByActionPlaceObstacleCorner(
 	updateToolBrush();
 }
 
-void StageEditorController::updateSpritesByActionCompleteObstacle(
+void StageEditorController::updateSpritesByActionUnplaceObstacleCorner(
 	const std::shared_ptr<StageEditorAction> action)
 {
-	const auto actionCast =
-		std::dynamic_pointer_cast<StageEditorActionCompleteObstacle>(action);
-	m_obstacleEdges->clearCorners();
-	addObstacleSprite(actionCast->getOid());
-	updateToolBrush();
-}
-
-void StageEditorController::updateSpritesByActionAbortObstacle(
-	const std::shared_ptr<StageEditorAction> action)
-{
-	const auto actionCast =
-		std::dynamic_pointer_cast<StageEditorActionAbortObstacle>(action);
-	
-	m_obstacleEdges->clearCorners();
+	(void)action;
+	updateObstacleEdgesSprite();
 	updateToolBrush();
 }
 
@@ -751,16 +841,16 @@ void StageEditorController::updateToolBrushPlayers()
 		// Predict
 		auto predictedAction = m_stageEditor.predictAddPlayer(pos, snapping,
 			isSuccess);
-		assert(predictedAction->getType() == StageEditorAction::ACTION_ADD_PLAYER);
+		assert(predictedAction->getType() == StageEditorAction::ACTION_ADD_PLAYER_OBJECT);
 
 		// Downcast
 		auto predictedActionCast =
-			std::dynamic_pointer_cast<StageEditorActionAddPlayer>(
+			std::dynamic_pointer_cast<StageEditorActionAddPlayerObject>(
 				predictedAction);
 
 		Matrix3x3 tmScreen = getStageToScreenMatrix();
 		// Project to screen space
-		PointF playerPosScreen = predictedActionCast->getPos();
+		PointF playerPosScreen = predictedActionCast->getPlayerObject().pos;
 		playerPosScreen.transform(tmScreen);
 		
 		// Modify sprite

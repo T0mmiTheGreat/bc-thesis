@@ -32,11 +32,12 @@ std::shared_ptr<StageEditorAction> StageEditor::createActionNone()
 	return std::make_shared<StageEditorActionNone>();
 }
 
-std::shared_ptr<StageEditorAction> StageEditor::createActionAddPlayer(
+std::shared_ptr<StageEditorAction> StageEditor::createActionAddPlayerObject(
 	const PointF& pos)
 {
 	EditorOID oid = generateEditorOID();
-	auto res = std::make_shared<StageEditorActionAddPlayer>(pos, oid);
+	StageEditorPlayerObject playerTmp(oid, pos);
+	auto res = std::make_shared<StageEditorActionAddPlayerObject>(playerTmp);
 	return res;
 }
 
@@ -47,12 +48,13 @@ std::shared_ptr<StageEditorAction> StageEditor::createActionPlaceObstacleCorner(
 	return res;
 }
 
-std::shared_ptr<StageEditorAction> StageEditor::createActionCompleteObstacle()
+std::shared_ptr<StageEditorAction> StageEditor::createActionAddObstacleObject()
 {
 	EditorOID oid = generateEditorOID();
 	PolygonF shape = m_obstacleCorners;
+	StageEditorObstacleObject tmpObstacle(oid, std::move(shape));
 
-	auto res = std::make_shared<StageEditorActionCompleteObstacle>(shape, oid);
+	auto res = std::make_shared<StageEditorActionAddObstacleObject>(tmpObstacle);
 	return res;
 }
 
@@ -61,8 +63,16 @@ std::shared_ptr<StageEditorAction> StageEditor::createActionAbortObstacle()
 	if (m_obstacleCorners.empty()) {
 		return createActionNone();
 	} else {
-		auto res = std::make_shared<StageEditorActionAbortObstacle>(
-			m_obstacleCorners);
+		std::vector<std::shared_ptr<StageEditorAction>> actionsGroup;
+		std::shared_ptr<StageEditorAction> newAction;
+
+		// Delete the corners
+		for (auto i = m_obstacleCorners.rbegin(); i != m_obstacleCorners.rend(); ++i) {
+			newAction = std::make_shared<StageEditorActionUnplaceObstacleCorner>(*i);
+			actionsGroup.push_back(newAction);
+		}
+
+		auto res = getMergedActions(actionsGroup);
 		return res;
 	}
 }
@@ -283,17 +293,17 @@ void StageEditor::doAction(const std::shared_ptr<StageEditorAction> action)
 		case StageEditorAction::ACTION_MULTIPLE:
 			doActionMultiple(action);
 			break;
-		case StageEditorAction::ACTION_ADD_PLAYER:
-			doActionAddPlayer(action);
+		case StageEditorAction::ACTION_ADD_PLAYER_OBJECT:
+			doActionAddPlayerObject(action);
+			break;
+		case StageEditorAction::ACTION_ADD_OBSTACLE_OBJECT:
+			doActionAddObstacleObject(action);
 			break;
 		case StageEditorAction::ACTION_PLACE_OBSTACLE_CORNER:
 			doActionPlaceObstacleCorner(action);
 			break;
-		case StageEditorAction::ACTION_COMPLETE_OBSTACLE:
-			doActionCompleteObstacle(action);
-			break;
-		case StageEditorAction::ACTION_ABORT_OBSTACLE:
-			doActionAbortObstacle(action);
+		case StageEditorAction::ACTION_UNPLACE_OBSTACLE_CORNER:
+			doActionUnplaceObstacleCorner(action);
 			break;
 		case StageEditorAction::ACTION_ACTIVATE_TOOL:
 			doActionActivateTool(action);
@@ -338,15 +348,24 @@ void StageEditor::doActionMultiple(const std::shared_ptr<StageEditorAction> acti
 	}
 }
 
-void StageEditor::doActionAddPlayer(const std::shared_ptr<StageEditorAction> action)
+void StageEditor::doActionAddPlayerObject(const std::shared_ptr<StageEditorAction> action)
 {
 	auto actionCast =
-		std::dynamic_pointer_cast<StageEditorActionAddPlayer>(action);
+		std::dynamic_pointer_cast<StageEditorActionAddPlayerObject>(action);
 	
-	EditorOID oid = actionCast->getOid();
-	const PointF& pos = actionCast->getPos();
+	EditorOID oid = actionCast->getPlayerObject().getOid();
 
-	m_stageState.players.emplace(oid, StageEditorPlayerObject(oid, pos));
+	m_stageState.players.emplace(oid, actionCast->getPlayerObject());
+}
+
+void StageEditor::doActionAddObstacleObject(const std::shared_ptr<StageEditorAction> action)
+{
+	auto actionCast =
+		std::dynamic_pointer_cast<StageEditorActionAddObstacleObject>(action);
+	
+	EditorOID oid = actionCast->getObstacleObject().getOid();
+	
+	m_stageState.obstacles.emplace(oid, actionCast->getObstacleObject());
 }
 
 void StageEditor::doActionPlaceObstacleCorner(
@@ -360,27 +379,12 @@ void StageEditor::doActionPlaceObstacleCorner(
 	m_obstacleCorners.push_back(pos);
 }
 
-void StageEditor::doActionCompleteObstacle(
+void StageEditor::doActionUnplaceObstacleCorner(
 	const std::shared_ptr<StageEditorAction> action)
 {
-	auto actionCast =
-		std::dynamic_pointer_cast<StageEditorActionCompleteObstacle>(action);
-	
-	EditorOID oid = actionCast->getOid();
-	const PolygonF& shape = actionCast->getShape();
+	(void)action;
 
-	m_stageState.obstacles.emplace(oid, StageEditorObstacleObject(oid, shape));
-
-	m_obstacleCorners.clear();
-}
-
-void StageEditor::doActionAbortObstacle(
-	const std::shared_ptr<StageEditorAction> action)
-{
-	auto actionCast =
-		std::dynamic_pointer_cast<StageEditorActionAbortObstacle>(action);
-	
-	m_obstacleCorners.clear();
+	m_obstacleCorners.pop_back();
 }
 
 void StageEditor::doActionActivateTool(
@@ -540,7 +544,7 @@ const std::shared_ptr<StageEditorAction> StageEditor::addPlayer(
 		auto actionDeselect = createActionDeselectAll();
 
 		// Add player
-		auto actionAddPlayer = createActionAddPlayer(posSnap);
+		auto actionAddPlayer = createActionAddPlayerObject(posSnap);
 
 		// Merge
 		auto res = getMergedActions(actionDeselect, actionAddPlayer);
@@ -592,10 +596,15 @@ const std::shared_ptr<StageEditorAction> StageEditor::completeObstacle()
 {
 	// Complete obstacle
 	std::shared_ptr<StageEditorAction> res;
-	if (canCompleteObstacle()) {
-		res = createActionCompleteObstacle();
-	} else {
+	if (!canCompleteObstacle()) {
 		res = createActionNone();
+	} else {
+		// Remove the corners
+		auto actionAbortObstacle = createActionAbortObstacle();
+		// Create obstacle from the corners
+		auto actionAddObstacle = createActionAddObstacleObject();
+		// Merge
+		res = getMergedActions(actionAbortObstacle, actionAddObstacle);
 	}
 	
 	if (res->getType() != StageEditorAction::ACTION_NONE) {
@@ -848,14 +857,29 @@ bool StageEditor::isSelectedObjectAt(const PointF& pos)
 		|| (getSelectedObstacleAt(pos) != EDITOR_OID_NULL);
 }
 
-void StageEditor::undo()
+const std::shared_ptr<StageEditorAction> StageEditor::undo()
 {
-	// TODO
+	if (!canUndo()) {
+		return createActionNone();
+	} else {
+		auto undoneAction = m_history.undoAction();
+		auto undoneActionInv = undoneAction->createInverse();
+
+		doAction(undoneActionInv);
+		return undoneActionInv;
+	}
 }
 
-void StageEditor::redo()
+const std::shared_ptr<StageEditorAction> StageEditor::redo()
 {
-	// TODO
+	if (!canRedo()) {
+		return createActionNone();
+	} else {
+		auto redoneAction = m_history.redoAction();
+
+		doAction(redoneAction);
+		return redoneAction;
+	}
 }
 
 bool StageEditor::canUndo()
@@ -1156,7 +1180,7 @@ const std::shared_ptr<StageEditorAction> StageEditor::predictAddPlayer(
 	PointF posSnapped;
 	getSnappedPoint(pos, snapping, posSnapped);
 
-	auto res = createActionAddPlayer(posSnapped);
+	auto res = createActionAddPlayerObject(posSnapped);
 	isSuccess = canCreatePlayer(posSnapped);
 	return res;
 }

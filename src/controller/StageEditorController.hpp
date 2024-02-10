@@ -150,7 +150,16 @@ private:
 	void checkToolIconMouseHover(int x, int y);
 	void checkWorkspaceDoDrag(int x, int y);
 
+	void checkMenuIconClick(int x, int y);
 	void checkToolIconClick(int x, int y);
+
+	void menuIconClick(int iconIdx);
+	void menuIconNewClick();
+	void menuIconOpenClick();
+	void menuIconSaveClick();
+	void menuIconSaveAsClick();
+	void menuIconUndoClick();
+	void menuIconRedoClick();
 
 	/**
 	 * @brief If the icon has COSTUME_HOVER changes it to COSTUME_NORMAL.
@@ -177,6 +186,7 @@ private:
 	 * @param iconIdx Index of the tool icon.
 	 */
 	void toolIconUnsetSelected(int iconIdx);
+	void menuIconSetEnabled(int iconIdx, bool value);
 
 	void hideBrush();
 
@@ -185,16 +195,18 @@ private:
 	 */
 	void updateSpritesByViewport();
 
+	void updateUndoRedoIcons();
+
 	void updateSpritesByAction(const std::shared_ptr<StageEditorAction> action);
 	void updateSpritesByActionMultiple(
 		const std::shared_ptr<StageEditorAction> action);
-	void updateSpritesByActionAddPlayer(
+	void updateSpritesByActionAddPlayerObject(
+		const std::shared_ptr<StageEditorAction> action);
+	void updateSpritesByActionAddObstacleObject(
 		const std::shared_ptr<StageEditorAction> action);
 	void updateSpritesByActionPlaceObstacleCorner(
 		const std::shared_ptr<StageEditorAction> action);
-	void updateSpritesByActionCompleteObstacle(
-		const std::shared_ptr<StageEditorAction> action);
-	void updateSpritesByActionAbortObstacle(
+	void updateSpritesByActionUnplaceObstacleCorner(
 		const std::shared_ptr<StageEditorAction> action);
 	void updateSpritesByActionActivateTool(
 		const std::shared_ptr<StageEditorAction> action);

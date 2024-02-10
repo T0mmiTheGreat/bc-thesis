@@ -43,10 +43,12 @@ public:
 	enum ActionType {
 		ACTION_NONE,
 		ACTION_MULTIPLE,
-		ACTION_ADD_PLAYER,
+		ACTION_ADD_PLAYER_OBJECT,
+		ACTION_ADD_OBSTACLE_OBJECT,
+		ACTION_DELETE_PLAYER_OBJECT,
+		ACTION_DELETE_OBSTACLE_OBJECT,
 		ACTION_PLACE_OBSTACLE_CORNER,
-		ACTION_COMPLETE_OBSTACLE,
-		ACTION_ABORT_OBSTACLE,
+		ACTION_UNPLACE_OBSTACLE_CORNER,
 		ACTION_ACTIVATE_TOOL,
 		ACTION_SELECT_PLAYER_OBJECT,
 		ACTION_SELECT_OBSTACLE_OBJECT,
@@ -55,8 +57,6 @@ public:
 		ACTION_BEGIN_DRAG_SELECTED,
 		ACTION_MOVE_PLAYER_OBJECT,
 		ACTION_MOVE_OBSTACLE_OBJECT,
-		ACTION_DELETE_PLAYER_OBJECT,
-		ACTION_DELETE_OBSTACLE_OBJECT,
 	};
 
 	virtual ~StageEditorAction() {}
@@ -65,6 +65,13 @@ public:
 	 * @brief Returns the action type.
 	 */
 	virtual ActionType getType() const = 0;
+
+	/**
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
+	 */
+	virtual std::shared_ptr<StageEditorAction> createInverse() const = 0;
 };
 
 /**
@@ -72,6 +79,28 @@ public:
  */
 template <class T>
 concept StageEditorActionDerived = std::is_base_of<StageEditorAction, T>::value;
+
+/**
+ * @brief No action was performed.
+ * 
+ * @details Pretty sure this will find its use.
+ */
+class StageEditorActionNone : public StageEditorAction {
+public:
+	/**
+	 * @brief Returns the action type.
+	 */
+	ActionType getType() const override {
+		return ACTION_NONE;
+	}
+
+	/**
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
+	 */
+	std::shared_ptr<StageEditorAction> createInverse() const override;
+};
 
 /**
  * @brief Multiple actions performed at once.
@@ -112,6 +141,13 @@ public:
 	}
 
 	/**
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
+	 */
+	std::shared_ptr<StageEditorAction> createInverse() const override;
+
+	/**
 	 * @brief The actions list (their order is significant).
 	 */
 	const ActionsCollection& getActions() const {
@@ -120,57 +156,77 @@ public:
 };
 
 /**
- * @brief No action was performed.
- * 
- * @details Pretty sure this will find its use.
- */
-class StageEditorActionNone : public StageEditorAction {
-public:
-	/**
-	 * @brief Returns the action type.
-	 */
-	ActionType getType() const override {
-		return ACTION_NONE;
-	}
-};
-
-/**
  * @brief A player object was added.
  */
-class StageEditorActionAddPlayer : public StageEditorAction {
+class StageEditorActionAddPlayerObject : public StageEditorAction {
 private:
-	PointF m_pos;
-	EditorOID m_oid;
+	StageEditorPlayerObject m_playerObject;
 public:
 	/**
-	 * @brief Constructs a new StageEditorActionAddPlayer object.
+	 * @brief Constructs a new StageEditorActionAddPlayerObject object.
 	 * 
-	 * @param pos Player object position.
-	 * @param oid Player object ID.
+	 * @param playerObject The added player.
 	 */
-	StageEditorActionAddPlayer(const PointF& pos, EditorOID oid)
-		: m_pos{pos}
-		, m_oid{oid}
+	StageEditorActionAddPlayerObject(
+		const StageEditorPlayerObject& playerObject)
+		: m_playerObject{playerObject}
 	{}
 
 	/**
 	 * @brief Returns the action type.
 	 */
 	ActionType getType() const override {
-		return ACTION_ADD_PLAYER;
+		return ACTION_ADD_PLAYER_OBJECT;
 	}
 
 	/**
-	 * @brief Player object position.
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
 	 */
-	const PointF& getPos() const {
-		return m_pos;
-	}
+	std::shared_ptr<StageEditorAction> createInverse() const override;
+
 	/**
-	 * @brief Player object ID.
+	 * @brief The added player.
 	 */
-	EditorOID getOid() const {
-		return m_oid;
+	const StageEditorPlayerObject& getPlayerObject() const {
+		return m_playerObject;
+	}
+};
+
+class StageEditorActionAddObstacleObject : public StageEditorAction {
+private:
+	StageEditorObstacleObject m_obstacleObject;
+public:
+	/**
+	 * @brief Constructs a new StageEditorActionAddObstacleObject object.
+	 * 
+	 * @param playerObject The added obstacle.
+	 */
+	StageEditorActionAddObstacleObject(
+		const StageEditorObstacleObject& obstacleObject)
+		: m_obstacleObject{obstacleObject}
+	{}
+
+	/**
+	 * @brief Returns the action type.
+	 */
+	ActionType getType() const override {
+		return ACTION_ADD_OBSTACLE_OBJECT;
+	}
+
+	/**
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
+	 */
+	std::shared_ptr<StageEditorAction> createInverse() const override;
+
+	/**
+	 * @brief The added obstacle.
+	 */
+	const StageEditorObstacleObject& getObstacleObject() const {
+		return m_obstacleObject;
 	}
 };
 
@@ -195,6 +251,13 @@ public:
 	}
 
 	/**
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
+	 */
+	std::shared_ptr<StageEditorAction> createInverse() const override;
+
+	/**
 	 * @brief New corner position.
 	 */
 	const PointF& getPos() const {
@@ -202,72 +265,43 @@ public:
 	}
 };
 
-class StageEditorActionCompleteObstacle : public StageEditorAction {
-private:
-	PolygonF m_shape;
-	EditorOID m_oid;
-public:
-	/**
-	 * @brief Constructs a new StageEditorActionCompleteObstacle object.
-	 * 
-	 * @param shape Obstacle object shape.
-	 * @param oid Obstacle object ID.
-	 */
-	StageEditorActionCompleteObstacle(const PolygonF& shape, EditorOID oid)
-		: m_shape{shape}
-		, m_oid{oid}
-	{}
-
-	/**
-	 * @brief Returns the action type.
-	 */
-	ActionType getType() const override {
-		return ACTION_COMPLETE_OBSTACLE;
-	}
-
-	/**
-	 * @brief Obstacle object shape.
-	 */
-	const PolygonF& getShape() const {
-		return m_shape;
-	}
-	/**
-	 * @brief Obstacle object ID.
-	 */
-	EditorOID getOid() const {
-		return m_oid;
-	}
-};
-
 /**
- * @brief Construction of an obstacle has been aborted, removing all placed
- *        corners of the unfinished obstacle.
+ * @brief Undone place obstacle corner.
+ * 
+ * @remark This action always deletes the last placed corner.
  */
-class StageEditorActionAbortObstacle : public StageEditorAction {
+class StageEditorActionUnplaceObstacleCorner : public StageEditorAction {
 private:
-	std::vector<PointF> m_obstacleCorners;
+	PointF m_pos;
 public:
 	/**
-	 * @brief Constructs a new StageEditorActionAbortObstacle object.
+	 * @brief Constructs a new StageEditorActionUnplaceObstacleCorner object.
 	 * 
-	 * @param obstacleCorners Corners of the aborted obstacle.
+	 * @param pos Former corner position.
 	 */
-	StageEditorActionAbortObstacle(const std::vector<PointF>& obstacleCorners)
-		: m_obstacleCorners{obstacleCorners}
+	StageEditorActionUnplaceObstacleCorner(const PointF& pos)
+		: m_pos{pos}
 	{}
 
 	/**
 	 * @brief Returns the action type.
 	 */
 	ActionType getType() const override {
-		return ACTION_ABORT_OBSTACLE;
+		return ACTION_UNPLACE_OBSTACLE_CORNER;
 	}
 
 	/**
-	 * @brief Corners of the aborted obstacle.
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
 	 */
-	const std::vector<PointF>& getObstacleCorners() const {
-		return m_obstacleCorners;
+	std::shared_ptr<StageEditorAction> createInverse() const override;
+
+	/**
+	 * @brief Former corner position.
+	 */
+	const PointF& getPos() const {
+		return m_pos;
 	}
 };
 
@@ -293,6 +327,13 @@ public:
 	ActionType getType() const override {
 		return ACTION_ACTIVATE_TOOL;
 	}
+
+	/**
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
+	 */
+	std::shared_ptr<StageEditorAction> createInverse() const override;
 
 	/**
 	 * @brief The tool which was replaced.
@@ -331,6 +372,13 @@ public:
 	virtual ActionType getType() const = 0;
 
 	/**
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
+	 */
+	virtual std::shared_ptr<StageEditorAction> createInverse() const override = 0;
+
+	/**
 	 * @brief The object which was selected or deselected.
 	 */
 	EditorOID getOid() const {
@@ -353,6 +401,13 @@ public:
 	 * @brief Returns the action type.
 	 */
 	virtual ActionType getType() const = 0;
+
+	/**
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
+	 */
+	virtual std::shared_ptr<StageEditorAction> createInverse() const override = 0;
 };
 
 class StageEditorActionSelectPlayerObject : public StageEditorActionSelectObjectBase {
@@ -372,6 +427,13 @@ public:
 	ActionType getType() const override {
 		return ACTION_SELECT_PLAYER_OBJECT;
 	}
+
+	/**
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
+	 */
+	std::shared_ptr<StageEditorAction> createInverse() const override;
 };
 
 class StageEditorActionSelectObstacleObject : public StageEditorActionSelectObjectBase {
@@ -391,6 +453,13 @@ public:
 	ActionType getType() const override {
 		return ACTION_SELECT_OBSTACLE_OBJECT;
 	}
+
+	/**
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
+	 */
+	std::shared_ptr<StageEditorAction> createInverse() const override;
 };
 
 class StageEditorActionDeselectObjectBase : public StageEditorActionSelectDeselectObjectBase {
@@ -408,6 +477,13 @@ public:
 	 * @brief Returns the action type.
 	 */
 	virtual ActionType getType() const = 0;
+
+	/**
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
+	 */
+	virtual std::shared_ptr<StageEditorAction> createInverse() const override = 0;
 };
 
 class StageEditorActionDeselectPlayerObject : public StageEditorActionDeselectObjectBase {
@@ -427,6 +503,13 @@ public:
 	ActionType getType() const override {
 		return ACTION_DESELECT_PLAYER_OBJECT;
 	}
+
+	/**
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
+	 */
+	std::shared_ptr<StageEditorAction> createInverse() const override;
 };
 
 class StageEditorActionDeselectObstacleObject : public StageEditorActionDeselectObjectBase {
@@ -446,6 +529,13 @@ public:
 	ActionType getType() const override {
 		return ACTION_DESELECT_OBSTACLE_OBJECT;
 	}
+
+	/**
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
+	 */
+	std::shared_ptr<StageEditorAction> createInverse() const override;
 };
 
 class StageEditorBeginDragSelected : public StageEditorAction {
@@ -476,6 +566,13 @@ public:
 	ActionType getType() const override {
 		return ACTION_BEGIN_DRAG_SELECTED;
 	}
+
+	/**
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
+	 */
+	std::shared_ptr<StageEditorAction> createInverse() const override;
 
 	/**
 	 * @brief Position where the drag started.
@@ -524,6 +621,13 @@ public:
 	virtual ActionType getType() const = 0;
 
 	/**
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
+	 */
+	virtual std::shared_ptr<StageEditorAction> createInverse() const override = 0;
+
+	/**
 	 * @brief The object which was moved.
 	 */
 	EditorOID getOid() const {
@@ -564,6 +668,13 @@ public:
 	ActionType getType() const override {
 		return ACTION_MOVE_PLAYER_OBJECT;
 	}
+
+	/**
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
+	 */
+	std::shared_ptr<StageEditorAction> createInverse() const override;
 };
 
 class StageEditorActionMoveObstacleObject : public StageEditorActionMoveObjectBase {
@@ -585,6 +696,13 @@ public:
 	ActionType getType() const override {
 		return ACTION_MOVE_OBSTACLE_OBJECT;
 	}
+
+	/**
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
+	 */
+	std::shared_ptr<StageEditorAction> createInverse() const override;
 };
 
 class StageEditorActionDeleteObjectBase : public StageEditorAction {
@@ -593,6 +711,13 @@ public:
 	 * @brief Returns the action type.
 	 */
 	virtual ActionType getType() const = 0;
+
+	/**
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
+	 */
+	virtual std::shared_ptr<StageEditorAction> createInverse() const override = 0;
 
 	/**
 	 * @brief The deleted object.
@@ -619,6 +744,13 @@ public:
 	ActionType getType() const override {
 		return ACTION_DELETE_PLAYER_OBJECT;
 	}
+
+	/**
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
+	 */
+	std::shared_ptr<StageEditorAction> createInverse() const override;
 
 	/**
 	 * @brief The deleted object.
@@ -654,6 +786,13 @@ public:
 	ActionType getType() const override {
 		return ACTION_DELETE_OBSTACLE_OBJECT;
 	}
+
+	/**
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
+	 */
+	std::shared_ptr<StageEditorAction> createInverse() const override;
 
 	/**
 	 * @brief The deleted object.
