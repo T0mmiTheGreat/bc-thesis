@@ -538,20 +538,20 @@ public:
 	std::shared_ptr<StageEditorAction> createInverse() const override;
 };
 
-class StageEditorBeginDragSelected : public StageEditorAction {
+class StageEditorActionBeginDragSelected : public StageEditorAction {
 private:
 	PointF m_where;
 	std::unordered_set<EditorOID> m_playerOids;
 	std::unordered_set<EditorOID> m_obstacleOids;
 public:
 	/**
-	 * @brief Constructs a new StageEditorBeginDragSelected object.
+	 * @brief Constructs a new StageEditorActionBeginDragSelected object.
 	 * 
 	 * @param where Position where the drag started.
 	 * @param playerOids OIDs of the selected players.
 	 * @param obstacleOids OIDs of the selected obstacles.
 	 */
-	StageEditorBeginDragSelected(
+	StageEditorActionBeginDragSelected(
 		const PointF& where,
 		const std::unordered_set<EditorOID>& playerOids,
 		const std::unordered_set<EditorOID>& obstacleOids)

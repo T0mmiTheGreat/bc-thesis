@@ -104,7 +104,7 @@ std::shared_ptr<StageEditorAction>
 	return res;
 }
 
-std::shared_ptr<StageEditorAction> StageEditorBeginDragSelected::createInverse() const
+std::shared_ptr<StageEditorAction> StageEditorActionBeginDragSelected::createInverse() const
 {
 	// This action should not appear in the action history; it is more of
 	// a helper action for backend and controller, so it there is no reason

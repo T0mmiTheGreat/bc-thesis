@@ -564,7 +564,7 @@ void StageEditorController::updateSpritesByActionBeginDragSelected(
 	const std::shared_ptr<StageEditorAction> action)
 {
 	const auto actionCast =
-		std::dynamic_pointer_cast<StageEditorBeginDragSelected>(action);
+		std::dynamic_pointer_cast<StageEditorActionBeginDragSelected>(action);
 	
 	for (EditorOID oid : actionCast->getPlayerOids()) {
 		m_draggedPlayerSprites[oid] = std::move(m_playerSprites[oid]);

@@ -168,7 +168,7 @@ std::shared_ptr<StageEditorAction> StageEditor::createActionDeselectAll()
 std::shared_ptr<StageEditorAction> StageEditor::createActionBeginDragSelected(
 	const PointF& where)
 {
-	auto res = std::make_shared<StageEditorBeginDragSelected>(where,
+	auto res = std::make_shared<StageEditorActionBeginDragSelected>(where,
 		m_selectedPlayers, m_selectedObstacles);
 	return res;
 }
@@ -446,7 +446,7 @@ void StageEditor::doActionBeginDragSelected(
 	const std::shared_ptr<StageEditorAction> action)
 {
 	auto actionCast =
-		std::dynamic_pointer_cast<StageEditorBeginDragSelected>(action);
+		std::dynamic_pointer_cast<StageEditorActionBeginDragSelected>(action);
 	
 	m_dragStart = actionCast->getWhere();
 	m_isDragging = true;
