@@ -20,7 +20,7 @@
 class MainMenuTitleSprite : public PositionedSpriteBase {
 private:
 	// The title text to show
-	const std::string TITLE_TEXT = "MAIN TITLE";
+	const std::string TITLE_TEXT = "BUBBLE BRAWL";
 	// The font of the title text
 	const FontId TITLE_FONT = FONT_SEGOEPR_66;
 protected:
