@@ -11,6 +11,7 @@
 
 #include "controller/StageEditorController.hpp"
 
+#include "controller/ControllerFactory.hpp"
 #include "stageeditor/Common.hpp"
 
 StageEditorController::StageEditorController(
@@ -30,6 +31,7 @@ void StageEditorController::createSprites()
 	m_menuIcons[MENUICON_SAVE_AS_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_SAVE_AS);
 	m_menuIcons[MENUICON_UNDO_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_UNDO);
 	m_menuIcons[MENUICON_REDO_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_REDO);
+	m_menuIcons[MENUICON_BACK_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_BACK);
 
 	// Menubar line
 	m_menuBarSprite = std::make_unique<OptionBarSprite>(sysProxy);
@@ -274,6 +276,9 @@ void StageEditorController::menuIconClick(int iconIdx)
 		case MENUICON_REDO_IDX:
 			menuIconRedoClick();
 			break;
+		case MENUICON_BACK_IDX:
+			menuIconBackClick();
+			break;
 	}
 }
 
@@ -313,6 +318,11 @@ void StageEditorController::menuIconRedoClick()
 		updateSpritesByAction(lastAction);
 		updateUndoRedoIcons();
 	}
+}
+
+void StageEditorController::menuIconBackClick()
+{
+	finishedEvent();
 }
 
 void StageEditorController::iconHighlightOff(
@@ -1011,17 +1021,28 @@ Rect StageEditorController::getWorkspaceRect()
 
 Rect StageEditorController::getMenuIconRect(int iconIdx)
 {
-	// Get the menu bar position
-	Rect menubarRect = getMenubarRect();
-	Rect res(
-		menubarRect.x + MENUICONS_LEFT_MARGIN, // Add left margin
-		menubarRect.y + MENUICONS_TOP_MARGIN,  // Add top margin
-		MENUICONS_WIDTH, // Set width
-		MENUICONS_HEIGHT // Set height
-	);
-	// Skip preceding icons
-	res.x += iconIdx * (MENUICONS_WIDTH + MENUICONS_SPACING);
-	return res;
+	if (iconIdx != MENUICON_BACK_IDX) {
+		// Get the menu bar position
+		Rect menubarRect = getMenubarRect();
+		Rect res(
+			menubarRect.x + MENUICONS_LEFT_MARGIN, // Add left margin
+			menubarRect.y + MENUICONS_TOP_MARGIN,  // Add top margin
+			MENUICONS_WIDTH, // Set width
+			MENUICONS_HEIGHT // Set height
+		);
+		// Skip preceding icons
+		res.x += iconIdx * (MENUICONS_WIDTH + MENUICONS_SPACING);
+		return res;
+	} else {
+		Rect menubarRect = getMenubarRect();
+		Rect res(
+			menubarRect.getRight() - MENUICONS_RIGHT_MARGIN - MENUICONS_WIDTH,
+			menubarRect.y + MENUICONS_TOP_MARGIN,
+			MENUICONS_WIDTH,
+			MENUICONS_HEIGHT
+		);
+		return res;
+	}
 }
 
 Rect StageEditorController::getToolIconRect(int iconIdx)
@@ -1148,6 +1169,11 @@ PointF StageEditorController::getMouseInStageSpace(const Point& mouse)
 PointF StageEditorController::getMouseInStageSpace(int x, int y)
 {
 	return getMouseInStageSpace(Point(x, y));
+}
+
+std::unique_ptr<IControllerChild> StageEditorController::createReplacement()
+{
+	return ControllerFactory::createMainMenuController(sysProxy);
 }
 
 void StageEditorController::startedEvent()

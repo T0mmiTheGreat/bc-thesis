@@ -109,10 +109,11 @@ enum ImageId {
 	IMG_ICON_SAVE_AS,
 	IMG_ICON_UNDO,
 	IMG_ICON_REDO,
-	IMG_ICON_TRASH_CAN,
+	IMG_ICON_BACK,
 	IMG_ICON_SELECT_TOOL,
 	IMG_ICON_PLAYER_TOOL,
 	IMG_ICON_OBSTACLE_TOOL,
+	IMG_ICON_TRASH_CAN,
 	// XXX: Add new images to SDL manager too (constructor)
 
 	COUNT_IMAGEID // Number of images used by the program

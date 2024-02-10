@@ -41,13 +41,15 @@ private:
 	static constexpr int MENUICON_SAVE_AS_IDX = MENUICON_SAVE_IDX + 1;
 	static constexpr int MENUICON_UNDO_IDX = MENUICON_SAVE_AS_IDX + 1;
 	static constexpr int MENUICON_REDO_IDX = MENUICON_UNDO_IDX + 1;
-	static constexpr int MENUICON_COUNT = MENUICON_REDO_IDX + 1;
+	static constexpr int MENUICON_BACK_IDX = MENUICON_REDO_IDX + 1;
+	static constexpr int MENUICON_COUNT = MENUICON_BACK_IDX + 1;
 
 	static constexpr int MENUICONS_WIDTH = EditorIconSprite::FIXED_WIDTH;
 	static constexpr int MENUICONS_HEIGHT = EditorIconSprite::FIXED_HEIGHT;
 	static constexpr int MENUICONS_TOP_MARGIN = 8;
 	static constexpr int MENUICONS_LEFT_MARGIN = 8;
 	static constexpr int MENUICONS_BOTTOM_MARGIN = 8;
+	static constexpr int MENUICONS_RIGHT_MARGIN = MENUICONS_LEFT_MARGIN;
 	static constexpr int MENUICONS_SPACING = 6;
 
 	static constexpr int MENUBAR_HEIGHT = MENUICONS_TOP_MARGIN
@@ -160,6 +162,7 @@ private:
 	void menuIconSaveAsClick();
 	void menuIconUndoClick();
 	void menuIconRedoClick();
+	void menuIconBackClick();
 
 	/**
 	 * @brief If the icon has COSTUME_HOVER changes it to COSTUME_NORMAL.
@@ -341,6 +344,8 @@ private:
 	 * @param y Mouse Y position in screen space.
 	 */
 	PointF getMouseInStageSpace(int x, int y);
+protected:
+	std::unique_ptr<IControllerChild> createReplacement() override;
 public:
 	StageEditorController(std::shared_ptr<ISysProxy> sysProxy);
 	void startedEvent() override;
