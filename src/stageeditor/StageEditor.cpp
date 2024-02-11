@@ -1073,6 +1073,16 @@ bool StageEditor::canPlacePlayer(const StageEditorPlayerObject& player,
 	const std::unordered_set<EditorOID>& ignoredPlayers,
 	const std::unordered_set<EditorOID>& ignoredObstacles)
 {
+	// Check that the whole player is within the stage bounds
+
+	// Get the stage bounds
+	RectF stageBounds(0.0, 0.0, static_cast<Size2dF>(m_stageState.getSize()));
+	// Decrement by the player diameter
+	RectF stageBoundsDeflated = stageBounds.getInflated(-player.getRadius() * 2);
+	if (!stageBoundsDeflated.containsPoint(player.pos)) {
+		return false;
+	}
+
 	// Check collisions with other players
 	for (const auto& playerPair : m_stageState.players) {
 		const EditorOID& oid = playerPair.first;

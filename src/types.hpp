@@ -716,6 +716,38 @@ struct RectGeneric {
 	}
 
 	/**
+	 * @brief Changes the rectangle size from its center.
+	 * 
+	 * @details The returned rectangle will have its width and height changed
+	 *          by `dx` and `dy` respectively, and the X and Y changed by
+	 *          `-dx/2` and `-dy/2` respectively.
+	 * 
+	 * @param dx Increment in X axis.
+	 * @param dy Increment in Y axis.
+	 */
+	constexpr RectGeneric<T> getInflated(T dx, T dy) const {
+		RectGeneric<T> res(
+			x - (dx/2),
+			y - (dy/2),
+			w + dx,
+			h + dy
+		);
+		return res;
+	}
+
+	/**
+	 * @brief Changes the rectangle size from its center.
+	 * 
+	 * @details The returned rectangle will have both its width and height
+	 *          changed by `d`, and both the X and Y changed by `-d/2`.
+	 * 
+	 * @param d Increment in both X and Y axis.
+	 */
+	constexpr RectGeneric<T> getInflated(T d) const {
+		return getInflated(d, d);
+	}
+
+	/**
 	 * @brief Alias for rectangle union.
 	 */
 	constexpr RectGeneric<T> operator+ (const RectGeneric<T>& rhs) const {
