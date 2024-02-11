@@ -70,6 +70,7 @@ enum EditorTool {
 	TOOL_PLAYERS,
 	TOOL_OBSTACLES,
 	TOOL_DELETE,
+	TOOL_RESIZE_STAGE,
 };
 
 

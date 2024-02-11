@@ -41,6 +41,7 @@ SDLManager::SDLManager()
 		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_PLAYER_TOOL),
 		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_OBSTACLE_TOOL),
 		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_TRASH_CAN),
+		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_RESIZE),
 	}
 {}
 

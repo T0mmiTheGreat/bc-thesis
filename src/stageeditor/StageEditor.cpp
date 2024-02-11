@@ -253,6 +253,29 @@ std::shared_ptr<StageEditorAction> StageEditor::createActionDeleteSelectedObject
 	return res;
 }
 
+std::shared_ptr<StageEditorAction> StageEditor::createActionBeginDragStageCorner()
+{
+	auto res = std::make_shared<StageEditorActionBeginDragStageCorner>();
+	return res;
+}
+
+std::shared_ptr<StageEditorAction> 
+StageEditor::createActionResizeStageCheckLimits(int resizeX, int resizeY)
+{
+	int newW = m_stageState.width + resizeX;
+	int newH = m_stageState.height + resizeY;
+
+	if (newW < STAGE_WIDTH_MIN) {
+		resizeX += (STAGE_WIDTH_MIN - newW);
+	}
+	if (newH < STAGE_HEIGHT_MIN) {
+		resizeY += (STAGE_HEIGHT_MIN - newH);
+	}
+
+	auto res = std::make_shared<StageEditorActionResizeStage>(resizeX, resizeY);
+	return res;
+}
+
 template <StageEditorActionDerived... Args>
 std::shared_ptr<StageEditorAction> StageEditor::getMergedActions(
 	std::shared_ptr<Args>&... actions)
@@ -334,6 +357,12 @@ void StageEditor::doAction(const std::shared_ptr<StageEditorAction> action)
 			break;
 		case StageEditorAction::ACTION_DELETE_OBSTACLE_OBJECT:
 			doActionDeleteObstacleObject(action);
+			break;
+		case StageEditorAction::ACTION_BEGIN_DRAG_STAGE_CORNER:
+			doActionBeginDragStageCorner(action);
+			break;
+		case StageEditorAction::ACTION_RESIZE_STAGE:
+			doActionResizeStage(action);
 			break;
 	}
 }
@@ -448,8 +477,8 @@ void StageEditor::doActionBeginDragSelected(
 	auto actionCast =
 		std::dynamic_pointer_cast<StageEditorActionBeginDragSelected>(action);
 	
-	m_dragStart = actionCast->getWhere();
-	m_isDragging = true;
+	m_dragStartSelected = actionCast->getWhere();
+	m_isDraggingSelected = true;
 }
 
 void StageEditor::doActionMovePlayerObject(
@@ -500,6 +529,29 @@ void StageEditor::doActionDeleteObstacleObject(
 	EditorOID oid = actionCast->getObject().getOid();
 
 	m_stageState.obstacles.erase(oid);
+}
+
+void StageEditor::doActionBeginDragStageCorner(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	(void)action;
+
+	m_isDraggingStage = true;
+}
+
+void StageEditor::doActionResizeStage(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	auto actionCast =
+		std::dynamic_pointer_cast<StageEditorActionResizeStage>(action);
+	
+	int resizeX = actionCast->getResizeX();
+	int resizeY = actionCast->getResizeY();
+
+	m_stageState.width += resizeX;
+	m_stageState.height += resizeY;
+
+	m_isDraggingStage = false;
 }
 
 EditorOID StageEditor::getPlayerObjectAt(const PointF& pos)
@@ -685,7 +737,7 @@ const std::shared_ptr<StageEditorAction> StageEditor::beginDragSelected(
 {
 	std::shared_ptr<StageEditorAction> res;
 
-	if (!m_isDragging) {
+	if (!m_isDraggingSelected) {
 		res = createActionBeginDragSelected(pos);
 		doAction(res);
 	} else {
@@ -698,8 +750,8 @@ const std::shared_ptr<StageEditorAction> StageEditor::beginDragSelected(
 const std::shared_ptr<StageEditorAction> StageEditor::endDragSelected(
 	const PointF& pos, ObjectSnap snapping)
 {
-	if (m_isDragging) {
-		PointF offsetPoint = pos.relativeTo(m_dragStart);
+	if (m_isDraggingSelected) {
+		PointF offsetPoint = pos.relativeTo(m_dragStartSelected);
 		PointF offsetPointSnap;
 		getSnappedPoint(offsetPoint, snapping, offsetPointSnap);
 
@@ -719,7 +771,7 @@ const std::shared_ptr<StageEditorAction> StageEditor::endDragSelected(
 			m_history.pushAction(res);
 		}
 
-		m_isDragging = false;
+		m_isDraggingSelected = false;
 
 		return res;
 	} else {
@@ -791,6 +843,37 @@ const std::shared_ptr<StageEditorAction> StageEditor::deleteObject(
 	return res;
 }
 
+const std::shared_ptr<StageEditorAction> StageEditor::beginDragStageCorner()
+{
+	if (!m_isDraggingStage) {
+		auto res = createActionBeginDragStageCorner();
+		doAction(res);
+		return res;
+	} else {
+		return createActionNone();
+	}
+}
+
+const std::shared_ptr<StageEditorAction> StageEditor::endDragStageCorner(
+	const PointF& pos, ObjectSnap snapping)
+{
+	if (m_isDraggingStage) {
+		auto res = predictEndDragStageCorner(pos, snapping);
+
+		if (res->getType() != StageEditorAction::ACTION_NONE) {
+			// Perform
+			doAction(res);
+
+			// Add to actions history
+			m_history.pushAction(res);
+		}
+
+		return res;
+	} else {
+		return createActionNone();
+	}
+}
+
 StageEditor::StageEditor()
 	: m_stageState{
 		.width = STAGE_WIDTH_INITIAL,
@@ -799,7 +882,7 @@ StageEditor::StageEditor()
 		.players = std::unordered_map<EditorOID, StageEditorPlayerObject>(),
 	}
 	, m_activeTool{TOOL_SELECT}
-	, m_isDragging{false}
+	, m_isDraggingSelected{false}
 {}
 
 const StageState& StageEditor::getState() const
@@ -825,6 +908,11 @@ const std::unordered_set<EditorOID>& StageEditor::getSelectedPlayers() const
 const std::unordered_set<EditorOID>& StageEditor::getSelectedObstacles() const
 {
 	return m_selectedObstacles;
+}
+
+bool StageEditor::isDraggingStageCorner() const
+{
+	return m_isDraggingStage;
 }
 
 EditorOID StageEditor::getSelectedPlayerAt(const PointF& pos)
@@ -893,9 +981,11 @@ bool StageEditor::canRedo()
 }
 
 const std::shared_ptr<StageEditorAction> StageEditor::mouseLeftBtnDownToolSelect(
-	const PointF& pos, ObjectSnap snapping, bool isShiftPressed)
+	const PointF& pos, ObjectSnap snapping, bool isShiftPressed,
+	double grabZoneSize)
 {
 	(void)snapping;
+	(void)grabZoneSize;
 
 	if (isSelectedObjectAt(pos)) {
 		return beginDragSelected(pos);
@@ -905,26 +995,32 @@ const std::shared_ptr<StageEditorAction> StageEditor::mouseLeftBtnDownToolSelect
 }
 
 const std::shared_ptr<StageEditorAction> StageEditor::mouseLeftBtnDownToolPlayers(
-	const PointF& pos, ObjectSnap snapping, bool isShiftPressed)
+	const PointF& pos, ObjectSnap snapping, bool isShiftPressed,
+	double grabZoneSize)
 {
 	(void)isShiftPressed;
+	(void)grabZoneSize;
 
 	return addPlayer(pos, snapping);
 }
 
 const std::shared_ptr<StageEditorAction> StageEditor::mouseLeftBtnDownToolObstacles(
-	const PointF& pos, ObjectSnap snapping, bool isShiftPressed)
+	const PointF& pos, ObjectSnap snapping, bool isShiftPressed,
+	double grabZoneSize)
 {
 	(void)isShiftPressed;
+	(void)grabZoneSize;
 
 	return addObstacleCorner(pos, snapping);
 }
 
 const std::shared_ptr<StageEditorAction> StageEditor::mouseLeftBtnDownToolDelete(
-	const PointF& pos, ObjectSnap snapping, bool isShiftPressed)
+	const PointF& pos, ObjectSnap snapping, bool isShiftPressed,
+	double grabZoneSize)
 {
 	(void)snapping;
 	(void)isShiftPressed;
+	(void)grabZoneSize;
 	
 	if (isSelectedObjectAt(pos)) {
 		return deleteSelected();
@@ -933,10 +1029,33 @@ const std::shared_ptr<StageEditorAction> StageEditor::mouseLeftBtnDownToolDelete
 	}
 }
 
+const std::shared_ptr<StageEditorAction>
+StageEditor::mouseLeftBtnDownToolResizeStage(const PointF& pos,
+	ObjectSnap snapping, bool isShiftPressed, double grabZoneSize)
+{
+	(void)snapping;
+	(void)isShiftPressed;
+	
+	PointF stageCorner(m_stageState.width, m_stageState.height);
+
+	if (pos.sqrDistance(stageCorner) <= sqr(grabZoneSize)) {
+		return beginDragStageCorner();
+	} else {
+		return createActionNone();
+	}
+}
+
 const std::shared_ptr<StageEditorAction> StageEditor::mouseLeftBtnUpToolSelect(
 	const PointF& pos, ObjectSnap snapping)
 {
 	return endDragSelected(pos, snapping);
+}
+
+const std::shared_ptr<StageEditorAction>
+StageEditor::mouseLeftBtnUpToolResizeStage(const PointF& pos,
+	ObjectSnap snapping)
+{
+	return endDragStageCorner(pos, snapping);
 }
 
 const std::shared_ptr<StageEditorAction> StageEditor::mouseRightBtnDownToolObstacles()
@@ -956,7 +1075,7 @@ bool StageEditor::canPlacePlayer(const StageEditorPlayerObject& player,
 {
 	// Check collisions with other players
 	for (const auto& playerPair : m_stageState.players) {
-		EditorOID oid = playerPair.first;
+		const EditorOID& oid = playerPair.first;
 		const auto& object = playerPair.second;
 
 		if (ignoredPlayers.contains(oid)) continue;
@@ -968,7 +1087,7 @@ bool StageEditor::canPlacePlayer(const StageEditorPlayerObject& player,
 
 	// Check collisions with obstacles
 	for (const auto& obstaclePair : m_stageState.obstacles) {
-		EditorOID oid = obstaclePair.first;
+		const EditorOID& oid = obstaclePair.first;
 		const auto& object = obstaclePair.second;
 
 		if (ignoredObstacles.contains(oid)) continue;
@@ -1134,20 +1253,29 @@ const std::shared_ptr<StageEditorAction> StageEditor::toolLeftBtnDown(
 }
 
 const std::shared_ptr<StageEditorAction> StageEditor::mouseLeftBtnDown(
-	const PointF& pos, ObjectSnap snapping, bool isShiftPressed)
+	const PointF& pos, ObjectSnap snapping, bool isShiftPressed,
+	double grabZoneSize)
 {
 	switch (m_activeTool) {
 		case TOOL_SELECT:
-			return mouseLeftBtnDownToolSelect(pos, snapping, isShiftPressed);
+			return mouseLeftBtnDownToolSelect(pos, snapping, isShiftPressed,
+				grabZoneSize);
 			break;
 		case TOOL_PLAYERS:
-			return mouseLeftBtnDownToolPlayers(pos, snapping, isShiftPressed);
+			return mouseLeftBtnDownToolPlayers(pos, snapping, isShiftPressed,
+				grabZoneSize);
 			break;
 		case TOOL_OBSTACLES:
-			return mouseLeftBtnDownToolObstacles(pos, snapping, isShiftPressed);
+			return mouseLeftBtnDownToolObstacles(pos, snapping, isShiftPressed,
+				grabZoneSize);
 			break;
 		case TOOL_DELETE:
-			return mouseLeftBtnDownToolDelete(pos, snapping, isShiftPressed);
+			return mouseLeftBtnDownToolDelete(pos, snapping, isShiftPressed,
+				grabZoneSize);
+			break;
+		case TOOL_RESIZE_STAGE:
+			return mouseLeftBtnDownToolResizeStage(pos, snapping,
+				isShiftPressed, grabZoneSize);
 			break;
 	}
 
@@ -1158,10 +1286,13 @@ const std::shared_ptr<StageEditorAction> StageEditor::mouseLeftBtnDown(
 const std::shared_ptr<StageEditorAction> StageEditor::mouseLeftBtnUp(
 	const PointF& pos, ObjectSnap snapping)
 {
-	if (m_activeTool == TOOL_SELECT) {
-		return mouseLeftBtnUpToolSelect(pos, snapping);
-	} else {
-		return createActionNone();
+	switch (m_activeTool) {
+		case TOOL_SELECT:
+			return mouseLeftBtnUpToolSelect(pos, snapping);
+		case TOOL_RESIZE_STAGE:
+			return mouseLeftBtnUpToolResizeStage(pos, snapping);
+		default:
+			return createActionNone();
 	}
 }
 
@@ -1199,11 +1330,11 @@ const std::shared_ptr<StageEditorAction> StageEditor::predictPlaceObstacleCorner
 const std::shared_ptr<StageEditorAction> StageEditor::predictEndDragPlayerObject(
 	EditorOID oid, const PointF& pos, ObjectSnap snapping, bool& isSuccess)
 {
-	if (!m_selectedPlayers.contains(oid) || !m_isDragging) {
+	if (!m_selectedPlayers.contains(oid) || !m_isDraggingSelected) {
 		isSuccess = false;
 		return createActionNone();
 	} else {
-		PointF offsetPoint = pos - m_dragStart;
+		PointF offsetPoint = pos - m_dragStartSelected;
 		PointF offsetPointSnapped;
 		getSnappedPoint(offsetPoint, snapping, offsetPointSnapped);
 
@@ -1219,11 +1350,11 @@ const std::shared_ptr<StageEditorAction> StageEditor::predictEndDragPlayerObject
 const std::shared_ptr<StageEditorAction> StageEditor::predictEndDragObstacleObject(
 	EditorOID oid, const PointF& pos, ObjectSnap snapping, bool& isSuccess)
 {
-	if (!m_selectedObstacles.contains(oid) || !m_isDragging) {
+	if (!m_selectedObstacles.contains(oid) || !m_isDraggingSelected) {
 		isSuccess = false;
 		return createActionNone();
 	} else {
-		PointF offsetPoint = pos - m_dragStart;
+		PointF offsetPoint = pos - m_dragStartSelected;
 		PointF offsetPointSnapped;
 		getSnappedPoint(offsetPoint, snapping, offsetPointSnapped);
 
@@ -1232,6 +1363,24 @@ const std::shared_ptr<StageEditorAction> StageEditor::predictEndDragObstacleObje
 
 		auto res = createActionMoveObstacleObject(oid, dx, dy);
 		isSuccess = canMoveSelectedObstacle(oid, dx, dy);
+		return res;
+	}
+}
+
+const std::shared_ptr<StageEditorAction> StageEditor::predictEndDragStageCorner(
+	const PointF& pos, ObjectSnap snapping)
+{
+	if (!m_isDraggingStage) {
+		return createActionNone();
+	} else {
+		PointF offsetPoint(pos.x - m_stageState.width, pos.y - m_stageState.height);
+		PointF offsetPointSnap;
+		getSnappedPoint(offsetPoint, snapping, offsetPointSnap);
+
+		int resizeX = static_cast<int>(offsetPointSnap.x);
+		int resizeY = static_cast<int>(offsetPointSnap.y);
+
+		auto res = createActionResizeStageCheckLimits(resizeX, resizeY);
 		return res;
 	}
 }

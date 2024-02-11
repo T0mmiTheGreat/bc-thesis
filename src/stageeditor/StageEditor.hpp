@@ -26,6 +26,8 @@ class StageEditor {
 private:
 	static constexpr int STAGE_WIDTH_INITIAL = 1280;
 	static constexpr int STAGE_HEIGHT_INITIAL = 720;
+	static constexpr int STAGE_WIDTH_MIN = 100;
+	static constexpr int STAGE_HEIGHT_MIN = 100;
 
 	StageState m_stageState;
 	EditorTool m_activeTool;
@@ -34,9 +36,11 @@ private:
 	PolygonF::CollectionType m_obstacleCorners;
 	std::unordered_set<EditorOID> m_selectedPlayers;
 	std::unordered_set<EditorOID> m_selectedObstacles;
-	// The position of the mouse in stage space where the dragging began
-	PointF m_dragStart;
-	bool m_isDragging;
+	// The position of the mouse in stage space where the dragging of the
+	// selected objects began
+	PointF m_dragStartSelected;
+	bool m_isDraggingSelected;
+	bool m_isDraggingStage;
 
 	/**
 	 * @brief Snaps the coordinates to the grid based on `snapping`.
@@ -48,7 +52,8 @@ private:
 	void getSnappedPoint(const PointF& p, ObjectSnap snapping, PointF& pSnap);
 
 	std::shared_ptr<StageEditorAction> createActionNone();
-	std::shared_ptr<StageEditorAction> createActionAddPlayerObject(const PointF& pos);
+	std::shared_ptr<StageEditorAction> createActionAddPlayerObject(
+		const PointF& pos);
 	std::shared_ptr<StageEditorAction> createActionPlaceObstacleCorner(
 		const PointF& pos);
 	std::shared_ptr<StageEditorAction> createActionAddObstacleObject();
@@ -72,13 +77,16 @@ private:
 		EditorOID oid, double dx, double dy);
 	std::shared_ptr<StageEditorAction> createActionMoveObstacleObject(
 		EditorOID oid, double dx, double dy);
-	std::shared_ptr<StageEditorAction> createActionMoveSelectedObjects(double dx,
-		double dy);
+	std::shared_ptr<StageEditorAction> createActionMoveSelectedObjects(
+		double dx, double dy);
 	std::shared_ptr<StageEditorAction> createActionDeletePlayerObject(
 		EditorOID oid);
 	std::shared_ptr<StageEditorAction> createActionDeleteObstacleObject(
 		EditorOID oid);
 	std::shared_ptr<StageEditorAction> createActionDeleteSelectedObjects();
+	std::shared_ptr<StageEditorAction> createActionBeginDragStageCorner();
+	std::shared_ptr<StageEditorAction> createActionResizeStageCheckLimits(
+		int resizeX, int resizeY);
 
 	/**
 	 * @brief Creates one action from multiple actions.
@@ -124,6 +132,8 @@ private:
 	void doActionMoveObstacleObject(const std::shared_ptr<StageEditorAction> action);
 	void doActionDeletePlayerObject(const std::shared_ptr<StageEditorAction> action);
 	void doActionDeleteObstacleObject(const std::shared_ptr<StageEditorAction> action);
+	void doActionBeginDragStageCorner(const std::shared_ptr<StageEditorAction> action);
+	void doActionResizeStage(const std::shared_ptr<StageEditorAction> action);
 
 	EditorOID getPlayerObjectAt(const PointF& pos);
 	EditorOID getObstacleObjectAt(const PointF& pos);
@@ -182,8 +192,8 @@ private:
 	/**
 	 * @brief Begins a dragging operation.
 	 * 
-	 * @details Records the position in the `m_dragStart` variable and changes
-	 *          the `m_isDragging` variable to true.
+	 * @details Records the position in the `m_dragStartSelected` variable and changes
+	 *          the `m_isDraggingSelected` variable to true.
 	 * 
 	 * @return The action performed.
 	 */
@@ -191,14 +201,18 @@ private:
 	/**
 	 * @brief Finishes a dragging operation.
 	 * 
-	 * @details Moves all selected objects and changes the `m_isDragging`
+	 * @details Moves all selected objects and changes the `m_isDraggingSelected`
 	 *          variable to false.
 	 * 
 	 * @return The action performed.
 	 */
-	const std::shared_ptr<StageEditorAction> endDragSelected(const PointF& pos, ObjectSnap snapping);
+	const std::shared_ptr<StageEditorAction> endDragSelected(const PointF& pos,
+		ObjectSnap snapping);
 	const std::shared_ptr<StageEditorAction> deleteSelected();
 	const std::shared_ptr<StageEditorAction> deleteObject(const PointF& pos);
+	const std::shared_ptr<StageEditorAction> beginDragStageCorner();
+	const std::shared_ptr<StageEditorAction> endDragStageCorner(
+		const PointF& pos, ObjectSnap snapping);
 
 	/**
 	 * @brief Returns the OID of the player object at the given position,
@@ -233,7 +247,8 @@ private:
 	 * @return The action performed.
 	 */
 	const std::shared_ptr<StageEditorAction> mouseLeftBtnDownToolSelect(
-		const PointF& pos, ObjectSnap snapping, bool isShiftPressed);
+		const PointF& pos, ObjectSnap snapping, bool isShiftPressed,
+		double grabZoneSize);
 	/**
 	 * @brief Left mouse button pressed over workspace while the "players tool"
 	 *        is active.
@@ -241,7 +256,8 @@ private:
 	 * @return The action performed.
 	 */
 	const std::shared_ptr<StageEditorAction> mouseLeftBtnDownToolPlayers(
-		const PointF& pos, ObjectSnap snapping, bool isShiftPressed);
+		const PointF& pos, ObjectSnap snapping, bool isShiftPressed,
+		double grabZoneSize);
 	/**
 	 * @brief Left mouse button pressed over workspace while the "obstacles
 	 *        tool" is active.
@@ -249,7 +265,8 @@ private:
 	 * @return The action performed.
 	 */
 	const std::shared_ptr<StageEditorAction> mouseLeftBtnDownToolObstacles(
-		const PointF& pos, ObjectSnap snapping, bool isShiftPressed);
+		const PointF& pos, ObjectSnap snapping, bool isShiftPressed,
+		double grabZoneSize);
 	/**
 	 * @brief Left mouse button pressed over workspace while the "delete tool"
 	 *        is active.
@@ -257,7 +274,17 @@ private:
 	 * @return The action performed.
 	 */
 	const std::shared_ptr<StageEditorAction> mouseLeftBtnDownToolDelete(
-		const PointF& pos, ObjectSnap snapping, bool isShiftPressed);
+		const PointF& pos, ObjectSnap snapping, bool isShiftPressed,
+		double grabZoneSize);
+	/**
+	 * @brief Left mouse button pressed over workspace while the "resize stage
+	 *        tool" is active.
+	 * 
+	 * @return The action performed.
+	 */
+	const std::shared_ptr<StageEditorAction> mouseLeftBtnDownToolResizeStage(
+		const PointF& pos, ObjectSnap snapping, bool isShiftPressed,
+		double grabZoneSize);
 
 	/**
 	 * @brief Left mouse button released over workspace while the "select tool"
@@ -266,6 +293,14 @@ private:
 	 * @return The action performed.
 	 */
 	const std::shared_ptr<StageEditorAction> mouseLeftBtnUpToolSelect(
+		const PointF& pos, ObjectSnap snapping);
+	/**
+	 * @brief Left mouse button released over workspace while the "resize stage
+	 *        tool" is active.
+	 * 
+	 * @return The action performed.
+	 */
+	const std::shared_ptr<StageEditorAction> mouseLeftBtnUpToolResizeStage(
 		const PointF& pos, ObjectSnap snapping);
 
 	/**
@@ -355,6 +390,7 @@ public:
 	const PolygonF::CollectionType& getObstacleCorners() const;
 	const std::unordered_set<EditorOID>& getSelectedPlayers() const;
 	const std::unordered_set<EditorOID>& getSelectedObstacles() const;
+	bool isDraggingStageCorner() const;
 	
 	/**
 	 * @brief Left mouse button pressed over a tool button.
@@ -371,11 +407,14 @@ public:
 	 * @param pos Mouse position projected to the stage space.
 	 * @param snapping How the coordinates should be snapped to grid.
 	 * @param isShiftPressed Whether the Shift key is pressed at the same time.
+	 * @param grabZoneSize Tolerance radius of a point. If `pos` is within this
+	 *                     radius, the click will count as click on that point.
+	 *                     Used for, e.g., resizing the stage.
 	 * 
 	 * @return The action performed.
 	 */
 	const std::shared_ptr<StageEditorAction> mouseLeftBtnDown(const PointF& pos, ObjectSnap snapping,
-		bool isShiftPressed);
+		bool isShiftPressed, double grabZoneSize);
 	/**
 	 * @brief Left mouse button released over workspace.
 	 * 
@@ -454,6 +493,8 @@ public:
 	 */
 	const std::shared_ptr<StageEditorAction> predictEndDragObstacleObject(
 		EditorOID oid, const PointF& pos, ObjectSnap snapping, bool& isSuccess);
+	const std::shared_ptr<StageEditorAction> predictEndDragStageCorner(
+		const PointF& pos, ObjectSnap snapping);
 	
 	const std::shared_ptr<StageEditorAction> undo();
 	const std::shared_ptr<StageEditorAction> redo();

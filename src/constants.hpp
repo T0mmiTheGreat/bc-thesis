@@ -38,5 +38,6 @@
 #define IMAGE_PATH_ICON_PLAYER_TOOL   IMAGES_PATH "player-tool.png"
 #define IMAGE_PATH_ICON_OBSTACLE_TOOL IMAGES_PATH "obstacle-tool.png"
 #define IMAGE_PATH_ICON_TRASH_CAN     IMAGES_PATH "trash-can.png"
+#define IMAGE_PATH_ICON_RESIZE        IMAGES_PATH "resize.png"
 
 #endif // CONSTANTS_HPP

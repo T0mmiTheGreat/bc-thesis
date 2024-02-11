@@ -30,7 +30,7 @@ private:
 	PointF m_dragBegin;
 	// The position of src rect at the moment when the dragging started
 	PointF m_srcRectBegin;
-	bool m_isDragging;
+	bool m_isDraggingSelected;
 	ZoomType m_zoom;
 
 	/**

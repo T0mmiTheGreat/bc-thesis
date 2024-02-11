@@ -35,13 +35,13 @@
 class StageEditorController : public GeneralControllerBase {
 private:
 #pragma region constants
-	static constexpr int MENUICON_NEW_IDX = 0;
-	static constexpr int MENUICON_OPEN_IDX = MENUICON_NEW_IDX + 1;
-	static constexpr int MENUICON_SAVE_IDX = MENUICON_OPEN_IDX + 1;
+	static constexpr int MENUICON_NEW_IDX     = 0;
+	static constexpr int MENUICON_OPEN_IDX    = MENUICON_NEW_IDX + 1;
+	static constexpr int MENUICON_SAVE_IDX    = MENUICON_OPEN_IDX + 1;
 	static constexpr int MENUICON_SAVE_AS_IDX = MENUICON_SAVE_IDX + 1;
-	static constexpr int MENUICON_UNDO_IDX = MENUICON_SAVE_AS_IDX + 1;
-	static constexpr int MENUICON_REDO_IDX = MENUICON_UNDO_IDX + 1;
-	static constexpr int MENUICON_BACK_IDX = MENUICON_REDO_IDX + 1;
+	static constexpr int MENUICON_UNDO_IDX    = MENUICON_SAVE_AS_IDX + 1;
+	static constexpr int MENUICON_REDO_IDX    = MENUICON_UNDO_IDX + 1;
+	static constexpr int MENUICON_BACK_IDX    = MENUICON_REDO_IDX + 1;
 	static constexpr int MENUICON_COUNT = MENUICON_BACK_IDX + 1;
 
 	static constexpr int MENUICONS_WIDTH = EditorIconSprite::FIXED_WIDTH;
@@ -57,11 +57,12 @@ private:
 	static constexpr Color MENUBAR_FCOLOR = Color::black();
 	static constexpr Color MENUBAR_SCOLOR = Color::white();
 	
-	static constexpr int TOOLICON_SELECT_IDX = 0;
-	static constexpr int TOOLICON_PLAYER_IDX = TOOLICON_SELECT_IDX + 1;
-	static constexpr int TOOLICON_OBSTACLE_IDX = TOOLICON_PLAYER_IDX + 1;
+	static constexpr int TOOLICON_SELECT_IDX    = 0;
+	static constexpr int TOOLICON_PLAYER_IDX    = TOOLICON_SELECT_IDX + 1;
+	static constexpr int TOOLICON_OBSTACLE_IDX  = TOOLICON_PLAYER_IDX + 1;
 	static constexpr int TOOLICON_TRASH_CAN_IDX = TOOLICON_OBSTACLE_IDX + 1;
-	static constexpr int TOOLICON_COUNT = TOOLICON_TRASH_CAN_IDX + 1;
+	static constexpr int TOOLICON_RESIZE_IDX    = TOOLICON_TRASH_CAN_IDX + 1;
+	static constexpr int TOOLICON_COUNT = TOOLICON_RESIZE_IDX + 1;
 
 	static constexpr int TOOLICONS_WIDTH = EditorIconSprite::FIXED_WIDTH;
 	static constexpr int TOOLICONS_HEIGHT = EditorIconSprite::FIXED_HEIGHT;
@@ -231,9 +232,13 @@ private:
 		const std::shared_ptr<StageEditorAction> action);
 	void updateSpritesByActionDeleteObstacleObject(
 		const std::shared_ptr<StageEditorAction> action);
+	void updateSpritesByActionBeginDragStageCorner(
+		const std::shared_ptr<StageEditorAction> action);
+	void updateSpritesByActionResizeStage(
+		const std::shared_ptr<StageEditorAction> action);
 
 	/**
-	 * @brief Updates grid sprite after a change in viewport.
+	 * @brief Updates grid sprite after a change in backend or viewport.
 	 */
 	void updateGridSprite();
 	/**
@@ -276,6 +281,7 @@ private:
 	void updateToolBrushPlayers();
 	void updateToolBrushObstacles();
 	void updateToolBrushDelete();
+	void updateToolBrushResizeStage();
 
 	void addPlayerSprite(EditorOID oid);
 	void addObstacleSprite(EditorOID oid);
@@ -323,6 +329,17 @@ private:
 	ObjectSnap getSnapping();
 
 	/**
+	 * @brief Chooses the grab zone size based on the zoom of the viewport.
+	 * 
+	 * @details Grab zone of a point is an area around a point, for instance
+	 *          a stage corner. If a user clicks within this area it counts as
+	 *          a click on that point. Generally, the area is smaller, the
+	 *          bigger is the zoom value. This is to always make the area the
+	 *          same size on the screen.
+	 */
+	double getGrabZoneSizeByViewportZoom();
+
+	/**
 	 * @brief Calculates the player sprite radius based on viewport zoom.
 	 */
 	int getPlayerSpriteRadius();
@@ -344,6 +361,12 @@ private:
 	 * @param y Mouse Y position in screen space.
 	 */
 	PointF getMouseInStageSpace(int x, int y);
+
+	/**
+	 * @brief Returns the current size of the stage, or the resized stage, if
+	 *        the stage is being resized.
+	 */
+	Size2d getPredictedStageSize();
 protected:
 	std::shared_ptr<IControllerChild> createReplacement() override;
 public:

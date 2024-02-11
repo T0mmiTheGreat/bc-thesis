@@ -57,6 +57,8 @@ public:
 		ACTION_BEGIN_DRAG_SELECTED,
 		ACTION_MOVE_PLAYER_OBJECT,
 		ACTION_MOVE_OBSTACLE_OBJECT,
+		ACTION_BEGIN_DRAG_STAGE_CORNER,
+		ACTION_RESIZE_STAGE,
 	};
 
 	virtual ~StageEditorAction() {}
@@ -268,7 +270,7 @@ public:
 /**
  * @brief Undone place obstacle corner.
  * 
- * @remark This action always deletes the last placed corner.
+ * @remark The deleted corner is always the last placed.
  */
 class StageEditorActionUnplaceObstacleCorner : public StageEditorAction {
 private:
@@ -806,6 +808,74 @@ public:
 	 */
 	const StageEditorObstacleObject& getObstacleObject() const {
 		return m_obstacleObject;
+	}
+};
+
+class StageEditorActionBeginDragStageCorner : public StageEditorAction {
+public:
+	/**
+	 * @brief Constructs a new StageEditorActionBeginDragStageCorner object.
+	 */
+	StageEditorActionBeginDragStageCorner()
+	{}
+
+	/**
+	 * @brief Returns the action type.
+	 */
+	ActionType getType() const override {
+		return ACTION_BEGIN_DRAG_STAGE_CORNER;
+	}
+
+	/**
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
+	 */
+	std::shared_ptr<StageEditorAction> createInverse() const override;
+};
+
+class StageEditorActionResizeStage : public StageEditorAction {
+private:
+	int m_resizeX;
+	int m_resizeY;
+public:
+	/**
+	 * @brief Constructs a new StageEditorActionResizeStage object.
+	 * 
+	 * @param resizeX Resize amount in X dimension.
+	 * @param resizeY Resize amount in Y dimension.
+	 */
+	StageEditorActionResizeStage(int resizeX, int resizeY)
+		: m_resizeX{resizeX}
+		, m_resizeY{resizeY}
+	{}
+
+	/**
+	 * @brief Returns the action type.
+	 */
+	ActionType getType() const override {
+		return ACTION_RESIZE_STAGE;
+	}
+
+	/**
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
+	 */
+	std::shared_ptr<StageEditorAction> createInverse() const override;
+
+	/**
+	 * @brief Resize amount in X dimension.
+	 */
+	int getResizeX() const {
+		return m_resizeX;
+	}
+
+	/**
+	 * @brief Resize amount in Y dimension.
+	 */
+	int getResizeY() const {
+		return m_resizeY;
 	}
 };
 

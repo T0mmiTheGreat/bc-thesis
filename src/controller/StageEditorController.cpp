@@ -41,6 +41,7 @@ void StageEditorController::createSprites()
 	m_toolIcons[TOOLICON_PLAYER_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_PLAYER_TOOL);
 	m_toolIcons[TOOLICON_OBSTACLE_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_OBSTACLE_TOOL);
 	m_toolIcons[TOOLICON_TRASH_CAN_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_TRASH_CAN);
+	m_toolIcons[TOOLICON_RESIZE_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_RESIZE);
 
 	// Toolbar line
 	m_toolBarSprite = std::make_unique<OptionBarSprite>(sysProxy);
@@ -152,7 +153,8 @@ void StageEditorController::mouseBtnDownWorkspace(MouseBtn btn, int x, int y)
 			ObjectSnap snapping = getSnapping();
 
 			const auto lastAction = m_stageEditor.mouseLeftBtnDown(pos, snapping,
-				sysProxy->isKeyPressed(KEY_SHIFT));
+				sysProxy->isKeyPressed(KEY_SHIFT),
+				getGrabZoneSizeByViewportZoom());
 			updateSpritesByAction(lastAction);
 		} break;
 		case BTN_RIGHT: {
@@ -466,6 +468,12 @@ void StageEditorController::updateSpritesByAction(
 		case StageEditorAction::ACTION_DELETE_OBSTACLE_OBJECT:
 			updateSpritesByActionDeleteObstacleObject(action);
 			break;
+		case StageEditorAction::ACTION_BEGIN_DRAG_STAGE_CORNER:
+			updateSpritesByActionBeginDragStageCorner(action);
+			break;
+		case StageEditorAction::ACTION_RESIZE_STAGE:
+			updateSpritesByActionResizeStage(action);
+			break;
 	}
 
 	updateUndoRedoIcons();
@@ -635,13 +643,29 @@ void StageEditorController::updateSpritesByActionDeleteObstacleObject(
 	m_obstacleSprites.erase(oid);
 }
 
+void StageEditorController::updateSpritesByActionBeginDragStageCorner(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	(void)action;
+	
+	updateToolBrush();
+}
+
+void StageEditorController::updateSpritesByActionResizeStage(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	(void)action;
+
+	updateGridSprite();
+}
+
 void StageEditorController::updateGridSprite()
 {
 	// Get the transformation matrix
 	Matrix3x3 tm = getStageToScreenMatrix();
 
 	// Get the grid bounds in stage space
-	Rect gridRect(0, 0, m_stageEditor.getState().getSize());
+	Rect gridRect(0, 0, getPredictedStageSize());
 	// Project to screen space
 	gridRect.transform(tm);
 
@@ -821,6 +845,9 @@ void StageEditorController::updateToolBrush()
 		case TOOL_DELETE:
 			updateToolBrushDelete();
 			break;
+		case TOOL_RESIZE_STAGE:
+			updateToolBrushResizeStage();
+			break;
 	}
 }
 
@@ -929,6 +956,13 @@ void StageEditorController::updateToolBrushObstacles()
 void StageEditorController::updateToolBrushDelete()
 {
 	hideBrush();
+}
+
+void StageEditorController::updateToolBrushResizeStage()
+{
+	hideBrush();
+
+	updateGridSprite();
 }
 
 void StageEditorController::addPlayerSprite(EditorOID oid)
@@ -1058,8 +1092,6 @@ Rect StageEditorController::getToolIconRect(int iconIdx)
 	// Skip icons on the left
 	res.x += (iconIdx % TOOLBAR_ITEM_COLUMNS) * (TOOLICONS_WIDTH + TOOLICONS_HORZ_SPACING);
 	// Skip rows
-	// Note: currently there is only one row (3 columns, 3 icons). If this
-	// changes in the future, this note should be deleted
 	res.y += (iconIdx / TOOLBAR_ITEM_COLUMNS) * (TOOLICONS_HEIGHT + TOOLICONS_VERT_SPACING);
 	return res;
 }
@@ -1071,6 +1103,7 @@ int StageEditorController::toolToIconIdx(EditorTool tool)
 		case TOOL_PLAYERS: return TOOLICON_PLAYER_IDX;
 		case TOOL_OBSTACLES: return TOOLICON_OBSTACLE_IDX;
 		case TOOL_DELETE: return TOOLICON_TRASH_CAN_IDX;
+		case TOOL_RESIZE_STAGE: return TOOLICON_RESIZE_IDX;
 		// Don't place the `default` label, or else the compiler won't produce
 		// a warning when there are some enum values missing
 	}
@@ -1088,6 +1121,7 @@ EditorTool StageEditorController::iconIdxToTool(int iconIdx)
 		case TOOLICON_PLAYER_IDX: return TOOL_PLAYERS;
 		case TOOLICON_OBSTACLE_IDX: return TOOL_OBSTACLES;
 		case TOOLICON_TRASH_CAN_IDX: return TOOL_DELETE;
+		case TOOLICON_RESIZE_IDX: return TOOL_RESIZE_STAGE;
 		// Inaccessible, but need to get rid of the warning
 		default: return EditorTool(-1);
 	}
@@ -1144,6 +1178,11 @@ ObjectSnap StageEditorController::getSnapping()
 		: getSnappingByViewportZoom());
 }
 
+double StageEditorController::getGrabZoneSizeByViewportZoom()
+{
+	return (1.0 / m_viewport.getZoom()) * 10.0;
+}
+
 int StageEditorController::getPlayerSpriteRadius()
 {
 	return static_cast<int>(EDITOR_PLAYER_RADIUS * m_viewport.getZoom());
@@ -1169,6 +1208,28 @@ PointF StageEditorController::getMouseInStageSpace(const Point& mouse)
 PointF StageEditorController::getMouseInStageSpace(int x, int y)
 {
 	return getMouseInStageSpace(Point(x, y));
+}
+
+Size2d StageEditorController::getPredictedStageSize()
+{
+	Size2d res = m_stageEditor.getState().getSize();
+
+	if (m_stageEditor.isDraggingStageCorner()) {
+		PointF pos = getMouseInStageSpace();
+		ObjectSnap snapping = getSnapping();
+
+		auto predictedAction = m_stageEditor.predictEndDragStageCorner(pos,
+			snapping);
+		if (predictedAction->getType() == StageEditorAction::ACTION_RESIZE_STAGE) {
+			auto predictedActionCast =
+				std::dynamic_pointer_cast<StageEditorActionResizeStage>(
+					predictedAction);
+			res.w += predictedActionCast->getResizeX();
+			res.h += predictedActionCast->getResizeY();
+		}
+	}
+
+	return res;
 }
 
 std::shared_ptr<IControllerChild> StageEditorController::createReplacement()

@@ -33,7 +33,7 @@ void StageViewport::pullLeash()
 StageViewport::StageViewport(const Size2dF& stageSize, const Size2dF& dstSize)
 	: m_srcRect(0.0, 0.0, dstSize)
 	, m_dstSize{dstSize}
-	, m_isDragging{false}
+	, m_isDraggingSelected{false}
 	, m_zoom{1.0}
 {
 	setStageSize(stageSize);
@@ -120,12 +120,12 @@ void StageViewport::beginDrag(const PointF& where)
 {
 	m_dragBegin = where;
 	m_srcRectBegin = m_srcRect.getTopLeft();
-	m_isDragging = true;
+	m_isDraggingSelected = true;
 }
 
 void StageViewport::doDrag(const PointF& where)
 {
-	if (m_isDragging) {
+	if (m_isDraggingSelected) {
 		// Vector `dragBegin -> where`
 		PointF dragRelToBegin = where.relativeTo(m_dragBegin);
 		// Project the vector to stage space
@@ -142,12 +142,12 @@ void StageViewport::doDrag(const PointF& where)
 
 void StageViewport::endDrag()
 {
-	m_isDragging = false;
+	m_isDraggingSelected = false;
 }
 
 bool StageViewport::isDrag()
 {
-	return m_isDragging;
+	return m_isDraggingSelected;
 }
 
 void StageViewport::setZoom(const PointF& towards, ZoomType newZoom)

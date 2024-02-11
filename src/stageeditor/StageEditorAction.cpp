@@ -144,3 +144,19 @@ std::shared_ptr<StageEditorAction>
 		m_obstacleObject);
 	return res;
 }
+
+std::shared_ptr<StageEditorAction> StageEditorActionBeginDragStageCorner::createInverse() const
+{
+	// This action should not appear in the action history; it is more of
+	// a helper action for backend and controller, so it there is no reason
+	// to invert it
+
+	return std::make_shared<StageEditorActionNone>();
+}
+
+std::shared_ptr<StageEditorAction> StageEditorActionResizeStage::createInverse() const
+{
+	auto res = std::make_shared<StageEditorActionResizeStage>(-m_resizeX,
+		-m_resizeY);
+	return res;
+}
