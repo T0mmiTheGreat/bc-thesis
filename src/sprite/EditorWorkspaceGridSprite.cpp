@@ -16,6 +16,7 @@ EditorWorkspaceGridSprite::EditorWorkspaceGridSprite(
 	: SpriteBase(paintingProxy)
 	, BoundedSpriteBase(paintingProxy)
 	, PositionedSpriteBase(paintingProxy)
+	, m_costume{COSTUME_NORMAL}
 	, m_solidsFrequency{0}
 	, m_xSpacing{0.0}
 	, m_ySpacing{0.0}
@@ -28,8 +29,38 @@ Size2d EditorWorkspaceGridSprite::getSize()
 	return m_size;
 }
 
-void EditorWorkspaceGridSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas,
-	const Rect& invalidRect)
+EditorWorkspaceGridSprite::Costume EditorWorkspaceGridSprite::getCostume() const
+{
+	return m_costume;
+}
+
+void EditorWorkspaceGridSprite::setCostume(
+	EditorWorkspaceGridSprite::Costume value)
+{
+	if (m_costume != value) {
+		invalidate();
+		m_costume = value;
+		invalidate();
+	}
+}
+
+void EditorWorkspaceGridSprite::repaintCostumeNormal(
+	std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
+{
+	repaintColor(GRID_BORDER_COLOR_NORMAL, GRID_CELL_COLOR_NORMAL, canvas,
+		invalidRect);
+}
+
+void EditorWorkspaceGridSprite::repaintCostumeBad(
+	std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
+{
+	repaintColor(GRID_BORDER_COLOR_BAD, GRID_CELL_COLOR_BAD, canvas,
+		invalidRect);
+}
+
+void EditorWorkspaceGridSprite::repaintColor(
+	const Color& gridBorderColor, const Color& gridCellColor,
+	std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
 {
 	Rect bounds = getBounds();
 	Point bottomRight = bounds.getBottomRight();
@@ -40,11 +71,11 @@ void EditorWorkspaceGridSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas
 	double iRectBottom = invalidRect.getBottom();
 
 	// Border
-	canvas->setStrokingColor(GRID_BORDER_COLOR);
+	canvas->setStrokingColor(gridBorderColor);
 	canvas->strokeRectangle(bounds.x, bounds.y, bounds.w, bounds.h);
 
 	// Set color for cells
-	canvas->setStrokingColor(GRID_CELL_COLOR);
+	canvas->setStrokingColor(gridCellColor);
 
 	// Vertical lines
 	if (m_xSpacing != 0.0) {
@@ -108,6 +139,19 @@ void EditorWorkspaceGridSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas
 				lineIdx = 0;
 			}
 		}
+	}
+}
+
+void EditorWorkspaceGridSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas,
+	const Rect& invalidRect)
+{
+	switch (m_costume) {
+		case COSTUME_NORMAL:
+			repaintCostumeNormal(canvas, invalidRect);
+			break;
+		case COSTUME_BAD:
+			repaintCostumeBad(canvas, invalidRect);
+			break;
 	}
 }
 

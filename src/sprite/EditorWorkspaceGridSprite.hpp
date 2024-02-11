@@ -20,17 +20,33 @@
 #include "sprite/PositionedSpriteBase.hpp"
 
 class EditorWorkspaceGridSprite : public PositionedSpriteBase {
+public:
+	enum Costume {
+		COSTUME_NORMAL, // Stage can be resized
+		COSTUME_BAD,    // Stage can not be resized
+	};
 private:
-	static constexpr Color GRID_BORDER_COLOR = Color::grayscale(0x4a);
 	static constexpr uint8_t GRID_CELL_ALPHA = 0x60;
-	static constexpr Color GRID_CELL_COLOR = Color(GRID_BORDER_COLOR)
+	static constexpr Color GRID_BORDER_COLOR_NORMAL = Color::grayscale(0x4a);
+	static constexpr Color GRID_CELL_COLOR_NORMAL =
+		Color(GRID_BORDER_COLOR_NORMAL).setAlpha(GRID_CELL_ALPHA);
+	static constexpr Color GRID_BORDER_COLOR_BAD = Color::bad();
+	static constexpr Color GRID_CELL_COLOR_BAD = Color(GRID_BORDER_COLOR_BAD)
 		.setAlpha(GRID_CELL_ALPHA);
 
+	Costume m_costume;
 	unsigned m_solidsFrequency;
 	double m_xSpacing;
 	double m_ySpacing;
 	Size2d m_size;
-	
+
+	void repaintCostumeNormal(std::shared_ptr<ICanvas> canvas,
+		const Rect& invalidRect);
+	void repaintCostumeBad(std::shared_ptr<ICanvas> canvas,
+		const Rect& invalidRect);
+	void repaintColor(const Color& gridBorderColor, const Color& gridCellColor,
+		std::shared_ptr<ICanvas> canvas, const Rect& invalidRect);
+protected:
 	void repaintAsVisible(std::shared_ptr<ICanvas> canvas,
 		const Rect& invalidRect) override;
 public:
@@ -46,6 +62,14 @@ public:
 	 */
 	Size2d getSize() override;
 
+	/**
+	 * @brief Getter for the grid costume.
+	 */
+	EditorWorkspaceGridSprite::Costume getCostume() const;
+	/**
+	 * @brief Setter for the grid costume.
+	 */
+	void setCostume(EditorWorkspaceGridSprite::Costume value);
 	/**
 	 * @brief Getter for the solids frequency.
 	 * 

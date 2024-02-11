@@ -260,18 +260,8 @@ std::shared_ptr<StageEditorAction> StageEditor::createActionBeginDragStageCorner
 }
 
 std::shared_ptr<StageEditorAction> 
-StageEditor::createActionResizeStageCheckLimits(int resizeX, int resizeY)
+StageEditor::createActionResizeStage(int resizeX, int resizeY)
 {
-	int newW = m_stageState.width + resizeX;
-	int newH = m_stageState.height + resizeY;
-
-	if (newW < STAGE_WIDTH_MIN) {
-		resizeX += (STAGE_WIDTH_MIN - newW);
-	}
-	if (newH < STAGE_HEIGHT_MIN) {
-		resizeY += (STAGE_HEIGHT_MIN - newH);
-	}
-
 	auto res = std::make_shared<StageEditorActionResizeStage>(resizeX, resizeY);
 	return res;
 }
@@ -858,7 +848,12 @@ const std::shared_ptr<StageEditorAction> StageEditor::endDragStageCorner(
 	const PointF& pos, ObjectSnap snapping)
 {
 	if (m_isDraggingStage) {
-		auto res = predictEndDragStageCorner(pos, snapping);
+		bool isSuccess;
+		auto res = predictEndDragStageCorner(pos, snapping, isSuccess);
+
+		if (!isSuccess) {
+			res = createActionResizeStage(0, 0);
+		}
 
 		if (res->getType() != StageEditorAction::ACTION_NONE) {
 			// Perform
@@ -871,6 +866,19 @@ const std::shared_ptr<StageEditorAction> StageEditor::endDragStageCorner(
 		return res;
 	} else {
 		return createActionNone();
+	}
+}
+
+void StageEditor::checkStageResizeLimits(int& resizeX, int& resizeY)
+{
+	int newW = m_stageState.width + resizeX;
+	int newH = m_stageState.height + resizeY;
+
+	if (newW < STAGE_WIDTH_MIN) {
+		resizeX += (STAGE_WIDTH_MIN - newW);
+	}
+	if (newH < STAGE_HEIGHT_MIN) {
+		resizeY += (STAGE_HEIGHT_MIN - newH);
 	}
 }
 
@@ -1243,6 +1251,24 @@ bool StageEditor::canMoveSelectedObjects(double dx, double dy)
 	return true;
 }
 
+bool StageEditor::canResizeStage(int dx, int dy)
+{
+	RectF newBounds(0.0, 0.0, m_stageState.width + dx,
+		m_stageState.height + dy);
+	RectF newBoundsDeflated = newBounds.getInflated(-EDITOR_PLAYER_RADIUS * 2);
+	
+	// All players must be within the new bounds
+	for (const auto& playerPair : m_stageState.players) {
+		const auto& player = playerPair.second;
+
+		if (!newBoundsDeflated.containsPoint(player.pos)) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
 const std::shared_ptr<StageEditorAction> StageEditor::toolLeftBtnDown(
 	EditorTool tool)
 {
@@ -1365,7 +1391,7 @@ const std::shared_ptr<StageEditorAction> StageEditor::predictEndDragObstacleObje
 }
 
 const std::shared_ptr<StageEditorAction> StageEditor::predictEndDragStageCorner(
-	const PointF& pos, ObjectSnap snapping)
+	const PointF& pos, ObjectSnap snapping, bool& isSuccess)
 {
 	if (!m_isDraggingStage) {
 		return createActionNone();
@@ -1376,8 +1402,10 @@ const std::shared_ptr<StageEditorAction> StageEditor::predictEndDragStageCorner(
 
 		int resizeX = static_cast<int>(offsetPointSnap.x);
 		int resizeY = static_cast<int>(offsetPointSnap.y);
+		checkStageResizeLimits(resizeX, resizeY);
 
-		auto res = createActionResizeStageCheckLimits(resizeX, resizeY);
+		auto res = createActionResizeStage(resizeX, resizeY);
+		isSuccess = canResizeStage(resizeX, resizeY);
 		return res;
 	}
 }

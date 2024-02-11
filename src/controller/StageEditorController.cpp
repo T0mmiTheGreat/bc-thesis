@@ -664,8 +664,9 @@ void StageEditorController::updateGridSprite()
 	// Get the transformation matrix
 	Matrix3x3 tm = getStageToScreenMatrix();
 
+	bool isValid;
 	// Get the grid bounds in stage space
-	Rect gridRect(0, 0, getPredictedStageSize());
+	Rect gridRect(0, 0, getPredictedStageSize(isValid));
 	// Project to screen space
 	gridRect.transform(tm);
 
@@ -675,6 +676,9 @@ void StageEditorController::updateGridSprite()
 	double lineSpacing = m_viewport.getZoom() * snapping;
 
 	// Modify sprite
+	m_gridSprite->setCostume(isValid
+		? EditorWorkspaceGridSprite::COSTUME_NORMAL
+		: EditorWorkspaceGridSprite::COSTUME_BAD);
 	m_gridSprite->setPos(gridRect.x, gridRect.y);
 	m_gridSprite->setSize(gridRect.getSize());
 	m_gridSprite->setXSpacing(lineSpacing);
@@ -1210,16 +1214,17 @@ PointF StageEditorController::getMouseInStageSpace(int x, int y)
 	return getMouseInStageSpace(Point(x, y));
 }
 
-Size2d StageEditorController::getPredictedStageSize()
+Size2d StageEditorController::getPredictedStageSize(bool& isValid)
 {
 	Size2d res = m_stageEditor.getState().getSize();
+	isValid = true;
 
 	if (m_stageEditor.isDraggingStageCorner()) {
 		PointF pos = getMouseInStageSpace();
 		ObjectSnap snapping = getSnapping();
 
 		auto predictedAction = m_stageEditor.predictEndDragStageCorner(pos,
-			snapping);
+			snapping, isValid);
 		if (predictedAction->getType() == StageEditorAction::ACTION_RESIZE_STAGE) {
 			auto predictedActionCast =
 				std::dynamic_pointer_cast<StageEditorActionResizeStage>(

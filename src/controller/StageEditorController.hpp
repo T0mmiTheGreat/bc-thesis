@@ -365,8 +365,10 @@ private:
 	/**
 	 * @brief Returns the current size of the stage, or the resized stage, if
 	 *        the stage is being resized.
+	 * 
+	 * @param isValid Whether the resize can be applied to the stage.
 	 */
-	Size2d getPredictedStageSize();
+	Size2d getPredictedStageSize(bool& isValid);
 protected:
 	std::shared_ptr<IControllerChild> createReplacement() override;
 public:

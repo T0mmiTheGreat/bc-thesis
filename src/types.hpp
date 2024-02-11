@@ -1217,10 +1217,12 @@ struct Color {
 	static constexpr Color cyan() { return Color::rgb(0x00ffff); }
 	static constexpr Color magenta() { return Color::rgb(0xff00ff); }
 	static constexpr Color yellow() { return Color::rgb(0xffff00); }
+	static constexpr Color darkRed() { return Color::rgb(0x8b0000); }
 	static constexpr Color skyBlue() { return Color::rgb(0x87ceeb); }
 	static constexpr Color grayscale(uint8_t intensity) {
 		return Color(intensity, intensity, intensity);
 	}
+	static constexpr Color bad() { return Color::darkRed(); }
 	static constexpr Color playerDefault() { return Color::red(); }
 	static constexpr Color player(unsigned id) {
 		switch (id) {
@@ -1236,7 +1238,7 @@ struct Color {
 	// Used in editor for brushes, dragged objects, etc.
 	static constexpr Color ghost() { return Color::white().setAlpha(GHOST_ALPHA); }
 	// Used in editor for brushes, dragged objects, etc.
-	static constexpr Color badGhost() { return Color::red().setAlpha(GHOST_ALPHA); }
+	static constexpr Color badGhost() { return Color::bad().setAlpha(GHOST_ALPHA); }
 
 	constexpr bool operator== (const Color& rhs) const {
 		return

@@ -85,8 +85,8 @@ private:
 		EditorOID oid);
 	std::shared_ptr<StageEditorAction> createActionDeleteSelectedObjects();
 	std::shared_ptr<StageEditorAction> createActionBeginDragStageCorner();
-	std::shared_ptr<StageEditorAction> createActionResizeStageCheckLimits(
-		int resizeX, int resizeY);
+	std::shared_ptr<StageEditorAction> createActionResizeStage(int resizeX,
+		int resizeY);
 
 	/**
 	 * @brief Creates one action from multiple actions.
@@ -375,6 +375,12 @@ private:
 	 *        changed by `(dx, dy)`.
 	 */
 	bool canMoveSelectedObjects(double dx, double dy);
+	bool canResizeStage(int dx, int dy);
+	/**
+	 * @brief Checks whether the size of the stage wouldn't be too small after
+	 *        resize and adjusts the `dx` and `dy` if it would.
+	 */
+	void checkStageResizeLimits(int& resizeX, int& resizeY);
 public:
 	StageEditor();
 	/**
@@ -491,8 +497,17 @@ public:
 	 */
 	const std::shared_ptr<StageEditorAction> predictEndDragObstacleObject(
 		EditorOID oid, const PointF& pos, ObjectSnap snapping, bool& isSuccess);
+	/**
+	 * @brief Checks what would happen if a stage corner was dropped after
+	 *        dragging.
+	 * 
+	 * @param pos Mouse position projected to the stage space.
+	 * @param snapping How the coordinates should be snapped to grid.
+	 * @param isSuccess Whether the action would succeed.
+	 * @return The action that would be performed.
+	 */
 	const std::shared_ptr<StageEditorAction> predictEndDragStageCorner(
-		const PointF& pos, ObjectSnap snapping);
+		const PointF& pos, ObjectSnap snapping, bool& isSuccess);
 	
 	const std::shared_ptr<StageEditorAction> undo();
 	const std::shared_ptr<StageEditorAction> redo();
