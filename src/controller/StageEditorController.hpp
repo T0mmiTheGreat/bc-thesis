@@ -35,13 +35,14 @@
 class StageEditorController : public GeneralControllerBase {
 private:
 #pragma region constants
-	static constexpr int MENUICON_NEW_IDX     = 0;
-	static constexpr int MENUICON_OPEN_IDX    = MENUICON_NEW_IDX + 1;
-	static constexpr int MENUICON_SAVE_IDX    = MENUICON_OPEN_IDX + 1;
-	static constexpr int MENUICON_SAVE_AS_IDX = MENUICON_SAVE_IDX + 1;
-	static constexpr int MENUICON_UNDO_IDX    = MENUICON_SAVE_AS_IDX + 1;
-	static constexpr int MENUICON_REDO_IDX    = MENUICON_UNDO_IDX + 1;
-	static constexpr int MENUICON_BACK_IDX    = MENUICON_REDO_IDX + 1;
+	static constexpr int MENUICON_NEW_IDX        = 0;
+	static constexpr int MENUICON_OPEN_IDX       = MENUICON_NEW_IDX + 1;
+	static constexpr int MENUICON_SAVE_IDX       = MENUICON_OPEN_IDX + 1;
+	static constexpr int MENUICON_SAVE_AS_IDX    = MENUICON_SAVE_IDX + 1;
+	static constexpr int MENUICON_UNDO_IDX       = MENUICON_SAVE_AS_IDX + 1;
+	static constexpr int MENUICON_REDO_IDX       = MENUICON_UNDO_IDX + 1;
+	static constexpr int MENUICON_PROPERTIES_IDX = MENUICON_REDO_IDX + 1;
+	static constexpr int MENUICON_BACK_IDX       = MENUICON_PROPERTIES_IDX + 1;
 	static constexpr int MENUICON_COUNT = MENUICON_BACK_IDX + 1;
 
 	static constexpr int MENUICONS_WIDTH = EditorIconSprite::FIXED_WIDTH;
@@ -163,6 +164,7 @@ private:
 	void menuIconSaveAsClick();
 	void menuIconUndoClick();
 	void menuIconRedoClick();
+	void menuIconPropertiesClick();
 	void menuIconBackClick();
 
 	/**

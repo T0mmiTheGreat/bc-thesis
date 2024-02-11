@@ -31,6 +31,7 @@ void StageEditorController::createSprites()
 	m_menuIcons[MENUICON_SAVE_AS_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_SAVE_AS);
 	m_menuIcons[MENUICON_UNDO_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_UNDO);
 	m_menuIcons[MENUICON_REDO_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_REDO);
+	m_menuIcons[MENUICON_PROPERTIES_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_COGWHEEL);
 	m_menuIcons[MENUICON_BACK_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_BACK);
 
 	// Menubar line
@@ -278,6 +279,9 @@ void StageEditorController::menuIconClick(int iconIdx)
 		case MENUICON_REDO_IDX:
 			menuIconRedoClick();
 			break;
+		case MENUICON_PROPERTIES_IDX:
+			menuIconPropertiesClick();
+			break;
 		case MENUICON_BACK_IDX:
 			menuIconBackClick();
 			break;
@@ -320,6 +324,11 @@ void StageEditorController::menuIconRedoClick()
 		updateSpritesByAction(lastAction);
 		updateUndoRedoIcons();
 	}
+}
+
+void StageEditorController::menuIconPropertiesClick()
+{
+	// TODO
 }
 
 void StageEditorController::menuIconBackClick()
