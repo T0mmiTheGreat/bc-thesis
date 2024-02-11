@@ -50,7 +50,7 @@ void EditorWorkspaceGridSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas
 	if (m_xSpacing != 0.0) {
 		unsigned lineIdx = 0;
 
-		for (double x = bounds.x; x < bottomRight.x; x += m_xSpacing) {
+		for (double x = bounds.x + m_xSpacing; x < bottomRight.x; x += m_xSpacing) {
 			lineIdx++;
 
 			// Paint only if the line is within invalid rect
@@ -82,7 +82,7 @@ void EditorWorkspaceGridSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas
 	if (m_ySpacing != 0.0) {
 		unsigned lineIdx = 0;
 
-		for (double y = bounds.y; y < bottomRight.y; y += m_ySpacing) {
+		for (double y = bounds.y + m_ySpacing; y < bottomRight.y; y += m_ySpacing) {
 			lineIdx++;
 
 			// Paint only if the line is within invalid rect
