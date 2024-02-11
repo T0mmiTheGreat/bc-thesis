@@ -319,11 +319,9 @@ private:
 	 * @brief Checks whether the given player object has valid position.
 	 * 
 	 * @param player 
-	 * @param ignoredPlayers Player objects to ignore collisions with.
 	 * @param ignoredObstacles Obstacle objects to ignore collisions with.
 	 */
 	bool canPlacePlayer(const StageEditorPlayerObject& player,
-		const std::unordered_set<EditorOID>& ignoredPlayers,
 		const std::unordered_set<EditorOID>& ignoredObstacles);
 	/**
 	 * @brief Checks whether the given obstacle object has valid position.
