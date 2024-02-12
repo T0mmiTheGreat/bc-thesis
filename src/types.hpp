@@ -765,6 +765,13 @@ struct RectGeneric {
 		return *this;
 	}
 
+	constexpr bool operator== (const RectGeneric<T>& rhs) {
+		return (x == rhs.x)
+			&& (y == rhs.y)
+			&& (w == rhs.w)
+			&& (h == rhs.h);
+	}
+
 	/**
 	 * @brief Casts rectangle to another rectangle type.
 	 * 
