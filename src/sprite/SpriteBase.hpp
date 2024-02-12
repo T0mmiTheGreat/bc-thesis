@@ -35,6 +35,9 @@
  *         direct `paintingProxy->invalidateRect()` call.
  */
 class SpriteBase : virtual public ISprite {
+private:
+	template <typename T>
+	void propertyChangeValue(T& prop, const T& value);
 protected:
 	std::shared_ptr<IPaintingProxy> paintingProxy;
 	bool isVisible;
@@ -130,6 +133,14 @@ public:
 };
 
 template<typename T>
+inline void SpriteBase::propertyChangeValue(T& prop, const T& value)
+{
+	invalidate();
+	prop = value;
+	invalidate();
+}
+
+template<typename T>
 inline const T& SpriteBase::propertyGetter(const T& prop) const
 {
 	return prop;
@@ -139,16 +150,14 @@ template<typename T>
 inline void SpriteBase::propertySetterComparable(T& prop, const T& value)
 {
 	if (prop != value) {
-		invalidate();
-		prop = value;
-		invalidate();
+		propertyChangeValue(prop, value);
 	}
 }
 
 template<typename T>
 inline void SpriteBase::propertySetterNoncomparable(T& prop, const T& value)
 {
-	prop = value;
+	propertyChangeValue(prop, value);
 }
 
 #endif // SPRITEBASE_HPP
