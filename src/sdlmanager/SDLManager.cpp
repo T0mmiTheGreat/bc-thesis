@@ -27,6 +27,7 @@ SDLManager::SDLManager()
 		SDL2pp::Font(FONT_PATH_SEGOEPR, 66),
 		SDL2pp::Font(FONT_PATH_BRLNSTR, 20),
 		SDL2pp::Font(FONT_PATH_TAHOMA,  16),
+		SDL2pp::Font(FONT_PATH_TAHOMA,  20),
 	}
 	, m_images{
 		//              renderer  image file path

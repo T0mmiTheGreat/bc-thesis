@@ -24,6 +24,13 @@ StageEditorController::StageEditorController(
 	, m_brushSprite{nullptr}
 {}
 
+void StageEditorController::activatedEvent()
+{
+	GeneralControllerBase::activatedEvent();
+
+	updateAllSprites();
+}
+
 void StageEditorController::createSprites()
 {
 	// Menu icons
@@ -72,10 +79,6 @@ void StageEditorController::initializeSprites()
 
 	int activeToolIconIdx = toolToIconIdx(m_stageEditor->getActiveTool());
 	toolIconSetSelected(activeToolIconIdx);
-
-	updateSpritesByViewport();
-	updateToolBrush();
-	updateUndoRedoIcons();
 }
 
 void StageEditorController::positionSprites()
@@ -398,6 +401,14 @@ void StageEditorController::hideBrush()
 	}
 }
 
+void StageEditorController::updateAllSprites()
+{
+	updateSpritesByViewport();
+	updateToolBrush();
+	updateUndoRedoIcons();
+	updateIconSprites();
+}
+
 void StageEditorController::updateSpritesByViewport()
 {
 	EditorOID oid;
@@ -422,6 +433,31 @@ void StageEditorController::updateSpritesByViewport()
 
 	// Brush
 	updateToolBrush();
+}
+
+void StageEditorController::updateIconSprites()
+{
+	Rect menubarRect = getMenubarRect();
+	Rect toolbarRect = getToolbarRect();
+	Rect statusbarRect = getStatusbarRect();
+	Rect workspaceRect = getWorkspaceRect();
+	Point mouse = sysProxy->getMousePos();
+
+	iconHighlightOffAll();
+
+	if (menubarRect.containsPoint(mouse)) {
+		// Within menubar
+		mouseMoveMenubar(mouse.x, mouse.y);
+	} else if (toolbarRect.containsPoint(mouse)) {
+		// Within toolbar
+		mouseMoveToolbar(mouse.x, mouse.y);
+	} else if (statusbarRect.containsPoint(mouse)) {
+		// Within status bar
+		// Nothing
+	} else if (workspaceRect.containsPoint(mouse)) {
+		// Within workspace
+		mouseMoveWorkspace(mouse.x, mouse.y);
+	}
 }
 
 void StageEditorController::updateUndoRedoIcons()
@@ -1316,28 +1352,10 @@ void StageEditorController::mouseBtnUpEvent(MouseBtn btn, int x, int y)
 
 void StageEditorController::mouseMoveEvent(int x, int y)
 {
-	Rect menubarRect = getMenubarRect();
-	Rect toolbarRect = getToolbarRect();
-	Rect statusbarRect = getStatusbarRect();
-	Rect workspaceRect = getWorkspaceRect();
-	Point mouse(x, y);
-
-	iconHighlightOffAll();
-
-	if (menubarRect.containsPoint(mouse)) {
-		// Within menubar
-		mouseMoveMenubar(x, y);
-	} else if (toolbarRect.containsPoint(mouse)) {
-		// Within toolbar
-		mouseMoveToolbar(x, y);
-	} else if (statusbarRect.containsPoint(mouse)) {
-		// Within status bar
-		// Nothing
-	} else if (workspaceRect.containsPoint(mouse)) {
-		// Within workspace
-		mouseMoveWorkspace(x, y);
-	}
-
+	(void)x;
+	(void)y;
+	
+	updateIconSprites();
 	updateToolBrush();
 }
 

@@ -896,7 +896,7 @@ public:
 	 * @brief Returns the action type.
 	 */
 	ActionType getType() const override {
-		return ACTION_RESIZE_STAGE;
+		return ACTION_SET_STAGE_TITLE;
 	}
 
 	/**

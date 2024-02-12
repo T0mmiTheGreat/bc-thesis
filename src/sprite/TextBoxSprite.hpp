@@ -21,11 +21,10 @@
 
 class TextBoxSprite : public BoundedSpriteBase {
 private:
-	static constexpr FontId TEXT_FONT = FONT_TAHOMA_16;
-	static constexpr Color TEXT_COLOR = Color::white();
-
 	Rect m_textRect;
 	std::string m_text;
+	FontId m_font;
+	Color m_color;
 protected:
 	/**
 	 * @brief Repaints an area of sprite.
@@ -68,6 +67,22 @@ public:
 	 * @brief Setter for the "text" property.
 	 */
 	void setText(const std::string& value);
+	/**
+	 * @brief Getter for the "font" property.
+	 */
+	FontId getFont() const;
+	/**
+	 * @brief Setter for the "font" property.
+	 */
+	void setFont(FontId value);
+	/**
+	 * @brief Getter for the "color" property.
+	 */
+	const Color& getColor() const;
+	/**
+	 * @brief Setter for the "color" property.
+	 */
+	void setColor(const Color& value);
 };
 
 #endif // TEXTBOXSPRITE_HPP

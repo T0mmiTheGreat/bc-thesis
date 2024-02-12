@@ -17,6 +17,7 @@
 
 #include "controller/GeneralControllerBase.hpp"
 #include "sysproxy/ISysProxy.hpp"
+#include "sprite/TextSprite.hpp"
 #include "sprite/TextBoxSprite.hpp"
 #include "sprite/TextButtonSprite.hpp"
 #include "stageeditor/StageEditor.hpp"
@@ -31,9 +32,15 @@ private:
 	static constexpr std::string OK_BTN_TEXT = "OK";
 	static constexpr std::string CANCEL_BTN_TEXT = "Cancel";
 
+	static constexpr FontId TEXTBOX_FONT = FONT_TAHOMA_20;
+	static constexpr FontId FILENAME_FONT = FONT_TAHOMA_16;
+	static constexpr Color TEXTBOX_TEXT_COLOR = Color::white();
+	static constexpr Color FILENAME_TEXT_COLOR = Color::white().setAlpha(0x88);
+
 	std::shared_ptr<StageEditor> m_stageEditor;
 	std::string m_stageTitle;
 	std::unique_ptr<TextBoxSprite> m_textBoxSprite;
+	std::unique_ptr<TextSprite> m_filenameSprite;
 	std::unique_ptr<TextButtonSprite> m_okBtnSprite;
 	std::unique_ptr<TextButtonSprite> m_cancelBtnSprite;
 
@@ -45,6 +52,17 @@ private:
 	void positionSprites();
 
 	void updateTextBoxSprite();
+
+	void checkButtonsMouseHover();
+	void checkButtonsMouseHover(int x, int y);
+	void checkButtonsMouseHover(const Point& mouse);
+
+	void checkButtonsClick();
+	void checkButtonsClick(int x, int y);
+	void checkButtonsClick(const Point& mouse);
+
+	void okBtnClick();
+	void cancelBtnClick();
 public:
 	StagePropertiesController(std::shared_ptr<ISysProxy> sysProxy,
 		std::shared_ptr<StageEditor> stageEditor);

@@ -17,6 +17,7 @@ include_directories(.)
 # Sources (*.cpp)
 set(SOURCE_FILES
 	main.cpp
+	functions.cpp
 	SDL2_gfxPrimitives.cpp
 	sdlmanager/SDLManager.cpp
 	sdlsubscriber/SDLSubscriber.cpp
@@ -56,6 +57,7 @@ set(SOURCE_FILES
 	sprite/PlayerBrushSprite.cpp
 	sprite/ObstacleBrushSprite.cpp
 	sprite/TextBoxSprite.cpp
+	sprite/TextSprite.cpp
 	core/Core.cpp
 	core/stageobstacles/StageObstacles.cpp
 	core/trajectory/Trajectory.cpp
@@ -79,6 +81,7 @@ set(HEADER_FILES
 	SDL2_gfxPrimitives.h
 	constants.hpp
 	types.hpp
+	functions.hpp
 	sdlmanager/SDLManager.hpp
 	sdlsubscriber/ISDLSubscriber.hpp
 	sdlsubscriber/SDLSubscriber.hpp
@@ -127,6 +130,7 @@ set(HEADER_FILES
 	sprite/PlayerBrushSprite.hpp
 	sprite/ObstacleBrushSprite.hpp
 	sprite/TextBoxSprite.hpp
+	sprite/TextSprite.hpp
 	paintingproxy/IPaintingProxy.hpp
 	core/ICore.hpp
 	core/Core.hpp

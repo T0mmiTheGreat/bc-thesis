@@ -18,8 +18,8 @@ void TextBoxSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas,
 
 	Rect bounds = getBounds();
 
-	canvas->setFillingColor(TEXT_COLOR);
-	canvas->fillText(bounds.x, bounds.y, m_text, TEXT_FONT);
+	canvas->setFillingColor(m_color);
+	canvas->fillText(bounds.x, bounds.y, m_text, m_font);
 }
 
 TextBoxSprite::TextBoxSprite(std::shared_ptr<IPaintingProxy> paintingProxy)
@@ -27,11 +27,13 @@ TextBoxSprite::TextBoxSprite(std::shared_ptr<IPaintingProxy> paintingProxy)
 	, BoundedSpriteBase(paintingProxy)
 	, m_textRect()
 	, m_text()
+	, m_font{FONT_TAHOMA_16}
+	, m_color()
 {}
 
 Rect TextBoxSprite::getBounds()
 {
-	Rect textRect(0, 0, paintingProxy->getTextSize(m_text, TEXT_FONT));
+	Rect textRect(0, 0, paintingProxy->getTextSize(m_text, m_font));
 	textRect.centerAt(m_textRect);
 	return textRect;
 }
@@ -54,4 +56,24 @@ const std::string& TextBoxSprite::getText() const
 void TextBoxSprite::setText(const std::string& value)
 {
 	propertySetterComparable(m_text, value);
+}
+
+FontId TextBoxSprite::getFont() const
+{
+	return propertyGetter(m_font);
+}
+
+void TextBoxSprite::setFont(FontId value)
+{
+	propertySetterComparable(m_font, value);
+}
+
+const Color& TextBoxSprite::getColor() const
+{
+	return propertyGetter(m_color);
+}
+
+void TextBoxSprite::setColor(const Color& value)
+{
+	propertySetterComparable(m_color, value);
 }

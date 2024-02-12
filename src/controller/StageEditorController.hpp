@@ -203,10 +203,14 @@ private:
 
 	void hideBrush();
 
+	void updateAllSprites();
+
 	/**
 	 * @brief Updates all sprites after a change in viewport.
 	 */
 	void updateSpritesByViewport();
+
+	void updateIconSprites();
 
 	void updateUndoRedoIcons();
 
@@ -382,6 +386,7 @@ protected:
 	std::shared_ptr<IControllerChild> createReplacement() override;
 public:
 	StageEditorController(std::shared_ptr<ISysProxy> sysProxy);
+	void activatedEvent() override;
 	void startedEvent() override;
 	void mouseBtnDownEvent(MouseBtn btn, int x, int y) override;
 	void mouseBtnUpEvent(MouseBtn btn, int x, int y) override;
