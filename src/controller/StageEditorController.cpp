@@ -17,8 +17,10 @@
 StageEditorController::StageEditorController(
 	std::shared_ptr<ISysProxy> sysProxy)
 	: GeneralControllerBase(sysProxy)
-	, m_viewport(static_cast<Size2dF>(m_stageEditor.getState().getSize()),
+	, m_stageEditor{std::make_shared<StageEditor>()}
+	, m_viewport(static_cast<Size2dF>(m_stageEditor->getState().getSize()),
 		static_cast<Size2dF>(getWorkspaceRect().getSize()))
+	, m_exitResult{RES_MENU}
 	, m_brushSprite{nullptr}
 {}
 
@@ -68,7 +70,7 @@ void StageEditorController::initializeSprites()
 	createSprites();
 	positionSprites();
 
-	int activeToolIconIdx = toolToIconIdx(m_stageEditor.getActiveTool());
+	int activeToolIconIdx = toolToIconIdx(m_stageEditor->getActiveTool());
 	toolIconSetSelected(activeToolIconIdx);
 
 	updateSpritesByViewport();
@@ -153,14 +155,14 @@ void StageEditorController::mouseBtnDownWorkspace(MouseBtn btn, int x, int y)
 			PointF pos = getMouseInStageSpace(x, y);
 			ObjectSnap snapping = getSnapping();
 
-			const auto lastAction = m_stageEditor.mouseLeftBtnDown(pos, snapping,
+			const auto lastAction = m_stageEditor->mouseLeftBtnDown(pos, snapping,
 				sysProxy->isKeyPressed(KEY_SHIFT),
 				getGrabZoneSizeByViewportZoom());
 			updateSpritesByAction(lastAction);
 		} break;
 		case BTN_RIGHT: {
 			const std::shared_ptr<StageEditorAction> lastAction = 
-				m_stageEditor.mouseRightBtnDown();
+				m_stageEditor->mouseRightBtnDown();
 			updateSpritesByAction(lastAction);
 		} break;
 		case BTN_MIDDLE:
@@ -250,7 +252,7 @@ void StageEditorController::checkToolIconClick(int x, int y)
 
 	for (int iconIdx = 0; iconIdx < TOOLICON_COUNT; iconIdx++) {
 		if (getToolIconRect(iconIdx).containsPoint(mouse)) {
-			const auto lastAction = m_stageEditor.toolLeftBtnDown(
+			const auto lastAction = m_stageEditor->toolLeftBtnDown(
 				iconIdxToTool(iconIdx));
 			updateSpritesByAction(lastAction);
 			break;
@@ -310,8 +312,8 @@ void StageEditorController::menuIconSaveAsClick()
 
 void StageEditorController::menuIconUndoClick()
 {
-	if (m_stageEditor.canUndo()) {
-		auto lastAction = m_stageEditor.undo();
+	if (m_stageEditor->canUndo()) {
+		auto lastAction = m_stageEditor->undo();
 		updateSpritesByAction(lastAction);
 		updateUndoRedoIcons();
 	}
@@ -319,8 +321,8 @@ void StageEditorController::menuIconUndoClick()
 
 void StageEditorController::menuIconRedoClick()
 {
-	if (m_stageEditor.canRedo()) {
-		auto lastAction = m_stageEditor.redo();
+	if (m_stageEditor->canRedo()) {
+		auto lastAction = m_stageEditor->redo();
 		updateSpritesByAction(lastAction);
 		updateUndoRedoIcons();
 	}
@@ -328,11 +330,13 @@ void StageEditorController::menuIconRedoClick()
 
 void StageEditorController::menuIconPropertiesClick()
 {
-	// TODO
+	m_exitResult = RES_STAGE_PROPERTIES;
+	pausedEvent();
 }
 
 void StageEditorController::menuIconBackClick()
 {
+	m_exitResult = RES_MENU;
 	finishedEvent();
 }
 
@@ -422,8 +426,8 @@ void StageEditorController::updateSpritesByViewport()
 
 void StageEditorController::updateUndoRedoIcons()
 {
-	menuIconSetEnabled(MENUICON_UNDO_IDX, m_stageEditor.canUndo());
-	menuIconSetEnabled(MENUICON_REDO_IDX, m_stageEditor.canRedo());
+	menuIconSetEnabled(MENUICON_UNDO_IDX, m_stageEditor->canUndo());
+	menuIconSetEnabled(MENUICON_REDO_IDX, m_stageEditor->canRedo());
 }
 
 void StageEditorController::updateSpritesByAction(
@@ -482,6 +486,9 @@ void StageEditorController::updateSpritesByAction(
 			break;
 		case StageEditorAction::ACTION_RESIZE_STAGE:
 			updateSpritesByActionResizeStage(action);
+			break;
+		case StageEditorAction::ACTION_SET_STAGE_TITLE:
+			// Nothing to update
 			break;
 	}
 
@@ -709,7 +716,7 @@ void StageEditorController::updatePlayerSprite(EditorOID oid)
 	tm *= Matrix3x3::createTranslation(-radius, -radius);
 
 	// Get the player position in stage space
-	PointF playerPos = m_stageEditor.getState().players.at(oid).pos;
+	PointF playerPos = m_stageEditor->getState().players.at(oid).pos;
 	// Project to screen space
 	playerPos.transform(tm);
 
@@ -720,7 +727,7 @@ void StageEditorController::updatePlayerSprite(EditorOID oid)
 void StageEditorController::updateObstacleEdgesSprite()
 {
 	// Get the open obstacle's corners
-	auto corners = m_stageEditor.getObstacleCorners();
+	auto corners = m_stageEditor->getObstacleCorners();
 
 	// Get the transformation matrix
 	Matrix3x3 tm = getStageToScreenMatrix();
@@ -740,7 +747,7 @@ void StageEditorController::updateObstacleSprite(EditorOID oid)
 	Matrix3x3 tm = getStageToScreenMatrix();
 
 	// Get the obstacle in stage space
-	PolygonF obstacleObject = m_stageEditor.getState().obstacles.at(oid).shape;
+	PolygonF obstacleObject = m_stageEditor->getState().obstacles.at(oid).shape;
 	// Project to screen space
 	obstacleObject.transform(tm);
 
@@ -771,7 +778,7 @@ void StageEditorController::updateDraggedPlayerSprite(EditorOID oid)
 
 	bool isSuccess;
 	// Predict
-	auto predictedAction = m_stageEditor.predictEndDragPlayerObject(oid, pos, snapping, isSuccess);
+	auto predictedAction = m_stageEditor->predictEndDragPlayerObject(oid, pos, snapping, isSuccess);
 
 	if (predictedAction->getType() == StageEditorAction::ACTION_MOVE_PLAYER_OBJECT) {
 		// Downcast
@@ -784,7 +791,7 @@ void StageEditorController::updateDraggedPlayerSprite(EditorOID oid)
 		double dy = predictedActionCast->getDy();
 
 		// Calculate the new position in stage space
-		PointF newPos = m_stageEditor.getState().players.at(oid).pos;
+		PointF newPos = m_stageEditor->getState().players.at(oid).pos;
 		newPos.x += dx;
 		newPos.y += dy;
 
@@ -813,7 +820,7 @@ void StageEditorController::updateDraggedObstacleSprite(EditorOID oid)
 
 	bool isSuccess;
 	// Predict
-	auto predictedAction = m_stageEditor.predictEndDragObstacleObject(oid, pos, snapping, isSuccess);
+	auto predictedAction = m_stageEditor->predictEndDragObstacleObject(oid, pos, snapping, isSuccess);
 
 	if (predictedAction->getType() == StageEditorAction::ACTION_MOVE_OBSTACLE_OBJECT) {
 		// Downcast
@@ -826,7 +833,7 @@ void StageEditorController::updateDraggedObstacleSprite(EditorOID oid)
 		double dy = predictedActionCast->getDy();
 
 		// Calculate the new shape in stage space
-		PolygonF newShape = m_stageEditor.getState().obstacles.at(oid).shape;
+		PolygonF newShape = m_stageEditor->getState().obstacles.at(oid).shape;
 		for (auto& corner : newShape.corners) {
 			corner.x += dx;
 			corner.y += dy;
@@ -845,7 +852,7 @@ void StageEditorController::updateDraggedObstacleSprite(EditorOID oid)
 
 void StageEditorController::updateToolBrush()
 {
-	switch (m_stageEditor.getActiveTool()) {
+	switch (m_stageEditor->getActiveTool()) {
 		case TOOL_SELECT:
 			updateToolBrushSelect();
 			break;
@@ -889,7 +896,7 @@ void StageEditorController::updateToolBrushPlayers()
 
 		bool isSuccess;
 		// Predict
-		auto predictedAction = m_stageEditor.predictAddPlayer(pos, snapping,
+		auto predictedAction = m_stageEditor->predictAddPlayer(pos, snapping,
 			isSuccess);
 		assert(predictedAction->getType() == StageEditorAction::ACTION_ADD_PLAYER_OBJECT);
 
@@ -922,7 +929,7 @@ void StageEditorController::updateToolBrushObstacles()
 
 	bool isSuccess;
 	// Predict
-	auto predictedAction = m_stageEditor.predictPlaceObstacleCorner(pos,
+	auto predictedAction = m_stageEditor->predictPlaceObstacleCorner(pos,
 		snapping, isSuccess);
 	assert(predictedAction->getType() == StageEditorAction::ACTION_PLACE_OBSTACLE_CORNER);
 	
@@ -936,7 +943,7 @@ void StageEditorController::updateToolBrushObstacles()
 	PointF cornerPosScreen = predictedActionCast->getPos();
 	cornerPosScreen.transform(tmScreen);
 
-	if (m_stageEditor.getObstacleCorners().size() == 0) {
+	if (m_stageEditor->getObstacleCorners().size() == 0) {
 		if (!getWorkspaceRect().containsPoint(mousePos)) {
 			// Don't draw anything if the mouse does not move over workspace
 
@@ -955,7 +962,7 @@ void StageEditorController::updateToolBrushObstacles()
 		m_brushSprite = m_obstacleBrush.get();
 
 		Matrix3x3 tm = getStageToScreenMatrix();
-		PointF p0 = m_stageEditor.getObstacleCorners().back();
+		PointF p0 = m_stageEditor->getObstacleCorners().back();
 		p0.transform(tm);
 
 		m_obstacleBrush->setP0(static_cast<Point>(p0));
@@ -1225,14 +1232,14 @@ PointF StageEditorController::getMouseInStageSpace(int x, int y)
 
 Size2d StageEditorController::getPredictedStageSize(bool& isValid)
 {
-	Size2d res = m_stageEditor.getState().getSize();
+	Size2d res = m_stageEditor->getState().getSize();
 	isValid = true;
 
-	if (m_stageEditor.isDraggingStageCorner()) {
+	if (m_stageEditor->isDraggingStageCorner()) {
 		PointF pos = getMouseInStageSpace();
 		ObjectSnap snapping = getSnapping();
 
-		auto predictedAction = m_stageEditor.predictEndDragStageCorner(pos,
+		auto predictedAction = m_stageEditor->predictEndDragStageCorner(pos,
 			snapping, isValid);
 		if (predictedAction->getType() == StageEditorAction::ACTION_RESIZE_STAGE) {
 			auto predictedActionCast =
@@ -1248,7 +1255,16 @@ Size2d StageEditorController::getPredictedStageSize(bool& isValid)
 
 std::shared_ptr<IControllerChild> StageEditorController::createReplacement()
 {
-	return ControllerFactory::createMainMenuController(sysProxy);
+	switch (m_exitResult) {
+		case RES_MENU:
+			return ControllerFactory::createMainMenuController(sysProxy);
+		case RES_STAGE_PROPERTIES:
+			return ControllerFactory::createStagePropertiesController(
+				sysProxy, m_stageEditor);
+	}
+
+	// Default
+	return nullptr;
 }
 
 void StageEditorController::startedEvent()
@@ -1286,7 +1302,7 @@ void StageEditorController::mouseBtnUpEvent(MouseBtn btn, int x, int y)
 		case BTN_LEFT: {
 			PointF pos = getMouseInStageSpace(x, y);
 			ObjectSnap snapping = getSnapping();
-			const auto lastAction = m_stageEditor.mouseLeftBtnUp(pos, snapping);
+			const auto lastAction = m_stageEditor->mouseLeftBtnUp(pos, snapping);
 			updateSpritesByAction(lastAction);
 		} break;
 		case BTN_MIDDLE:

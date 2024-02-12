@@ -35,12 +35,14 @@ set(SOURCE_FILES
 	controller/MainMenuController.cpp
 	controller/InGameController.cpp
 	controller/StageEditorController.cpp
+	controller/StagePropertiesController.cpp
 	math/Math.cpp
 	sprite/SpriteBase.cpp
 	sprite/BoundedSpriteBase.cpp
 	sprite/PositionedSpriteBase.cpp
 	sprite/AnimatedSpriteBase.cpp
 	sprite/LogoSprite.cpp
+	sprite/TextButtonSprite.cpp
 	sprite/MainMenuItemSprite.cpp
 	sprite/MainMenuTitleSprite.cpp
 	sprite/PlayerSprite.cpp
@@ -53,6 +55,7 @@ set(SOURCE_FILES
 	sprite/EditorWorkspaceGridSprite.cpp
 	sprite/PlayerBrushSprite.cpp
 	sprite/ObstacleBrushSprite.cpp
+	sprite/TextBoxSprite.cpp
 	core/Core.cpp
 	core/stageobstacles/StageObstacles.cpp
 	core/trajectory/Trajectory.cpp
@@ -100,6 +103,7 @@ set(HEADER_FILES
 	controller/MainMenuController.hpp
 	controller/InGameController.hpp
 	controller/StageEditorController.hpp
+	controller/StagePropertiesController.hpp
 	math/Math.hpp
 	sprite/ISprite.hpp
 	sprite/IPositionedSprite.hpp
@@ -109,6 +113,7 @@ set(HEADER_FILES
 	sprite/PositionedSpriteBase.hpp
 	sprite/AnimatedSpriteBase.hpp
 	sprite/LogoSprite.hpp
+	sprite/TextButtonSprite.hpp
 	sprite/MainMenuItemSprite.hpp
 	sprite/MainMenuTitleSprite.hpp
 	sprite/PlayerSprite.hpp
@@ -121,6 +126,7 @@ set(HEADER_FILES
 	sprite/EditorWorkspaceGridSprite.hpp
 	sprite/PlayerBrushSprite.hpp
 	sprite/ObstacleBrushSprite.hpp
+	sprite/TextBoxSprite.hpp
 	paintingproxy/IPaintingProxy.hpp
 	core/ICore.hpp
 	core/Core.hpp

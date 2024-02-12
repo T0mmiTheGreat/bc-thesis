@@ -266,6 +266,14 @@ StageEditor::createActionResizeStage(int resizeX, int resizeY)
 	return res;
 }
 
+std::shared_ptr<StageEditorAction> StageEditor::createActionSetStageTitle(
+	const std::string& newName)
+{
+	auto res = std::make_shared<StageEditorActionSetStageTitle>(
+		m_stageState.title, newName);
+	return res;
+}
+
 template <StageEditorActionDerived... Args>
 std::shared_ptr<StageEditorAction> StageEditor::getMergedActions(
 	std::shared_ptr<Args>&... actions)
@@ -353,6 +361,9 @@ void StageEditor::doAction(const std::shared_ptr<StageEditorAction> action)
 			break;
 		case StageEditorAction::ACTION_RESIZE_STAGE:
 			doActionResizeStage(action);
+			break;
+		case StageEditorAction::ACTION_SET_STAGE_TITLE:
+			doActionSetStageTitle(action);
 			break;
 	}
 }
@@ -542,6 +553,15 @@ void StageEditor::doActionResizeStage(
 	m_stageState.height += resizeY;
 
 	m_isDraggingStage = false;
+}
+
+void StageEditor::doActionSetStageTitle(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	auto actionCast =
+		std::dynamic_pointer_cast<StageEditorActionSetStageTitle>(action);
+	
+	m_stageState.title = actionCast->getNewName();
 }
 
 EditorOID StageEditor::getPlayerObjectAt(const PointF& pos)
@@ -884,6 +904,7 @@ void StageEditor::checkStageResizeLimits(int& resizeX, int& resizeY)
 
 StageEditor::StageEditor()
 	: m_stageState{
+		.title = STAGE_TITLE_DEFAULT,
 		.width = STAGE_WIDTH_INITIAL,
 		.height = STAGE_HEIGHT_INITIAL,
 		.obstacles = std::unordered_map<EditorOID, StageEditorObstacleObject>(),
@@ -1273,6 +1294,22 @@ const std::shared_ptr<StageEditorAction> StageEditor::toolLeftBtnDown(
 	EditorTool tool)
 {
 	return activateTool(tool);
+}
+
+const std::shared_ptr<StageEditorAction> StageEditor::setStageTitle(
+	const std::string& newName)
+{
+	auto res = createActionSetStageTitle(newName);
+
+	if (res->getType() != StageEditorAction::ACTION_NONE) {
+		// Perform
+		doAction(res);
+
+		// Add to actions history
+		m_history.pushAction(res);
+	}
+
+	return res;
 }
 
 const std::shared_ptr<StageEditorAction> StageEditor::mouseLeftBtnDown(

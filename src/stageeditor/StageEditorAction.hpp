@@ -13,6 +13,7 @@
 #define STAGEEDITORACTION_HPP
 
 #include <memory>
+#include <string>
 #include <type_traits>
 #include <unordered_set>
 #include <vector>
@@ -59,6 +60,7 @@ public:
 		ACTION_MOVE_OBSTACLE_OBJECT,
 		ACTION_BEGIN_DRAG_STAGE_CORNER,
 		ACTION_RESIZE_STAGE,
+		ACTION_SET_STAGE_TITLE,
 	};
 
 	virtual ~StageEditorAction() {}
@@ -876,6 +878,40 @@ public:
 	 */
 	int getResizeY() const {
 		return m_resizeY;
+	}
+};
+
+class StageEditorActionSetStageTitle : public StageEditorAction {
+private:
+	std::string m_oldName;
+	std::string m_newName;
+public:
+	StageEditorActionSetStageTitle(const std::string& oldName,
+		const std::string& newName)
+		: m_oldName{oldName}
+		, m_newName{newName}
+	{}
+
+	/**
+	 * @brief Returns the action type.
+	 */
+	ActionType getType() const override {
+		return ACTION_RESIZE_STAGE;
+	}
+
+	/**
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
+	 */
+	std::shared_ptr<StageEditorAction> createInverse() const override;
+
+	const std::string& getOldName() const {
+		return m_oldName;
+	}
+
+	const std::string& getNewName() const {
+		return m_newName;
 	}
 };
 

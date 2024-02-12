@@ -13,6 +13,7 @@
 #define STAGEEDITOR_HPP
 
 #include <memory>
+#include <string>
 #include <unordered_set>
 #include <vector>
 
@@ -26,6 +27,7 @@ class StageEditor {
 private:
 	static constexpr int STAGE_WIDTH_INITIAL = 1280;
 	static constexpr int STAGE_HEIGHT_INITIAL = 720;
+	static constexpr std::string STAGE_TITLE_DEFAULT = "My stage";
 	static constexpr int STAGE_WIDTH_MIN = 100;
 	static constexpr int STAGE_HEIGHT_MIN = 100;
 
@@ -87,6 +89,8 @@ private:
 	std::shared_ptr<StageEditorAction> createActionBeginDragStageCorner();
 	std::shared_ptr<StageEditorAction> createActionResizeStage(int resizeX,
 		int resizeY);
+	std::shared_ptr<StageEditorAction> createActionSetStageTitle(
+		const std::string& newName);
 
 	/**
 	 * @brief Creates one action from multiple actions.
@@ -134,6 +138,7 @@ private:
 	void doActionDeleteObstacleObject(const std::shared_ptr<StageEditorAction> action);
 	void doActionBeginDragStageCorner(const std::shared_ptr<StageEditorAction> action);
 	void doActionResizeStage(const std::shared_ptr<StageEditorAction> action);
+	void doActionSetStageTitle(const std::shared_ptr<StageEditorAction> action);
 
 	EditorOID getPlayerObjectAt(const PointF& pos);
 	EditorOID getObstacleObjectAt(const PointF& pos);
@@ -404,6 +409,9 @@ public:
 	 * @return The action performed.
 	 */
 	const std::shared_ptr<StageEditorAction> toolLeftBtnDown(EditorTool tool);
+
+	const std::shared_ptr<StageEditorAction> setStageTitle(
+		const std::string& newName);
 
 	/**
 	 * @brief Left mouse button pressed over workspace.

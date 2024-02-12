@@ -19,6 +19,7 @@
 #include "controller/MainMenuController.hpp"
 #include "controller/InGameController.hpp"
 #include "controller/StageEditorController.hpp"
+#include "controller/StagePropertiesController.hpp"
 
 std::shared_ptr<IRootController> ControllerFactory::createRootController(std::shared_ptr<ISysProxy> sysProxy)
 {
@@ -48,4 +49,12 @@ std::shared_ptr<IControllerChild> ControllerFactory::createInGameController(std:
 std::shared_ptr<IControllerChild> ControllerFactory::createStageEditorController(std::shared_ptr<ISysProxy> sysProxy)
 {
 	return std::make_unique<StageEditorController>(sysProxy);
+}
+
+std::shared_ptr<IControllerChild> 
+ControllerFactory::createStagePropertiesController(
+	std::shared_ptr<ISysProxy> sysProxy,
+	std::shared_ptr<StageEditor> stageEditor)
+{
+	return std::make_shared<StagePropertiesController>(sysProxy, stageEditor);
 }

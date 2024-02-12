@@ -160,3 +160,10 @@ std::shared_ptr<StageEditorAction> StageEditorActionResizeStage::createInverse()
 		-m_resizeY);
 	return res;
 }
+
+std::shared_ptr<StageEditorAction> StageEditorActionSetStageTitle::createInverse() const
+{
+	auto res = std::make_shared<StageEditorActionSetStageTitle>(m_newName,
+		m_oldName);
+	return res;
+}

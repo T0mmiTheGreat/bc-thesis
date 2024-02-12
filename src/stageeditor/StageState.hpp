@@ -12,6 +12,7 @@
 #ifndef STAGESTATE_HPP
 #define STAGESTATE_HPP
 
+#include <string>
 #include <unordered_map>
 
 #include "types.hpp"
@@ -19,6 +20,7 @@
 #include "stageeditor/StageEditorObjects.hpp"
 
 struct StageState {
+	std::string title;
 	int width;
 	int height;
 	std::unordered_map<EditorOID, StageEditorObstacleObject> obstacles;

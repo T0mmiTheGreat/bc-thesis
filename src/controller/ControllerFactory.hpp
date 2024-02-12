@@ -16,6 +16,7 @@
 
 #include "controller/IRootController.hpp"
 #include "controller/IControllerChild.hpp"
+#include "stageeditor/StageEditor.hpp"
 #include "sysproxy/ISysProxy.hpp"
 
 /**
@@ -65,6 +66,9 @@ public:
 	 *                 (dependency injection). 
 	 */
 	static std::shared_ptr<IControllerChild> createStageEditorController(std::shared_ptr<ISysProxy> sysProxy);
+	static std::shared_ptr<IControllerChild> createStagePropertiesController(
+		std::shared_ptr<ISysProxy> sysProxy,
+		std::shared_ptr<StageEditor> stageEditor);
 };
 
 #endif // CONTROLLERFACTORY_HPP

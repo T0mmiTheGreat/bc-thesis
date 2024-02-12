@@ -34,6 +34,11 @@
 
 class StageEditorController : public GeneralControllerBase {
 private:
+	enum ExitResult {
+		RES_MENU,
+		RES_STAGE_PROPERTIES,
+	};
+private:
 #pragma region constants
 	static constexpr int MENUICON_NEW_IDX        = 0;
 	static constexpr int MENUICON_OPEN_IDX       = MENUICON_NEW_IDX + 1;
@@ -92,8 +97,10 @@ private:
 	// XXX: Keep the editor and viewport in this order for correct order of
 	//      initialization
 
-	StageEditor m_stageEditor;
+	std::shared_ptr<StageEditor> m_stageEditor;
 	StageViewport m_viewport;
+
+	ExitResult m_exitResult;
 
 #pragma region sprites
 	std::array<std::unique_ptr<EditorIconSprite>, MENUICON_COUNT> m_menuIcons;
