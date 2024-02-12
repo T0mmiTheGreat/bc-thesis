@@ -19,24 +19,77 @@
 
 /**
  * @brief Controller that receives events from another controller.
+ * 
+ * @details Many "begin" and "end" events are provided here, but none of them
+ *          should be sent directly. There are specialized functions which take
+ *          care of it. I.e., don't call `startedEvent()`, call `start()`
+ *          instead.
  */
 class IControllerEventSubscriber {
 public:
 	// The connections between begin/end events:
 	//
-	// startedEvent -+
-	//               +---> activatedEvent
-	// resumedEvent -+
+	// 1) startedEvent -+
+	//                  +---> 2) activatedEvent
+	// 1) resumedEvent -+
 	//
 	//
-	// abortedEvent -+
-	//               +---> finishedEvent -+
-	// stoppedEvent -+                    |
-	//                                    +---> deactivatedEvent
-	//                                    |
-	//                       pausedEvent -+
+	// 2) abortedEvent -+
+	//                  +---> 3) finishedEvent -+
+	// 2) stoppedEvent -+                       |
+	//                                          +---> 1) deactivatedEvent
+	//                                          |
+	//                          2) pausedEvent -+
 
 	virtual ~IControllerEventSubscriber() {}
+	/**
+	 * @brief The controller should start.
+	 * 
+	 * @details Should only be called by its parent, before any other event.
+	 *          Should call `startedEvent()`, then `activatedEvent()`.
+	 */
+	virtual void start() = 0;
+	/**
+	 * @brief The controller should stop.
+	 * 
+	 * @details Should only be called by the controller itself. Should be called
+	 *          from `abort()` and `stop()`. Should call `deactivatedEvent()`,
+	 *          then `finishedEvent()`. No event should be sent afterwards.
+	 */
+	virtual void finish() = 0;
+	/**
+	 * @brief The controller should stop.
+	 * 
+	 * @details Should only be called by its parent. Should call
+	 *          `deactivatedEvent()`, then `finishedEvent()`. No event should be
+	 *          sent afterwards.
+	 */
+	virtual void stop() = 0;
+	/**
+	 * @brief The controller should stop.
+	 * 
+	 * @details May be called both by its parent and the controller itself.
+	 *          Should call `deactivatedEvent()`, then `finishedEvent()`. No
+	 *          event should be sent afterwards.
+	 */
+	virtual void abort() = 0;
+	/**
+	 * @brief The controller should stop, but not reset its state, as it will
+	 *        be resumed later.
+	 * 
+	 * @details Should only be called by the controller itself. Should call
+	 *          `deactivatedEvent()`. The next event it receives should be
+	 *          either `resumedEvent()` or any of the "end" events.
+	 */
+	virtual void pause() = 0;
+	/**
+	 * @brief The controller should be resumed after pause.
+	 * 
+	 * @details Should only be called by its parent. Should call
+	 *          `activatedEvent()`. 
+	 */
+	virtual void resume() = 0;
+
 	/**
 	 * @brief The controller has been activated.
 	 */
@@ -46,42 +99,40 @@ public:
 	 */
 	virtual void deactivatedEvent() = 0;
 	/**
-	 * @brief The controller should start.
+	 * @brief The controller has started.
 	 * 
 	 * @details The first event that the controller receives.
 	 */
 	virtual void startedEvent() = 0;
 	/**
-	 * @brief The controller should end.
+	 * @brief The controller has finished.
 	 * 
-	 * @details The last event that the controller receives. Should be sent
-	 *          only by the controller itself and not its parent.
+	 * @details The last event that the controller receives.
 	 */
 	virtual void finishedEvent() = 0;
 	/**
-	 * @brief The controller should stop.
+	 * @brief The controller has stopped.
 	 * 
-	 * @details In most cases identical to finishedEvent(). Should only be sent
-	 *          by its parent and not the controller itself.
+	 * @details In most cases identical to finishedEvent().
 	 */
 	virtual void stoppedEvent() = 0;
 	/**
-	 * @brief The controller should stop.
+	 * @brief The controller has stopped.
 	 * 
-	 * @details In most cases identical to finishedEvent(). May be sent both
-	 *          by parent and the controller itself. Puts more emphasis on the
-	 *          "exceptional termination".
+	 * @details In most cases identical to finishedEvent(). Puts more emphasis
+	 *          on the "exceptional termination".
 	 */
 	virtual void abortedEvent() = 0;
 	/**
-	 * @brief The controller should stop, but not reset its state as it will be
-	 *        awoken again.
+	 * @brief The controller has stopped, but should not reset its state as it
+	 *        will be resumed again.
 	 */
 	virtual void pausedEvent() = 0;
 	/**
 	 * @brief The controller was awoken after `pausedEvent()`.
 	 */
 	virtual void resumedEvent() = 0;
+
 	/**
 	 * @brief A key was pressed.
 	 * 

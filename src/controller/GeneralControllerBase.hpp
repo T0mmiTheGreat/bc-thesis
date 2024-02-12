@@ -53,6 +53,55 @@ public:
 	 *                 (dependency injection).
 	 */
 	GeneralControllerBase(std::shared_ptr<ISysProxy> sysProxy);
+
+	/**
+	 * @brief The controller should start.
+	 * 
+	 * @details Should only be called by its parent, before any other event.
+	 *          Should call `startedEvent()`, then `activatedEvent()`.
+	 */
+	void start() override;
+	/**
+	 * @brief The controller should stop.
+	 * 
+	 * @details Should only be called by the controller itself. Should be called
+	 *          from `abort()` and `stop()`. Should call `deactivatedEvent()`,
+	 *          then `finishedEvent()`. No event should be sent afterwards.
+	 */
+	void finish() override;
+	/**
+	 * @brief The controller should stop.
+	 * 
+	 * @details Should only be called by its parent. Should call
+	 *          `deactivatedEvent()`, then `finishedEvent()`. No event should be
+	 *          sent afterwards.
+	 */
+	void stop() override;
+	/**
+	 * @brief The controller should stop.
+	 * 
+	 * @details May be called both by its parent and the controller itself.
+	 *          Should call `deactivatedEvent()`, then `finishedEvent()`. No
+	 *          event should be sent afterwards.
+	 */
+	void abort() override;
+	/**
+	 * @brief The controller should stop, but not reset its state, as it will
+	 *        be resumed later.
+	 * 
+	 * @details Should only be called by the controller itself. Should call
+	 *          `deactivatedEvent()`. The next event it receives should be
+	 *          either `resumedEvent()` or any of the "end" events.
+	 */
+	void pause() override;
+	/**
+	 * @brief The controller should be resumed after pause.
+	 * 
+	 * @details Should only be called by its parent. Should call
+	 *          `activatedEvent()`. 
+	 */
+	void resume() override;
+
 	/**
 	 * @brief The controller has been activated.
 	 * 

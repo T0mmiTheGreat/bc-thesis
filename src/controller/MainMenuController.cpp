@@ -102,7 +102,7 @@ void MainMenuController::mouseBtnDownEvent(MouseBtn btn, int x, int y)
 	switch (menuItemIdx) {
 		case MENU_PLAY_BTN_IDX:
 		case MENU_STAGE_EDITOR_BTN_IDX:
-			finishedEvent();
+			finish();
 			break;
 		case MENU_QUIT_BTN_IDX:
 			sysProxy->quit();

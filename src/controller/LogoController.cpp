@@ -43,7 +43,7 @@ void LogoController::loopEvent()
 	GeneralControllerBase::loopEvent();
 	m_sprite->loopEvent();
 	if (!m_sprite->isAnimationRunning()) {
-		finishedEvent();
+		finish();
 	}
 }
 

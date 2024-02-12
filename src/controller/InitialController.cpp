@@ -23,5 +23,5 @@ std::shared_ptr<IControllerChild> InitialController::createReplacement()
 
 void InitialController::loopEvent()
 {
-	finishedEvent();
+	finish();
 }

@@ -331,13 +331,13 @@ void StageEditorController::menuIconRedoClick()
 void StageEditorController::menuIconPropertiesClick()
 {
 	m_exitResult = RES_STAGE_PROPERTIES;
-	pausedEvent();
+	pause();
 }
 
 void StageEditorController::menuIconBackClick()
 {
 	m_exitResult = RES_MENU;
-	finishedEvent();
+	finish();
 }
 
 void StageEditorController::iconHighlightOff(

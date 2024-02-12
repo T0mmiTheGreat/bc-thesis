@@ -22,6 +22,44 @@ GeneralControllerBase::GeneralControllerBase(
 	, sysProxy{sysProxy}
 {}
 
+void GeneralControllerBase::start()
+{
+	startedEvent();
+	activatedEvent();
+}
+
+void GeneralControllerBase::finish()
+{
+	deactivatedEvent();
+	finishedEvent();
+}
+
+void GeneralControllerBase::stop()
+{
+	deactivatedEvent();
+	stoppedEvent();
+	finishedEvent();
+}
+
+void GeneralControllerBase::abort()
+{
+	deactivatedEvent();
+	abortedEvent();
+	finishedEvent();
+}
+
+void GeneralControllerBase::pause()
+{
+	deactivatedEvent();
+	pausedEvent();
+}
+
+void GeneralControllerBase::resume()
+{
+	resumedEvent();
+	activatedEvent();
+}
+
 void GeneralControllerBase::activatedEvent()
 {
 	sysProxy->invalidateRect();
@@ -34,12 +72,11 @@ void GeneralControllerBase::deactivatedEvent()
 
 void GeneralControllerBase::startedEvent()
 {
-	activatedEvent();
+	// Ignore
 }
 
 void GeneralControllerBase::finishedEvent()
 {
-	deactivatedEvent();
 	if (parent != nullptr) {
 		auto replacement = createReplacement();
 		parent->replaceController(std::move(replacement));
@@ -52,22 +89,21 @@ void GeneralControllerBase::pausedEvent()
 		auto replacement = createReplacement();
 		parent->pauseController(std::move(replacement));
 	}
-	deactivatedEvent();
 }
 
 void GeneralControllerBase::resumedEvent()
 {
-	activatedEvent();
+	// Ignore
 }
 
 void GeneralControllerBase::stoppedEvent()
 {
-	finishedEvent();
+	// Ignore
 }
 
 void GeneralControllerBase::abortedEvent()
 {
-	finishedEvent();
+	// Ignore
 }
 
 void GeneralControllerBase::keyDownEvent(KeyCode key)
