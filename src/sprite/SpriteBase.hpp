@@ -65,6 +65,33 @@ protected:
 	 * @brief Invalidates a rectangular area on the screen.
 	 */
 	virtual void invalidateRect(const Rect& rect);
+
+	/**
+	 * @brief Generic property getter.
+	 * 
+	 * @tparam T Type of the property.
+	 * @param prop Property value.
+	 */
+	template <typename T>
+	const T& propertyGetter(const T& prop) const;
+	/**
+	 * @brief Generic property setter.
+	 * 
+	 * @tparam T Type of the property. Must implement `operator== ()`
+	 * @param prop Reference to property.
+	 * @param value New property value.
+	 */
+	template <typename T>
+	void propertySetterComparable(T& prop, const T& value);
+	/**
+	 * @brief Generic property setter.
+	 * 
+	 * @tparam T Type of the property.
+	 * @param prop Reference to property.
+	 * @param value New property value.
+	 */
+	template <typename T>
+	void propertySetterNoncomparable(T& prop, const T& value);
 public:
 	SpriteBase(std::shared_ptr<IPaintingProxy> paintingProxy);
 	virtual ~SpriteBase();
@@ -101,5 +128,27 @@ public:
 	virtual void repaint(std::shared_ptr<ICanvas> canvas,
 		const Rect& invalidRect) override;
 };
+
+template<typename T>
+inline const T& SpriteBase::propertyGetter(const T& prop) const
+{
+	return prop;
+}
+
+template<typename T>
+inline void SpriteBase::propertySetterComparable(T& prop, const T& value)
+{
+	if (prop != value) {
+		invalidate();
+		prop = value;
+		invalidate();
+	}
+}
+
+template<typename T>
+inline void SpriteBase::propertySetterNoncomparable(T& prop, const T& value)
+{
+	prop = value;
+}
 
 #endif // SPRITEBASE_HPP
