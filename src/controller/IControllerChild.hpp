@@ -26,17 +26,34 @@ typedef std::function<void(std::shared_ptr<IControllerChild>)> SwapCallback;
  */
 class IControllerChild : public IControllerEventSubscriber {
 public:
+	class IParent {
+	public:
+		virtual ~IParent() {}
+		/**
+		 * @brief Replaces the current child with `replacement`.
+		 */
+		virtual void replaceController(
+			std::shared_ptr<IControllerChild> replacement) = 0;
+		/**
+		 * @brief Replaces the current child with `replacement`, but keeps the
+		 *        current child alive in a stack structure.
+		 * 
+		 * @details Once the `replacement` finishes, if it does not provide a
+		 *          replacement itself (replaces with `nullptr`), the child at
+		 *          the top of the stack should be awoken again.
+		 */
+		virtual void pauseController(
+			std::shared_ptr<IControllerChild> replacement) = 0;
+	};
+public:
 	virtual ~IControllerChild() {}
 	/**
-	 * @brief Assigns function for swapping the child with a new child.
+	 * @brief Assigns a parent of the controller.
 	 * 
 	 * @details Once a child finishes, it may (and sometimes must) provide
-	 *          a replacement for itself. To avoid circular references the
-	 *          child must not keep a pointer to its parent, so instead it
-	 *          receives a function pointer from its parent which will replace
-	 *          the child with the provided controller.
+	 *          a replacement for itself.
 	 */
-	virtual void setSwapCallback(SwapCallback f) = 0;
+	virtual void setParent(IControllerChild::IParent* parent) = 0;
 };
 
 #endif // ICONTROLLERCHILD_HPP

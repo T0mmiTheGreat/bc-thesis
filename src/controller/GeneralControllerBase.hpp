@@ -33,16 +33,16 @@
  */
 class GeneralControllerBase : public IControllerChild {
 protected:
-	SwapCallback swapCallback;
+	IControllerChild::IParent* parent;
 	std::shared_ptr<ISysProxy> sysProxy;
 
 	/**
-	 * @brief Creates the replacement for this current controller.
+	 * @brief Creates a replacement for this current controller.
 	 * 
-	 * @details Once the controller finishes it should call the swap callback
-	 *          to replace itself in the parent. This class already takes care
-	 *          of calling the callback, descendants only need to provide the
-	 *          correct replacement.
+	 * @details Once the controller finishes it should replace itself in the
+	 *          parent. This class already takes care of calling the replacement
+	 *          method, descendants only need to provide the correct
+	 *          replacement.
 	 */
 	virtual std::shared_ptr<IControllerChild> createReplacement();
 public:
@@ -54,9 +54,23 @@ public:
 	 */
 	GeneralControllerBase(std::shared_ptr<ISysProxy> sysProxy);
 	/**
+	 * @brief The controller has been activated.
+	 * 
+	 * @details Descendants should call this method if they override it.
+	 */
+	virtual void activatedEvent() override;
+	/**
+	 * @brief The controller has been deactivated.
+	 * 
+	 * @details Descendants should call this method if they override it.
+	 */
+	virtual void deactivatedEvent() override;
+	/**
 	 * @brief The controller should start.
 	 * 
 	 * @details The first event that the controller receives.
+	 * 
+	 *          Descendants should call this method if they override it.
 	 */
 	virtual void startedEvent() override;
 	/**
@@ -93,6 +107,8 @@ public:
 	 *          Descendants should call this method if they override it.
 	 */
 	virtual void abortedEvent() override;
+	virtual void pausedEvent() override;
+	virtual void resumedEvent() override;
 	/**
 	 * @brief A key was pressed.
 	 * 
@@ -170,19 +186,16 @@ public:
 	 */
 	virtual void paintEvent(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override;
 	/**
-	 * @brief Assigns function for swapping the child with a new child.
+	 * @brief Assigns a parent of the controller.
 	 * 
 	 * @details Once a child finishes, it may (and sometimes must) provide
-	 *          a replacement for itself. To avoid circular references the
-	 *          child must not keep a pointer to its parent, so instead it
-	 *          receives a function pointer from its parent which will replace
-	 *          the child with the provided controller.
+	 *          a replacement for itself.
 	 * 
-	 *          Modifies `swapCallback`.
+	 *          Modifies `parent`.
 	 * 
 	 *          Descendants should call this method if they override it.
 	 */
-	virtual void setSwapCallback(SwapCallback f) override;
+	virtual void setParent(IControllerChild::IParent* parent) override;
 };
 
 #endif // GENERALCONTROLLERBASE_HPP

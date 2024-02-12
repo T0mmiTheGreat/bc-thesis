@@ -22,7 +22,29 @@
  */
 class IControllerEventSubscriber {
 public:
+	// The connections between begin/end events:
+	//
+	// startedEvent -+
+	//               +---> activatedEvent
+	// resumedEvent -+
+	//
+	//
+	// abortedEvent -+
+	//               +---> finishedEvent -+
+	// stoppedEvent -+                    |
+	//                                    +---> deactivatedEvent
+	//                                    |
+	//                       pausedEvent -+
+
 	virtual ~IControllerEventSubscriber() {}
+	/**
+	 * @brief The controller has been activated.
+	 */
+	virtual void activatedEvent() = 0;
+	/**
+	 * @brief The controller has been deactivated.
+	 */
+	virtual void deactivatedEvent() = 0;
 	/**
 	 * @brief The controller should start.
 	 * 
@@ -51,6 +73,15 @@ public:
 	 *          "exceptional termination".
 	 */
 	virtual void abortedEvent() = 0;
+	/**
+	 * @brief The controller should stop, but not reset its state as it will be
+	 *        awoken again.
+	 */
+	virtual void pausedEvent() = 0;
+	/**
+	 * @brief The controller was awoken after `pausedEvent()`.
+	 */
+	virtual void resumedEvent() = 0;
 	/**
 	 * @brief A key was pressed.
 	 * 

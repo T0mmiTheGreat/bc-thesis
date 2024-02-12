@@ -66,9 +66,9 @@ void InGameController::updatePlayerSprites()
 	}
 }
 
-void InGameController::startedEvent()
+void InGameController::activatedEvent()
 {
-	GeneralControllerBase::startedEvent();
+	GeneralControllerBase::activatedEvent();
 	m_core->loopEvent();
 	updatePlayerSprites();
 }

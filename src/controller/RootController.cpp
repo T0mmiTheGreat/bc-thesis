@@ -86,23 +86,42 @@ void RootController::run()
 	m_sysProxy->runEventLoop();
 }
 
+void RootController::replaceController(
+	std::shared_ptr<IControllerChild> replacement)
+{
+	if (replacement == nullptr) {
+		if (!m_pausedControllers.empty()) {
+			m_childController = std::move(m_pausedControllers.back());
+			m_pausedControllers.pop_back();
+			m_childController->resumedEvent();
+		}
+	} else {
+		m_childController = replacement;
+		setChildController(replacement);
+	}
+}
+
+void RootController::pauseController(
+	std::shared_ptr<IControllerChild> replacement)
+{
+	assert(replacement != nullptr);
+
+	m_pausedControllers.push_back(std::move(m_childController));
+	setChildController(replacement);
+}
+
 void RootController::setChildController(std::shared_ptr<IControllerChild> value)
 {
-	if (value != nullptr) {
-		// Set child controller
-		m_childController = std::move(value);
-		// Assign swap callback to the controller
-		m_childController->setSwapCallback([this](std::shared_ptr<IControllerChild> newValue) {
-			this->setChildController(std::move(newValue));
-		});
-		// If the event loop is already running, send the started event straight
-		// away. If it's not running yet, it will be sent once the event loop
-		// starts
-		if (m_sysProxy->getEventLoopState() == EVENTLOOP_RUNNING) {
-			m_childController->startedEvent();
-		}
-	}
-	else {
-		m_childController = nullptr;
+	assert(value != nullptr);
+
+	// Set child controller
+	m_childController = std::move(value);
+	// Assign parent
+	m_childController->setParent(this);
+	// If the event loop is already running, send the started event straight
+	// away. If it's not running yet, it will be sent once the event loop
+	// starts
+	if (m_sysProxy->getEventLoopState() == EVENTLOOP_RUNNING) {
+		m_childController->startedEvent();
 	}
 }

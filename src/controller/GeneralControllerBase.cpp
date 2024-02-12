@@ -18,20 +18,46 @@ std::shared_ptr<IControllerChild> GeneralControllerBase::createReplacement()
 
 GeneralControllerBase::GeneralControllerBase(
 	std::shared_ptr<ISysProxy> sysProxy)
-	: swapCallback{nullptr}
+	: parent{nullptr}
 	, sysProxy{sysProxy}
 {}
 
-void GeneralControllerBase::startedEvent()
+void GeneralControllerBase::activatedEvent()
 {
 	sysProxy->invalidateRect();
 }
 
+void GeneralControllerBase::deactivatedEvent()
+{
+	// Ignore
+}
+
+void GeneralControllerBase::startedEvent()
+{
+	activatedEvent();
+}
+
 void GeneralControllerBase::finishedEvent()
 {
-	if (swapCallback != nullptr) {
-		swapCallback(createReplacement());
+	deactivatedEvent();
+	if (parent != nullptr) {
+		auto replacement = createReplacement();
+		parent->replaceController(std::move(replacement));
 	}
+}
+
+void GeneralControllerBase::pausedEvent()
+{
+	if (parent != nullptr) {
+		auto replacement = createReplacement();
+		parent->pauseController(std::move(replacement));
+	}
+	deactivatedEvent();
+}
+
+void GeneralControllerBase::resumedEvent()
+{
+	activatedEvent();
 }
 
 void GeneralControllerBase::stoppedEvent()
@@ -99,7 +125,7 @@ void GeneralControllerBase::paintEvent(std::shared_ptr<ICanvas> canvas,
 	// Ignore
 }
 
-void GeneralControllerBase::setSwapCallback(SwapCallback f)
+void GeneralControllerBase::setParent(IControllerChild::IParent* parent)
 {
-	swapCallback = f;
+	this->parent = parent;
 }
