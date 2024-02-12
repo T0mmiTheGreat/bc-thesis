@@ -50,6 +50,12 @@ void GeneralControllerBase::keyDownEvent(KeyCode key)
 	// Ignore
 }
 
+void GeneralControllerBase::textInputEvent(const char* text)
+{
+	(void)text;
+	// Ignore
+}
+
 void GeneralControllerBase::mouseBtnDownEvent(MouseBtn btn, int x, int y)
 {
 	(void)btn;

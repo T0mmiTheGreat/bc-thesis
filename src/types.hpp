@@ -49,6 +49,7 @@ enum EventLoopState {
 typedef enum KeyCode {
 	KEY_UNKNOWN,
 	KEY_RETURN, // Or ENTER
+	KEY_BACKSPACE,
 	KEY_CTRL, // If Ctrl is not present, looks for Cmd
 	KEY_SHIFT,
 	KEY_ALT, // If Alt is not present, looks for Opt/Option

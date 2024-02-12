@@ -29,6 +29,7 @@ public:
 	Size2d getTextSize(const std::string& text, FontId font) override;
 	Size2d getImageSize(ImageId img) override;
 	Size2d getPaintAreaSize() override;
+	void setTextInputEnabled(bool value) override;
 	void quit() override;
 };
 

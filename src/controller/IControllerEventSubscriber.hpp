@@ -61,6 +61,21 @@ public:
 	 */
 	virtual void keyDownEvent(KeyCode key) = 0;
 	/**
+	 * @brief A character key was pressed.
+	 * 
+	 * @param text The null-terminated input text in UTF-8 encoding.
+	 * 
+	 * @remark The parameter type is compatible with `SDL_TextInputEvent`.
+	 *         For more details, refer to:
+	 *         https://wiki.libsdl.org/SDL2/SDL_TextInputEvent
+	 * 
+	 * @example ```
+	 *          std::string s = "Input character: ";
+	 *          s += text;
+	 *          ```
+	 */
+	virtual void textInputEvent(const char* text) = 0;
+	/**
 	 * @brief A mouse button was pressed.
 	 * 
 	 * @param btn The code of the button.

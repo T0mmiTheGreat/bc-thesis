@@ -68,6 +68,15 @@ Size2d SDLSysProxy::getPaintAreaSize()
 	return SDLManager::sdlPointToSize(SDLManager::get().getPaintAreaSize());
 }
 
+void SDLSysProxy::setTextInputEnabled(bool value)
+{
+	if (value) {
+		SDL_StartTextInput();
+	} else {
+		SDL_StopTextInput();
+	}
+}
+
 void SDLSysProxy::quit()
 {
 	// This event will be pushed to the event queue

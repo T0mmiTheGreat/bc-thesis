@@ -30,6 +30,7 @@ public:
 	void startEvent() override;
 	void quitEvent() override;
 	void keyDownEvent(KeyCode key) override;
+	void textInputEvent(const char* text) override;
 	void mouseBtnDownEvent(MouseBtn btn, int x, int y) override;
 	void mouseBtnUpEvent(MouseBtn btn, int x, int y) override;
 	void mouseMoveEvent(int x, int y) override;

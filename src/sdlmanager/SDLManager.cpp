@@ -117,24 +117,25 @@ void SDLManager::invalidateRect(SDL_Rect& rect)
 KeyCode SDLManager::sdlKeycodeToEnum(SDL_Keycode sdlk)
 {
 	switch (sdlk) {
-		case SDLK_RETURN: return KEY_RETURN;
-		case SDLK_LEFT:   return KEY_LEFT_ARROW;
-		case SDLK_UP:     return KEY_UP_ARROW;
-		case SDLK_RIGHT:  return KEY_RIGHT_ARROW;
-		case SDLK_DOWN:   return KEY_DOWN_ARROW;
-		case SDLK_a:      return KEY_A;
-		case SDLK_w:      return KEY_W;
-		case SDLK_d:      return KEY_D;
-		case SDLK_s:      return KEY_S;
-		case SDLK_h:      return KEY_H;
-		case SDLK_u:      return KEY_U;
-		case SDLK_k:      return KEY_K;
-		case SDLK_j:      return KEY_J;
-		case SDLK_LCTRL:  return KEY_CTRL;
-		case SDLK_RCTRL:  return KEY_CTRL;
-		case SDLK_LSHIFT: return KEY_SHIFT;
-		case SDLK_RSHIFT: return KEY_SHIFT;
-		case SDLK_LALT:   return KEY_ALT;
+		case SDLK_RETURN:    return KEY_RETURN;
+		case SDLK_BACKSPACE: return KEY_BACKSPACE;
+		case SDLK_LEFT:      return KEY_LEFT_ARROW;
+		case SDLK_UP:        return KEY_UP_ARROW;
+		case SDLK_RIGHT:     return KEY_RIGHT_ARROW;
+		case SDLK_DOWN:      return KEY_DOWN_ARROW;
+		case SDLK_a:         return KEY_A;
+		case SDLK_w:         return KEY_W;
+		case SDLK_d:         return KEY_D;
+		case SDLK_s:         return KEY_S;
+		case SDLK_h:         return KEY_H;
+		case SDLK_u:         return KEY_U;
+		case SDLK_k:         return KEY_K;
+		case SDLK_j:         return KEY_J;
+		case SDLK_LCTRL:     return KEY_CTRL;
+		case SDLK_RCTRL:     return KEY_CTRL;
+		case SDLK_LSHIFT:    return KEY_SHIFT;
+		case SDLK_RSHIFT:    return KEY_SHIFT;
+		case SDLK_LALT:      return KEY_ALT;
 		default: return KEY_UNKNOWN;
 	}
 }
@@ -163,6 +164,7 @@ SDL_Scancode SDLManager::enumToSdlScancode(KeyCode keyCode)
 {
 	switch (keyCode) {
 		case KEY_RETURN:      return SDL_SCANCODE_RETURN;
+		case KEY_BACKSPACE:   return SDL_SCANCODE_BACKSPACE;
 		case KEY_LEFT_ARROW:  return SDL_SCANCODE_LEFT;
 		case KEY_UP_ARROW:    return SDL_SCANCODE_UP;
 		case KEY_RIGHT_ARROW: return SDL_SCANCODE_RIGHT;

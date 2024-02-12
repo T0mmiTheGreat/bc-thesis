@@ -79,6 +79,15 @@ public:
 	 */
 	virtual Size2d getPaintAreaSize() = 0;
 	/**
+	 * @brief Enables or disables text input events.
+	 * 
+	 * @details The text input events won't be sent by default, because they
+	 *          may slow down the application. Pass `true` to enable sending
+	 *          them. After you are done receiving the events, disable them
+	 *          by passing `false` to this method.
+	 */
+	virtual void setTextInputEnabled(bool value) = 0;
+	/**
 	 * @brief Requests the program to stop.
 	 * 
 	 * @details This method should stop the event loop just like pressing the

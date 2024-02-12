@@ -21,6 +21,9 @@ void SDLSubscriber::generalEvent(const SDL_Event& ev)
 			case SDL_KEYDOWN:
 				lockedSubscriber->keyDownEvent(SDLManager::sdlKeycodeToEnum(ev.key.keysym.sym));
 				break;
+			case SDL_TEXTINPUT:
+				lockedSubscriber->textInputEvent(ev.text.text);
+				break;
 			case SDL_MOUSEBUTTONDOWN:
 				lockedSubscriber->mouseBtnDownEvent(SDLManager::sdlMouseBtnToEnum(ev.button.button), ev.button.x, ev.button.y);
 				break;

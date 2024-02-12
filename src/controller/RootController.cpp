@@ -39,6 +39,12 @@ void RootController::keyDownEvent(KeyCode key)
 	m_childController->keyDownEvent(key);
 }
 
+void RootController::textInputEvent(const char* text)
+{
+	// Propagate
+	m_childController->textInputEvent(text);
+}
+
 void RootController::mouseBtnDownEvent(MouseBtn btn, int x, int y)
 {
 	// Propagate
