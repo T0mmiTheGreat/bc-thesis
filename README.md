@@ -16,7 +16,8 @@ You need these tools:
 
 - Git, GCC, etc.,
 - CMake,
-- SDL2 library (well, technically it's not a tool...). See the installation guide at <https://wiki.libsdl.org/SDL2/Installation>.
+- SDL2 library. See the installation guide at <https://wiki.libsdl.org/SDL2/Installation>,
+- CGAL: <https://www.cgal.org/download.html>.
 
 1.  Clone this repository using `git clone --recurse-submodules <repo-url>`. If you forgot to use the `--recurse-submodules` flag, you can still run `git submodule init` and then `git submodule update` (or combine these commands by running `git submodule update --init`) to get the submodules. You need them because this project uses the [libSDL2pp](https://github.com/libSDL2pp/libSDL2pp/tree/01ba3ddfbaa89d85391d7781beac3e625a340f0b) library as a Git submodule.
 
