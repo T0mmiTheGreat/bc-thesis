@@ -40,6 +40,10 @@ private:
 		const std::string& key);
 	void throwParserExceptionInvalidKeyValue(const std::string& fn,
 		const std::string& key);
+	/**
+	 * @brief Returns path to the stage based on its ID.
+	 */
+	static std::string getStagePath(const IStageSerializer::IdType& id);
 public:
 	YAMLStageSerializer();
 	

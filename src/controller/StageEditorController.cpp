@@ -37,7 +37,6 @@ void StageEditorController::createSprites()
 	m_menuIcons[MENUICON_NEW_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_NEW);
 	m_menuIcons[MENUICON_OPEN_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_OPEN);
 	m_menuIcons[MENUICON_SAVE_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_SAVE);
-	m_menuIcons[MENUICON_SAVE_AS_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_SAVE_AS);
 	m_menuIcons[MENUICON_UNDO_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_UNDO);
 	m_menuIcons[MENUICON_REDO_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_REDO);
 	m_menuIcons[MENUICON_PROPERTIES_IDX] = std::make_unique<EditorIconSprite>(sysProxy, IMG_ICON_COGWHEEL);
@@ -275,9 +274,6 @@ void StageEditorController::menuIconClick(int iconIdx)
 		case MENUICON_SAVE_IDX:
 			menuIconSaveClick();
 			break;
-		case MENUICON_SAVE_AS_IDX:
-			menuIconSaveAsClick();
-			break;
 		case MENUICON_UNDO_IDX:
 			menuIconUndoClick();
 			break;
@@ -305,12 +301,7 @@ void StageEditorController::menuIconOpenClick()
 
 void StageEditorController::menuIconSaveClick()
 {
-	// TODO
-}
-
-void StageEditorController::menuIconSaveAsClick()
-{
-	// TODO
+	m_stageEditor->save();
 }
 
 void StageEditorController::menuIconUndoClick()

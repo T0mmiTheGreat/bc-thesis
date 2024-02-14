@@ -31,6 +31,8 @@ static YAML::Emitter& operator<< (YAML::Emitter& out,
 	const YAMLStageSerializer::PlayerType& value);
 static YAML::Emitter& operator<< (YAML::Emitter& out, 
 	const YAMLStageSerializer::ObstacleType& value);
+static YAML::Emitter& operator<< (YAML::Emitter& out, 
+	const std::vector<YAMLStageSerializer::PositionRuleType>& value);
 
 
 void YAMLStageSerializer::throwIOException(const std::string& fn,
@@ -57,6 +59,12 @@ void YAMLStageSerializer::throwParserExceptionInvalidKeyValue(
 	throwParserException(fn, concatStrings("Invalid ", key, " value"));
 }
 
+std::string YAMLStageSerializer::getStagePath(
+	const IStageSerializer::IdType& id)
+{
+	return concatStrings(STAGES_PATH, id, FILE_EXT);
+}
+
 YAMLStageSerializer::YAMLStageSerializer()
 	: StageSerializerBase()
 {}
@@ -64,8 +72,11 @@ YAMLStageSerializer::YAMLStageSerializer()
 void YAMLStageSerializer::save(const std::string& id) const
 {
 	try {
+		// Make file name
+		std::string fn = getStagePath(id);
+
 		// Open file stream
-		std::ofstream stream(id);
+		std::ofstream stream(fn);
 		// Enable exceptions
 		stream.exceptions(std::ios_base::badbit | std::ios_base::failbit);
 
@@ -169,6 +180,19 @@ YAML::Emitter& operator<< (YAML::Emitter& out,
 	// Corner type is equivalent to `YAMLStageSerializer::PlayerType`, which is
 	// implemented here too
 	out << value.corners;
+	
+	assert(out.good());
+	return out;
+}
+
+YAML::Emitter& operator<< (YAML::Emitter& out,
+	const std::vector<YAMLStageSerializer::PositionRuleType>& value)
+{
+	out << YAML::BeginSeq;
+	for (auto rule : value) {
+		out << YAML::Flow << rule;
+	}
+	out << YAML::EndSeq;
 	
 	assert(out.good());
 	return out;

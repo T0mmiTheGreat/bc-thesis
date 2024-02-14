@@ -43,8 +43,7 @@ private:
 	static constexpr int MENUICON_NEW_IDX        = 0;
 	static constexpr int MENUICON_OPEN_IDX       = MENUICON_NEW_IDX + 1;
 	static constexpr int MENUICON_SAVE_IDX       = MENUICON_OPEN_IDX + 1;
-	static constexpr int MENUICON_SAVE_AS_IDX    = MENUICON_SAVE_IDX + 1;
-	static constexpr int MENUICON_UNDO_IDX       = MENUICON_SAVE_AS_IDX + 1;
+	static constexpr int MENUICON_UNDO_IDX       = MENUICON_SAVE_IDX + 1;
 	static constexpr int MENUICON_REDO_IDX       = MENUICON_UNDO_IDX + 1;
 	static constexpr int MENUICON_PROPERTIES_IDX = MENUICON_REDO_IDX + 1;
 	static constexpr int MENUICON_BACK_IDX       = MENUICON_PROPERTIES_IDX + 1;
@@ -168,7 +167,6 @@ private:
 	void menuIconNewClick();
 	void menuIconOpenClick();
 	void menuIconSaveClick();
-	void menuIconSaveAsClick();
 	void menuIconUndoClick();
 	void menuIconRedoClick();
 	void menuIconPropertiesClick();

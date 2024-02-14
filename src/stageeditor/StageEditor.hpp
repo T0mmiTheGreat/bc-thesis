@@ -25,12 +25,6 @@
 
 class StageEditor {
 private:
-	static constexpr int STAGE_WIDTH_INITIAL = 1280;
-	static constexpr int STAGE_HEIGHT_INITIAL = 720;
-	static constexpr std::string STAGE_TITLE_DEFAULT = "My stage";
-	static constexpr int STAGE_WIDTH_MIN = 100;
-	static constexpr int STAGE_HEIGHT_MIN = 100;
-
 	StageState m_stageState;
 	EditorTool m_activeTool;
 	StageEditorHistory m_history;
@@ -558,6 +552,12 @@ public:
 	const std::shared_ptr<StageEditorAction> redo();
 	bool canUndo();
 	bool canRedo();
+	/**
+	 * @brief Saves stage to a file.
+	 * 
+	 * @exception IStageSerializer::Exception
+	 */
+	void save();
 };
 
 #endif // STAGEEDITOR_HPP
