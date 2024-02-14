@@ -30,6 +30,7 @@ public:
 	Size2d getImageSize(ImageId img) override;
 	Size2d getPaintAreaSize() override;
 	void setTextInputEnabled(bool value) override;
+	void showErrorMessage(const std::string& msg) override;
 	void quit() override;
 };
 

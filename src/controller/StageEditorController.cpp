@@ -301,7 +301,13 @@ void StageEditorController::menuIconOpenClick()
 
 void StageEditorController::menuIconSaveClick()
 {
-	m_stageEditor->save();
+	try {
+		m_stageEditor->save();
+
+	} catch (const IStageSerializer::Exception& e) {
+		sysProxy->showErrorMessage(e.what());
+		updateAllSprites();
+	}
 }
 
 void StageEditorController::menuIconUndoClick()

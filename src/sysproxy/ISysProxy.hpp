@@ -88,6 +88,10 @@ public:
 	 */
 	virtual void setTextInputEnabled(bool value) = 0;
 	/**
+	 * @brief Shows a dialog box reporting an error.
+	 */
+	virtual void showErrorMessage(const std::string& msg) = 0;
+	/**
 	 * @brief Requests the program to stop.
 	 * 
 	 * @details This method should stop the event loop just like pressing the

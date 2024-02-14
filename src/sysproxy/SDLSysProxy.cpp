@@ -77,6 +77,19 @@ void SDLSysProxy::setTextInputEnabled(bool value)
 	}
 }
 
+void SDLSysProxy::showErrorMessage(const std::string& msg)
+{
+	auto ec = SDL_ShowSimpleMessageBox(
+		SDL_MESSAGEBOX_ERROR,
+		"Error",
+		msg.c_str(),
+		SDLManager::get().window.Get()
+	);
+	if (ec < 0) {
+		throw SDL2pp::Exception("SDL_ShowSimpleMessageBox");
+	}
+}
+
 void SDLSysProxy::quit()
 {
 	// This event will be pushed to the event queue
