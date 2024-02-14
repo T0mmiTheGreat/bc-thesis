@@ -29,6 +29,16 @@ void StageEditor::getSnappedPoint(const PointF& p, ObjectSnap snapping,
 	}
 }
 
+void StageEditor::getSnappedOffset(const PointF& p0, const PointF& p1,
+	ObjectSnap snapping, double& offsetX, double& offsetY)
+{
+	PointF offsetPoint = p1 - p0;
+	PointF offsetPointSnapped;
+	getSnappedPoint(offsetPoint, snapping, offsetPointSnapped);
+	offsetX = offsetPointSnapped.x;
+	offsetY = offsetPointSnapped.y;
+}
+
 std::shared_ptr<StageEditorAction> StageEditor::createActionNone()
 {
 	return std::make_shared<StageEditorActionNone>();
@@ -273,6 +283,56 @@ std::shared_ptr<StageEditorAction> StageEditor::createActionSetStageTitle(
 {
 	auto res = std::make_shared<StageEditorActionSetStageTitle>(
 		m_stageState.title, newName);
+	return res;
+}
+
+std::shared_ptr<StageEditorAction> StageEditor::createActionDeleteAllPlayers()
+{
+	// The actions performed (all the deletions)
+	std::vector<std::shared_ptr<StageEditorAction>> actionGroup;
+	std::shared_ptr<StageEditorAction> newAction;
+
+	// Delete
+	for (const auto& playerPair : m_stageState.players) {
+		const auto& oid = playerPair.first;
+		newAction = createActionDeletePlayerObject(oid);
+		actionGroup.push_back(newAction);
+	}
+
+	// Merge
+	auto res = getMergedActions(actionGroup);
+
+	return res;
+}
+
+std::shared_ptr<StageEditorAction> StageEditor::createActionDeleteAllObstacles()
+{
+	// The actions performed (all the deletions)
+	std::vector<std::shared_ptr<StageEditorAction>> actionGroup;
+	std::shared_ptr<StageEditorAction> newAction;
+
+	// Delete
+	for (const auto& obstaclePair : m_stageState.obstacles) {
+		const auto& oid = obstaclePair.first;
+		newAction = createActionDeleteObstacleObject(oid);
+		actionGroup.push_back(newAction);
+	}
+
+	// Merge
+	auto res = getMergedActions(actionGroup);
+
+	return res;
+}
+
+std::shared_ptr<StageEditorAction> StageEditor::createActionDeleteAllObjects()
+{
+	// Delete players
+	auto actionDeletePlayers = createActionDeleteAllPlayers();
+	// Delete obstacles
+	auto actionDeleteObstacles = createActionDeleteAllObstacles();
+
+	// Merge
+	auto res = getMergedActions(actionDeletePlayers, actionDeleteObstacles);
 	return res;
 }
 
@@ -908,6 +968,7 @@ StageEditor::StageEditor()
 	: m_stageState()
 	, m_activeTool{TOOL_SELECT}
 	, m_isDraggingSelected{false}
+	, m_isDraggingStage{false}
 {}
 
 const StageState& StageEditor::getState() const
@@ -1032,6 +1093,42 @@ bool StageEditor::canUndo()
 bool StageEditor::canRedo()
 {
 	return m_history.canRedo();
+}
+
+const std::shared_ptr<StageEditorAction> StageEditor::newStage()
+{
+	// XXX: Kinda bad, likely to cause problems...
+
+	// Stop obstacle creation
+	auto actionAbortObstacle = createActionAbortObstacle();
+	// Stop all dragging
+	m_isDraggingSelected = false;
+	m_isDraggingStage = false;
+	// Deselect all objects
+	auto actionDeselect = createActionDeselectAll();
+	// Delete all objects
+	auto actionDelete = createActionDeleteAllObjects();
+	// Reset title
+	auto actionTitle = createActionSetStageTitle(
+		StageState::STAGE_TITLE_DEFAULT);
+	// Reset size
+	int resizeX = StageState::STAGE_WIDTH_INITIAL - m_stageState.width;
+	int resizeY = StageState::STAGE_HEIGHT_INITIAL - m_stageState.height;
+	auto actionResize = createActionResizeStage(resizeX, resizeY);
+
+	// Merge
+	auto res = getMergedActions(actionAbortObstacle, actionDeselect,
+		actionDelete, actionTitle, actionResize);
+	
+	if (res->getType() != StageEditorAction::ACTION_NONE) {
+		// Perform
+		doAction(res);
+
+		// Add to actions history
+		m_history.pushAction(res);
+	}
+
+	return res;
 }
 
 void StageEditor::save()
@@ -1432,15 +1529,11 @@ const std::shared_ptr<StageEditorAction> StageEditor::predictEndDragPlayerObject
 	EditorOID oid, const PointF& pos, ObjectSnap snapping, bool& isSuccess)
 {
 	if (!m_selectedPlayers.contains(oid) || !m_isDraggingSelected) {
-		isSuccess = false;
+		isSuccess = true;
 		return createActionNone();
 	} else {
-		PointF offsetPoint = pos - m_dragStartSelected;
-		PointF offsetPointSnapped;
-		getSnappedPoint(offsetPoint, snapping, offsetPointSnapped);
-
-		double dx = offsetPointSnapped.x;
-		double dy = offsetPointSnapped.y;
+		double dx, dy;
+		getSnappedOffset(m_dragStartSelected, pos, snapping, dx, dy);
 
 		auto res = createActionMovePlayerObject(oid, dx, dy);
 		isSuccess = canMoveSelectedPlayer(oid, dx, dy);
@@ -1452,15 +1545,11 @@ const std::shared_ptr<StageEditorAction> StageEditor::predictEndDragObstacleObje
 	EditorOID oid, const PointF& pos, ObjectSnap snapping, bool& isSuccess)
 {
 	if (!m_selectedObstacles.contains(oid) || !m_isDraggingSelected) {
-		isSuccess = false;
+		isSuccess = true;
 		return createActionNone();
 	} else {
-		PointF offsetPoint = pos - m_dragStartSelected;
-		PointF offsetPointSnapped;
-		getSnappedPoint(offsetPoint, snapping, offsetPointSnapped);
-
-		double dx = offsetPointSnapped.x;
-		double dy = offsetPointSnapped.y;
+		double dx, dy;
+		getSnappedOffset(m_dragStartSelected, pos, snapping, dx, dy);
 
 		auto res = createActionMoveObstacleObject(oid, dx, dy);
 		isSuccess = canMoveSelectedObstacle(oid, dx, dy);
@@ -1472,14 +1561,15 @@ const std::shared_ptr<StageEditorAction> StageEditor::predictEndDragStageCorner(
 	const PointF& pos, ObjectSnap snapping, bool& isSuccess)
 {
 	if (!m_isDraggingStage) {
+		isSuccess = true;
 		return createActionNone();
 	} else {
-		PointF offsetPoint(pos.x - m_stageState.width, pos.y - m_stageState.height);
-		PointF offsetPointSnap;
-		getSnappedPoint(offsetPoint, snapping, offsetPointSnap);
+		PointF stageBottomRight(m_stageState.width, m_stageState.height);
+		double dx, dy;
+		getSnappedOffset(stageBottomRight, pos, snapping, dx, dy);
 
-		int resizeX = static_cast<int>(offsetPointSnap.x);
-		int resizeY = static_cast<int>(offsetPointSnap.y);
+		int resizeX = static_cast<int>(dx);
+		int resizeY = static_cast<int>(dy);
 		checkStageResizeLimits(resizeX, resizeY);
 
 		auto res = createActionResizeStage(resizeX, resizeY);

@@ -46,6 +46,18 @@ private:
 	 * @param pSnap `p` snapped to grid based on `snapping`.
 	 */
 	void getSnappedPoint(const PointF& p, ObjectSnap snapping, PointF& pSnap);
+	/**
+	 * @brief Calculates the vector between `p0` and `p1` snapped to grid based
+	 *        on `snapping`.
+	 * 
+	 * @param p0 Origin.
+	 * @param p1 End point.
+	 * @param snapping The desired snapping.
+	 * @param offsetX 
+	 * @param offsetY 
+	 */
+	void getSnappedOffset(const PointF& p0, const PointF& p1,
+		ObjectSnap snapping, double& offsetX, double& offsetY);
 
 	std::shared_ptr<StageEditorAction> createActionNone();
 	std::shared_ptr<StageEditorAction> createActionAddPlayerObject(
@@ -85,6 +97,9 @@ private:
 		int resizeY);
 	std::shared_ptr<StageEditorAction> createActionSetStageTitle(
 		const std::string& newName);
+	std::shared_ptr<StageEditorAction> createActionDeleteAllPlayers();
+	std::shared_ptr<StageEditorAction> createActionDeleteAllObstacles();
+	std::shared_ptr<StageEditorAction> createActionDeleteAllObjects();
 
 	/**
 	 * @brief Creates one action from multiple actions.
@@ -552,6 +567,12 @@ public:
 	const std::shared_ptr<StageEditorAction> redo();
 	bool canUndo();
 	bool canRedo();
+	/**
+	 * @brief Creates a new empty stage.
+	 * 
+	 * @return The action performed.
+	 */
+	const std::shared_ptr<StageEditorAction> newStage();
 	/**
 	 * @brief Saves stage to a file.
 	 * 

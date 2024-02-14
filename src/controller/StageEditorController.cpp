@@ -291,7 +291,8 @@ void StageEditorController::menuIconClick(int iconIdx)
 
 void StageEditorController::menuIconNewClick()
 {
-	// TODO
+	const auto lastAction = m_stageEditor->newStage();
+	updateSpritesByAction(lastAction);
 }
 
 void StageEditorController::menuIconOpenClick()
