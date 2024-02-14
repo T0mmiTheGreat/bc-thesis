@@ -19,4 +19,11 @@
  */
 void popBackUtf8(std::string& s);
 
+template <typename... Args>
+std::string concatStrings(const Args&... strings)
+{
+	std::string res = (std::string() + ... + strings);
+	return res;
+}
+
 #endif // FUNCTIONS_HPP

@@ -74,6 +74,9 @@ set(SOURCE_FILES
 	stageeditor/StageViewport.cpp
 	stageeditor/StageEditorAction.cpp
 	stageeditor/StageEditorHistory.cpp
+	stageserializer/StageSerializerBase.cpp
+	stageserializer/StageSerializerFactory.cpp
+	stageserializer/YAMLStageSerializer.cpp
 )
 
 # Headers (*.hpp)
@@ -154,6 +157,10 @@ set(HEADER_FILES
 	stageeditor/StageViewport.hpp
 	stageeditor/StageEditorAction.hpp
 	stageeditor/StageEditorHistory.hpp
+	stageserializer/IStageSerializer.hpp
+	stageserializer/StageSerializerBase.hpp
+	stageserializer/StageSerializerFactory.hpp
+	stageserializer/YAMLStageSerializer.hpp
 )
 
 # Create the executable in the repo root directory
@@ -174,6 +181,8 @@ include_directories(${SDL2_image_INCLUDE_DIRS})
 set(CGAL_DO_NOT_WARN_ABOUT_CMAKE_BUILD_TYPE TRUE)
 find_package(CGAL REQUIRED)
 include_directories(${CGAL_INCLUDE_DIRS})
+find_package(YAML-CPP REQUIRED)
+include_directories(${YAML_CPP_INCLUDE_DIR})
 
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
 
@@ -184,4 +193,5 @@ target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${SDL2_ttf_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${SDL2_image_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${CGAL_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${YAML_CPP_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} SDL2pp::SDL2pp)
