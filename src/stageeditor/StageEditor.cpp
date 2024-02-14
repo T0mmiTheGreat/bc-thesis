@@ -14,6 +14,7 @@
 #include <cctype>
 #include <vector>
 
+#include "functions.hpp"
 #include "math/Math.hpp"
 #include "stageeditor/Common.hpp"
 #include "stageserializer/StageSerializerFactory.hpp"
@@ -62,9 +63,14 @@ std::shared_ptr<StageEditorAction> StageEditor::createActionPlaceObstacleCorner(
 
 std::shared_ptr<StageEditorAction> StageEditor::createActionAddObstacleObject()
 {
+	return createActionAddObstacleObject(m_obstacleCorners);
+}
+
+std::shared_ptr<StageEditorAction> StageEditor::createActionAddObstacleObject(
+	const PolygonF& shape)
+{
 	EditorOID oid = generateEditorOID();
-	PolygonF shape = m_obstacleCorners;
-	StageEditorObstacleObject tmpObstacle(oid, std::move(shape));
+	StageEditorObstacleObject tmpObstacle(oid, shape);
 
 	auto res = std::make_shared<StageEditorActionAddObstacleObject>(tmpObstacle);
 	return res;
@@ -334,6 +340,47 @@ std::shared_ptr<StageEditorAction> StageEditor::createActionDeleteAllObjects()
 	// Merge
 	auto res = getMergedActions(actionDeletePlayers, actionDeleteObstacles);
 	return res;
+}
+
+std::shared_ptr<StageEditorAction> StageEditor::createActionClearStage()
+{
+	// XXX: Kinda bad, likely to cause problems...
+
+	// Stop obstacle creation
+	auto actionAbortObstacle = createActionAbortObstacle();
+	// Stop all dragging
+	auto actionEndDragSelected = createActionMoveSelectedObjects(0, 0);
+	auto actionEndDragStageCorner = createActionResizeStage(0, 0);
+	// Deselect all objects
+	auto actionDeselect = createActionDeselectAll();
+	// Delete all objects
+	auto actionDelete = createActionDeleteAllObjects();
+
+	// Merge
+	auto res = getMergedActions(actionAbortObstacle, actionEndDragSelected,
+		actionEndDragStageCorner, actionDeselect, actionDelete);
+	return res;
+}
+
+std::shared_ptr<StageEditorAction> StageEditor::createActionResetStage()
+{
+	// Reset title
+	auto actionSetTitle = createActionSetStageTitle(
+		StageState::STAGE_TITLE_DEFAULT);
+	// Reset size
+	int resizeX = StageState::STAGE_WIDTH_INITIAL - m_stageState.width;
+	int resizeY = StageState::STAGE_HEIGHT_INITIAL - m_stageState.height;
+	auto actionResize = createActionResizeStage(resizeX, resizeY);
+
+	// Merge
+	auto res = getMergedActions(actionSetTitle, actionResize);
+	return res;
+}
+
+std::shared_ptr<StageEditorAction> StageEditor::createActionDeserializeStage(
+	const std::shared_ptr<IStageSerializer>& data)
+{
+	return deserializeStage(data);
 }
 
 template <StageEditorActionDerived... Args>
@@ -964,6 +1011,88 @@ void StageEditor::checkStageResizeLimits(int& resizeX, int& resizeY)
 	}
 }
 
+std::shared_ptr<IStageSerializer> StageEditor::serializeStage()
+{
+	auto res = StageSerializerFactory::createDefault();
+	// Title
+	res->setTitle(m_stageState.title);
+	// Width
+	res->setWidth(m_stageState.width);
+	// Height
+	res->setHeight(m_stageState.height);
+
+	// Players -- `m_stageState.players` as a vector
+	std::vector<IStageSerializer::PlayerType> players_;
+	players_.reserve(m_stageState.players.size());
+	for (const auto& playerPair : m_stageState.players) {
+		const auto& player = playerPair.second;
+		players_.push_back(player.pos);
+	}
+	res->setPlayers(players_);
+
+	// Obstacles -- `m_stageState.obstacles` as a vector of triangles
+	std::vector<IStageSerializer::ObstacleType> obstacles_;
+	std::vector<TriangleF> pogTriang;
+	for (const auto& obstaclePair : m_stageState.obstacles) {
+		// Get the obstacle
+		const auto& obstacle = obstaclePair.second;
+		// Triangulate
+		obstacle.shape.triangulate(pogTriang);
+		vectorAppendRange(obstacles_, pogTriang);
+	}
+	res->setObstacles(obstacles_);
+
+	// Position rules -- just a sequence of numbers:
+	// `0 -> players_.size() - 1`
+	// FIXME: Editor should allow making custom position rules
+
+	// The list
+	std::vector<IStageSerializer::PositionRuleType> positionRules_;
+	// A single rule
+	IStageSerializer::PositionRuleType positionRule_;
+	positionRule_.reserve(players_.size());
+	// Create the rule
+	for (size_t i = 0; i < players_.size(); i++) positionRule_.push_back(i);
+	// Insert to the rules list
+	positionRules_.push_back(std::move(positionRule_));
+	res->setPositionRules(positionRules_);
+
+	return res;
+}
+
+std::shared_ptr<StageEditorAction> StageEditor::deserializeStage(
+	const std::shared_ptr<IStageSerializer> data)
+{
+	std::shared_ptr<StageEditorAction> newAction;
+
+	// Set title
+	auto actionSetTitle = createActionSetStageTitle(data->getTitle());
+	// Set size
+	int resizeX = data->getWidth() - m_stageState.width;
+	int resizeY = data->getHeight() - m_stageState.height;
+	auto actionResize = createActionResizeStage(resizeX, resizeY);
+	// Set players
+	std::vector<std::shared_ptr<StageEditorAction>> actionsGroupAddPlayer;
+	for (const auto& pos : data->getPlayers()) {
+		newAction = createActionAddPlayerObject(pos);
+		actionsGroupAddPlayer.push_back(newAction);
+	}
+	auto actionAddPlayers = getMergedActions(actionsGroupAddPlayer);
+	// Set obstacles
+	std::vector<std::shared_ptr<StageEditorAction>> actionsGroupAddObstacle;
+	for (const auto& shape : data->getObstacles()) {
+		newAction = createActionAddObstacleObject(shape);
+		actionsGroupAddObstacle.push_back(newAction);
+	}
+	auto actionAddObstacles = getMergedActions(actionsGroupAddObstacle);
+
+	// Merge
+	auto res = getMergedActions(actionSetTitle, actionResize, actionAddPlayers,
+		actionAddObstacles);
+	
+	return res;
+}
+
 StageEditor::StageEditor()
 	: m_stageState()
 	, m_activeTool{TOOL_SELECT}
@@ -1015,10 +1144,10 @@ void StageEditor::getStageFileName(std::string& fn, bool& isAutoGenerated)
 void StageEditor::getStageFileName(const std::string& stageTitle,
 	std::string& fn, bool& isAutoGenerated)
 {
-	if (m_stageState.isFileAssociated()) {
+	if (m_stageState.isIdAssociated()) {
 		// Already has a file -- return it
 
-		fn = m_stageState.filename;
+		fn = m_stageState.stageId;
 		isAutoGenerated = false;
 	} else {
 		// Doesn't have a file yet -- auto-generate
@@ -1097,28 +1226,13 @@ bool StageEditor::canRedo()
 
 const std::shared_ptr<StageEditorAction> StageEditor::newStage()
 {
-	// XXX: Kinda bad, likely to cause problems...
-
-	// Stop obstacle creation
-	auto actionAbortObstacle = createActionAbortObstacle();
-	// Stop all dragging
-	m_isDraggingSelected = false;
-	m_isDraggingStage = false;
-	// Deselect all objects
-	auto actionDeselect = createActionDeselectAll();
-	// Delete all objects
-	auto actionDelete = createActionDeleteAllObjects();
-	// Reset title
-	auto actionTitle = createActionSetStageTitle(
-		StageState::STAGE_TITLE_DEFAULT);
-	// Reset size
-	int resizeX = StageState::STAGE_WIDTH_INITIAL - m_stageState.width;
-	int resizeY = StageState::STAGE_HEIGHT_INITIAL - m_stageState.height;
-	auto actionResize = createActionResizeStage(resizeX, resizeY);
+	// Clear
+	auto actionClear = createActionClearStage();
+	// Reset
+	auto actionReset = createActionResetStage();
 
 	// Merge
-	auto res = getMergedActions(actionAbortObstacle, actionDeselect,
-		actionDelete, actionTitle, actionResize);
+	auto res = getMergedActions(actionClear, actionReset);
 	
 	if (res->getType() != StageEditorAction::ACTION_NONE) {
 		// Perform
@@ -1134,7 +1248,7 @@ const std::shared_ptr<StageEditorAction> StageEditor::newStage()
 void StageEditor::save()
 {
 	// Serialize
-	auto serializer = m_stageState.serialize();
+	auto serializer = serializeStage();
 
 	// Get stage ID
 	std::string id;
@@ -1143,13 +1257,40 @@ void StageEditor::save()
 	// Save to file
 	serializer->save(id);
 
-	// Assign file to stage
-	m_stageState.assignFile(id);
+	// Assign ID to stage
+	m_stageState.assignId(id);
 }
 
-const std::shared_ptr<StageEditorAction> StageEditor::mouseLeftBtnDownToolSelect(
-	const PointF& pos, ObjectSnap snapping, bool isShiftPressed,
-	double grabZoneSize)
+const std::shared_ptr<StageEditorAction> StageEditor::load(
+	const IStageSerializer::IdType& id)
+{
+	// Clear
+	auto actionClear = createActionClearStage();
+	// Load
+	auto data = StageSerializerFactory::createDefault();
+	data->load(id);
+	auto actionLoad = createActionDeserializeStage(data);
+
+	// Merge
+	auto res = getMergedActions(actionClear, actionLoad);
+	
+	if (res->getType() != StageEditorAction::ACTION_NONE) {
+		// Perform
+		doAction(res);
+
+		// Add to actions history
+		m_history.pushAction(res);
+	}
+
+	// Assign ID to stage
+	m_stageState.assignId(id);
+
+	return res;
+}
+
+const std::shared_ptr<StageEditorAction>
+StageEditor::mouseLeftBtnDownToolSelect(const PointF& pos, ObjectSnap snapping,
+	bool isShiftPressed, double grabZoneSize)
 {
 	(void)snapping;
 	(void)grabZoneSize;

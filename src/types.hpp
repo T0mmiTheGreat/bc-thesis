@@ -1007,7 +1007,7 @@ struct PolygonF {
 	 * 
 	 * @param result The generated triangles.
 	 */
-	void triangulate(std::vector<TriangleF>& result) {
+	void triangulate(std::vector<TriangleF>& result) const {
 		// Invalid polygon cannot be triangulated
 		assert(isValidEuclidean());
 		// We want to create a new "result"

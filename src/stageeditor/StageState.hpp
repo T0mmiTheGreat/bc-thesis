@@ -33,26 +33,24 @@ struct StageState {
 	int height;
 	std::unordered_map<EditorOID, StageEditorObstacleObject> obstacles;
 	std::unordered_map<EditorOID, StageEditorPlayerObject> players;
-	std::string filename;
+	IStageSerializer::IdType stageId;
 
 	StageState()
 		: title{STAGE_TITLE_DEFAULT}
 		, width{STAGE_WIDTH_INITIAL}
 		, height{STAGE_HEIGHT_INITIAL}
-		, filename()
+		, stageId()
 	{}
 
 	Size2d getSize() const {
 		return Size2d(width, height);
 	}
-	bool isFileAssociated() const {
-		return !filename.empty();
+	bool isIdAssociated() const {
+		return !stageId.empty();
 	}
-	void assignFile(const std::string& fn) {
-		filename = fn;
+	void assignId(const IStageSerializer::IdType& fn) {
+		stageId = fn;
 	}
-
-	std::shared_ptr<IStageSerializer> serialize() const;
 };
 
 #endif // STAGESTATE_HPP

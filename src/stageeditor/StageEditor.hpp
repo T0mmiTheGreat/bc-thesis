@@ -65,6 +65,8 @@ private:
 	std::shared_ptr<StageEditorAction> createActionPlaceObstacleCorner(
 		const PointF& pos);
 	std::shared_ptr<StageEditorAction> createActionAddObstacleObject();
+	std::shared_ptr<StageEditorAction> createActionAddObstacleObject(
+		const PolygonF& shape);
 	std::shared_ptr<StageEditorAction> createActionAbortObstacle();
 	std::shared_ptr<StageEditorAction> createActionActivateTool(
 		EditorTool newTool);
@@ -100,6 +102,10 @@ private:
 	std::shared_ptr<StageEditorAction> createActionDeleteAllPlayers();
 	std::shared_ptr<StageEditorAction> createActionDeleteAllObstacles();
 	std::shared_ptr<StageEditorAction> createActionDeleteAllObjects();
+	std::shared_ptr<StageEditorAction> createActionClearStage();
+	std::shared_ptr<StageEditorAction> createActionResetStage();
+	std::shared_ptr<StageEditorAction> createActionDeserializeStage(
+		const std::shared_ptr<IStageSerializer>& data);
 
 	/**
 	 * @brief Creates one action from multiple actions.
@@ -395,6 +401,10 @@ private:
 	 *        resize and adjusts the `dx` and `dy` if it would.
 	 */
 	void checkStageResizeLimits(int& resizeX, int& resizeY);
+
+	std::shared_ptr<IStageSerializer> serializeStage();
+	std::shared_ptr<StageEditorAction> deserializeStage(
+		const std::shared_ptr<IStageSerializer> data);
 public:
 	StageEditor();
 	/**
@@ -579,6 +589,7 @@ public:
 	 * @exception IStageSerializer::Exception
 	 */
 	void save();
+	const std::shared_ptr<StageEditorAction> load(const IStageSerializer::IdType& id);
 };
 
 #endif // STAGEEDITOR_HPP

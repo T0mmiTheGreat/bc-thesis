@@ -297,7 +297,8 @@ void StageEditorController::menuIconNewClick()
 
 void StageEditorController::menuIconOpenClick()
 {
-	// TODO
+	const auto lastAction = m_stageEditor->load("my_stage");
+	updateSpritesByAction(lastAction);
 }
 
 void StageEditorController::menuIconSaveClick()

@@ -137,7 +137,7 @@ bool areVectorsAntiparallel(double v1x, double v1y, double v2x, double v2y);
  * @remark The polygon must be simple, i.e., without self-intersecting
  *         edges.
  */
-void triangulatePolygon(std::vector<std::array<double,2>> corners,
-	std::vector<std::array<std::array<double,2>,3>> triangles);
+void triangulatePolygon(const std::vector<std::array<double,2>>& corners,
+	std::vector<std::array<std::array<double,2>,3>>& triangles);
 
 #endif // MATH_HPP

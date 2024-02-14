@@ -47,7 +47,7 @@ class IStageSerializer {
 public:
 	typedef std::string IdType;
 	typedef PointF PlayerType;
-	typedef PolygonF ObstacleType;
+	typedef TriangleF ObstacleType;
 	// These are indexes to the `players` vector
 	typedef std::vector<int> PositionRuleType;
 

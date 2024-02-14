@@ -72,8 +72,8 @@ bool areVectorsAntiparallel(double v1x, double v1y, double v2x, double v2y)
 	}
 }
 
-void triangulatePolygon(std::vector<std::array<double,2>> corners,
-	std::vector<std::array<std::array<double,2>,3>> triangles)
+void triangulatePolygon(const std::vector<std::array<double,2>>& corners,
+	std::vector<std::array<std::array<double,2>,3>>& triangles)
 {
 	// Inspired from https://doc.cgal.org/latest/Triangulation_2/Triangulation_2_2polygon_triangulation_8cpp-example.html
 
@@ -107,7 +107,7 @@ void triangulatePolygon(std::vector<std::array<double,2>> corners,
 	// Find facets (triangles) which are within the bounds of the polygon
 	CGAL::mark_domain_in_triangulation(cdt, in_domain);
 
-	decltype(triangles)::value_type triangle;
+	std::remove_reference<decltype(triangles)>::type::value_type triangle;
 	// Move the triangles to the output vector
 	for (CDT::Face_handle fh : cdt.finite_face_handles()) {
 		// If the facet is within the bounds of the polygon...

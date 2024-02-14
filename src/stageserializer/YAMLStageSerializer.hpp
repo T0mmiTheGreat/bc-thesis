@@ -27,19 +27,17 @@ private:
 	 * @param fn File which caused the exception.
 	 * @param what Exception text.
 	 */
-	void throwIOException(const std::string& fn, const std::string& what) const;
+	static void throwIOException(const std::string& fn,
+		const std::string& what);
 	/**
 	 * @brief Creates and throws an ParserException.
 	 * 
 	 * @param fn File which caused the exception.
 	 * @param what Exception text.
 	 */
-	void throwParserException(const std::string& fn, const std::string& what) const;
+	static void throwParserException(const std::string& fn,
+		const std::string& what);
 
-	void throwParserExceptionMissingKey(const std::string& fn,
-		const std::string& key);
-	void throwParserExceptionInvalidKeyValue(const std::string& fn,
-		const std::string& key);
 	/**
 	 * @brief Returns path to the stage based on its ID.
 	 */
