@@ -104,6 +104,18 @@ public:
 	 */
 	virtual IStageSerializer::IdType generateIdByTitle(
 		const std::string& title) const = 0;
+	/**
+	 * @brief Returns the "canonical" ID for the provided `stageId`.
+	 * 
+	 * @details "Canonical" ID is used for identifying the stage externally. If
+	 *          the stage is stored in a file, returns the path (probably
+	 *          relative) to the file. For other means of storing the stage, the
+	 *          value may be anything; the `stageId` itself, empty string,
+	 *          hash, etc. In general, though, it would make sense to refer to
+	 *          is as the "file name".
+	 */
+	virtual std::string getStageCanonicalId(
+		const IStageSerializer::IdType& stageId) const = 0;
 
 	virtual const std::string& getTitle() const = 0;
 	virtual void setTitle(const std::string& value) = 0;

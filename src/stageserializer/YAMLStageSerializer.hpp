@@ -49,8 +49,9 @@ public:
 	void load(const IStageSerializer::IdType& id) override;
 
 	std::unordered_set<IStageSerializer::IdType> getAllIds() const override;
-	std::unordered_map<IStageSerializer::IdType, std::string>
-	getAllTitles() const override;
+
+	std::string getStageCanonicalId(
+		const IStageSerializer::IdType& stageId) const override;
 };
 
 #endif // YAMLSTAGESERIALIZER_HPP

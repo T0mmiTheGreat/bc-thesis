@@ -206,7 +206,7 @@ YAMLStageSerializer::YAMLStageSerializer()
 	: StageSerializerBase()
 {}
 
-void YAMLStageSerializer::save(const std::string& id) const
+void YAMLStageSerializer::save(const IStageSerializer::IdType& id) const
 {
 	// Make file name
 	std::string fn = getStagePath(id);
@@ -275,11 +275,10 @@ YAMLStageSerializer::getAllIds() const
 	return res;
 }
 
-std::unordered_map<IStageSerializer::IdType,std::string>
-YAMLStageSerializer::getAllTitles() const
+std::string YAMLStageSerializer::getStageCanonicalId(
+	const IStageSerializer::IdType& stageId) const
 {
-	// TODO
-	return std::unordered_map<IdType,std::string>();
+	return getStagePath(stageId);
 }
 
 YAML::Emitter& operator<< (YAML::Emitter& out,
