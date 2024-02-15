@@ -51,6 +51,9 @@ struct StageState {
 	void assignId(const IStageSerializer::IdType& fn) {
 		stageId = fn;
 	}
+	void removeId() {
+		stageId.clear();
+	}
 };
 
 #endif // STAGESTATE_HPP

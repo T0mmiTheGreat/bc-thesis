@@ -1244,6 +1244,8 @@ const std::shared_ptr<StageEditorAction> StageEditor::newStage()
 		m_history.pushAction(res);
 	}
 
+	m_stageState.removeId();
+
 	return res;
 }
 
