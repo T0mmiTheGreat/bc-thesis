@@ -21,6 +21,7 @@
 #include "types.hpp"
 #include "stageeditor/Common.hpp"
 #include "stageeditor/StageEditorObjects.hpp"
+#include "stageserializer/IStageSerializer.hpp"
 
 /**
  * @brief Base class for stage editor actions.
@@ -61,6 +62,8 @@ public:
 		ACTION_BEGIN_DRAG_STAGE_CORNER,
 		ACTION_RESIZE_STAGE,
 		ACTION_SET_STAGE_TITLE,
+		ACTION_ASSIGN_STAGE_ID,
+		ACTION_REMOVE_STAGE_ID,
 	};
 
 	virtual ~StageEditorAction() {}
@@ -912,6 +915,82 @@ public:
 
 	const std::string& getNewName() const {
 		return m_newName;
+	}
+};
+
+/**
+ * @brief Stage was assigned a unique identifier.
+ * 
+ * @remark "Assign" is not the same as "overwrite". If the stage had an ID
+ *         already assign, it has to be removed first.
+ */
+class StageEditorActionAssignStageId : public StageEditorAction {
+private:
+	IStageSerializer::IdType m_id;
+public:
+	/**
+	 * @brief Constructs a new StageEditorActionAssignStageId object.
+	 * 
+	 * @param id The assigned ID.
+	 */
+	StageEditorActionAssignStageId(const IStageSerializer::IdType& id)
+		: m_id{id}
+	{}
+
+	/**
+	 * @brief Returns the action type.
+	 */
+	ActionType getType() const override {
+		return ACTION_ASSIGN_STAGE_ID;
+	}
+
+	/**
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
+	 */
+	std::shared_ptr<StageEditorAction> createInverse() const override;
+
+	/**
+	 * @brief The assigned ID.
+	 */
+	const IStageSerializer::IdType& getId() const {
+		return m_id;
+	}
+};
+
+class StageEditorActionRemoveStageId : public StageEditorAction {
+private:
+	IStageSerializer::IdType m_id;
+public:
+	/**
+	 * @brief Constructs a new StageEditorActionRemoveStageId object.
+	 * 
+	 * @param id The removed ID.
+	 */
+	StageEditorActionRemoveStageId(const IStageSerializer::IdType& id)
+		: m_id{id}
+	{}
+
+	/**
+	 * @brief Returns the action type.
+	 */
+	ActionType getType() const override {
+		return ACTION_REMOVE_STAGE_ID;
+	}
+
+	/**
+	 * @brief Creates action which does the opposite of this action.
+	 * 
+	 * @details For undo.
+	 */
+	std::shared_ptr<StageEditorAction> createInverse() const override;
+
+	/**
+	 * @brief The removed ID.
+	 */
+	const IStageSerializer::IdType& getId() const {
+		return m_id;
 	}
 };
 

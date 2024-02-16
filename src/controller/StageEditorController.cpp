@@ -525,6 +525,12 @@ void StageEditorController::updateSpritesByAction(
 		case StageEditorAction::ACTION_SET_STAGE_TITLE:
 			// Nothing to update
 			break;
+		case StageEditorAction::ACTION_ASSIGN_STAGE_ID:
+			// Nothing to update
+			break;
+		case StageEditorAction::ACTION_REMOVE_STAGE_ID:
+			// Nothing to update
+			break;
 	}
 
 	updateUndoRedoIcons();

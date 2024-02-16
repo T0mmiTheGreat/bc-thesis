@@ -106,6 +106,11 @@ private:
 	std::shared_ptr<StageEditorAction> createActionResetStage();
 	std::shared_ptr<StageEditorAction> createActionDeserializeStage(
 		const std::shared_ptr<IStageSerializer>& data);
+	std::shared_ptr<StageEditorAction> createActionAssignStageId(
+		const IStageSerializer::IdType& id);
+	std::shared_ptr<StageEditorAction> createActionRemoveStageId();
+	std::shared_ptr<StageEditorAction> createActionChangeStageId(
+		const IStageSerializer::IdType& id);
 
 	/**
 	 * @brief Creates one action from multiple actions.
@@ -154,6 +159,8 @@ private:
 	void doActionBeginDragStageCorner(const std::shared_ptr<StageEditorAction> action);
 	void doActionResizeStage(const std::shared_ptr<StageEditorAction> action);
 	void doActionSetStageTitle(const std::shared_ptr<StageEditorAction> action);
+	void doActionAssignStageId(const std::shared_ptr<StageEditorAction> action);
+	void doActionRemoveStageId(const std::shared_ptr<StageEditorAction> action);
 
 	EditorOID getPlayerObjectAt(const PointF& pos);
 	EditorOID getObstacleObjectAt(const PointF& pos);

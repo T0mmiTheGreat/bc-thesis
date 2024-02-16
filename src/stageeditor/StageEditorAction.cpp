@@ -167,3 +167,15 @@ std::shared_ptr<StageEditorAction> StageEditorActionSetStageTitle::createInverse
 		m_oldName);
 	return res;
 }
+
+std::shared_ptr<StageEditorAction> StageEditorActionAssignStageId::createInverse() const
+{
+	auto res = std::make_shared<StageEditorActionRemoveStageId>(m_id);
+	return res;
+}
+
+std::shared_ptr<StageEditorAction> StageEditorActionRemoveStageId::createInverse() const
+{
+	auto res = std::make_shared<StageEditorActionAssignStageId>(m_id);
+	return res;
+}

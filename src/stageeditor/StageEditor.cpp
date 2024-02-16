@@ -383,6 +383,35 @@ std::shared_ptr<StageEditorAction> StageEditor::createActionDeserializeStage(
 	return deserializeStage(data);
 }
 
+std::shared_ptr<StageEditorAction> StageEditor::createActionAssignStageId(
+	const IStageSerializer::IdType& id)
+{
+	if (!m_stageState.isIdAssociated()) {
+		return std::make_shared<StageEditorActionAssignStageId>(id);
+	} else {
+		return createActionNone();
+	}
+}
+
+std::shared_ptr<StageEditorAction> StageEditor::createActionRemoveStageId()
+{
+	if (m_stageState.isIdAssociated()) {
+		return std::make_shared<StageEditorActionRemoveStageId>(
+			m_stageState.stageId);
+	} else {
+		return createActionNone();
+	}
+}
+
+std::shared_ptr<StageEditorAction> StageEditor::createActionChangeStageId(
+	const IStageSerializer::IdType& id)
+{
+	auto actionRemove = createActionRemoveStageId();
+	auto actionAssign = createActionAssignStageId(id);
+	auto res = getMergedActions(actionRemove, actionAssign);
+	return res;
+}
+
 template <StageEditorActionDerived... Args>
 std::shared_ptr<StageEditorAction> StageEditor::getMergedActions(
 	std::shared_ptr<Args>&... actions)
@@ -473,6 +502,12 @@ void StageEditor::doAction(const std::shared_ptr<StageEditorAction> action)
 			break;
 		case StageEditorAction::ACTION_SET_STAGE_TITLE:
 			doActionSetStageTitle(action);
+			break;
+		case StageEditorAction::ACTION_ASSIGN_STAGE_ID:
+			doActionAssignStageId(action);
+			break;
+		case StageEditorAction::ACTION_REMOVE_STAGE_ID:
+			doActionRemoveStageId(action);
 			break;
 	}
 }
@@ -671,6 +706,23 @@ void StageEditor::doActionSetStageTitle(
 		std::dynamic_pointer_cast<StageEditorActionSetStageTitle>(action);
 	
 	m_stageState.title = actionCast->getNewName();
+}
+
+void StageEditor::doActionAssignStageId(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	auto actionCast =
+		std::dynamic_pointer_cast<StageEditorActionAssignStageId>(action);
+	
+	m_stageState.assignId(actionCast->getId());
+}
+
+void StageEditor::doActionRemoveStageId(
+	const std::shared_ptr<StageEditorAction> action)
+{
+	(void)action;
+
+	m_stageState.removeId();
 }
 
 EditorOID StageEditor::getPlayerObjectAt(const PointF& pos)
@@ -1232,9 +1284,11 @@ const std::shared_ptr<StageEditorAction> StageEditor::newStage()
 	auto actionClear = createActionClearStage();
 	// Reset
 	auto actionReset = createActionResetStage();
+	// Remove ID
+	auto actionRemoveId = createActionRemoveStageId();
 
 	// Merge
-	auto res = getMergedActions(actionClear, actionReset);
+	auto res = getMergedActions(actionClear, actionReset, actionRemoveId);
 	
 	if (res->getType() != StageEditorAction::ACTION_NONE) {
 		// Perform
@@ -1244,25 +1298,29 @@ const std::shared_ptr<StageEditorAction> StageEditor::newStage()
 		m_history.pushAction(res);
 	}
 
-	m_stageState.removeId();
-
 	return res;
 }
 
 void StageEditor::save()
 {
+	if (!m_stageState.isIdAssociated()) {
+		// Get stage ID
+		auto serializer = StageSerializerFactory::createDefault();
+		auto id = serializer->generateIdByTitle(m_stageState.title);
+
+		// Assign ID to stage
+		auto actionAssignId = createActionAssignStageId(id);
+		if (actionAssignId->getType() != StageEditorAction::ACTION_NONE) {
+			doAction(actionAssignId);
+			m_history.pushAction(actionAssignId);
+		}
+	}
+
 	// Serialize
 	auto serializer = serializeStage();
 
-	// Get stage ID
-	std::string id;
-	getStageFileName(id);
-
-	// Save to file
-	serializer->save(id);
-
-	// Assign ID to stage
-	m_stageState.assignId(id);
+	// Save
+	serializer->save(m_stageState.stageId);
 }
 
 const std::shared_ptr<StageEditorAction> StageEditor::load(
