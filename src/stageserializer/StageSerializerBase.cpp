@@ -20,6 +20,24 @@ StageSerializerBase::StageSerializerBase()
 	, positionRules()
 {}
 
+std::unordered_map<IStageSerializer::IdType,std::string>
+StageSerializerBase::getAllTitles()
+{
+	auto ids = getAllIds();
+	std::unordered_map<IStageSerializer::IdType,std::string> res;
+
+	for (const auto& id : ids) {
+		try {
+			load(id);
+			res[id] = getTitle();
+		} catch (const IStageSerializer::Exception&) {
+			// Ignore these
+		}
+	}
+
+	return res;
+}
+
 IStageSerializer::IdType StageSerializerBase::generateIdByTitle(
 	const std::string& title) const
 {

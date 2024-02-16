@@ -48,7 +48,7 @@ public:
 	 * @return Map of stage titles indexed using their IDs.
 	 */
 	virtual std::unordered_map<IStageSerializer::IdType, std::string>
-	getAllTitles() const override = 0;
+	getAllTitles() override;
 
 	/**
 	 * @brief Generates a stage ID based on the `title`.
