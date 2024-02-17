@@ -37,6 +37,7 @@ private:
 	enum ExitResult {
 		RES_MENU,
 		RES_STAGE_PROPERTIES,
+		RES_STAGE_SELECT,
 	};
 private:
 #pragma region constants
@@ -100,6 +101,9 @@ private:
 	StageViewport m_viewport;
 
 	ExitResult m_exitResult;
+
+	IStageSerializer::IdType m_selectedStage;
+	bool m_isSelectedStageValid;
 
 #pragma region sprites
 	std::array<std::unique_ptr<EditorIconSprite>, MENUICON_COUNT> m_menuIcons;
@@ -385,6 +389,7 @@ protected:
 	
 	void onActivated() override;
 	void onStarted() override;
+	void onResumed() override;
 	void onMouseBtnDown(MouseBtn btn, int x, int y) override;
 	void onMouseBtnUp(MouseBtn btn, int x, int y) override;
 	void onMouseMove(int x, int y) override;

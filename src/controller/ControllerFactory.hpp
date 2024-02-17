@@ -17,6 +17,7 @@
 #include "controller/IRootController.hpp"
 #include "controller/IControllerChild.hpp"
 #include "stageeditor/StageEditor.hpp"
+#include "stageserializer/IStageSerializer.hpp"
 #include "sysproxy/ISysProxy.hpp"
 
 /**
@@ -69,6 +70,9 @@ public:
 	static std::shared_ptr<IControllerChild> createStagePropertiesController(
 		std::shared_ptr<ISysProxy> sysProxy,
 		std::shared_ptr<StageEditor> stageEditor);
+	static std::shared_ptr<IControllerChild> createStageSelectController(
+		std::shared_ptr<ISysProxy> sysProxy,
+		IStageSerializer::IdType& selectedStage, bool& isSelectedStageValid);
 };
 
 #endif // CONTROLLERFACTORY_HPP

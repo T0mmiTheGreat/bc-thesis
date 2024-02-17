@@ -297,8 +297,8 @@ void StageEditorController::menuIconNewClick()
 
 void StageEditorController::menuIconOpenClick()
 {
-	const auto lastAction = m_stageEditor->load("my_stage");
-	updateSpritesByAction(lastAction);
+	m_exitResult = RES_STAGE_SELECT;
+	pausedEvent();
 }
 
 void StageEditorController::menuIconSaveClick()
@@ -1302,6 +1302,9 @@ std::shared_ptr<IControllerChild> StageEditorController::createReplacement()
 		case RES_STAGE_PROPERTIES:
 			return ControllerFactory::createStagePropertiesController(
 				sysProxy, m_stageEditor);
+		case RES_STAGE_SELECT:
+			return ControllerFactory::createStageSelectController(sysProxy,
+				m_selectedStage, m_isSelectedStageValid);
 	}
 
 	// Default
@@ -1312,6 +1315,17 @@ void StageEditorController::onStarted()
 {
 	GeneralControllerBase::onStarted();
 	initializeSprites();
+}
+
+void StageEditorController::onResumed()
+{
+	GeneralControllerBase::onResumed();
+	if (m_exitResult == RES_STAGE_SELECT) {
+		if (m_isSelectedStageValid) {
+			const auto lastAction = m_stageEditor->load(m_selectedStage);
+			updateSpritesByAction(lastAction);
+		}
+	}
 }
 
 void StageEditorController::onMouseBtnDown(MouseBtn btn, int x, int y)

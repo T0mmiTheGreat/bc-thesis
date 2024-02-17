@@ -20,6 +20,7 @@
 #include "controller/InGameController.hpp"
 #include "controller/StageEditorController.hpp"
 #include "controller/StagePropertiesController.hpp"
+#include "controller/StageSelectController.hpp"
 
 std::shared_ptr<IRootController> ControllerFactory::createRootController(std::shared_ptr<ISysProxy> sysProxy)
 {
@@ -57,4 +58,13 @@ ControllerFactory::createStagePropertiesController(
 	std::shared_ptr<StageEditor> stageEditor)
 {
 	return std::make_shared<StagePropertiesController>(sysProxy, stageEditor);
+}
+
+std::shared_ptr<IControllerChild>
+ControllerFactory::createStageSelectController(
+	std::shared_ptr<ISysProxy> sysProxy,
+	IStageSerializer::IdType& selectedStage, bool& isSelectedStageValid)
+{
+	return std::make_shared<StageSelectController>(sysProxy, selectedStage,
+		isSelectedStageValid);
 }
