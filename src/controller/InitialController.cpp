@@ -21,7 +21,7 @@ std::shared_ptr<IControllerChild> InitialController::createReplacement()
 	//return ControllerFactory::createMainMenuController(sysProxy);
 }
 
-void InitialController::loopEvent()
+void InitialController::onLoop()
 {
-	finish();
+	finishedEvent();
 }

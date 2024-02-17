@@ -36,11 +36,13 @@ private:
 	 * @brief Sets the player sprite properties based on the state of the core.
 	 */
 	void updatePlayerSprites();
+protected:
+	void onActivated() override;
+	void onLoop() override;
+	void onPaint(std::shared_ptr<ICanvas> canvas,
+		const Rect& invalidRect) override;
 public:
 	InGameController(std::shared_ptr<ISysProxy> sysProxy);
-	void activatedEvent() override;
-	void loopEvent() override;
-	void paintEvent(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override;
 };
 
 #endif // INGAMECONTROLLER_HPP

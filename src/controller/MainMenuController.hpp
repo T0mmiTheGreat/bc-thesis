@@ -50,13 +50,15 @@ private:
 	int getMenuItemAt(int x, int y);
 protected:
 	std::shared_ptr<IControllerChild> createReplacement() override;
+	
+	void onStarted() override;
+	void onMouseBtnDown(MouseBtn btn, int x, int y) override;
+	void onMouseMove(int x, int y) override;
+	void onLoop() override;
+	void onPaint(std::shared_ptr<ICanvas> canvas,
+		const Rect& invalidRect) override;
 public:
 	MainMenuController(std::shared_ptr<ISysProxy> sysProxy);
-	void startedEvent() override;
-	void mouseBtnDownEvent(MouseBtn btn, int x, int y) override;
-	void mouseMoveEvent(int x, int y) override;
-	void loopEvent() override;
-	void paintEvent(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override;
 };
 
 #endif // MAINMENUCONTROLLER_HPP

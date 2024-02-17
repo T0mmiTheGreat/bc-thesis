@@ -146,12 +146,12 @@ void StagePropertiesController::checkButtonsClick(const Point& mouse)
 void StagePropertiesController::okBtnClick()
 {
 	m_stageEditor->setStageTitle(m_stageTitle);
-	finish();
+	finishedEvent();
 }
 
 void StagePropertiesController::cancelBtnClick()
 {
-	finish();
+	finishedEvent();
 }
 
 StagePropertiesController::StagePropertiesController(
@@ -161,28 +161,28 @@ StagePropertiesController::StagePropertiesController(
 	, m_stageEditor{stageEditor}
 {}
 
-void StagePropertiesController::startedEvent()
+void StagePropertiesController::onStarted()
 {
-	GeneralControllerBase::startedEvent();
+	GeneralControllerBase::onStarted();
 	
 	m_stageTitle = m_stageEditor->getState().title;
 
 	initializeSprites();
 }
 
-void StagePropertiesController::activatedEvent()
+void StagePropertiesController::onActivated()
 {
-	GeneralControllerBase::activatedEvent();
+	GeneralControllerBase::onActivated();
 	sysProxy->setTextInputEnabled(true);
 }
 
-void StagePropertiesController::deactivatedEvent()
+void StagePropertiesController::onDeactivated()
 {
 	sysProxy->setTextInputEnabled(false);
-	GeneralControllerBase::deactivatedEvent();
+	GeneralControllerBase::onDeactivated();
 }
 
-void StagePropertiesController::keyDownEvent(KeyCode key)
+void StagePropertiesController::onKeyDown(KeyCode key)
 {
 	if (key == KEY_BACKSPACE) {
 		// Delete character
@@ -195,25 +195,25 @@ void StagePropertiesController::keyDownEvent(KeyCode key)
 	}
 }
 
-void StagePropertiesController::textInputEvent(const char* text)
+void StagePropertiesController::onTextInput(const char* text)
 {
 	m_stageTitle += text;
 	updateTextBoxSprite();
 }
 
-void StagePropertiesController::mouseBtnDownEvent(MouseBtn btn, int x, int y)
+void StagePropertiesController::onMouseBtnDown(MouseBtn btn, int x, int y)
 {
 	if (btn == BTN_LEFT) {
 		checkButtonsClick(x, y);
 	}
 }
 
-void StagePropertiesController::mouseMoveEvent(int x, int y)
+void StagePropertiesController::onMouseMove(int x, int y)
 {
 	checkButtonsMouseHover(x, y);
 }
 
-void StagePropertiesController::paintEvent(std::shared_ptr<ICanvas> canvas,
+void StagePropertiesController::onPaint(std::shared_ptr<ICanvas> canvas,
 	const Rect& invalidRect)
 {
 	m_textBoxSprite->repaint(canvas, invalidRect);

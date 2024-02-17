@@ -22,16 +22,15 @@
 /**
  * @brief The base class for general (non-root) controllers.
  * 
- * @details Provides convenient overrides for events, so if descendants don't
- *          need to listen to some events, they don't need to explicitly
- *          override the pure virtual methods and make their body empty.
- * 
- *          There are no methods that the descendants are forced to implement.
+ * @details There are no methods that the descendants are forced to implement.
  *          They may choose to override `createReplacement()` if they are not
- *          "point of no return". They MUST call this class's constructor if
- *          they provide their own.
+ *          "point of no return", or `on<eventName>` if they are willing to
+ *          listen to that event.
  */
 class GeneralControllerBase : public IControllerChild {
+private:
+	void replaceController();
+	void pauseController();
 protected:
 	IControllerChild::IParent* parent;
 	std::shared_ptr<ISysProxy> sysProxy;
@@ -45,6 +44,47 @@ protected:
 	 *          replacement.
 	 */
 	virtual std::shared_ptr<IControllerChild> createReplacement();
+
+	// The connections between begin/end events:
+	//
+	// 1) onStarted -+
+	//               +---> 2) onActivated
+	// 1) onResumed -+
+	//
+	//
+	// 2) onFinished -+
+	//                |
+	// 2) onStopped --+
+	//                +---> 1) onDeactivated
+	// 2) onAborted --+
+	//                |
+	// 2) onPaused ---+
+	//
+	// Public `<eventName>Event` correspond to protected `on<eventName>`, so
+	// when the public variant is called "from the outside", the call is
+	// delegated to the protected variant. The exceptions are the begin/end
+	// events; although their protected counterpart is called, there are other
+	// events, which are called together with them. Which ones and their order
+	// is shown in the graph above. For example, when `finishedEvent()` is
+	// called, it calls `onDeactivated()`, then `onFinished()`.
+
+	virtual void onActivated();
+	virtual void onDeactivated();
+	virtual void onStarted();
+	virtual void onFinished();
+	virtual void onStopped();
+	virtual void onAborted();
+	virtual void onPaused();
+	virtual void onResumed();
+	virtual void onKeyDown(KeyCode key);
+	virtual void onTextInput(const char* text);
+	virtual void onMouseBtnDown(MouseBtn btn, int x, int y);
+	virtual void onMouseBtnUp(MouseBtn btn, int x, int y);
+	virtual void onMouseMove(int x, int y);
+	virtual void onMouseWheel(int dx, int dy);
+	virtual void onLoop();
+	virtual void onPaint(std::shared_ptr<ICanvas> canvas,
+		const Rect& invalidRect);
 public:
 	/**
 	 * @brief Constructs a new GeneralControllerBase object.
@@ -55,109 +95,50 @@ public:
 	GeneralControllerBase(std::shared_ptr<ISysProxy> sysProxy);
 
 	/**
-	 * @brief The controller should start.
+	 * @brief The controller has started.
 	 * 
-	 * @details Should only be called by its parent, before any other event.
-	 *          Should call `startedEvent()`, then `activatedEvent()`.
+	 * @details The first event that the controller receives. Should only be
+	 *          called by its parent.
 	 */
-	void start() override;
+	void startedEvent() override;
 	/**
-	 * @brief The controller should stop.
+	 * @brief The controller has finished.
 	 * 
-	 * @details Should only be called by the controller itself. Should be called
-	 *          from `abort()` and `stop()`. Should call `deactivatedEvent()`,
-	 *          then `finishedEvent()`. No event should be sent afterwards.
+	 * @details The last event that the controller receives. Should only be
+	 *          called by the controller itself.
 	 */
-	void finish() override;
+	void finishedEvent() override;
 	/**
-	 * @brief The controller should stop.
+	 * @brief The controller has stopped.
 	 * 
-	 * @details Should only be called by its parent. Should call
-	 *          `deactivatedEvent()`, then `finishedEvent()`. No event should be
-	 *          sent afterwards.
+	 * @details The last event that the controller receives. Should only be
+	 *          called by its parent.
 	 */
-	void stop() override;
+	void stoppedEvent() override;
 	/**
-	 * @brief The controller should stop.
+	 * @brief The controller has stopped.
 	 * 
-	 * @details May be called both by its parent and the controller itself.
-	 *          Should call `deactivatedEvent()`, then `finishedEvent()`. No
-	 *          event should be sent afterwards.
+	 * @details The last event that the controller receives. Puts more emphasis
+	 *          on the "exceptional termination". May be called both by its
+	 *          parent and the controller itself.
 	 */
-	void abort() override;
+	void abortedEvent() override;
 	/**
-	 * @brief The controller should stop, but not reset its state, as it will
-	 *        be resumed later.
+	 * @brief The controller has stopped, but should not reset its state as it
+	 *        will be resumed again.
 	 * 
 	 * @details Should only be called by the controller itself. Should call
-	 *          `deactivatedEvent()`. The next event it receives should be
-	 *          either `resumedEvent()` or any of the "end" events.
+	 *          The next event it receives should be either `resumedEvent()`
+	 *          or any of the "end" events.
 	 */
-	void pause() override;
+	void pausedEvent() override;
 	/**
-	 * @brief The controller should be resumed after pause.
+	 * @brief The controller was awoken after `pausedEvent()`.
 	 * 
-	 * @details Should only be called by its parent. Should call
-	 *          `activatedEvent()`. 
+	 * @details Should only be called by its parent.
 	 */
-	void resume() override;
+	void resumedEvent() override;
 
-	/**
-	 * @brief The controller has been activated.
-	 * 
-	 * @details Descendants should call this method if they override it.
-	 */
-	virtual void activatedEvent() override;
-	/**
-	 * @brief The controller has been deactivated.
-	 * 
-	 * @details Descendants should call this method if they override it.
-	 */
-	virtual void deactivatedEvent() override;
-	/**
-	 * @brief The controller should start.
-	 * 
-	 * @details The first event that the controller receives.
-	 * 
-	 *          Descendants should call this method if they override it.
-	 */
-	virtual void startedEvent() override;
-	/**
-	 * @brief The controller should end.
-	 * 
-	 * @details The last event that the controller receives. Should be sent
-	 *          only by the controller itself and not its parent.
-	 * 
-	 *          Automatically calls the swap callback.
-	 * 
-	 *          Descendants should call this method if they override it.
-	 */
-	virtual void finishedEvent() override;
-	/**
-	 * @brief The controller should stop.
-	 * 
-	 * @details In most cases identical to finishedEvent(). Should only be sent
-	 *          by its parent and not the controller itself.
-	 * 
-	 *          Delegated to finishedEvent.
-	 * 
-	 *          Descendants should call this method if they override it.
-	 */
-	virtual void stoppedEvent() override;
-	/**
-	 * @brief The controller should stop.
-	 * 
-	 * @details In most cases identical to finishedEvent(). May be sent both
-	 *          by parent and the controller itself. Puts more emphasis on the
-	 *          "exceptional termination".
-	 * 
-	 *          Delegated to finishedEvent.
-	 * 
-	 *          Descendants should call this method if they override it.
-	 */
-	virtual void abortedEvent() override;
-	virtual void pausedEvent() override;
-	virtual void resumedEvent() override;
 	/**
 	 * @brief A key was pressed.
 	 * 
@@ -166,7 +147,7 @@ public:
 	 * 
 	 * @param key The code of the key.
 	 */
-	virtual void keyDownEvent(KeyCode key) override;
+	void keyDownEvent(KeyCode key) override;
 	/**
 	 * @brief A character key was pressed.
 	 * 
@@ -181,7 +162,7 @@ public:
 	 *          s += text;
 	 *          ```
 	 */
-	virtual void textInputEvent(const char* text) override;
+	void textInputEvent(const char* text) override;
 	/**
 	 * @brief A mouse button was pressed.
 	 * 
@@ -191,7 +172,7 @@ public:
 	 * @param y The mouse y coordinate. 0 is the top border of the window. The
 	 *          coordinate increases downwards.
 	 */
-	virtual void mouseBtnDownEvent(MouseBtn btn, int x, int y) override;
+	void mouseBtnDownEvent(MouseBtn btn, int x, int y) override;
 	/**
 	 * @brief A mouse button was released.
 	 * 
@@ -201,7 +182,7 @@ public:
 	 * @param y The mouse y coordinate. 0 is the top border of the window. The
 	 *          coordinate increases downwards.
 	 */
-	virtual void mouseBtnUpEvent(MouseBtn btn, int x, int y) override;
+	void mouseBtnUpEvent(MouseBtn btn, int x, int y) override;
 	/**
 	 * @brief A mouse cursor moved.
 	 * 
@@ -210,7 +191,7 @@ public:
 	 * @param y The y coordinate. 0 is the top border of the window. The
 	 *          coordinate increases downwards.
 	 */
-	virtual void mouseMoveEvent(int x, int y) override;
+	void mouseMoveEvent(int x, int y) override;
 	/**
 	 * @brief A mouse wheel has been scrolled.
 	 * 
@@ -219,11 +200,11 @@ public:
 	 * @param dy The amount scrolled vertically, positive away from the user
 	 *           and negative towards the user.
 	 */
-	virtual void mouseWheelEvent(int dx, int dy) override;
+	void mouseWheelEvent(int dx, int dy) override;
 	/**
 	 * @brief Event that happens every event loop iteration.
 	 */
-	virtual void loopEvent() override;
+	void loopEvent() override;
 	/**
 	 * @brief Request to paint.
 	 * 
@@ -233,7 +214,7 @@ public:
 	 * @remark The recipent may choose to repaint area larger than invalidRect.
 	 *         Everything outside will be clipped.
 	 */
-	virtual void paintEvent(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override;
+	void paintEvent(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override;
 	/**
 	 * @brief Assigns a parent of the controller.
 	 * 
@@ -244,7 +225,7 @@ public:
 	 * 
 	 *          Descendants should call this method if they override it.
 	 */
-	virtual void setParent(IControllerChild::IParent* parent) override;
+	void setParent(IControllerChild::IParent* parent) override;
 };
 
 #endif // GENERALCONTROLLERBASE_HPP

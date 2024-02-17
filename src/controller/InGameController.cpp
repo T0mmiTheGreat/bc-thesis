@@ -66,20 +66,21 @@ void InGameController::updatePlayerSprites()
 	}
 }
 
-void InGameController::activatedEvent()
+void InGameController::onActivated()
 {
-	GeneralControllerBase::activatedEvent();
+	GeneralControllerBase::onActivated();
 	m_core->loopEvent();
 	updatePlayerSprites();
 }
 
-void InGameController::loopEvent()
+void InGameController::onLoop()
 {
 	m_core->loopEvent();
 	updatePlayerSprites();
 }
 
-void InGameController::paintEvent(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
+void InGameController::onPaint(std::shared_ptr<ICanvas> canvas,
+	const Rect& invalidRect)
 {
 	for (auto& spr : m_playerSprites) {
 		spr->repaint(canvas, invalidRect);

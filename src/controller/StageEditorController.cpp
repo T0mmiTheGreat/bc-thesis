@@ -24,9 +24,9 @@ StageEditorController::StageEditorController(
 	, m_brushSprite{nullptr}
 {}
 
-void StageEditorController::activatedEvent()
+void StageEditorController::onActivated()
 {
-	GeneralControllerBase::activatedEvent();
+	GeneralControllerBase::onActivated();
 
 	updateAllSprites();
 }
@@ -333,13 +333,13 @@ void StageEditorController::menuIconRedoClick()
 void StageEditorController::menuIconPropertiesClick()
 {
 	m_exitResult = RES_STAGE_PROPERTIES;
-	pause();
+	pausedEvent();
 }
 
 void StageEditorController::menuIconBackClick()
 {
 	m_exitResult = RES_MENU;
-	finish();
+	finishedEvent();
 }
 
 void StageEditorController::iconHighlightOff(
@@ -1308,13 +1308,13 @@ std::shared_ptr<IControllerChild> StageEditorController::createReplacement()
 	return nullptr;
 }
 
-void StageEditorController::startedEvent()
+void StageEditorController::onStarted()
 {
-	GeneralControllerBase::startedEvent();
+	GeneralControllerBase::onStarted();
 	initializeSprites();
 }
 
-void StageEditorController::mouseBtnDownEvent(MouseBtn btn, int x, int y)
+void StageEditorController::onMouseBtnDown(MouseBtn btn, int x, int y)
 {
 	Rect menubarRect = getMenubarRect();
 	Rect toolbarRect = getToolbarRect();
@@ -1337,7 +1337,7 @@ void StageEditorController::mouseBtnDownEvent(MouseBtn btn, int x, int y)
 	}
 }
 
-void StageEditorController::mouseBtnUpEvent(MouseBtn btn, int x, int y)
+void StageEditorController::onMouseBtnUp(MouseBtn btn, int x, int y)
 {
 	switch (btn) {
 		case BTN_LEFT: {
@@ -1355,7 +1355,7 @@ void StageEditorController::mouseBtnUpEvent(MouseBtn btn, int x, int y)
 	}
 }
 
-void StageEditorController::mouseMoveEvent(int x, int y)
+void StageEditorController::onMouseMove(int x, int y)
 {
 	(void)x;
 	(void)y;
@@ -1364,7 +1364,7 @@ void StageEditorController::mouseMoveEvent(int x, int y)
 	updateToolBrush();
 }
 
-void StageEditorController::mouseWheelEvent(int dx, int dy)
+void StageEditorController::onMouseWheel(int dx, int dy)
 {
 	Rect workspaceRect = getWorkspaceRect();
 	Point mouse = sysProxy->getMousePos();
@@ -1374,7 +1374,7 @@ void StageEditorController::mouseWheelEvent(int dx, int dy)
 	}
 }
 
-void StageEditorController::paintEvent(std::shared_ptr<ICanvas> canvas,
+void StageEditorController::onPaint(std::shared_ptr<ICanvas> canvas,
 	const Rect& invalidRect)
 {
 	// Grid

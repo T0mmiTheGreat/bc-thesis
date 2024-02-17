@@ -11,9 +11,120 @@
 
 #include "controller/GeneralControllerBase.hpp"
 
+void GeneralControllerBase::replaceController()
+{
+	if (parent != nullptr) {
+		auto replacement = createReplacement();
+		parent->replaceController(std::move(replacement));
+	}
+}
+
+void GeneralControllerBase::pauseController()
+{
+	if (parent != nullptr) {
+		auto replacement = createReplacement();
+		parent->pauseController(std::move(replacement));
+	}
+}
+
 std::shared_ptr<IControllerChild> GeneralControllerBase::createReplacement()
 {
 	return nullptr;
+}
+
+void GeneralControllerBase::onActivated()
+{
+	sysProxy->invalidateRect();
+}
+
+void GeneralControllerBase::onDeactivated()
+{
+	// Ignore
+}
+
+void GeneralControllerBase::onStarted()
+{
+	// Ignore
+}
+
+void GeneralControllerBase::onFinished()
+{
+	// Ignore
+}
+
+void GeneralControllerBase::onStopped()
+{
+	// Ignore
+}
+
+void GeneralControllerBase::onAborted()
+{
+	// Ignore
+}
+
+void GeneralControllerBase::onPaused()
+{
+	// Ignore
+}
+
+void GeneralControllerBase::onResumed()
+{
+	// Ignore
+}
+
+void GeneralControllerBase::onKeyDown(KeyCode key)
+{
+	(void)key;
+	// Ignore
+}
+
+void GeneralControllerBase::onTextInput(const char* text)
+{
+	(void)text;
+	// Ignore
+}
+
+void GeneralControllerBase::onMouseBtnDown(MouseBtn btn, int x, int y)
+{
+	(void)btn;
+	(void)x;
+	(void)y;
+	// Ignore
+}
+
+void GeneralControllerBase::onMouseBtnUp(MouseBtn btn, int x, int y)
+{
+	(void)btn;
+	(void)x;
+	(void)y;
+	// Ignore
+}
+
+void GeneralControllerBase::onMouseMove(int x, int y)
+{
+	(void)x;
+	(void)y;
+	// Ignore
+}
+
+void GeneralControllerBase::onMouseWheel(int dx, int dy)
+{
+	(void)dx;
+	(void)dy;
+	// Ignore
+}
+
+void GeneralControllerBase::onLoop()
+{
+	// Ignore
+}
+
+void GeneralControllerBase::onPaint(std::shared_ptr<ICanvas> canvas,
+	const Rect& invalidRect)
+{
+	(void)canvas;
+	(void)invalidRect;
+	// Ignore
 }
 
 GeneralControllerBase::GeneralControllerBase(
@@ -22,143 +133,85 @@ GeneralControllerBase::GeneralControllerBase(
 	, sysProxy{sysProxy}
 {}
 
-void GeneralControllerBase::start()
-{
-	startedEvent();
-	activatedEvent();
-}
-
-void GeneralControllerBase::finish()
-{
-	deactivatedEvent();
-	finishedEvent();
-}
-
-void GeneralControllerBase::stop()
-{
-	deactivatedEvent();
-	stoppedEvent();
-	finishedEvent();
-}
-
-void GeneralControllerBase::abort()
-{
-	deactivatedEvent();
-	abortedEvent();
-	finishedEvent();
-}
-
-void GeneralControllerBase::pause()
-{
-	deactivatedEvent();
-	pausedEvent();
-}
-
-void GeneralControllerBase::resume()
-{
-	resumedEvent();
-	activatedEvent();
-}
-
-void GeneralControllerBase::activatedEvent()
-{
-	sysProxy->invalidateRect();
-}
-
-void GeneralControllerBase::deactivatedEvent()
-{
-	// Ignore
-}
-
 void GeneralControllerBase::startedEvent()
 {
-	// Ignore
+	onStarted();
+	onActivated();
 }
 
 void GeneralControllerBase::finishedEvent()
 {
-	if (parent != nullptr) {
-		auto replacement = createReplacement();
-		parent->replaceController(std::move(replacement));
-	}
+	onDeactivated();
+	onFinished();
+	replaceController();
 }
 
 void GeneralControllerBase::pausedEvent()
 {
-	if (parent != nullptr) {
-		auto replacement = createReplacement();
-		parent->pauseController(std::move(replacement));
-	}
+	onDeactivated();
+	onPaused();
+	pauseController();
 }
 
 void GeneralControllerBase::resumedEvent()
 {
-	// Ignore
+	onResumed();
+	onActivated();
 }
 
 void GeneralControllerBase::stoppedEvent()
 {
-	// Ignore
+	onDeactivated();
+	onStopped();
+	replaceController();
 }
 
 void GeneralControllerBase::abortedEvent()
 {
-	// Ignore
+	onDeactivated();
+	onAborted();
+	replaceController();
 }
 
 void GeneralControllerBase::keyDownEvent(KeyCode key)
 {
-	(void)key;
-	// Ignore
+	onKeyDown(key);
 }
 
 void GeneralControllerBase::textInputEvent(const char* text)
 {
-	(void)text;
-	// Ignore
+	onTextInput(text);
 }
 
 void GeneralControllerBase::mouseBtnDownEvent(MouseBtn btn, int x, int y)
 {
-	(void)btn;
-	(void)x;
-	(void)y;
-	// Ignore
+	onMouseBtnDown(btn, x, y);
 }
 
 void GeneralControllerBase::mouseBtnUpEvent(MouseBtn btn, int x, int y)
 {
-	(void)btn;
-	(void)x;
-	(void)y;
-	// Ignore
+	onMouseBtnUp(btn, x, y);
 }
 
 void GeneralControllerBase::mouseMoveEvent(int x, int y)
 {
-	(void)x;
-	(void)y;
-	// Ignore
+	onMouseMove(x, y);
 }
 
 void GeneralControllerBase::mouseWheelEvent(int dx, int dy)
 {
-	(void)dx;
-	(void)dy;
-	// Ignore
+	onMouseWheel(dx, dy);
 }
 
 void GeneralControllerBase::loopEvent()
 {
-	// Ignore
+	onLoop();
 }
 
 void GeneralControllerBase::paintEvent(std::shared_ptr<ICanvas> canvas,
 	const Rect& invalidRect)
 {
-	(void)canvas;
-	(void)invalidRect;
-	// Ignore
+	onPaint(canvas, invalidRect);
 }
 
 void GeneralControllerBase::setParent(IControllerChild::IParent* parent)

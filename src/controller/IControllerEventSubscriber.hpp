@@ -27,109 +27,50 @@
  */
 class IControllerEventSubscriber {
 public:
-	// The connections between begin/end events:
-	//
-	// 1) startedEvent -+
-	//                  +---> 2) activatedEvent
-	// 1) resumedEvent -+
-	//
-	//
-	// 2) abortedEvent -+
-	//                  +---> 3) finishedEvent -+
-	// 2) stoppedEvent -+                       |
-	//                                          +---> 1) deactivatedEvent
-	//                                          |
-	//                          2) pausedEvent -+
-
 	virtual ~IControllerEventSubscriber() {}
-	/**
-	 * @brief The controller should start.
-	 * 
-	 * @details Should only be called by its parent, before any other event.
-	 *          Should call `startedEvent()`, then `activatedEvent()`.
-	 */
-	virtual void start() = 0;
-	/**
-	 * @brief The controller should stop.
-	 * 
-	 * @details Should only be called by the controller itself. Should be called
-	 *          from `abort()` and `stop()`. Should call `deactivatedEvent()`,
-	 *          then `finishedEvent()`. No event should be sent afterwards.
-	 */
-	virtual void finish() = 0;
-	/**
-	 * @brief The controller should stop.
-	 * 
-	 * @details Should only be called by its parent. Should call
-	 *          `deactivatedEvent()`, then `finishedEvent()`. No event should be
-	 *          sent afterwards.
-	 */
-	virtual void stop() = 0;
-	/**
-	 * @brief The controller should stop.
-	 * 
-	 * @details May be called both by its parent and the controller itself.
-	 *          Should call `deactivatedEvent()`, then `finishedEvent()`. No
-	 *          event should be sent afterwards.
-	 */
-	virtual void abort() = 0;
-	/**
-	 * @brief The controller should stop, but not reset its state, as it will
-	 *        be resumed later.
-	 * 
-	 * @details Should only be called by the controller itself. Should call
-	 *          `deactivatedEvent()`. The next event it receives should be
-	 *          either `resumedEvent()` or any of the "end" events.
-	 */
-	virtual void pause() = 0;
-	/**
-	 * @brief The controller should be resumed after pause.
-	 * 
-	 * @details Should only be called by its parent. Should call
-	 *          `activatedEvent()`. 
-	 */
-	virtual void resume() = 0;
 
-	/**
-	 * @brief The controller has been activated.
-	 */
-	virtual void activatedEvent() = 0;
-	/**
-	 * @brief The controller has been deactivated.
-	 */
-	virtual void deactivatedEvent() = 0;
 	/**
 	 * @brief The controller has started.
 	 * 
-	 * @details The first event that the controller receives.
+	 * @details The first event that the controller receives. Should only be
+	 *          called by its parent.
 	 */
 	virtual void startedEvent() = 0;
 	/**
 	 * @brief The controller has finished.
 	 * 
-	 * @details The last event that the controller receives.
+	 * @details The last event that the controller receives. Should only be
+	 *          called by the controller itself.
 	 */
 	virtual void finishedEvent() = 0;
 	/**
 	 * @brief The controller has stopped.
 	 * 
-	 * @details In most cases identical to finishedEvent().
+	 * @details The last event that the controller receives. Should only be
+	 *          called by its parent.
 	 */
 	virtual void stoppedEvent() = 0;
 	/**
 	 * @brief The controller has stopped.
 	 * 
-	 * @details In most cases identical to finishedEvent(). Puts more emphasis
-	 *          on the "exceptional termination".
+	 * @details The last event that the controller receives. Puts more emphasis
+	 *          on the "exceptional termination". May be called both by its
+	 *          parent and the controller itself.
 	 */
 	virtual void abortedEvent() = 0;
 	/**
 	 * @brief The controller has stopped, but should not reset its state as it
 	 *        will be resumed again.
+	 * 
+	 * @details Should only be called by the controller itself. Should call
+	 *          The next event it receives should be either `resumedEvent()`
+	 *          or any of the "end" events.
 	 */
 	virtual void pausedEvent() = 0;
 	/**
 	 * @brief The controller was awoken after `pausedEvent()`.
+	 * 
+	 * @details Should only be called by its parent.
 	 */
 	virtual void resumedEvent() = 0;
 

@@ -20,9 +20,9 @@ std::shared_ptr<IControllerChild> LogoController::createReplacement()
 	return ControllerFactory::createMainMenuController(sysProxy);
 }
 
-void LogoController::startedEvent()
+void LogoController::onStarted()
 {
-	GeneralControllerBase::startedEvent();
+	GeneralControllerBase::onStarted();
 
 	// Create logo sprite
 	m_sprite = std::make_unique<LogoSprite>(sysProxy);
@@ -38,17 +38,17 @@ void LogoController::startedEvent()
 	m_sprite->startAnimation();
 }
 
-void LogoController::loopEvent()
+void LogoController::onLoop()
 {
-	GeneralControllerBase::loopEvent();
+	GeneralControllerBase::onLoop();
 	m_sprite->loopEvent();
 	if (!m_sprite->isAnimationRunning()) {
-		finish();
+		finishedEvent();
 	}
 }
 
-void LogoController::paintEvent(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
+void LogoController::onPaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
 {
-	GeneralControllerBase::paintEvent(canvas, invalidRect);
+	GeneralControllerBase::onPaint(canvas, invalidRect);
 	m_sprite->repaint(canvas, invalidRect);
 }

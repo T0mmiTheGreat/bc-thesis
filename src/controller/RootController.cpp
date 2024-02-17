@@ -22,12 +22,12 @@ RootController::RootController(std::shared_ptr<ISysProxy> sysProxy)
 
 void RootController::startEvent()
 {
-	m_childController->start();
+	m_childController->startedEvent();
 }
 
 void RootController::quitEvent()
 {
-	m_childController->stop();
+	m_childController->stoppedEvent();
 }
 
 void RootController::keyDownEvent(KeyCode key)
@@ -90,7 +90,7 @@ void RootController::replaceController(
 		if (!m_pausedControllers.empty()) {
 			m_childController = std::move(m_pausedControllers.back());
 			m_pausedControllers.pop_back();
-			m_childController->resume();
+			m_childController->resumedEvent();
 		}
 	} else {
 		m_childController = replacement;
@@ -119,6 +119,6 @@ void RootController::setChildController(std::shared_ptr<IControllerChild> value)
 	// away. If it's not running yet, it will be sent once the event loop
 	// starts
 	if (m_sysProxy->getEventLoopState() == EVENTLOOP_RUNNING) {
-		m_childController->start();
+		m_childController->startedEvent();
 	}
 }

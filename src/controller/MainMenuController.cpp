@@ -85,13 +85,13 @@ std::shared_ptr<IControllerChild> MainMenuController::createReplacement()
 	}
 }
 
-void MainMenuController::startedEvent()
+void MainMenuController::onStarted()
 {
-	GeneralControllerBase::startedEvent();
+	GeneralControllerBase::onStarted();
 	createSprites();
 }
 
-void MainMenuController::mouseBtnDownEvent(MouseBtn btn, int x, int y)
+void MainMenuController::onMouseBtnDown(MouseBtn btn, int x, int y)
 {
 	if (btn != BTN_LEFT) return;
 
@@ -102,7 +102,7 @@ void MainMenuController::mouseBtnDownEvent(MouseBtn btn, int x, int y)
 	switch (menuItemIdx) {
 		case MENU_PLAY_BTN_IDX:
 		case MENU_STAGE_EDITOR_BTN_IDX:
-			finish();
+			finishedEvent();
 			break;
 		case MENU_QUIT_BTN_IDX:
 			sysProxy->quit();
@@ -110,7 +110,7 @@ void MainMenuController::mouseBtnDownEvent(MouseBtn btn, int x, int y)
 	}
 }
 
-void MainMenuController::mouseMoveEvent(int x, int y)
+void MainMenuController::onMouseMove(int x, int y)
 {
 	Point mousePt(x, y);
 
@@ -125,14 +125,14 @@ void MainMenuController::mouseMoveEvent(int x, int y)
 	}
 }
 
-void MainMenuController::loopEvent()
+void MainMenuController::onLoop()
 {
-	GeneralControllerBase::loopEvent();
+	GeneralControllerBase::onLoop();
 }
 
-void MainMenuController::paintEvent(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
+void MainMenuController::onPaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
 {
-	GeneralControllerBase::paintEvent(canvas, invalidRect);
+	GeneralControllerBase::onPaint(canvas, invalidRect);
 	for (auto& btn : m_menuBtns) {
 		btn->repaint(canvas, invalidRect);
 	}

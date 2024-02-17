@@ -382,15 +382,17 @@ private:
 	Size2d getPredictedStageSize(bool& isValid);
 protected:
 	std::shared_ptr<IControllerChild> createReplacement() override;
+	
+	void onActivated() override;
+	void onStarted() override;
+	void onMouseBtnDown(MouseBtn btn, int x, int y) override;
+	void onMouseBtnUp(MouseBtn btn, int x, int y) override;
+	void onMouseMove(int x, int y) override;
+	void onMouseWheel(int dx, int dy) override;
+	void onPaint(std::shared_ptr<ICanvas> canvas,
+		const Rect& invalidRect) override;
 public:
 	StageEditorController(std::shared_ptr<ISysProxy> sysProxy);
-	void activatedEvent() override;
-	void startedEvent() override;
-	void mouseBtnDownEvent(MouseBtn btn, int x, int y) override;
-	void mouseBtnUpEvent(MouseBtn btn, int x, int y) override;
-	void mouseMoveEvent(int x, int y) override;
-	void mouseWheelEvent(int dx, int dy) override;
-	void paintEvent(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect) override;
 };
 
 #endif // STAGEEDITORCONTROLLER_HPP

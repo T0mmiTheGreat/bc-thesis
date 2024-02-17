@@ -63,18 +63,19 @@ private:
 
 	void okBtnClick();
 	void cancelBtnClick();
+protected:
+	void onStarted() override;
+	void onActivated() override;
+	void onDeactivated() override;
+	void onKeyDown(KeyCode key) override;
+	void onTextInput(const char* text) override;
+	void onMouseBtnDown(MouseBtn btn, int x, int y) override;
+	void onMouseMove(int x, int y) override;
+	void onPaint(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
+		override;
 public:
 	StagePropertiesController(std::shared_ptr<ISysProxy> sysProxy,
 		std::shared_ptr<StageEditor> stageEditor);
-	void startedEvent() override;
-	void activatedEvent() override;
-	void deactivatedEvent() override;
-	void keyDownEvent(KeyCode key) override;
-	void textInputEvent(const char* text) override;
-	void mouseBtnDownEvent(MouseBtn btn, int x, int y) override;
-	void mouseMoveEvent(int x, int y) override;
-	void paintEvent(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
-		override;
 };
 
 #endif // STAGEPROPERTIESCONTROLLER_HPP
