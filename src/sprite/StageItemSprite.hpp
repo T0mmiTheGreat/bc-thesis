@@ -55,7 +55,7 @@ protected:
 	void repaintAsVisible(std::shared_ptr<ICanvas> canvas,
 		const Rect& invalidRect) override;
 public:
-	static constexpr int BORDER_HEIGHT = PADDING_VERT + 20 + TEXT_SPACING + 16
+	static constexpr int BORDER_HEIGHT = PADDING_VERT + 25 + TEXT_SPACING + 20
 		+ PADDING_VERT;
 
 	StageItemSprite(std::shared_ptr<IPaintingProxy> paintingProxy);
