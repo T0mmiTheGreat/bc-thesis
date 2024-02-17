@@ -1436,10 +1436,11 @@ const std::shared_ptr<StageEditorAction> StageEditor::mouseRightBtnDownToolObsta
 bool StageEditor::canPlacePlayer(const StageEditorPlayerObject& player)
 {
 	std::unordered_set<EditorOID> dontIgnore;
-	return canPlacePlayer(player, dontIgnore);
+	return canPlacePlayer(player, dontIgnore, dontIgnore);
 }
 
 bool StageEditor::canPlacePlayer(const StageEditorPlayerObject& player,
+		const std::unordered_set<EditorOID>& ignoredPlayers,
 	const std::unordered_set<EditorOID>& ignoredObstacles)
 {
 	// Check that the whole player is within the stage bounds
@@ -1450,6 +1451,18 @@ bool StageEditor::canPlacePlayer(const StageEditorPlayerObject& player,
 	RectF stageBoundsDeflated = stageBounds.getInflated(-player.getRadius() * 2);
 	if (!stageBoundsDeflated.containsPoint(player.pos)) {
 		return false;
+	}
+
+	// Check collisions with other players
+	for (const auto& playerPair : m_stageState.players) {
+		const EditorOID& oid = playerPair.first;
+		const auto& object = playerPair.second;
+
+		if (ignoredPlayers.contains(oid)) continue;
+
+		if (object.collidesWithPlayer(player)) {
+			return false;
+		}
 	}
 
 	// Check collisions with obstacles
@@ -1582,7 +1595,7 @@ bool StageEditor::canMoveSelectedPlayer(EditorOID oid, double dx, double dy)
 	StageEditorPlayerObject tmpPlayer(m_stageState.players.at(oid));
 	tmpPlayer.moveBy(dx, dy);
 
-	return canPlacePlayer(tmpPlayer, m_selectedObstacles);
+	return canPlacePlayer(tmpPlayer, m_selectedPlayers, m_selectedObstacles);
 }
 
 bool StageEditor::canMoveSelectedObstacle(EditorOID oid, double dx, double dy)
