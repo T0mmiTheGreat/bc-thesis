@@ -181,21 +181,29 @@ void StageEditorController::mouseWheelWorkspace(int dx, int dy)
 {
 	(void)dx;
 
-	if (sysProxy->isKeyPressed(KEY_CTRL) && dy != 0) {
-		// Zoom
-		
-		Rect workspaceRect = getWorkspaceRect();
-		Point mouse = sysProxy->getMousePos();
-		Point mouseRel = mouse.relativeTo(workspaceRect.getTopLeft());
-		if (dy > 0) {
-			// Zoom in
-			m_viewport.zoomIn(static_cast<PointF>(mouseRel),
-				dy * StageViewport::DEFAULT_ZOOM_FACTOR);
-		} else {
-			// Zoom out
-			m_viewport.zoomOut(static_cast<PointF>(mouseRel),
-				-dy * StageViewport::DEFAULT_ZOOM_FACTOR);
+	if (sysProxy->isKeyPressed(KEY_CTRL)) {
+		if (dy != 0) {
+			// Zoom
+			
+			Rect workspaceRect = getWorkspaceRect();
+			Point mouse = sysProxy->getMousePos();
+			Point mouseRel = mouse.relativeTo(workspaceRect.getTopLeft());
+			if (dy > 0) {
+				// Zoom in
+				m_viewport.zoomIn(static_cast<PointF>(mouseRel),
+					dy * StageViewport::DEFAULT_ZOOM_FACTOR);
+			} else {
+				// Zoom out
+				m_viewport.zoomOut(static_cast<PointF>(mouseRel),
+					-dy * StageViewport::DEFAULT_ZOOM_FACTOR);
+			}
+			updateSpritesByViewport();
 		}
+	} else {
+		// Scroll viewport
+
+		m_viewport.scroll(dx * VIEWPORT_MOVE_PER_SCROLL,
+			-dy * VIEWPORT_MOVE_PER_SCROLL);  // Note the minus sign
 		updateSpritesByViewport();
 	}
 }

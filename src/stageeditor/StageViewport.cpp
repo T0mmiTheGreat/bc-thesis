@@ -150,6 +150,12 @@ bool StageViewport::isDrag()
 	return m_isDraggingSelected;
 }
 
+void StageViewport::scroll(double dx, double dy)
+{
+	m_srcRect.x += dx;
+	m_srcRect.y += dy;
+}
+
 void StageViewport::setZoom(const PointF& towards, ZoomType newZoom)
 {
 	assert(newZoom != 0.0);

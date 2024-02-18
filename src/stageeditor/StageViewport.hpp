@@ -138,6 +138,16 @@ public:
 	bool isDrag();
 
 	/**
+	 * @brief Moves the viewport without performing a dragging operation.
+	 * 
+	 * @param dx Move in horizontal direction (positive to the right).
+	 * @param dy Move in vertical direction (positive downwards).
+	 * 
+	 * @todo The positive/negative directions may be actually wrong.
+	 */
+	void scroll(double dx, double dy);
+
+	/**
 	 * @brief Sets zoom value.
 	 * 
 	 * @param towards The point in the screen space to zoom towards.

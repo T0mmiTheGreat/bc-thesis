@@ -92,6 +92,9 @@ private:
 	static constexpr FontId STATUSBAR_TEXT_FONT = FONT_TAHOMA_16;
 	static constexpr Color STATUSBAR_FCOLOR = MENUBAR_FCOLOR;
 	static constexpr Color STATUSBAR_SCOLOR = MENUBAR_SCOLOR;
+
+	// How many pixels the viewport moves when the mouse wheel is scrolled
+	static constexpr double VIEWPORT_MOVE_PER_SCROLL = 32.0;
 #pragma endregion constants
 
 	// XXX: Keep the editor and viewport in this order for correct order of
