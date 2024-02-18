@@ -118,6 +118,11 @@ enum ImageId {
 	IMG_ICON_OBSTACLE_TOOL,
 	IMG_ICON_TRASH_CAN,
 	IMG_ICON_RESIZE,
+	IMG_ICON_INPUT_WSAD,
+	IMG_ICON_INPUT_TGFH,
+	IMG_ICON_INPUT_IKJL,
+	IMG_ICON_INPUT_ARROWS,
+	IMG_ICON_BOT,
 	// XXX: Add new images to SDL manager too (constructor)
 
 	COUNT_IMAGEID // Number of images used by the program
@@ -1229,6 +1234,10 @@ struct Color {
 	static constexpr Color yellow() { return Color::rgb(0xffff00); }
 	static constexpr Color darkRed() { return Color::rgb(0x8b0000); }
 	static constexpr Color skyBlue() { return Color::rgb(0x87ceeb); }
+	static constexpr Color wheat() { return Color::rgb(0xf5deb3); }
+	static constexpr Color dodgerBlue() { return Color::rgb(0x1e90ff); }
+	static constexpr Color salmon() { return Color::rgb(0xfa8072); }
+	static constexpr Color springGreen() { return Color::rgb(0x00ff7f); }
 	static constexpr Color grayscale(uint8_t intensity) {
 		return Color(intensity, intensity, intensity);
 	}
@@ -1240,6 +1249,10 @@ struct Color {
 			case 1: return Color::green();
 			case 2: return Color::skyBlue();
 			case 3: return Color::magenta();
+			case 4: return Color::wheat();
+			case 5: return Color::dodgerBlue();
+			case 6: return Color::salmon();
+			case 7: return Color::springGreen();
 			default: return Color::playerDefault();
 		}
 	}
