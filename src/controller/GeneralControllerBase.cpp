@@ -135,6 +135,10 @@ GeneralControllerBase::GeneralControllerBase(
 
 void GeneralControllerBase::startedEvent()
 {
+	// To keep the object alive -- onStarted may call finishedEvent(), which
+	// would destroy the object
+	auto tmpThis = shared_from_this();
+
 	onStarted();
 	onActivated();
 }
@@ -155,6 +159,10 @@ void GeneralControllerBase::pausedEvent()
 
 void GeneralControllerBase::resumedEvent()
 {
+	// To keep the object alive -- onResumed may call finishedEvent(), which
+	// would destroy the object
+	auto tmpThis = shared_from_this();
+	
 	onResumed();
 	onActivated();
 }

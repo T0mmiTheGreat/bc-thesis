@@ -27,7 +27,10 @@
  *          "point of no return", or `on<eventName>` if they are willing to
  *          listen to that event.
  */
-class GeneralControllerBase : public IControllerChild {
+class GeneralControllerBase
+	: public IControllerChild
+	, public std::enable_shared_from_this<GeneralControllerBase>
+{
 private:
 	void replaceController();
 	void pauseController();
