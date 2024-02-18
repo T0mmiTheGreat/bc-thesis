@@ -19,8 +19,15 @@
 #include "controller/GeneralControllerBase.hpp"
 #include "sprite/MainMenuItemSprite.hpp"
 #include "sprite/MainMenuTitleSprite.hpp"
+#include "stageserializer/IStageSerializer.hpp"
 
 class MainMenuController : public GeneralControllerBase {
+private:
+	enum ExitResult {
+		RES_STAGE_SELECT,
+		RES_PLAY,
+		RES_EDITOR,
+	};
 private:
 	// Space between menu items
 	static constexpr int MENU_ITEM_SPACING = 10;
@@ -35,9 +42,15 @@ private:
 
 	// Sprites
 	std::array<std::unique_ptr<MainMenuItemSprite>, MENU_ITEM_COUNT> m_menuBtns;
-	// The menu item clicked or -1 if none was clicked
-	int m_selectedItem;
 	std::unique_ptr<MainMenuTitleSprite> m_title;
+
+	ExitResult m_exitResult;
+
+	// Used when selecting a stage for playing (passed as parameters to
+	// StageSelectController constructor).
+
+	IStageSerializer::IdType m_selectedStage;
+	bool m_isSelectedStageValid;
 
 	void createSprites();
 	/**
@@ -52,6 +65,7 @@ protected:
 	std::shared_ptr<IControllerChild> createReplacement() override;
 	
 	void onStarted() override;
+	void onResumed() override;
 	void onMouseBtnDown(MouseBtn btn, int x, int y) override;
 	void onMouseMove(int x, int y) override;
 	void onLoop() override;

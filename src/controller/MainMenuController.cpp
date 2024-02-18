@@ -18,7 +18,6 @@
 
 MainMenuController::MainMenuController(std::shared_ptr<ISysProxy> sysProxy)
 	: GeneralControllerBase(sysProxy)
-	, m_selectedItem{-1}
 {
 }
 
@@ -75,14 +74,18 @@ int MainMenuController::getMenuItemAt(int x, int y)
 
 std::shared_ptr<IControllerChild> MainMenuController::createReplacement()
 {
-	switch (m_selectedItem) {
-		case MENU_PLAY_BTN_IDX:
+	switch (m_exitResult) {
+		case RES_STAGE_SELECT:
+			return ControllerFactory::createStageSelectController(sysProxy,
+				m_selectedStage, m_isSelectedStageValid);
+		case RES_PLAY:
 			return ControllerFactory::createInGameController(sysProxy);
-		case MENU_STAGE_EDITOR_BTN_IDX:
+		case RES_EDITOR:
 			return ControllerFactory::createStageEditorController(sysProxy);
-		default:
-			return nullptr;
 	}
+
+	// Default
+	return nullptr;
 }
 
 void MainMenuController::onStarted()
@@ -91,17 +94,30 @@ void MainMenuController::onStarted()
 	createSprites();
 }
 
+void MainMenuController::onResumed()
+{
+	GeneralControllerBase::onResumed();
+	if (m_exitResult == RES_STAGE_SELECT) {
+		if (m_isSelectedStageValid) {
+			m_exitResult = RES_PLAY;
+			finishedEvent();
+		}
+	}
+}
+
 void MainMenuController::onMouseBtnDown(MouseBtn btn, int x, int y)
 {
 	if (btn != BTN_LEFT) return;
 
 	int menuItemIdx = getMenuItemAt(x, y);
-	
-	m_selectedItem = menuItemIdx;
 
 	switch (menuItemIdx) {
 		case MENU_PLAY_BTN_IDX:
+			m_exitResult = RES_STAGE_SELECT;
+			pausedEvent();
+			break;
 		case MENU_STAGE_EDITOR_BTN_IDX:
+			m_exitResult = RES_EDITOR;
 			finishedEvent();
 			break;
 		case MENU_QUIT_BTN_IDX:
