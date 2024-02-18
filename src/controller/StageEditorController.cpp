@@ -392,10 +392,7 @@ void StageEditorController::menuIconSetEnabled(int iconIdx, bool value)
 void StageEditorController::hideBrush()
 {
 	if (m_brushSprite != nullptr) {
-		if (m_brushSprite == m_playerBrush.get()) {
-			// Repaint
-			m_playerBrush->setPos(0, 0);
-		}
+		m_brushSprite->forceUpdate();
 		m_brushSprite = nullptr;
 	}
 }
