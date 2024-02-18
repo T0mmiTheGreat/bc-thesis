@@ -102,6 +102,9 @@ private:
 
 	ExitResult m_exitResult;
 
+	// Used when selecting a stage to load (passed as parameters to
+	// StageSelectController constructor).
+
 	IStageSerializer::IdType m_selectedStage;
 	bool m_isSelectedStageValid;
 
@@ -158,6 +161,12 @@ private:
 	 */
 	void mouseBtnDownWorkspace(MouseBtn btn, int x, int y);
 
+	/**
+	 * @brief Mouse scrolled over workspace.
+	 * 
+	 * @param dx The amount scrolled horizontally.
+	 * @param dy The amount scrolled vertically.
+	 */
 	void mouseWheelWorkspace(int dx, int dy);
 
 	void checkMenuIconMouseHover(int x, int y);
@@ -201,10 +210,22 @@ private:
 	 * @param iconIdx Index of the tool icon.
 	 */
 	void toolIconUnsetSelected(int iconIdx);
+	/**
+	 * @brief Sets the enabled state (enabled/disabled) of a menu icon.
+	 * 
+	 * @param iconIdx 
+	 * @param value `true` for "enabled", `false` for "disabled".
+	 */
 	void menuIconSetEnabled(int iconIdx, bool value);
 
+	/**
+	 * @brief Makes the brush sprite not visible.
+	 */
 	void hideBrush();
 
+	/**
+	 * @brief Updates all existing sprites (does not create new ones).
+	 */
 	void updateAllSprites();
 
 	/**
@@ -212,8 +233,15 @@ private:
 	 */
 	void updateSpritesByViewport();
 
-	void updateIconSprites();
+	/**
+	 * @brief Updates all sprites after mouse movement.
+	 * 
+	 */
+	void updateSpritesByMousePos(const Point& mouse);
 
+	/**
+	 * @brief Updates the state of undo and redo buttons.
+	 */
 	void updateUndoRedoIcons();
 
 	void updateSpritesByAction(const std::shared_ptr<StageEditorAction> action);

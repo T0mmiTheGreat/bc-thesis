@@ -402,7 +402,7 @@ void StageEditorController::updateAllSprites()
 	updateSpritesByViewport();
 	updateToolBrush();
 	updateUndoRedoIcons();
-	updateIconSprites();
+	updateSpritesByMousePos(sysProxy->getMousePos());
 }
 
 void StageEditorController::updateSpritesByViewport()
@@ -431,13 +431,12 @@ void StageEditorController::updateSpritesByViewport()
 	updateToolBrush();
 }
 
-void StageEditorController::updateIconSprites()
+void StageEditorController::updateSpritesByMousePos(const Point& mouse)
 {
 	Rect menubarRect = getMenubarRect();
 	Rect toolbarRect = getToolbarRect();
 	Rect statusbarRect = getStatusbarRect();
 	Rect workspaceRect = getWorkspaceRect();
-	Point mouse = sysProxy->getMousePos();
 
 	iconHighlightOffAll();
 
@@ -1368,10 +1367,7 @@ void StageEditorController::onMouseBtnUp(MouseBtn btn, int x, int y)
 
 void StageEditorController::onMouseMove(int x, int y)
 {
-	(void)x;
-	(void)y;
-	
-	updateIconSprites();
+	updateSpritesByMousePos(Point(x, y));
 	updateToolBrush();
 }
 
