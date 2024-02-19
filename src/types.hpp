@@ -1015,8 +1015,8 @@ struct PolygonF {
 	void triangulate(std::vector<TriangleF>& result) const {
 		// Invalid polygon cannot be triangulated
 		assert(isValidEuclidean());
-		// We want to create a new "result"
-		assert(result.empty());
+		
+		result.clear();
 
 		std::vector<std::array<double,2>> inPolygon;
 		std::array<double,2> polygonPt;
