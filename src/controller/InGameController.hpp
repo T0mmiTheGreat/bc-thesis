@@ -22,6 +22,7 @@
 #include "playerinput/IPlayerInput.hpp"
 #include "sprite/PlayerSprite.hpp"
 #include "sprite/ObstacleSprite.hpp"
+#include "sprite/HollowRectSprite.hpp"
 #include "stageserializer/IStageSerializer.hpp"
 
 class InGameController : public GeneralControllerBase {
@@ -29,9 +30,11 @@ private:
 	std::unique_ptr<Core> m_core;
 	std::vector<std::unique_ptr<PlayerSprite>> m_playerSprites;
 	std::vector<std::unique_ptr<ObstacleSprite>> m_obstacleSprites;
+	std::unique_ptr<HollowRectSprite> m_stageBoundsSprite;
 
 	void createPlayerSprites();
 	void createObstacleSprites();
+	void createStageBoundsSprite();
 	/**
 	 * @brief Sets the player sprite properties based on the state of the core.
 	 */

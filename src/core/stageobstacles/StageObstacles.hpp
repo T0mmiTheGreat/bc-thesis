@@ -24,6 +24,7 @@
 class StageObstacles {
 private:
  	std::vector<StageObstacle> m_obstacles;
+	Size2d m_bounds;
 
 	// sin(pi/4)
 	static constexpr double DIAG_MOVEMENT_PERAXIS_LENGTH = 0.70710678118654752440084436210485;
@@ -41,8 +42,10 @@ private:
 	 */
 	static void inputToVector(const PlayerInputFlags& input, double& x, double& y);
 public:
-	StageObstacles(const std::vector<StageObstacle>& obstacles);
+	StageObstacles(const std::vector<StageObstacle>& obstacles,
+		const Size2d& bounds);
 	const std::vector<StageObstacle>& getObstaclesList() const;
+	const Size2d& getStageSize() const;
 	/**
 	 * @brief Returns the player trajectory based on the player input, taking
 	 *        the obstacles into account.

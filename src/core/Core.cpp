@@ -91,7 +91,9 @@ void Core::initializeStage(const std::shared_ptr<IStageSerializer> stage,
 	}
 
 	// Obstacles
-	m_obstacles = std::make_unique<StageObstacles>(stage->getObstacles());
+	Size2d bounds(stage->getWidth(), stage->getHeight());
+	m_obstacles = std::make_unique<StageObstacles>(stage->getObstacles(),
+		bounds);
 }
 
 void Core::tick()
@@ -125,4 +127,9 @@ const PlayerList& Core::getPlayerList() const
 const std::vector<StageObstacle>& Core::getObstaclesList() const
 {
 	return m_obstacles->getObstaclesList();
+}
+
+const Size2d & Core::getStageSize() const
+{
+	return m_obstacles->getStageSize();
 }

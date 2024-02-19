@@ -632,6 +632,16 @@ struct RectGeneric {
 	}
 
 	/**
+	 * @brief Intersect rectangle with another.
+	 */
+	constexpr void intersectRect(const RectGeneric<T>& rhs) {
+		this->x = (this->x > rhs.x ? this->x : rhs.x);
+		this->y = (this->y > rhs.y ? this->y : rhs.y);
+		this->w = (this->getRight() < rhs.getRight() ? this->getRight() : rhs.getRight()) - x;
+		this->h = (this->getBottom() < rhs.getBottom() ? this->getBottom() : rhs.getBottom()) - y;
+	}
+
+	/**
 	 * @brief Get the union of two rectangles.
 	 * 
 	 * @details A union of rectangles in 2D space may result in an octagonal
@@ -641,6 +651,15 @@ struct RectGeneric {
 	constexpr RectGeneric<T> getunionRect(const RectGeneric<T>& rhs) const {
 		RectGeneric<T> res(*this);
 		res.unionRect(rhs);
+		return res;
+	}
+
+	/**
+	 * @brief Get the intersection of two rectangles.
+	 */
+	constexpr RectGeneric<T> getIntersectRect(const RectGeneric<T>& rhs) {
+		RectGeneric<T> res(*this);
+		res.intersectRect(rhs);
 		return res;
 	}
 

@@ -43,6 +43,19 @@ void InGameController::createObstacleSprites()
 	}
 }
 
+void InGameController::createStageBoundsSprite()
+{
+	Size2d screenSize = sysProxy->getPaintAreaSize();
+
+	m_stageBoundsSprite = std::make_unique<HollowRectSprite>(sysProxy);
+	m_stageBoundsSprite->setColor(Color::obstacle());
+	m_stageBoundsSprite->setPos(0, 0);
+	m_stageBoundsSprite->setBigRectWidth(screenSize.w);
+	m_stageBoundsSprite->setBigRectHeight(screenSize.h);
+	Rect hole(0, 0, m_core->getStageSize());
+	m_stageBoundsSprite->setHole(hole);
+}
+
 void InGameController::updatePlayerSprites()
 {
 	auto plStates = m_core->getPlayerList();
@@ -59,6 +72,7 @@ void InGameController::onStarted()
 	m_core->loopEvent();
 	createPlayerSprites();
 	createObstacleSprites();
+	createStageBoundsSprite();
 	updatePlayerSprites();
 }
 
@@ -78,4 +92,6 @@ void InGameController::onPaint(std::shared_ptr<ICanvas> canvas,
 	for (auto& spr : m_obstacleSprites) {
 		spr->repaint(canvas, invalidRect);
 	}
+
+	m_stageBoundsSprite->repaint(canvas, invalidRect);
 }

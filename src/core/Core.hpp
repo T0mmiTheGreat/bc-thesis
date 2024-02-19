@@ -80,6 +80,7 @@ public:
 	 */
 	const PlayerList& getPlayerList() const;
 	const std::vector<StageObstacle>& getObstaclesList() const;
+	const Size2d& getStageSize() const;
 };
 
 #endif // CORE_HPP

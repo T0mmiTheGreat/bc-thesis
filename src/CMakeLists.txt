@@ -60,6 +60,7 @@ set(SOURCE_FILES
 	sprite/TextBoxSprite.cpp
 	sprite/TextSprite.cpp
 	sprite/StageItemSprite.cpp
+	sprite/HollowRectSprite.cpp
 	core/Core.cpp
 	core/stageobstacles/StageObstacles.cpp
 	core/trajectory/Trajectory.cpp
@@ -139,6 +140,7 @@ set(HEADER_FILES
 	sprite/TextBoxSprite.hpp
 	sprite/TextSprite.hpp
 	sprite/StageItemSprite.hpp
+	sprite/HollowRectSprite.hpp
 	paintingproxy/IPaintingProxy.hpp
 	core/Common.hpp
 	core/Core.hpp
