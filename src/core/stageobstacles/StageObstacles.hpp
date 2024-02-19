@@ -15,18 +15,15 @@
 #include <memory>
 #include <vector>
 
-#include "core/Constants.hpp"
+#include "types.hpp"
+#include "core/Common.hpp"
 #include "core/trajectory/Trajectory.hpp"
 #include "playerinput/IPlayerInput.hpp"
 #include "playerstate/IPlayerState.hpp"
 
 class StageObstacles {
-// private:
-// 	struct Obstacle {
-// 		double x1, y1, x2, y2, x3, y3;
-// 	};
 private:
-// 	std::vector<Obstacle> m_obstacles;
+ 	std::vector<StageObstacle> m_obstacles;
 
 	// sin(pi/4)
 	static constexpr double DIAG_MOVEMENT_PERAXIS_LENGTH = 0.70710678118654752440084436210485;
@@ -44,6 +41,8 @@ private:
 	 */
 	static void inputToVector(const PlayerInputFlags& input, double& x, double& y);
 public:
+	StageObstacles(const std::vector<StageObstacle>& obstacles);
+	const std::vector<StageObstacle>& getObstaclesList() const;
 	/**
 	 * @brief Returns the player trajectory based on the player input, taking
 	 *        the obstacles into account.

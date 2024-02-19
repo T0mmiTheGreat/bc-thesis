@@ -27,6 +27,12 @@ KeyboardPlayerInput KeyboardPlayerInput::constructWSAD(
 	return KeyboardPlayerInput(sysProxy, KEY_A, KEY_W, KEY_D, KEY_S);
 }
 
+KeyboardPlayerInput KeyboardPlayerInput::constructIKJL(
+	std::shared_ptr<ISysProxyPlayerInput> sysProxy)
+{
+	return KeyboardPlayerInput(sysProxy, KEY_J, KEY_I, KEY_L, KEY_K);
+}
+
 KeyboardPlayerInput KeyboardPlayerInput::constructArrows(
 	std::shared_ptr<ISysProxyPlayerInput> sysProxy)
 {

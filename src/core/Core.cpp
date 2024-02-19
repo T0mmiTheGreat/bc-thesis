@@ -13,10 +13,15 @@
 
 #include "core/trajectory/Trajectory.hpp"
 #include "math/Math.hpp"
+#include "playerstate/IPlayerState.hpp"
+#include "playerstate/PlayerStateFactory.hpp"
 
-Core::Core()
+Core::Core(const std::shared_ptr<IStageSerializer> stage,
+	const std::vector<std::shared_ptr<IPlayerInput>>& players)
 	: m_tickTimer(TICK_INTERVAL)
-{}
+{
+	initializeStage(stage, players);
+}
 
 void Core::initTurnData(TurnData& turnData)
 {
@@ -34,7 +39,7 @@ void Core::initTurnData(TurnData& turnData)
 void Core::calculateTrajectories(TurnData& turnData)
 {
 	for (auto& playerTurn : turnData.playerTurns) {
-		m_obstacles.getPlayerTrajectory(playerTurn.playerRef, playerTurn.trajectory);
+		m_obstacles->getPlayerTrajectory(playerTurn.playerRef, playerTurn.trajectory);
 	}
 }
 
@@ -70,6 +75,25 @@ void Core::changePlayersHp(TurnData& turnData)
 	}
 }
 
+void Core::initializeStage(const std::shared_ptr<IStageSerializer> stage,
+	const std::vector<std::shared_ptr<IPlayerInput>>& players)
+{
+	assert(players.size() <= stage->getPlayers().size());
+
+	std::shared_ptr<IPlayerState> newPlayer;
+
+	// Players
+	for (size_t i = 0; i < players.size(); i++) {
+		const auto& playerPos = stage->getPlayers()[i];
+		newPlayer = PlayerStateFactory::createDefault(playerPos.x, playerPos.y,
+			players[i]);
+		m_players.push_back(newPlayer);
+	}
+
+	// Obstacles
+	m_obstacles = std::make_unique<StageObstacles>(stage->getObstacles());
+}
+
 void Core::tick()
 {
 	playersActions();
@@ -93,12 +117,12 @@ void Core::loopEvent()
 	}
 }
 
-void Core::addPlayer(std::shared_ptr<IPlayerState> player)
-{
-	m_players.push_back(player);
-}
-
-const PlayerList& Core::getPlayerList()
+const PlayerList& Core::getPlayerList() const
 {
 	return m_players;
+}
+
+const std::vector<StageObstacle>& Core::getObstaclesList() const
+{
+	return m_obstacles->getObstaclesList();
 }

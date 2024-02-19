@@ -17,48 +17,30 @@
 #include "playerinput/PlayerInputFactory.hpp"
 #include "playerstate/PlayerStateFactory.hpp"
 
-InGameController::InGameController(std::shared_ptr<ISysProxy> sysProxy)
+InGameController::InGameController(std::shared_ptr<ISysProxy> sysProxy,
+	const std::shared_ptr<IStageSerializer> stage,
+	const std::vector<std::shared_ptr<IPlayerInput>>& players)
 	: GeneralControllerBase(sysProxy)
-	, m_core{std::make_unique<Core>()}
+	, m_core{std::make_unique<Core>(stage, players)}
+{}
+
+void InGameController::createPlayerSprites()
 {
-	createPlayers();
+	const auto& players = m_core->getPlayerList();
+	for (size_t i = 0; i < players.size(); i++) {
+		auto playerSprite = std::make_unique<PlayerSprite>(sysProxy);
+		playerSprite->setColor(Color::player(i));
+		m_playerSprites.push_back(std::move(playerSprite));
+	}
 }
 
-void InGameController::createPlayers()
+void InGameController::createObstacleSprites()
 {
-	newPlayer(
-		PlayerInputFactory::createKeyboardPlayerInputWSAD(sysProxy),
-		200.0, 200.0,
-		Color::red()
-	);
-	newPlayer(
-		PlayerInputFactory::createKeyboardPlayerInputArrows(sysProxy),
-		400.0, 200.0,
-		Color::green()
-	);
-	newPlayer(
-		PlayerInputFactory::createKeyboardPlayerInput(sysProxy,
-			KEY_H, KEY_U, KEY_K, KEY_J),
-		300.0, 300.0,
-		Color(0xff, 0x80, 0xa0)
-	);
-	newPlayer(
-		PlayerInputFactory::createAIPlayerInput(),
-		1000.0, 800.0,
-		Color::player(3)
-	);
-}
-
-void InGameController::newPlayer(std::shared_ptr<IPlayerInput> playerInput,
-	double startX, double startY, const Color& color)
-{
-	auto playerState = PlayerStateFactory::createDefault(startX, startY,
-		playerInput);
-	m_core->addPlayer(playerState);
-
-	auto playerSprite = std::make_unique<PlayerSprite>(sysProxy);
-	playerSprite->setColor(color);
-	m_playerSprites.push_back(std::move(playerSprite));
+	for (const auto& obstacle : m_core->getObstaclesList()) {
+		auto obstacleSprite = std::make_unique<ObstacleSprite>(sysProxy);
+		obstacleSprite->setShape(obstacle);
+		m_obstacleSprites.push_back(std::move(obstacleSprite));
+	}
 }
 
 void InGameController::updatePlayerSprites()
@@ -71,10 +53,12 @@ void InGameController::updatePlayerSprites()
 	}
 }
 
-void InGameController::onActivated()
+void InGameController::onStarted()
 {
-	GeneralControllerBase::onActivated();
+	GeneralControllerBase::onStarted();
 	m_core->loopEvent();
+	createPlayerSprites();
+	createObstacleSprites();
 	updatePlayerSprites();
 }
 
@@ -88,6 +72,10 @@ void InGameController::onPaint(std::shared_ptr<ICanvas> canvas,
 	const Rect& invalidRect)
 {
 	for (auto& spr : m_playerSprites) {
+		spr->repaint(canvas, invalidRect);
+	}
+
+	for (auto& spr : m_obstacleSprites) {
 		spr->repaint(canvas, invalidRect);
 	}
 }

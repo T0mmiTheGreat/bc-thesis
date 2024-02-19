@@ -140,10 +140,9 @@ set(HEADER_FILES
 	sprite/TextSprite.hpp
 	sprite/StageItemSprite.hpp
 	paintingproxy/IPaintingProxy.hpp
-	core/ICore.hpp
+	core/Common.hpp
 	core/Core.hpp
-	core/Constants.hpp
-	core/stageobstacles/StageObstacles.cpp
+	core/stageobstacles/StageObstacles.hpp
 	core/trajectory/Trajectory.hpp
 	playerinput/IPlayerInput.hpp
 	playerinput/PlayerInputFactory.hpp

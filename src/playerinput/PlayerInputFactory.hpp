@@ -36,6 +36,8 @@ public:
 		KeyCode keyUp, KeyCode keyRight, KeyCode keyDown);
 	static std::shared_ptr<IPlayerInput> createKeyboardPlayerInputWSAD(
 		std::shared_ptr<ISysProxyPlayerInput> sysProxy);
+	static std::shared_ptr<IPlayerInput> createKeyboardPlayerInputIKJL(
+		std::shared_ptr<ISysProxyPlayerInput> sysProxy);
 	static std::shared_ptr<IPlayerInput> createKeyboardPlayerInputArrows(
 		std::shared_ptr<ISysProxyPlayerInput> sysProxy);
 	static std::shared_ptr<IPlayerInput> createImmobilePlayerInput();

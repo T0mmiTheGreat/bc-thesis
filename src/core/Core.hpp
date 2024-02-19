@@ -12,14 +12,19 @@
 #ifndef CORE_HPP
 #define CORE_HPP
 
+#include <memory>
 #include <vector>
 
 #include "types.hpp"
-#include "core/ICore.hpp"
-#include "core/Constants.hpp"
+#include "core/Common.hpp"
 #include "core/stageobstacles/StageObstacles.hpp"
+#include "stageserializer/IStageSerializer.hpp"
+#include "playerinput/IPlayerInput.hpp"
+#include "playerstate/IPlayerState.hpp"
 
-class Core : public ICore {
+typedef std::vector<std::shared_ptr<IPlayerState>> PlayerList;
+
+class Core {
 private:
 	struct PlayerTurn {
 		std::shared_ptr<IPlayerState> playerRef;
@@ -41,8 +46,10 @@ private:
 	 */
 	PlayerList m_players;
 	Timer m_tickTimer;
-	StageObstacles m_obstacles;
+	std::unique_ptr<StageObstacles> m_obstacles;
 
+	void initializeStage(const std::shared_ptr<IStageSerializer> stage,
+		const std::vector<std::shared_ptr<IPlayerInput>>& players);
 	/**
 	 * @brief Game tick event.
 	 * 
@@ -62,19 +69,17 @@ private:
 	void movePlayers(TurnData& turnData);
 	void changePlayersHp(TurnData& turnData);
 public:
-	Core();
+	Core(const std::shared_ptr<IStageSerializer> stage,
+		const std::vector<std::shared_ptr<IPlayerInput>>& players);
 	/**
 	 * @brief Event that happens every event loop iteration.
 	 */
-	void loopEvent() override;
-	/**
-	 * @brief Add a player to the player list.
-	 */
-	void addPlayer(std::shared_ptr<IPlayerState> player) override;
+	void loopEvent();
 	/**
 	 * @brief Access the player list.
 	 */
-	const PlayerList& getPlayerList() override;
+	const PlayerList& getPlayerList() const;
+	const std::vector<StageObstacle>& getObstaclesList() const;
 };
 
 #endif // CORE_HPP

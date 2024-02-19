@@ -42,6 +42,16 @@ void StageObstacles::inputToVector(const PlayerInputFlags& input, double& x, dou
 	}
 }
 
+StageObstacles::StageObstacles(
+	const std::vector<StageObstacle>& obstacles)
+	: m_obstacles{obstacles}
+{}
+
+const std::vector<StageObstacle>& StageObstacles::getObstaclesList() const
+{
+	return m_obstacles;
+}
+
 void StageObstacles::getPlayerTrajectory(std::shared_ptr<IPlayerState> playerState,
 	Trajectory& trajectory)
 {

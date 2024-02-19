@@ -42,9 +42,12 @@ std::shared_ptr<IControllerChild> ControllerFactory::createMainMenuController(st
 	return std::make_unique<MainMenuController>(sysProxy);
 }
 
-std::shared_ptr<IControllerChild> ControllerFactory::createInGameController(std::shared_ptr<ISysProxy> sysProxy)
+std::shared_ptr<IControllerChild> ControllerFactory::createInGameController(
+	std::shared_ptr<ISysProxy> sysProxy,
+	const std::shared_ptr<IStageSerializer> stage,
+	const std::vector<std::shared_ptr<IPlayerInput>>& players)
 {
-	return std::make_unique<InGameController>(sysProxy);
+	return std::make_unique<InGameController>(sysProxy, stage, players);
 }
 
 std::shared_ptr<IControllerChild> ControllerFactory::createStageEditorController(std::shared_ptr<ISysProxy> sysProxy)

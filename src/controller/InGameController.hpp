@@ -18,29 +18,33 @@
 
 #include "types.hpp"
 #include "controller/GeneralControllerBase.hpp"
-#include "core/ICore.hpp"
+#include "core/Core.hpp"
 #include "playerinput/IPlayerInput.hpp"
 #include "sprite/PlayerSprite.hpp"
+#include "sprite/ObstacleSprite.hpp"
+#include "stageserializer/IStageSerializer.hpp"
 
 class InGameController : public GeneralControllerBase {
 private:
-	std::unique_ptr<ICore> m_core;
+	std::unique_ptr<Core> m_core;
 	std::vector<std::unique_ptr<PlayerSprite>> m_playerSprites;
+	std::vector<std::unique_ptr<ObstacleSprite>> m_obstacleSprites;
 
-	void createPlayers();
-	void newPlayer(std::shared_ptr<IPlayerInput> playerInput, double startX,
-		double startY, const Color& color);
+	void createPlayerSprites();
+	void createObstacleSprites();
 	/**
 	 * @brief Sets the player sprite properties based on the state of the core.
 	 */
 	void updatePlayerSprites();
 protected:
-	void onActivated() override;
+	void onStarted() override;
 	void onLoop() override;
 	void onPaint(std::shared_ptr<ICanvas> canvas,
 		const Rect& invalidRect) override;
 public:
-	InGameController(std::shared_ptr<ISysProxy> sysProxy);
+	InGameController(std::shared_ptr<ISysProxy> sysProxy,
+		const std::shared_ptr<IStageSerializer> stage,
+		const std::vector<std::shared_ptr<IPlayerInput>>& players);
 };
 
 #endif // INGAMECONTROLLER_HPP

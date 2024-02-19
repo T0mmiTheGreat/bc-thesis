@@ -11,10 +11,10 @@
 
 #include "controller/MainMenuController.hpp"
 
-#include <format>
-
 #include "types.hpp"
 #include "controller/ControllerFactory.hpp"
+#include "playerinput/PlayerInputFactory.hpp"
+#include "stageserializer/StageSerializerFactory.hpp"
 
 MainMenuController::MainMenuController(std::shared_ptr<ISysProxy> sysProxy)
 	: GeneralControllerBase(sysProxy)
@@ -72,6 +72,27 @@ int MainMenuController::getMenuItemAt(int x, int y)
 	return -1;
 }
 
+const std::shared_ptr<IStageSerializer>
+MainMenuController::getStageForGame() const
+{
+	assert(m_isSelectedStageValid);
+
+	auto res = StageSerializerFactory::createDefault();
+	res->load(m_selectedStage);
+	return res;
+}
+
+const std::vector<std::shared_ptr<IPlayerInput>>
+MainMenuController::getPlayersForGame() const
+{
+	// FIXME
+	std::vector<std::shared_ptr<IPlayerInput>> res;
+	res.push_back(PlayerInputFactory::createKeyboardPlayerInputWSAD(sysProxy));
+	res.push_back(PlayerInputFactory::createKeyboardPlayerInputIKJL(sysProxy));
+	res.push_back(PlayerInputFactory::createKeyboardPlayerInputArrows(sysProxy));
+	return res;
+}
+
 std::shared_ptr<IControllerChild> MainMenuController::createReplacement()
 {
 	switch (m_exitResult) {
@@ -79,7 +100,8 @@ std::shared_ptr<IControllerChild> MainMenuController::createReplacement()
 			return ControllerFactory::createStageSelectController(sysProxy,
 				m_selectedStage, m_isSelectedStageValid);
 		case RES_PLAY:
-			return ControllerFactory::createInGameController(sysProxy);
+			return ControllerFactory::createInGameController(sysProxy,
+				getStageForGame(), getPlayersForGame());
 		case RES_EDITOR:
 			return ControllerFactory::createStageEditorController(sysProxy);
 	}

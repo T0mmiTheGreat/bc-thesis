@@ -30,6 +30,13 @@ std::shared_ptr<IPlayerInput> PlayerInputFactory::createKeyboardPlayerInputWSAD(
 		KeyboardPlayerInput::constructWSAD(sysProxy));
 }
 
+std::shared_ptr<IPlayerInput> PlayerInputFactory::createKeyboardPlayerInputIKJL(
+	std::shared_ptr<ISysProxyPlayerInput> sysProxy)
+{
+	return std::make_shared<KeyboardPlayerInput>(
+		KeyboardPlayerInput::constructIKJL(sysProxy));
+}
+
 std::shared_ptr<IPlayerInput> PlayerInputFactory::createKeyboardPlayerInputArrows(
 	std::shared_ptr<ISysProxyPlayerInput> sysProxy)
 {

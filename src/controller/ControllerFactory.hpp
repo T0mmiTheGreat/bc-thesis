@@ -16,6 +16,7 @@
 
 #include "controller/IRootController.hpp"
 #include "controller/IControllerChild.hpp"
+#include "playerinput/IPlayerInput.hpp"
 #include "stageeditor/StageEditor.hpp"
 #include "stageserializer/IStageSerializer.hpp"
 #include "sysproxy/ISysProxy.hpp"
@@ -59,7 +60,10 @@ public:
 	 * @param sysProxy Proxy for communication with the system manager
 	 *                 (dependency injection). 
 	 */
-	static std::shared_ptr<IControllerChild> createInGameController(std::shared_ptr<ISysProxy> sysProxy);
+	static std::shared_ptr<IControllerChild> createInGameController(
+		std::shared_ptr<ISysProxy> sysProxy,
+		const std::shared_ptr<IStageSerializer> stage,
+		const std::vector<std::shared_ptr<IPlayerInput>>& players);
 	/**
 	 * @brief Constructs a new StageEditorController object.
 	 * 

@@ -58,13 +58,15 @@ typedef enum KeyCode {
 	KEY_RIGHT_ARROW,
 	KEY_DOWN_ARROW,
 	KEY_A,
-	KEY_W,
 	KEY_D,
-	KEY_S,
 	KEY_H,
-	KEY_U,
-	KEY_K,
+	KEY_I,
 	KEY_J,
+	KEY_K,
+	KEY_L,
+	KEY_S,
+	KEY_U,
+	KEY_W,
 	// XXX: also add to SysEvent publishers/subscribers if needed
 } KeyCode;
 

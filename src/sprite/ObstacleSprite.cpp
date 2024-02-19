@@ -48,6 +48,7 @@ ObstacleSprite::ObstacleSprite(std::shared_ptr<IPaintingProxy> paintingProxy)
 	: SpriteBase(paintingProxy)
 	, BoundedSpriteBase(paintingProxy)
 	, m_costume{COSTUME_NORMAL}
+	, m_color{Color::obstacle()}
 {}
 
 void ObstacleSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)

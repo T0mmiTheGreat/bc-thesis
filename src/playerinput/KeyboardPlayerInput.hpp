@@ -39,6 +39,8 @@ public:
 		KeyCode keyLeft, KeyCode keyUp, KeyCode keyRight, KeyCode keyDown);
 	static KeyboardPlayerInput constructWSAD(
 		std::shared_ptr<ISysProxyPlayerInput> sysProxy);
+	static KeyboardPlayerInput constructIKJL(
+		std::shared_ptr<ISysProxyPlayerInput> sysProxy);
 	static KeyboardPlayerInput constructArrows(
 		std::shared_ptr<ISysProxyPlayerInput> sysProxy);
 	PlayerInputFlags readInput() override;

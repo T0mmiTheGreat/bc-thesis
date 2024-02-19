@@ -17,6 +17,7 @@
 
 #include "types.hpp"
 #include "controller/GeneralControllerBase.hpp"
+#include "playerinput/IPlayerInput.hpp"
 #include "sprite/MainMenuItemSprite.hpp"
 #include "sprite/MainMenuTitleSprite.hpp"
 #include "stageserializer/IStageSerializer.hpp"
@@ -61,6 +62,9 @@ private:
 	 * @return Index to `m_menuBtns` or -1 if no item is at the given position.
 	 */
 	int getMenuItemAt(int x, int y);
+
+	const std::shared_ptr<IStageSerializer> getStageForGame() const;
+	const std::vector<std::shared_ptr<IPlayerInput>> getPlayersForGame() const;
 protected:
 	std::shared_ptr<IControllerChild> createReplacement() override;
 	
