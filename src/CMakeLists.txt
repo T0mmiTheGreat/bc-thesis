@@ -67,6 +67,7 @@ set(SOURCE_FILES
 	playerinput/PlayerInputBase.cpp
 	playerinput/ImmobilePlayerInput.cpp
 	playerinput/KeyboardPlayerInput.cpp
+	playerinput/AIPlayerInput.cpp
 	playerstate/PlayerStateFactory.cpp
 	playerstate/PlayerStateBase.cpp
 	playerstate/DefaultPlayerState.cpp
@@ -149,6 +150,7 @@ set(HEADER_FILES
 	playerinput/PlayerInputBase.hpp
 	playerinput/KeyboardPlayerInput.hpp
 	playerinput/ImmobilePlayerInput.hpp
+	playerinput/AIPlayerInput.hpp
 	playerinput/ISysProxyPlayerInput.hpp
 	playerstate/IPlayerState.hpp
 	playerstate/PlayerStateFactory.hpp

@@ -8,6 +8,8 @@
  * 
  */
 
+#include <cstdlib>
+#include <ctime>
 #include <memory>
 
 #include <SDL2/SDL.h> // SDL_main
@@ -22,6 +24,7 @@ int main(int argc, char *argv[])
 {
 	(void)argc;
 	(void)argv;
+	srand(time(NULL));
 	auto rootCntl = ControllerFactory::createRootController(SysProxyFactory::createDefault());
 	auto sdlSubs = std::make_shared<SDLSubscriber>(rootCntl);
 	SDLManager::get().assignSubscriber(sdlSubs);

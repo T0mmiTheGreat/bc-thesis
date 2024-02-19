@@ -39,6 +39,7 @@ public:
 	static std::shared_ptr<IPlayerInput> createKeyboardPlayerInputArrows(
 		std::shared_ptr<ISysProxyPlayerInput> sysProxy);
 	static std::shared_ptr<IPlayerInput> createImmobilePlayerInput();
+	static std::shared_ptr<IPlayerInput> createAIPlayerInput();
 };
 
 #endif // PLAYERINPUTFACTORY_HPP

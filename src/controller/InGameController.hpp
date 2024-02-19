@@ -24,8 +24,6 @@
 
 class InGameController : public GeneralControllerBase {
 private:
-	static constexpr int PLAYER_COUNT = 3;
-
 	std::unique_ptr<ICore> m_core;
 	std::vector<std::unique_ptr<PlayerSprite>> m_playerSprites;
 

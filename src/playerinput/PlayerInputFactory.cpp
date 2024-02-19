@@ -13,6 +13,7 @@
 
 #include "playerinput/KeyboardPlayerInput.hpp"
 #include "playerinput/ImmobilePlayerInput.hpp"
+#include "playerinput/AIPlayerInput.hpp"
 
 std::shared_ptr<IPlayerInput> PlayerInputFactory::createKeyboardPlayerInput(
 	std::shared_ptr<ISysProxyPlayerInput> sysProxy, KeyCode keyLeft,
@@ -39,4 +40,9 @@ std::shared_ptr<IPlayerInput> PlayerInputFactory::createKeyboardPlayerInputArrow
 std::shared_ptr<IPlayerInput> PlayerInputFactory::createImmobilePlayerInput()
 {
 	return std::make_shared<ImmobilePlayerInput>();
+}
+
+std::shared_ptr<IPlayerInput> PlayerInputFactory::createAIPlayerInput()
+{
+	return std::make_shared<AIPlayerInput>();
 }

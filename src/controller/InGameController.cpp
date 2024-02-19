@@ -42,6 +42,11 @@ void InGameController::createPlayers()
 		300.0, 300.0,
 		Color(0xff, 0x80, 0xa0)
 	);
+	newPlayer(
+		PlayerInputFactory::createAIPlayerInput(),
+		1000.0, 800.0,
+		Color::player(3)
+	);
 }
 
 void InGameController::newPlayer(std::shared_ptr<IPlayerInput> playerInput,
@@ -60,7 +65,7 @@ void InGameController::updatePlayerSprites()
 {
 	auto plStates = m_core->getPlayerList();
 
-	for (int i = 0; i < PLAYER_COUNT; i++) {
+	for (size_t i = 0; i < m_playerSprites.size(); i++) {
 		m_playerSprites[i]->setPos(plStates[i]->getX(), plStates[i]->getY());
 		m_playerSprites[i]->setRadius(static_cast<int>(plStates[i]->getSize()));
 	}
