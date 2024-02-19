@@ -1,7 +1,7 @@
 /**
- * @file TextButtonSprite.hpp
+ * @file OptionButtonSprite.hpp
  * @author Tomáš Ludrovan
- * @brief TextButtonSprite class
+ * @brief OptionButtonSprite class
  * @version 0.1
  * @date 2024-02-12
  * 
@@ -9,15 +9,15 @@
  * 
  */
 
-#ifndef TEXTBUTTONSPRITE_HPP
-#define TEXTBUTTONSPRITE_HPP
+#ifndef OPTIONBUTTONSPRITE_HPP
+#define OPTIONBUTTONSPRITE_HPP
 
 
 #include <string>
 
 #include "sprite/PositionedSpriteBase.hpp"
 
-class TextButtonSprite : public PositionedSpriteBase {
+class OptionButtonSprite : public PositionedSpriteBase {
 public:
 	enum Costume {
 		// Default appearance
@@ -46,7 +46,7 @@ public:
 	static constexpr int BUTTON_WIDTH = RECT_WIDTH_SCALED;
 	static constexpr int BUTTON_HEIGHT = RECT_HEIGHT_SCALED;
 
-	TextButtonSprite(std::shared_ptr<IPaintingProxy> paintingProxy);
+	OptionButtonSprite(std::shared_ptr<IPaintingProxy> paintingProxy);
 
 	/**
 	 * @brief Returns the size (width and height) of the sprite.
@@ -77,4 +77,4 @@ public:
 	void setCostume(Costume value);
 };
 
-#endif // TEXTBUTTONSPRITE_HPP
+#endif // OPTIONBUTTONSPRITE_HPP

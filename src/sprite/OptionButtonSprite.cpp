@@ -1,7 +1,7 @@
 /**
- * @file TextButtonSprite.cpp
+ * @file OptionButtonSprite.cpp
  * @author Tomáš Ludrovan
- * @brief TextButtonSprite class
+ * @brief OptionButtonSprite class
  * @version 0.1
  * @date 2024-02-12
  * 
@@ -9,21 +9,21 @@
  * 
  */
 
-#include "sprite/TextButtonSprite.hpp"
+#include "sprite/OptionButtonSprite.hpp"
 
-TextButtonSprite::TextButtonSprite(std::shared_ptr<IPaintingProxy> paintingProxy)
+OptionButtonSprite::OptionButtonSprite(std::shared_ptr<IPaintingProxy> paintingProxy)
 	: SpriteBase(paintingProxy)
 	, BoundedSpriteBase(paintingProxy)
 	, PositionedSpriteBase(paintingProxy)
 	, m_costume{COSTUME_NORMAL}
 {}
 
-Size2d TextButtonSprite::getSize()
+Size2d OptionButtonSprite::getSize()
 {
 	return Size2d(RECT_WIDTH_SCALED, RECT_HEIGHT_SCALED);
 }
 
-void TextButtonSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
+void OptionButtonSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
 {
 	(void)invalidRect;
 
@@ -45,22 +45,22 @@ void TextButtonSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas, const R
 	canvas->fillText(textX, textY, m_text, FONT);
 }
 
-const std::string& TextButtonSprite::getText() const
+const std::string& OptionButtonSprite::getText() const
 {
 	return propertyGetter(m_text);
 }
 
-void TextButtonSprite::setText(const std::string& value)
+void OptionButtonSprite::setText(const std::string& value)
 {
 	propertySetterComparable(m_text, value);
 }
 
-TextButtonSprite::Costume TextButtonSprite::getCostume() const
+OptionButtonSprite::Costume OptionButtonSprite::getCostume() const
 {
 	return propertyGetter(m_costume);
 }
 
-void TextButtonSprite::setCostume(TextButtonSprite::Costume value)
+void OptionButtonSprite::setCostume(OptionButtonSprite::Costume value)
 {
 	propertySetterComparable(m_costume, value);
 }

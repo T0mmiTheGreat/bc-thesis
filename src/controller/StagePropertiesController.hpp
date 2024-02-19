@@ -19,7 +19,7 @@
 #include "sysproxy/ISysProxy.hpp"
 #include "sprite/TextSprite.hpp"
 #include "sprite/TextBoxSprite.hpp"
-#include "sprite/TextButtonSprite.hpp"
+#include "sprite/OptionButtonSprite.hpp"
 #include "stageeditor/StageEditor.hpp"
 
 class StagePropertiesController : public GeneralControllerBase {
@@ -41,8 +41,8 @@ private:
 	std::string m_stageTitle;
 	std::unique_ptr<TextBoxSprite> m_textBoxSprite;
 	std::unique_ptr<TextSprite> m_filenameSprite;
-	std::unique_ptr<TextButtonSprite> m_okBtnSprite;
-	std::unique_ptr<TextButtonSprite> m_cancelBtnSprite;
+	std::unique_ptr<OptionButtonSprite> m_okBtnSprite;
+	std::unique_ptr<OptionButtonSprite> m_cancelBtnSprite;
 
 	Rect getOkBtnRect();
 	Rect getCancelBtnRect();

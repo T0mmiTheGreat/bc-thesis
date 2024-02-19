@@ -21,7 +21,7 @@ void StageSelectController::initializeSprites()
 
 void StageSelectController::createSprites()
 {
-	m_cancelButtonSprite = std::make_unique<TextButtonSprite>(sysProxy);
+	m_cancelButtonSprite = std::make_unique<OptionButtonSprite>(sysProxy);
 
 	m_cancelButtonSprite->setText(CANCEL_BUTTON_TEXT);
 }
@@ -99,20 +99,20 @@ Rect StageSelectController::getCancelButtonRect()
 	Size2d screenSize = sysProxy->getPaintAreaSize();
 
 	// Horizontally centered
-	int x = (screenSize.w - TextButtonSprite::BUTTON_WIDTH) / 2;
+	int x = (screenSize.w - OptionButtonSprite::BUTTON_WIDTH) / 2;
 	int y = screenSize.h - CANCEL_BUTTON_BOTTOM_MARGIN
-		- TextButtonSprite::BUTTON_HEIGHT;
-	Rect res(x, y, TextButtonSprite::BUTTON_WIDTH,
-		TextButtonSprite::BUTTON_HEIGHT);
+		- OptionButtonSprite::BUTTON_HEIGHT;
+	Rect res(x, y, OptionButtonSprite::BUTTON_WIDTH,
+		OptionButtonSprite::BUTTON_HEIGHT);
 	return res;
 }
 
 void StageSelectController::checkCancelButtonMouseHover(const Point& mouse)
 {
 	if (getCancelButtonRect().containsPoint(mouse)) {
-		m_cancelButtonSprite->setCostume(TextButtonSprite::COSTUME_HOVER);
+		m_cancelButtonSprite->setCostume(OptionButtonSprite::COSTUME_HOVER);
 	} else {
-		m_cancelButtonSprite->setCostume(TextButtonSprite::COSTUME_NORMAL);
+		m_cancelButtonSprite->setCostume(OptionButtonSprite::COSTUME_NORMAL);
 	}
 }
 

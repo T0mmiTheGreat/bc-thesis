@@ -44,7 +44,7 @@ set(SOURCE_FILES
 	sprite/PositionedSpriteBase.cpp
 	sprite/AnimatedSpriteBase.cpp
 	sprite/LogoSprite.cpp
-	sprite/TextButtonSprite.cpp
+	sprite/OptionButtonSprite.cpp
 	sprite/MainMenuItemSprite.cpp
 	sprite/MainMenuTitleSprite.cpp
 	sprite/PlayerSprite.cpp
@@ -122,7 +122,7 @@ set(HEADER_FILES
 	sprite/PositionedSpriteBase.hpp
 	sprite/AnimatedSpriteBase.hpp
 	sprite/LogoSprite.hpp
-	sprite/TextButtonSprite.hpp
+	sprite/OptionButtonSprite.hpp
 	sprite/MainMenuItemSprite.hpp
 	sprite/MainMenuTitleSprite.hpp
 	sprite/PlayerSprite.hpp

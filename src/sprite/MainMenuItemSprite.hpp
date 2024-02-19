@@ -12,11 +12,11 @@
 #ifndef MAINMENUITEMSPRITE_HPP
 #define MAINMENUITEMSPRITE_HPP
 
-#include "sprite/TextButtonSprite.hpp"
+#include "sprite/OptionButtonSprite.hpp"
 
 /**
  * @brief Sprite for main menu items.
  */
-typedef TextButtonSprite MainMenuItemSprite;
+typedef OptionButtonSprite MainMenuItemSprite;
 
 #endif // MAINMENUITEMSPRITE_HPP

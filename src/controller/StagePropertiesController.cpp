@@ -16,10 +16,10 @@
 Rect StagePropertiesController::getOkBtnRect()
 {
 	Rect res(
-		(sysProxy->getPaintAreaSize().w - TextButtonSprite::BUTTON_WIDTH) / 2,
+		(sysProxy->getPaintAreaSize().w - OptionButtonSprite::BUTTON_WIDTH) / 2,
 		BUTTONS_TOP,
-		TextButtonSprite::BUTTON_WIDTH,
-		TextButtonSprite::BUTTON_HEIGHT
+		OptionButtonSprite::BUTTON_WIDTH,
+		OptionButtonSprite::BUTTON_HEIGHT
 	);
 	return res;
 }
@@ -27,11 +27,11 @@ Rect StagePropertiesController::getOkBtnRect()
 Rect StagePropertiesController::getCancelBtnRect()
 {
 	Rect res(
-		(sysProxy->getPaintAreaSize().w - TextButtonSprite::BUTTON_WIDTH) / 2,
+		(sysProxy->getPaintAreaSize().w - OptionButtonSprite::BUTTON_WIDTH) / 2,
 		// Top      + height of OK btn                + the space between buttons
-		BUTTONS_TOP + TextButtonSprite::BUTTON_HEIGHT + BUTTONS_SPACING,
-		TextButtonSprite::BUTTON_WIDTH,
-		TextButtonSprite::BUTTON_HEIGHT
+		BUTTONS_TOP + OptionButtonSprite::BUTTON_HEIGHT + BUTTONS_SPACING,
+		OptionButtonSprite::BUTTON_WIDTH,
+		OptionButtonSprite::BUTTON_HEIGHT
 	);
 	return res;
 }
@@ -47,8 +47,8 @@ void StagePropertiesController::createSprites()
 {
 	m_textBoxSprite = std::make_unique<TextBoxSprite>(sysProxy);
 	m_filenameSprite = std::make_unique<TextSprite>(sysProxy);
-	m_okBtnSprite = std::make_unique<TextButtonSprite>(sysProxy);
-	m_cancelBtnSprite = std::make_unique<TextButtonSprite>(sysProxy);
+	m_okBtnSprite = std::make_unique<OptionButtonSprite>(sysProxy);
+	m_cancelBtnSprite = std::make_unique<OptionButtonSprite>(sysProxy);
 
 	m_textBoxSprite->setFont(TEXTBOX_FONT);
 	m_filenameSprite->setFont(FILENAME_FONT);
@@ -112,15 +112,15 @@ void StagePropertiesController::checkButtonsMouseHover(int x, int y)
 void StagePropertiesController::checkButtonsMouseHover(const Point& mouse)
 {
 	if (getOkBtnRect().containsPoint(mouse)) {
-		m_okBtnSprite->setCostume(TextButtonSprite::COSTUME_HOVER);
+		m_okBtnSprite->setCostume(OptionButtonSprite::COSTUME_HOVER);
 	} else {
-		m_okBtnSprite->setCostume(TextButtonSprite::COSTUME_NORMAL);
+		m_okBtnSprite->setCostume(OptionButtonSprite::COSTUME_NORMAL);
 	}
 
 	if (getCancelBtnRect().containsPoint(mouse)) {
-		m_cancelBtnSprite->setCostume(TextButtonSprite::COSTUME_HOVER);
+		m_cancelBtnSprite->setCostume(OptionButtonSprite::COSTUME_HOVER);
 	} else {
-		m_cancelBtnSprite->setCostume(TextButtonSprite::COSTUME_NORMAL);
+		m_cancelBtnSprite->setCostume(OptionButtonSprite::COSTUME_NORMAL);
 	}
 }
 

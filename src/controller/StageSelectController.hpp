@@ -18,7 +18,7 @@
 
 #include "controller/GeneralControllerBase.hpp"
 #include "sprite/StageItemSprite.hpp"
-#include "sprite/TextButtonSprite.hpp"
+#include "sprite/OptionButtonSprite.hpp"
 #include "stageserializer/IStageSerializer.hpp"
 #include "sysproxy/ISysProxy.hpp"
 
@@ -31,12 +31,14 @@ private:
 	static constexpr int CANCEL_BUTTON_BOTTOM_MARGIN = 110;
 	static constexpr std::string CANCEL_BUTTON_TEXT = "Cancel";
 
+	// Return values
+
 	IStageSerializer::IdType& m_selectedStage;
 	bool& m_isSelectedStageValid;
 
 	std::vector<IStageSerializer::IdType> m_stageIds;
 
-	std::unique_ptr<TextButtonSprite> m_cancelButtonSprite;
+	std::unique_ptr<OptionButtonSprite> m_cancelButtonSprite;
 	std::vector<std::unique_ptr<StageItemSprite>> m_stageItemSprites;
 
 	void initializeSprites();
