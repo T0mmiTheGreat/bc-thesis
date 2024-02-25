@@ -58,14 +58,10 @@ const Size2d& StageObstacles::getStageSize() const
 	return m_bounds;
 }
 
-void StageObstacles::getPlayerTrajectory(std::shared_ptr<IPlayerState> playerState,
-	Trajectory& trajectory)
+void StageObstacles::adjustPlayerTrajectory(Trajectory& trajectory,
+	double playerRadius)
 {
-	double ux, uy;
-	inputToVector(playerState->getPlayerInputObject()->readInput(), ux, uy);
-
-	trajectory.segment.lineSegment.Ax = playerState->getX();
-	trajectory.segment.lineSegment.Ay = playerState->getY();
-	trajectory.segment.lineSegment.ux = ux * playerState->getSpeed() * SPEED_FACTOR;
-	trajectory.segment.lineSegment.uy = uy * playerState->getSpeed() * SPEED_FACTOR;
+	(void)trajectory;
+	(void)playerRadius;
+	// TODO
 }

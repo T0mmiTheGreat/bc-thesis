@@ -47,11 +47,10 @@ public:
 	const std::vector<StageObstacle>& getObstaclesList() const;
 	const Size2d& getStageSize() const;
 	/**
-	 * @brief Returns the player trajectory based on the player input, taking
-	 *        the obstacles into account.
+	 * @brief Modifies the player trajectory by taking the obstacles into
+	 *        account.
 	 */
-	void getPlayerTrajectory(std::shared_ptr<IPlayerState> playerState,
-		Trajectory& trajectory);
+	void adjustPlayerTrajectory(Trajectory& trajectory, double playerRadius);
 };
 
 #endif // STAGEOBSTACLES_HPP

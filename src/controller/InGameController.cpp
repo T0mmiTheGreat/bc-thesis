@@ -26,11 +26,11 @@ InGameController::InGameController(std::shared_ptr<ISysProxy> sysProxy,
 
 void InGameController::createPlayerSprites()
 {
-	const auto& players = m_core->getPlayerList();
-	for (size_t i = 0; i < players.size(); i++) {
+	const auto& players = m_core->getPlayerStates();
+	for (const auto& [id, state] : players) {
 		auto playerSprite = std::make_unique<PlayerSprite>(sysProxy);
-		playerSprite->setColor(Color::player(i));
-		m_playerSprites.push_back(std::move(playerSprite));
+		playerSprite->setColor(Color::player(id));
+		m_playerSprites[id] = std::move(playerSprite);
 	}
 }
 
@@ -58,11 +58,13 @@ void InGameController::createStageBoundsSprite()
 
 void InGameController::updatePlayerSprites()
 {
-	auto plStates = m_core->getPlayerList();
+	auto plStates = m_core->getPlayerStates();
 
-	for (size_t i = 0; i < m_playerSprites.size(); i++) {
-		m_playerSprites[i]->setPos(plStates[i]->getX(), plStates[i]->getY());
-		m_playerSprites[i]->setRadius(static_cast<int>(plStates[i]->getSize()));
+	for (const auto& [id, state] : plStates) {
+		auto& spr = m_playerSprites[id];
+
+		spr->setCenterPos(state.x, state.y);
+		spr->setRadius(static_cast<int>(state.size));
 	}
 }
 
@@ -85,7 +87,7 @@ void InGameController::onLoop()
 void InGameController::onPaint(std::shared_ptr<ICanvas> canvas,
 	const Rect& invalidRect)
 {
-	for (auto& spr : m_playerSprites) {
+	for (auto& [id, spr] : m_playerSprites) {
 		spr->repaint(canvas, invalidRect);
 	}
 

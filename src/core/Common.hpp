@@ -16,6 +16,8 @@
 
 #include "types.hpp"
 
+typedef size_t PlayerId;
+
 typedef TriangleF StageObstacle;
 
 /**

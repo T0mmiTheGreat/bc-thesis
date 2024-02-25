@@ -14,10 +14,12 @@
 
 #include <ctime>
 #include <memory>
+#include <unordered_map>
 #include <vector>
 
 #include "types.hpp"
 #include "controller/GeneralControllerBase.hpp"
+#include "core/Common.hpp"
 #include "core/Core.hpp"
 #include "playerinput/IPlayerInput.hpp"
 #include "sprite/PlayerSprite.hpp"
@@ -28,7 +30,7 @@
 class InGameController : public GeneralControllerBase {
 private:
 	std::unique_ptr<Core> m_core;
-	std::vector<std::unique_ptr<PlayerSprite>> m_playerSprites;
+	std::unordered_map<PlayerId, std::unique_ptr<PlayerSprite>> m_playerSprites;
 	std::vector<std::unique_ptr<ObstacleSprite>> m_obstacleSprites;
 	std::unique_ptr<HollowRectSprite> m_stageBoundsSprite;
 

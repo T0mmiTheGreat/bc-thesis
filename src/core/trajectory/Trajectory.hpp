@@ -14,7 +14,7 @@
 
 #include <vector>
 
-#include "math/Math.hpp"
+#include "core/geometry/Geometry.hpp"
 
 // enum TrajectorySegmentType {
 // 	TRAJECTORY_LINE_SEGMENT,
@@ -25,7 +25,7 @@ struct TrajectorySegment {
 	// TrajectorySegmentType type;
 	// union {
 		struct {
-			double Ax, Ay, ux, uy;
+			Segment_2 seg;
 		} lineSegment;
 	// };
 };
@@ -43,10 +43,6 @@ struct Trajectory {
 	 *          desires to.
 	 */
 	double minSqdist(const Trajectory& rhs);
-	/**
-	 * @brief Returns the delta (i.e., vector) between initial and end point.
-	 */
-	void getDelta(double& x, double& y) const;
 };
 
 #endif // TRAJECTORY_HPP
