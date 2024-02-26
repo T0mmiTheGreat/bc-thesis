@@ -19,7 +19,6 @@
 #include "core/Common.hpp"
 #include "core/trajectory/Trajectory.hpp"
 #include "playerinput/IPlayerInput.hpp"
-#include "playerstate/IPlayerState.hpp"
 
 class StageObstacles {
 private:

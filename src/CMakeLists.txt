@@ -70,9 +70,6 @@ set(SOURCE_FILES
 	playerinput/ImmobilePlayerInput.cpp
 	playerinput/KeyboardPlayerInput.cpp
 	playerinput/AIPlayerInput.cpp
-	playerstate/PlayerStateFactory.cpp
-	playerstate/PlayerStateBase.cpp
-	playerstate/DefaultPlayerState.cpp
 	stageeditor/StageEditor.cpp
 	stageeditor/StageEditorObjects.cpp
 	stageeditor/StageState.cpp
@@ -156,10 +153,6 @@ set(HEADER_FILES
 	playerinput/ImmobilePlayerInput.hpp
 	playerinput/AIPlayerInput.hpp
 	playerinput/ISysProxyPlayerInput.hpp
-	playerstate/IPlayerState.hpp
-	playerstate/PlayerStateFactory.hpp
-	playerstate/PlayerStateBase.hpp
-	playerstate/DefaultPlayerState.hpp
 	stageeditor/Common.hpp
 	stageeditor/StageEditor.hpp
 	stageeditor/StageEditorObjects.hpp

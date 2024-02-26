@@ -15,7 +15,6 @@
 
 #include "core/Core.hpp"
 #include "playerinput/PlayerInputFactory.hpp"
-#include "playerstate/PlayerStateFactory.hpp"
 
 InGameController::InGameController(std::shared_ptr<ISysProxy> sysProxy,
 	const std::shared_ptr<IStageSerializer> stage,
