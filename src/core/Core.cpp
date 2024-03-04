@@ -85,10 +85,8 @@ void Core::calculateTrajectories(TurnData& turnData)
 		source = m_players[id].pos;
 		v = Vector_2(vx, vy);
 
-		playerTurn.trajectory.segment.lineSegment.seg = Segment_2(source,
-			source + v);
-		m_stageObstacles->adjustPlayerTrajectory(playerTurn.trajectory,
-			getPlayerSize(id));
+		playerTurn.trajectory = m_stageObstacles->getPlayerTrajectory(source,
+			v, getPlayerSize(id));
 	}
 }
 
@@ -114,7 +112,7 @@ void Core::movePlayers(TurnData& turnData)
 	for (auto& [id, playerTurn] : turnData.playerTurns) {
 		auto& player = m_players[id];
 
-		player.pos = playerTurn.trajectory.segment.lineSegment.seg.target();
+		player.pos = playerTurn.trajectory.last().getPEnd();
 	}
 }
 

@@ -17,39 +17,110 @@
 
 #include "types.hpp"
 #include "core/Common.hpp"
+#include "core/geometry/Geometry.hpp"
 #include "core/trajectory/Trajectory.hpp"
 #include "playerinput/IPlayerInput.hpp"
 
 class StageObstacles {
 private:
+	struct Wall {
+		// Line segment representing the wall
+		Segment_2 seg;
+		// Precomputed normal unit vector
+		Vector_2 n;
+	};
+	struct Corner {
+		Point_2 p;
+	};
+private:
+	// These are kept just because the controller will query them, but this
+	// class doesn't use these variables. (Only once, to initialize other
+	// things.)
+
  	std::vector<StageObstacle> m_obstacles;
 	Size2d m_bounds;
 
-	// sin(pi/4)
-	static constexpr double DIAG_MOVEMENT_PERAXIS_LENGTH = 0.70710678118654752440084436210485;
-	// Value to multiply with the player speed
-	static constexpr double SPEED_FACTOR = TICK_INTERVAL / 6.0;
+	std::vector<Wall> m_walls;
+	std::vector<Corner> m_corners;
+
 	/**
-	 * @brief Convert player input value to a vector.
+	 * @brief Initializes the wall and corner data.
 	 * 
-	 * @details Based on the player input creates a unit vector in the direction
-	 *          the player wants to move.
-	 * 
-	 * @param input The player input.
-	 * @param x Vector X coordinate.
-	 * @param y Vector Y coordinate.
+	 * @param obstacles List of obstacles.
+	 * @param bounds Stage bounds.
 	 */
-	static void inputToVector(const PlayerInputFlags& input, double& x, double& y);
+	void initializeCollisionObjects(const std::vector<StageObstacle>& obstacles,
+		const Size2d& bounds);
+	/**
+	 * @brief Fills the walls list.
+	 * 
+	 * @param obstacles List of obstacles.
+	 * @param bounds Stage bounds.
+	 */
+	void initializeWalls(const std::vector<StageObstacle>& obstacles,
+		const Size2d& bounds);
+	/**
+	 * @brief Fills the corners list.
+	 * 
+	 * @param obstacles List of obstacles.
+	 * @param bounds Stage bounds.
+	 */
+	void initializeCorners(const std::vector<StageObstacle>& obstacles,
+		const Size2d& bounds);
+
+	/**
+	 * @brief Calculates the unit normal vector of a wall.
+	 * 
+	 * @param wallSeg Line segment representing the wall.
+	 */
+	Vector_2 getWallUnitNormal(const Segment_2& wallSeg);
+
+	/**
+	 * @brief Adds walls of the `obstacle` to the walls list.
+	 */
+	void addObstacleToWallsList(const StageObstacle& obstacle);
+	/**
+	 * @brief Adds the stage walls to the walls list.
+	 */
+	void addBoundsToWallsList(const Size2d& bounds);
+	/**
+	 * @brief Adds corners of the `obstacle` to the corners list.
+	 */
+	void addObstacleToCornersList(const StageObstacle& obstacle);
+	/**
+	 * @brief Adds the stage corners to the corners list.
+	 */
+	void addBoundsToCornersList(const Size2d& bounds);
+
+	/**
+	 * @brief Creates a wall object and adds it to the walls list.
+	 * 
+	 * @param sp Source point of the wall.
+	 * @param ep Target (end) point of the wall.
+	 */
+	void addWallToList(const Point_2& sp, const Point_2& ep);
+	/**
+	 * @brief Creates a wall object and adds it to the walls list.
+	 * 
+	 * @param seg Line segment representing the wall.
+	 */
+	void addWallToList(const Segment_2& seg);
+	/**
+	 * @brief Creates a corner object and adds it to the corners list.
+	 * 
+	 * @param p Point representing the corner.
+	 */
+	void addCornerToList(const Point_2& p);
 public:
 	StageObstacles(const std::vector<StageObstacle>& obstacles,
 		const Size2d& bounds);
 	const std::vector<StageObstacle>& getObstaclesList() const;
 	const Size2d& getStageSize() const;
 	/**
-	 * @brief Modifies the player trajectory by taking the obstacles into
-	 *        account.
+	 * @brief Creates the player trajectory, taking the obstacles into account.
 	 */
-	void adjustPlayerTrajectory(Trajectory& trajectory, double playerRadius);
+	Trajectory getPlayerTrajectory(const Point_2& playerPos,
+		const Vector_2& playerMove, double playerRadius);
 };
 
 #endif // STAGEOBSTACLES_HPP
