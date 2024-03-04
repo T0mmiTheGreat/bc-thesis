@@ -21,6 +21,7 @@
 #include "core/trajectory/Trajectory.hpp"
 #include "playerinput/IPlayerInput.hpp"
 
+#ifdef OLD_TRAJECTORY_ALGORITHM
 class StageObstacles {
 private:
 	struct Wall {
@@ -122,5 +123,47 @@ public:
 	Trajectory getPlayerTrajectory(const Point_2& playerPos,
 		const Vector_2& playerMove, double playerRadius);
 };
+#else // OLD_TRAJECTORY_ALGORITHM
+class StageObstacles {
+private:
+	// These are kept just because the controller will query them, but this
+	// class doesn't use these variables. (Only once, to initialize other
+	// things.)
+
+ 	std::vector<StageObstacle> m_obstacles;
+	Size2d m_bounds;
+
+	// Collision objects
+	std::vector<Triangle_2> m_collObjs;
+
+	/**
+	 * @brief Initializes the collision objects data.
+	 * 
+	 * @param obstacles List of obstacles.
+	 * @param bounds Stage bounds.
+	 */
+	void initializeCollisionObjects(const std::vector<StageObstacle>& obstacles,
+		const Size2d& bounds);
+
+	/**
+	 * @brief Adds the `obstacle` to the collision objects list.
+	 */
+	void addObstacleToCollisionObjects(const StageObstacle& obstacle);
+	/**
+	 * @brief Adds the stage walls to the collision objects list.
+	 */
+	void addBoundsToCollisionObjects(const Size2d& bounds);
+public:
+	StageObstacles(const std::vector<StageObstacle>& obstacles,
+		const Size2d& bounds);
+	const std::vector<StageObstacle>& getObstaclesList() const;
+	const Size2d& getStageSize() const;
+	/**
+	 * @brief Creates the player trajectory, taking the obstacles into account.
+	 */
+	Trajectory getPlayerTrajectory(const Point_2& playerPos,
+		const Vector_2& playerMove, double playerRadius);
+};
+#endif // !OLD_TRAJECTORY_ALGORITHM
 
 #endif // STAGEOBSTACLES_HPP

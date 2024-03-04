@@ -15,11 +15,19 @@
 #include <functional>
 #include <vector>
 
+#ifdef OLD_TRAJECTORY_ALGORITHM
+#include <CGAL/Exact_predicates_exact_constructions_kernel_with_sqrt.h>
+#else
 #include <CGAL/Simple_cartesian.h>
+#endif
 
 #include "types.hpp"
 
+#ifdef OLD_TRAJECTORY_ALGORITHM
+typedef CGAL::Exact_predicates_exact_constructions_kernel_with_sqrt Kern;
+#else
 typedef CGAL::Simple_cartesian<double> Kern;
+#endif
 
 typedef CGAL::Point_2<Kern>              Point_2;
 typedef CGAL::Vector_2<Kern>             Vector_2;
@@ -31,8 +39,7 @@ typedef CGAL::Triangle_2<Kern>           Triangle_2;
 typedef CGAL::Circle_2<Kern>             Circle_2;
 typedef CGAL::Aff_transformation_2<Kern> Aff_transformation_2;
 
-constexpr double OP_EPSILON = std::numeric_limits<double>::epsilon() * 5.0;
-
+#ifdef OLD_TRAJECTORY_ALGORITHM
 /**
  * @brief Circular arc covering at most one quarter of the circle.
  */
@@ -50,8 +57,8 @@ public:
 	{
 		// Both `source` and `target` must lie on a circle with the center at
 		// the `center` point.
-		assert(std::abs(CGAL::squared_distance(center, source) 
-			- CGAL::squared_distance(center, target)) <= OP_EPSILON);
+		assert(CGAL::squared_distance(center, source) 
+			== CGAL::squared_distance(center, target));
 		// The angle must be <= 90 deg
 		assert(CGAL::angle(center, target, source) != CGAL::OBTUSE);
 	}
@@ -89,8 +96,7 @@ public:
 	 * @brief Checks if `p` lies on the supporting circle of the arc.
 	 */
 	bool is_concyclic(const Point_2& p) const {
-		return (std::abs(CGAL::squared_distance(p, m_center) - squared_radius())
-			<= OP_EPSILON);
+		return (CGAL::squared_distance(p, m_center) == squared_radius());
 	}
 	/**
 	 * @brief Checks if `p` lies on the arc.
@@ -132,6 +138,7 @@ public:
 		return l.oriented_side(m_target);
 	}
 };
+#endif // OLD_TRAJECTORY_ALGORITHM
 
 /**
  * @brief Converts `p` to CGAL point type.
@@ -156,6 +163,7 @@ inline Triangle_2 toCgalTriangle(const TriangleF& trg)
 	return Triangle_2(p, q, r);
 }
 
+#ifdef OLD_TRAJECTORY_ALGORITHM
 /**
  * @brief Helper function for `intersection` functions.
  * 
@@ -363,5 +371,6 @@ bounds_intersection(const Quadrant_arc_2& a, const Circle_2& c)
 
 	return res;
 }
+#endif // OLD_TRAJECTORY_ALGORITHM
 
 #endif // GEOMETRY_HPP

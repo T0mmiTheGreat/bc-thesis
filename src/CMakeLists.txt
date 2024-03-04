@@ -14,6 +14,13 @@ cmake_policy(SET CMP0153 OLD)
 
 include_directories(.)
 
+# Preprocessor macros
+
+# The old algorithm for computing player movement trajectory among obstacles.
+# It turned out to be too slow.
+#add_compile_definitions(OLD_TRAJECTORY_ALGORITHM)
+
+
 # Sources (*.cpp)
 set(SOURCE_FILES
 	main.cpp

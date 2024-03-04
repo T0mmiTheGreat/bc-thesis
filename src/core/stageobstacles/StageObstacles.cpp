@@ -11,6 +11,141 @@
 
 #include "core/stageobstacles/StageObstacles.hpp"
 
+#ifndef OLD_TRAJECTORY_ALGORITHM
+
+void StageObstacles::initializeCollisionObjects(
+	const std::vector<StageObstacle>& obstacles, const Size2d& bounds)
+{
+	for (const auto& obstacle: obstacles) {
+		addObstacleToCollisionObjects(obstacle);
+	}
+	addBoundsToCollisionObjects(bounds);
+}
+
+void StageObstacles::addObstacleToCollisionObjects(
+	const StageObstacle& obstacle)
+{
+	Triangle_2 trg(toCgalTriangle(obstacle));
+	if (trg.orientation() == CGAL::Orientation::CLOCKWISE) {
+		// The obstacle edges must be CCW
+		trg = trg.opposite();
+	}
+	m_collObjs.push_back(std::move(trg));
+}
+
+void StageObstacles::addBoundsToCollisionObjects(const Size2d& bounds)
+{
+	constexpr int EDGE_COUNT = 4;
+	Point_2 corners[EDGE_COUNT] = {
+		Point_2(0, 0),                // top left
+		Point_2(bounds.w, 0),         // top right
+		Point_2(bounds.w, bounds.h),  // bottom right
+		Point_2(0, bounds.h),         // bottom left
+	};
+	// These can be any points that complete the triangle and are on the
+	// negative side of the respective edge.
+	Point_2 edgeVertexes3[EDGE_COUNT] = {
+		Point_2(-10, 0),            // left
+		Point_2(0, -10),            // top
+		Point_2(bounds.w + 10, 0),  // right
+		Point_2(0, bounds.h + 10),  // bottom
+	};
+
+	Point_2 p, q, r;
+
+	q = corners[EDGE_COUNT - 1];
+	for (int i = 0; i < EDGE_COUNT; i++) {
+		p = std::move(q);
+		q = corners[i];
+		r = edgeVertexes3[i];
+		Triangle_2 trg(p, q, r);
+		m_collObjs.push_back(std::move(trg));
+	}
+}
+
+StageObstacles::StageObstacles(
+	const std::vector<StageObstacle>& obstacles, const Size2d& bounds)
+	: m_obstacles{obstacles}
+	, m_bounds{bounds}
+{
+	initializeCollisionObjects(obstacles, bounds);
+}
+
+const std::vector<StageObstacle>& StageObstacles::getObstaclesList() const
+{
+	return m_obstacles;
+}
+
+const Size2d& StageObstacles::getStageSize() const
+{
+	return m_bounds;
+}
+
+bool hasCollision(const std::vector<Triangle_2>& collObjs,
+	const Segment_2& seg, double playerRadius)
+{
+	for (const auto& collObj : collObjs) {
+		if (CGAL::squared_distance(collObj, seg) < CGAL::square(playerRadius)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+Trajectory StageObstacles::getPlayerTrajectory(const Point_2& playerPos,
+	const Vector_2& playerMove, double playerRadius)
+{
+	// Square of the maximum error of the bisection method
+	static constexpr double SQR_MAX_ERROR = sqr(0.5);
+
+	// Source (starting point)
+	Point_2 sp(playerPos);
+	// Target (end point)
+	Point_2 ep(playerPos + playerMove);
+
+	if (hasCollision(m_collObjs, Segment_2(sp, ep), playerRadius)) {
+		Vector_2 bumpVect = playerMove;
+		
+		// Aproximate collision point using bisection method
+		while (bumpVect.squared_length() > SQR_MAX_ERROR) {
+			// Bisect
+			bumpVect /= 2;
+
+			if (hasCollision(m_collObjs, Segment_2(sp, ep), playerRadius)) {
+				// Inside collision object -- go back
+
+				ep -= bumpVect;
+			} else {
+				// Outside collision object -- go forward
+
+				ep += bumpVect;
+			}
+		}
+
+		if (hasCollision(m_collObjs, Segment_2(sp, ep), playerRadius)) {
+			// Aproximation ended up inside the collision object -- undo the
+			// last "bump"
+
+			ep -= bumpVect;
+
+			// Positive side is in the direction of the player movement
+			Line_2 l(playerPos, playerMove.perpendicular(
+				CGAL::COUNTERCLOCKWISE));
+			if (!l.has_on_positive_side(ep)) {
+				// Player is moving in opposite direction -- fix that!
+
+				ep = playerPos;
+				// Now the player is not moving at all
+			}
+		}
+	}
+
+	Trajectory res(Segment_2(sp, ep), playerMove);
+	return res;
+}
+
+#else // OLD_TRAJECTORY_ALGORITHM
+
 #include "functions.hpp"
 
 class Obstacle {
@@ -448,17 +583,9 @@ const Size2d& StageObstacles::getStageSize() const
 Trajectory StageObstacles::getPlayerTrajectory(const Point_2& playerPos,
 	const Vector_2& playerMove, double playerRadius)
 {
-	if (playerMove == CGAL::NULL_VECTOR) {
-		Trajectory res;
-		Segment_2 zeroSeg(playerPos, playerPos);
-		auto zeroSeg1 = TrajectorySegment::constructLineSegment(zeroSeg);
-		res.push(std::move(zeroSeg1));
-		return res;
-	}
-
 	TrajectoryConstructionData data;
-	auto epsilovVec = playerMove * (OP_EPSILON / playerMove.squared_length());
-	data.playerPosition = playerPos - epsilovVec;
+
+	data.playerPosition = playerPos;
 	data.playerMovementVector = playerMove;
 
 	for (const auto& wall : m_walls) {
@@ -851,3 +978,5 @@ Collision shortestPath(TrajectoryConstructionData& data,
 
 	return collisions.at(shortestPathIdx);
 }
+
+#endif // OLD_TRAJECTORY_ALGORITHM

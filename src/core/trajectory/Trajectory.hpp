@@ -16,6 +16,66 @@
 
 #include "core/geometry/Geometry.hpp"
 
+#ifndef OLD_TRAJECTORY_ALGORITHM
+
+class Trajectory { // TODO
+private:
+	Segment_2 m_seg;
+	// The time at the end of the player trajectory. `1.0` is the end of the
+	// turn (also means that there was no collision with an obstacle). Should
+	// never be 0 -- if the length of `m_seg` is 0, the `m_tStop` should
+	// be `1.0`.
+	double m_tStop;
+
+	/**
+	 * @brief Calcualtes the `tStop` value.
+	 * 
+	 * @param seg Line segment representing the trajectory.
+	 * @param mvVec Player movement vector.
+	 * @return 
+	 */
+	static double calculateTStop(const Segment_2& seg, const Vector_2& mvVec);
+public:
+	/**
+	 * @brief Constructs a new Trajectory object.
+	 * 
+	 * @param seg Line segment representing the trajectory.
+	 * @param mvVec Player movement vector.
+	 */
+	Trajectory(const Segment_2& seg, const Vector_2& mvVec);
+	/**
+	 * @brief Constructs a new Trajectory object with zero length.
+	 * 
+	 * @param pt The start and end point of the trajectory.
+	 */
+	Trajectory(const Point_2& pt);
+	/**
+	 * @brief Constructs a new Trajectory object with zero length.
+	 */
+	Trajectory();
+
+	Segment_2& seg() { return m_seg; }
+	const Segment_2& seg() const { return m_seg; }
+
+	double& tStop() { return m_tStop; }
+	const double& tStop() const { return m_tStop; }
+
+	Point_2 end() const { return m_seg.target(); }
+
+	/**
+	 * @brief Calculates the minimum squared distance between 2 trajectories in time.
+	 * 
+	 * @details The returned value is the square of the Euclidean distance. The
+	 *          reason to not calculate the actual distance is because it would
+	 *          require one extra operation (sqrt), moreover, a rather slow
+	 *          operation. The caller may calculate the sqrt itself, if they
+	 *          desire to.
+	 */
+	double minSqdist(const Trajectory& rhs) const;
+};
+
+#else // OLD_TRAJECTORY_ALGORITHM
+
 class TrajectorySegment {
 public:
 	enum Type {
@@ -249,5 +309,7 @@ public:
 	 */
 	double minSqdist(const Trajectory& rhs) const;
 };
+
+#endif // OLD_TRAJECTORY_ALGORITHM
 
 #endif // TRAJECTORY_HPP

@@ -67,7 +67,11 @@ void Core::initTurnData(TurnData& turnData)
 		(void)state;
 
 		turnData.playerTurns[id] = PlayerTurn{
+#ifndef OLD_TRAJECTORY_ALGORITHM
+			.trajectory = Trajectory(state.pos),
+#else
 			.trajectory = Trajectory(),
+#endif
 			.playerCollisions = std::unordered_set<PlayerId>(),
 		};
 	}
@@ -112,7 +116,11 @@ void Core::movePlayers(TurnData& turnData)
 	for (auto& [id, playerTurn] : turnData.playerTurns) {
 		auto& player = m_players[id];
 
+#ifndef OLD_TRAJECTORY_ALGORITHM
+		player.pos = playerTurn.trajectory.end();
+#else
 		player.pos = playerTurn.trajectory.last().getPEnd();
+#endif
 	}
 }
 
