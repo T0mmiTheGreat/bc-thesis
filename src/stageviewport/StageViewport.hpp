@@ -90,19 +90,19 @@ public:
 	/**
 	 * @brief Projects the point from the screen space to the stage space.
 	 */
-	PointF screenToStage(const PointF& p);
+	PointF screenToStage(const PointF& p) const;
 	/**
 	 * @brief Projects the rectangle from the screen space to the stage space.
 	 */
-	RectF screenToStage(const RectF& r);
+	RectF screenToStage(const RectF& r) const;
 	/**
 	 * @brief Projects the point from the stage space to the screen space.
 	 */
-	PointF stageToScreen(const PointF& p);
+	PointF stageToScreen(const PointF& p) const;
 	/**
 	 * @brief Projects the rectangle from the stage space to the screen space.
 	 */
-	RectF stageToScreen(const RectF& r);
+	RectF stageToScreen(const RectF& r) const;
 
 	/**
 	 * @brief Begins the dragging operation.

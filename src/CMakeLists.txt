@@ -80,9 +80,9 @@ set(SOURCE_FILES
 	stageeditor/StageEditor.cpp
 	stageeditor/StageEditorObjects.cpp
 	stageeditor/StageState.cpp
-	stageeditor/StageViewport.cpp
 	stageeditor/StageEditorAction.cpp
 	stageeditor/StageEditorHistory.cpp
+	stageviewport/StageViewport.cpp
 	stageserializer/StageSerializerBase.cpp
 	stageserializer/StageSerializerFactory.cpp
 	stageserializer/YAMLStageSerializer.cpp
@@ -164,9 +164,9 @@ set(HEADER_FILES
 	stageeditor/StageEditor.hpp
 	stageeditor/StageEditorObjects.hpp
 	stageeditor/StageState.hpp
-	stageeditor/StageViewport.hpp
 	stageeditor/StageEditorAction.hpp
 	stageeditor/StageEditorHistory.hpp
+	stageviewport/StageViewport.hpp
 	stageserializer/IStageSerializer.hpp
 	stageserializer/StageSerializerBase.hpp
 	stageserializer/StageSerializerFactory.hpp

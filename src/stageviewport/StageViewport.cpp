@@ -9,7 +9,7 @@
  * 
  */
 
-#include "stageeditor/StageViewport.hpp"
+#include "stageviewport/StageViewport.hpp"
 
 void StageViewport::pullLeash()
 {
@@ -71,7 +71,7 @@ void StageViewport::setStageSize(const Size2dF& size)
 	pullLeash();
 }
 
-PointF StageViewport::screenToStage(const PointF& p)
+PointF StageViewport::screenToStage(const PointF& p) const
 {
 	PointF res = p;
 
@@ -86,7 +86,7 @@ PointF StageViewport::screenToStage(const PointF& p)
 	return res;
 }
 
-RectF StageViewport::screenToStage(const RectF& r)
+RectF StageViewport::screenToStage(const RectF& r) const
 {
 	RectF res(
 		screenToStage(r.getTopLeft()),
@@ -95,7 +95,7 @@ RectF StageViewport::screenToStage(const RectF& r)
 	return res;
 }
 
-PointF StageViewport::stageToScreen(const PointF& p)
+PointF StageViewport::stageToScreen(const PointF& p) const
 {
 	// Relative to [0, 0] of the stage
 	PointF res = p.relativeTo(m_srcRect.getTopLeft());
@@ -107,7 +107,7 @@ PointF StageViewport::stageToScreen(const PointF& p)
 	return res;
 }
 
-RectF StageViewport::stageToScreen(const RectF& r)
+RectF StageViewport::stageToScreen(const RectF& r) const
 {
 	RectF res(
 		stageToScreen(r.getTopLeft()),

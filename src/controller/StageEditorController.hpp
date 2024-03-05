@@ -30,7 +30,7 @@
 #include "sprite/ObstacleBrushSprite.hpp"
 #include "stageeditor/Common.hpp"
 #include "stageeditor/StageEditor.hpp"
-#include "stageeditor/StageViewport.hpp"
+#include "stageviewport/StageViewport.hpp"
 
 class StageEditorController : public GeneralControllerBase {
 private:
