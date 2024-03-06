@@ -13,32 +13,12 @@
 
 #ifndef OLD_TRAJECTORY_ALGORITHM
 
-double Trajectory::calculateTStop(const Segment_2& seg, const Vector_2& mvVec)
-{
-	if (seg.source() == seg.target()) {
-		// Zero length
-
-		return 1.0;
-	} else {
-		assert(mvVec != CGAL::NULL_VECTOR);
-		//assert(seg.direction() == mvVec.direction());
-
-		auto segVector = seg.to_vector();
-
-		double num = (segVector.x() != 0.0 ? segVector.x() : segVector.y());
-		double denom = (mvVec.x() != 0.0 ? mvVec.x() : mvVec.y());
-
-		return num / denom;
-	}
-}
-
-Trajectory::Trajectory(const Segment_2& seg, const Vector_2& mvVec)
+Trajectory::Trajectory(const Segment_2& seg)
 	: m_seg{seg}
-	, m_tStop{calculateTStop(seg, mvVec)}
 {}
 
 Trajectory::Trajectory(const Point_2& pt)
-	: Trajectory(Segment_2(pt, pt), CGAL::NULL_VECTOR)
+	: Trajectory(Segment_2(pt, pt))
 {}
 
 Trajectory::Trajectory()
@@ -48,7 +28,6 @@ Trajectory::Trajectory()
 double Trajectory::minSqdist(const Trajectory& rhs) const
 {
 	// See documentation - too complex to describe here
-	// FIXME
 
 	auto Ap1x = this->seg().source().x();
 	auto Ap1y = this->seg().source().y();

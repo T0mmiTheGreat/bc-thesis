@@ -194,7 +194,7 @@ Trajectory StageObstacles::getPlayerTrajectory(const Point_2& playerPos,
 		}
 	}
 
-	Trajectory res(Segment_2(sp, ep), playerMove);
+	Trajectory res(Segment_2(sp, ep));
 	return res;
 }
 

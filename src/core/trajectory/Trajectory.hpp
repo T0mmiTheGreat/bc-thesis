@@ -18,31 +18,16 @@
 
 #ifndef OLD_TRAJECTORY_ALGORITHM
 
-class Trajectory { // TODO
+class Trajectory {
 private:
 	Segment_2 m_seg;
-	// The time at the end of the player trajectory. `1.0` is the end of the
-	// turn (also means that there was no collision with an obstacle). Should
-	// never be 0 -- if the length of `m_seg` is 0, the `m_tStop` should
-	// be `1.0`.
-	double m_tStop;
-
-	/**
-	 * @brief Calcualtes the `tStop` value.
-	 * 
-	 * @param seg Line segment representing the trajectory.
-	 * @param mvVec Player movement vector.
-	 * @return 
-	 */
-	static double calculateTStop(const Segment_2& seg, const Vector_2& mvVec);
 public:
 	/**
 	 * @brief Constructs a new Trajectory object.
 	 * 
 	 * @param seg Line segment representing the trajectory.
-	 * @param mvVec Player movement vector.
 	 */
-	Trajectory(const Segment_2& seg, const Vector_2& mvVec);
+	Trajectory(const Segment_2& seg);
 	/**
 	 * @brief Constructs a new Trajectory object with zero length.
 	 * 
@@ -56,9 +41,6 @@ public:
 
 	Segment_2& seg() { return m_seg; }
 	const Segment_2& seg() const { return m_seg; }
-
-	double& tStop() { return m_tStop; }
-	const double& tStop() const { return m_tStop; }
 
 	Point_2 end() const { return m_seg.target(); }
 
