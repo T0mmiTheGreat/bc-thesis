@@ -253,7 +253,7 @@ std::unordered_map<PlayerId,PlayerState> Core::getPlayerStates() const
 		res[id] = PlayerState{
 			.x = CGAL::to_double(state.pos.x()),
 			.y = CGAL::to_double(state.pos.y()),
-			.hp = state.hp,
+			.hp = state.hp * PLAYER_HP_FACTOR,
 			.size = getPlayerSize(id),
 		};
 	}

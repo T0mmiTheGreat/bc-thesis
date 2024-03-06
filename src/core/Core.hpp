@@ -43,6 +43,9 @@ private:
 	static constexpr double PLAYER_HP_INITIAL = 1.0;
 	// HP depleted per frame
 	static constexpr double HP_DRAIN = TICK_INTERVAL / 3400.0;
+	// Internally, full HP is equal to `1.0`. Externally (as shown to the user),
+	// full HP is equal to `100.0`.
+	static constexpr double PLAYER_HP_FACTOR = 100.0;
 
 	Timer m_tickTimer;
 	std::unordered_map<PlayerId, PlayerStateInternal> m_players;

@@ -25,22 +25,60 @@
 #include "sprite/PlayerSprite.hpp"
 #include "sprite/ObstacleSprite.hpp"
 #include "sprite/HollowRectSprite.hpp"
+#include "sprite/OptionBarSprite.hpp"
+#include "sprite/TextSprite.hpp"
 #include "stageserializer/IStageSerializer.hpp"
+#include "stageviewport/StageViewport.hpp"
 
 class InGameController : public GeneralControllerBase {
 private:
-	std::unique_ptr<Core> m_core;
+	static constexpr int STAGE_AREA_LEFT = 0;
+	static constexpr int STAGE_AREA_TOP = 0;
+	static constexpr int MIN_STAGE_LEFT_MARGIN = 16;
+	static constexpr int MIN_STAGE_TOP_MARGIN = MIN_STAGE_LEFT_MARGIN;
+	static constexpr int MIN_STAGE_RIGHT_MARGIN = MIN_STAGE_LEFT_MARGIN;
+	static constexpr int MIN_STAGE_BOTTOM_MARGIN = MIN_STAGE_TOP_MARGIN;
+
+	static constexpr int STATUS_BAR_WIDTH = 180;
+	static constexpr int PLAYER_HP_RIGHT_MARGIN = 14;
+	static constexpr int PLAYER_HP_TOP_MARGIN = 8;
+	static constexpr int PLAYER_HP_BOTTOM_MARGIN = PLAYER_HP_TOP_MARGIN;
+
+	static constexpr FontId PLAYER_HP_FONT = FONT_BRLNSTR_20;
+
 	std::unordered_map<PlayerId, std::unique_ptr<PlayerSprite>> m_playerSprites;
 	std::vector<std::unique_ptr<ObstacleSprite>> m_obstacleSprites;
 	std::unique_ptr<HollowRectSprite> m_stageBoundsSprite;
 
+	std::unique_ptr<OptionBarSprite> m_statusBarSprite;
+	std::unordered_map<PlayerId, std::unique_ptr<OptionBarSprite>>
+	m_playerHpBgSprites;
+	std::unordered_map<PlayerId, std::unique_ptr<TextSprite>>
+	m_playerHpTextSprites;
+
+	std::unique_ptr<Core> m_core;
+	std::unique_ptr<StageViewport> m_viewport;
+
 	void createPlayerSprites();
 	void createObstacleSprites();
 	void createStageBoundsSprite();
+	void createPlayerStatusBarSprites();
+	void createStatusBarSprite();
+	void createPlayerHpBgSprites();
+	void createPlayerHpTextSprites();
+
+	void updateSprites();
 	/**
 	 * @brief Sets the player sprite properties based on the state of the core.
 	 */
 	void updatePlayerSprites();
+	void updatePlayerHpSprites();
+
+	void initializeViewport();
+
+	Rect getStageAreaRect();
+	Rect getPlayerHpBarRect(PlayerId playerId);
+	int getPlayerHpTextHeight();
 protected:
 	void onStarted() override;
 	void onLoop() override;

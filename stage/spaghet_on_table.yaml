@@ -1,0 +1,12 @@
+stage:
+  title: Spaghet on table
+  width: 4530
+  height: 220
+  players:
+    - [4400, 100]
+    - [800, 100]
+    - [100, 100]
+  obstacles:
+    []
+  positionRules:
+    - [0, 1, 2]
