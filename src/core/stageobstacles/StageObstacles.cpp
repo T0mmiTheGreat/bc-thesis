@@ -13,6 +13,31 @@
 
 #ifndef OLD_TRAJECTORY_ALGORITHM
 
+#include <limits>
+
+/**
+ * @brief Checks if player has collision with a collision object.
+ * 
+ * @param collObj The collision object to check the collision with.
+ * @param seg Current trajectory shape.
+ * @param playerRadius Radius (size) of the player bubble.
+ */
+static bool hasCollision(const Triangle_2& collObj, const Segment_2& seg,
+	double playerRadius);
+/**
+ * @brief Finds the nearest collision object which a player has collision with.
+ * 
+ * @param collObjs Collision objects to check collision with.
+ * @param seg Current trajectory shape.
+ * @param playerRadius Radius (size) of the player bubble.
+ * @param coll Found collsion (if any).
+ * @return `false` if no collisions were found, `true` if at least one collision
+ *         was found.
+ */
+static bool findNearestCollision(const std::vector<Triangle_2>& collObjs,
+	const Segment_2& seg, double playerRadius, Triangle_2& coll);
+
+
 void StageObstacles::initializeCollisionObjects(
 	const std::vector<StageObstacle>& obstacles, const Size2d& bounds)
 {
@@ -81,15 +106,43 @@ const Size2d& StageObstacles::getStageSize() const
 	return m_bounds;
 }
 
-bool hasCollision(const std::vector<Triangle_2>& collObjs,
-	const Segment_2& seg, double playerRadius)
+bool hasCollision(const Triangle_2& collObj, const Segment_2& seg,
+	double playerRadius)
 {
+	return (CGAL::squared_distance(collObj, seg) < CGAL::square(playerRadius));
+}
+
+bool findNearestCollision(const std::vector<Triangle_2>& collObjs,
+	const Segment_2& seg, double playerRadius, Triangle_2& coll)
+{
+	// Squared distance from the nearest collision object with which the player
+	// collides
+	double currNearestSq = std::numeric_limits<double>::infinity();
+	double sqdist;
+	// Pointer to the nearest collision object with which the player collides.
+	// If `nullptr`, there was no collision (yet).
+	const Triangle_2* collPtr = nullptr;
+
 	for (const auto& collObj : collObjs) {
-		if (CGAL::squared_distance(collObj, seg) < CGAL::square(playerRadius)) {
-			return true;
+		if (hasCollision(collObj, seg, playerRadius)) {
+			sqdist = CGAL::squared_distance(collObj, seg.source());
+			if (sqdist < currNearestSq) {
+				// Found the new nearest
+
+				currNearestSq = sqdist;
+				collPtr = &collObj;
+			}
 		}
 	}
-	return false;
+
+	// Check if there was any collision...
+	if (collPtr != nullptr) {
+		// ... and return the collision object if so
+
+		coll = *collPtr;
+	}
+
+	return (collPtr != nullptr);
 }
 
 Trajectory StageObstacles::getPlayerTrajectory(const Point_2& playerPos,
@@ -102,16 +155,17 @@ Trajectory StageObstacles::getPlayerTrajectory(const Point_2& playerPos,
 	Point_2 sp(playerPos);
 	// Target (end point)
 	Point_2 ep(playerPos + playerMove);
+	Triangle_2 collObj;
 
-	if (hasCollision(m_collObjs, Segment_2(sp, ep), playerRadius)) {
+	if (findNearestCollision(m_collObjs, Segment_2(sp, ep), playerRadius, collObj)) {
 		Vector_2 bumpVect = playerMove;
 		
-		// Aproximate collision point using bisection method
+		// Approximate collision point using bisection method
 		while (bumpVect.squared_length() > SQR_MAX_ERROR) {
 			// Bisect
 			bumpVect /= 2;
 
-			if (hasCollision(m_collObjs, Segment_2(sp, ep), playerRadius)) {
+			if (hasCollision(collObj, Segment_2(sp, ep), playerRadius)) {
 				// Inside collision object -- go back
 
 				ep -= bumpVect;
@@ -122,15 +176,15 @@ Trajectory StageObstacles::getPlayerTrajectory(const Point_2& playerPos,
 			}
 		}
 
-		if (hasCollision(m_collObjs, Segment_2(sp, ep), playerRadius)) {
-			// Aproximation ended up inside the collision object -- undo the
+		if (hasCollision(collObj, Segment_2(sp, ep), playerRadius)) {
+			// Approximation ended up inside the collision object -- undo the
 			// last "bump"
 
 			ep -= bumpVect;
 
 			// Positive side is in the direction of the player movement
 			Line_2 l(playerPos, playerMove.perpendicular(
-				CGAL::COUNTERCLOCKWISE));
+				CGAL::CLOCKWISE));
 			if (!l.has_on_positive_side(ep)) {
 				// Player is moving in opposite direction -- fix that!
 
