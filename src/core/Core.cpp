@@ -142,16 +142,17 @@ double Core::getPlayerSize(PlayerId id) const
 
 double Core::getPlayerSize(double hp)
 {
+	constexpr double MIN_SIZE = 5.0;
 	constexpr double BASE_SIZE = 50.0;
 	// Should be `<= 1.0`, so players with more HP gain size more slowly and
 	// the ones with less HP gain size faster
 	constexpr double SIZE_POWER = 1.0;
 	
-	// Full HP -> 100.0
-	// 0 HP -> 0.0
-	// 2x Full HP -> 200.0 (if SIZE_POWER == 1.0)
-	// 1/2x Full HP -> 50.0 (if SIZE_POWER == 1.0)
-	return std::pow(hp, SIZE_POWER) * BASE_SIZE;
+	// Full HP -> 50.0
+	// 0 HP -> 5.0
+	// 2x Full HP -> 95.0 (if SIZE_POWER == 1.0)
+	// 1/2x Full HP -> 27.5 (if SIZE_POWER == 1.0)
+	return MIN_SIZE + std::pow(hp, SIZE_POWER) * (BASE_SIZE - MIN_SIZE);
 }
 
 double Core::getPlayerSpeed(PlayerId id) const
@@ -161,13 +162,14 @@ double Core::getPlayerSpeed(PlayerId id) const
 
 double Core::getPlayerSpeed(double hp)
 {
+	constexpr double MAX_SPEED = 1.0;
 	constexpr double BASE_SPEED = 1.0 / 6.0;
 	
-	// Full HP -> 0.1667
-	// 0 HP -> 0.0
-	// 2x Full HP -> 0.0833
-	// 1/2x Full HP -> 0.3333
-	return BASE_SPEED / hp;
+	// Full HP -> 1/6 (BASE_SPEED)
+	// 0 HP -> 1.0 (MAX_SPEED)
+	// INF HP -> 0.0
+	// This equation was a tough one...
+	return (BASE_SPEED*MAX_SPEED) / ((MAX_SPEED - BASE_SPEED)*hp + BASE_SPEED);
 }
 
 double Core::getPlayerStrength(PlayerId id) const

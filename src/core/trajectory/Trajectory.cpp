@@ -27,6 +27,8 @@ Trajectory::Trajectory()
 
 double Trajectory::minSqdist(const Trajectory& rhs) const
 {
+	// Unnecesarily complex, probably wrong
+#if 0
 	// See documentation - too complex to describe here
 
 	auto Ap1x = this->seg().source().x();
@@ -43,7 +45,7 @@ double Trajectory::minSqdist(const Trajectory& rhs) const
 	auto b = 2*((Ap1x - Ap2x)*(up1x - up2x) + (Ap1y - Ap2y)*(up1y - up2y));
 	auto c = CGAL::square(Ap1x - Ap2x) + CGAL::square(Ap1y - Ap2y);
 
-	auto t = -b / 2*a;
+	auto t = -b / 2*a;  // Put `2*a` in brackets...?
 
 	// The time must be within the interval <0,1>. If the `t` is less than
 	// 0, we know that the minimum value for t => <0,1> is at t=0. Likewise,
@@ -56,6 +58,9 @@ double Trajectory::minSqdist(const Trajectory& rhs) const
 	} else {
 		return CGAL::to_double(CGAL::square(t)*a + t*b + c);
 	}
+#else
+	return CGAL::squared_distance(this->seg(), rhs.seg());
+#endif
 }
 
 #else // OLD_TRAJECTORY_ALGORITHM
