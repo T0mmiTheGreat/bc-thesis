@@ -24,6 +24,7 @@
 #include "stageserializer/IStageSerializer.hpp"
 #include "playerinput/IPlayerInput.hpp"
 #include "core/playerstate/PlayerState.hpp"
+#include "core/CoreAction.hpp"
 
 class Core {
 private:
@@ -45,30 +46,42 @@ private:
 	// full HP is equal to `100.0`.
 	static constexpr double PLAYER_HP_FACTOR = 100.0;
 
+	bool m_isInitialized;
+	std::shared_ptr<IStageSerializer> m_stageInitializer;
+	std::vector<std::shared_ptr<IPlayerInput>> m_playersInitializer;
+
 	Timer m_tickTimer;
 	std::unordered_map<PlayerId, PlayerStateInternal> m_players;
 	std::unique_ptr<StageObstacles> m_stageObstacles;
 
-	void initializeStage(const std::shared_ptr<IStageSerializer> stage,
-		const std::vector<std::shared_ptr<IPlayerInput>>& players);
+	/**
+	 * @brief Initializes the internal stage state.
+	 * 
+	 * @return The action performed.
+	 */
+	std::shared_ptr<CoreAction> initializeStage();
 	/**
 	 * @brief Game tick event.
 	 * 
 	 * @details Game tick is the moment when the game state progresses further.
 	 *          Players move, bonuses appear, effects are applied, etc.
+	 * 
+	 * @return The action performed.
 	 */
-	void tick();
+	std::shared_ptr<CoreAction> tick();
 	/**
 	 * @brief Processes actions of players (movement, bonuses, etc).
 	 * 
 	 * @note Called every tick.
+	 * 
+	 * @return The action performed.
 	 */
-	void playersActions();
-	void initTurnData(TurnData& turnData);
-	void calculateTrajectories(TurnData& turnData);
-	void findPlayerCollisions(TurnData& turnData);
-	void movePlayers(TurnData& turnData);
-	void changePlayersHp(TurnData& turnData);
+	std::shared_ptr<CoreAction> playersActions();
+	std::shared_ptr<CoreAction> initTurnData(TurnData& turnData);
+	std::shared_ptr<CoreAction> calculateTrajectories(TurnData& turnData);
+	std::shared_ptr<CoreAction> findPlayerCollisions(TurnData& turnData);
+	std::shared_ptr<CoreAction> movePlayers(TurnData& turnData);
+	std::shared_ptr<CoreAction> changePlayersHp(TurnData& turnData);
 
 	double getPlayerSize(PlayerId id) const;
 	static double getPlayerSize(double hp);
@@ -104,8 +117,10 @@ public:
 		const std::vector<std::shared_ptr<IPlayerInput>>& players);
 	/**
 	 * @brief Event that happens every event loop iteration.
+	 * 
+	 * @return The action performed.
 	 */
-	void loopEvent();
+	const std::shared_ptr<CoreAction> loopEvent();
 	std::unordered_map<PlayerId, PlayerState> getPlayerStates() const;
 	std::vector<StageObstacle> getObstaclesList() const;
 	Size2d getStageSize() const;

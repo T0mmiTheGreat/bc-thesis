@@ -21,6 +21,7 @@
 #include "controller/GeneralControllerBase.hpp"
 #include "core/Common.hpp"
 #include "core/Core.hpp"
+#include "core/CoreAction.hpp"
 #include "playerinput/IPlayerInput.hpp"
 #include "sprite/PlayerSprite.hpp"
 #include "sprite/ObstacleSprite.hpp"
@@ -59,20 +60,35 @@ private:
 	std::unique_ptr<Core> m_core;
 	std::unique_ptr<StageViewport> m_viewport;
 
-	void createPlayerSprites();
-	void createObstacleSprites();
+	void createPlayerSprite(PlayerId id);
+	void createPlayerHpBgSprite(PlayerId id);
+	void createPlayerHpTextSprite(PlayerId id);
+	void createObstacleSprite(const PolygonF& shape);
 	void createStageBoundsSprite();
-	void createPlayerStatusBarSprites();
 	void createStatusBarSprite();
-	void createPlayerHpBgSprites();
-	void createPlayerHpTextSprites();
 
-	void updateSprites();
-	/**
-	 * @brief Sets the player sprite properties based on the state of the core.
-	 */
-	void updatePlayerSprites();
-	void updatePlayerHpSprites();
+	void updatePlayerPos(PlayerId id, const PointF& pos);
+	void updatePlayerHp(PlayerId id, double hp);
+	void updatePlayerSize(PlayerId id, double size);
+
+	void updateSpritesByAction(
+		const std::shared_ptr<CoreAction> action);
+	void updateSpritesByActionNone(
+		const std::shared_ptr<CoreAction> action);
+	void updateSpritesByActionMultiple(
+		const std::shared_ptr<CoreAction> action);
+	void updateSpritesByActionAddObstacle(
+		const std::shared_ptr<CoreAction> action);
+	void updateSpritesByActionSetStageSize(
+		const std::shared_ptr<CoreAction> action);
+	void updateSpritesByActionAddPlayer(
+		const std::shared_ptr<CoreAction> action);
+	void updateSpritesByActionSetPlayerPos(
+		const std::shared_ptr<CoreAction> action);
+	void updateSpritesByActionSetPlayerHp(
+		const std::shared_ptr<CoreAction> action);
+	void updateSpritesByActionSetPlayerSize(
+		const std::shared_ptr<CoreAction> action);
 
 	void initializeViewport();
 

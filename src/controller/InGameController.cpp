@@ -23,28 +23,44 @@ InGameController::InGameController(std::shared_ptr<ISysProxy> sysProxy,
 	, m_core{std::make_unique<Core>(stage, players)}
 {}
 
-void InGameController::createPlayerSprites()
+void InGameController::createPlayerSprite(PlayerId id)
 {
-	const auto& players = m_core->getPlayerStates();
-	for (const auto& [id, state] : players) {
-		auto playerSprite = std::make_unique<PlayerSprite>(sysProxy);
-		playerSprite->setColor(Color::player(id));
-		m_playerSprites[id] = std::move(playerSprite);
-	}
+	auto playerSprite = std::make_unique<PlayerSprite>(sysProxy);
+	playerSprite->setColor(Color::player(id));
+	m_playerSprites[id] = std::move(playerSprite);
 }
 
-void InGameController::createObstacleSprites()
+void InGameController::createPlayerHpBgSprite(PlayerId id)
+{
+	auto spr = std::make_unique<OptionBarSprite>(sysProxy);
+	Rect barRect = getPlayerHpBarRect(id);
+
+	spr->setPos(barRect.getTopLeft());
+	spr->setBarWidth(barRect.w);
+	spr->setBarHeight(barRect.h);
+	spr->setFillingColor(Color::player(id));
+	spr->setBorders(
+		OptionBarSprite::Borders(false, false, false, false));
+	
+	m_playerHpBgSprites[id] = std::move(spr);
+}
+
+void InGameController::createPlayerHpTextSprite(PlayerId id)
+{
+	auto spr = std::make_unique<TextSprite>(sysProxy);
+	spr->setColor(Color::black());
+	spr->setFont(PLAYER_HP_FONT);
+	m_playerHpTextSprites[id] = std::move(spr);
+}
+
+void InGameController::createObstacleSprite(const PolygonF& shape)
 {
 	auto tm = m_viewport->getProjectionToScreenMatrix();
+	PolygonF shapeTf = shape.getTransformed(tm);
 
-	for (const auto& obstacle : m_core->getObstaclesList()) {
-		auto obstacleSprite = std::make_unique<ObstacleSprite>(sysProxy);
-
-		PolygonF shape = obstacle.getTransformed(tm);
-
-		obstacleSprite->setShape(shape);
-		m_obstacleSprites.push_back(std::move(obstacleSprite));
-	}
+	auto obstacleSprite = std::make_unique<ObstacleSprite>(sysProxy);
+	obstacleSprite->setShape(shapeTf);
+	m_obstacleSprites.push_back(std::move(obstacleSprite));
 }
 
 void InGameController::createStageBoundsSprite()
@@ -56,18 +72,6 @@ void InGameController::createStageBoundsSprite()
 	m_stageBoundsSprite->setPos(0, 0);
 	m_stageBoundsSprite->setBigRectWidth(screenSize.w);
 	m_stageBoundsSprite->setBigRectHeight(screenSize.h);
-
-	Rect stageRect(0, 0, m_core->getStageSize());
-	RectF holeF = m_viewport->stageToScreen(static_cast<RectF>(stageRect));
-	Rect hole = static_cast<Rect>(holeF);
-	m_stageBoundsSprite->setHole(hole);
-}
-
-void InGameController::createPlayerStatusBarSprites()
-{
-	createStatusBarSprite();
-	createPlayerHpBgSprites();
-	createPlayerHpTextSprites();
 }
 
 void InGameController::createStatusBarSprite()
@@ -82,76 +86,153 @@ void InGameController::createStatusBarSprite()
 		OptionBarSprite::Borders(true, false, false, false));
 }
 
-void InGameController::createPlayerHpBgSprites()
+void InGameController::updatePlayerPos(PlayerId id, const PointF& pos)
 {
-	const auto& players = m_core->getPlayerStates();
+	PointF posTf = m_viewport->stageToScreen(pos);
+	m_playerSprites[id]->setCenterPos(static_cast<Point>(posTf));
+}
 
-	for (auto& [id, state] : players) {
-		auto spr = std::make_unique<OptionBarSprite>(sysProxy);
-		Rect barRect = getPlayerHpBarRect(id);
+void InGameController::updatePlayerHp(PlayerId id, double hp)
+{
+	auto& spr = m_playerHpTextSprites[id];
+	const auto& bgSpr = m_playerHpBgSprites.at(id);
 
-		spr->setPos(barRect.getTopLeft());
-		spr->setBarWidth(barRect.w);
-		spr->setBarHeight(barRect.h);
-		spr->setFillingColor(Color::player(id));
-		spr->setBorders(
-			OptionBarSprite::Borders(false, false, false, false));
-		
-		m_playerHpBgSprites[id] = std::move(spr);
+	auto text = std::to_string(static_cast<int>(hp));
+
+	Rect textRect(0, 0, sysProxy->getTextSize(text, PLAYER_HP_FONT));
+	textRect.x = bgSpr->getBounds().getRight() - PLAYER_HP_RIGHT_MARGIN
+		- textRect.w;
+	textRect.y = bgSpr->getY() + PLAYER_HP_TOP_MARGIN;
+	
+	spr->setTextRect(textRect);
+	spr->setText(text);
+}
+
+void InGameController::updatePlayerSize(PlayerId id, double size)
+{
+	double sizeTf = size * m_viewport->getZoom();
+	int newRadius = static_cast<int>(sizeTf);
+	auto& spr = m_playerSprites[id];
+	Point sprPos(spr->getX(), spr->getY());
+	int sprRadius = spr->getRadius();
+
+	// The sprite "growth"
+	int sprRadiusDelta = newRadius - sprRadius;
+
+	// Adjust sprite position so its center does not change
+	sprPos.x -= sprRadiusDelta;
+	sprPos.y -= sprRadiusDelta;
+	
+	spr->setPos(sprPos);
+	spr->setRadius(newRadius);
+}
+
+void InGameController::updateSpritesByAction(
+	const std::shared_ptr<CoreAction> action)
+{
+	switch (action->getType()) {
+		case CoreAction::ACTION_NONE:
+			updateSpritesByActionNone(action);
+			break;
+		case CoreAction::ACTION_MULTIPLE:
+			updateSpritesByActionMultiple(action);
+			break;
+		case CoreAction::ACTION_ADD_OBSTACLE:
+			updateSpritesByActionAddObstacle(action);
+			break;
+		case CoreAction::ACTION_SET_STAGE_SIZE:
+			updateSpritesByActionSetStageSize(action);
+			break;
+		case CoreAction::ACTION_ADD_PLAYER:
+			updateSpritesByActionAddPlayer(action);
+			break;
+		case CoreAction::ACTION_SET_PLAYER_POS:
+			updateSpritesByActionSetPlayerPos(action);
+			break;
+		case CoreAction::ACTION_SET_PLAYER_HP:
+			updateSpritesByActionSetPlayerHp(action);
+			break;
+		case CoreAction::ACTION_SET_PLAYER_SIZE:
+			updateSpritesByActionSetPlayerSize(action);
+			break;
 	}
 }
 
-void InGameController::createPlayerHpTextSprites()
+void InGameController::updateSpritesByActionNone(
+	const std::shared_ptr<CoreAction> action)
 {
-	const auto& players = m_core->getPlayerStates();
+	(void)action;
+	// Nothing to do
+}
 
-	for (auto& [id, state] : players) {
-		auto spr = std::make_unique<TextSprite>(sysProxy);
-		spr->setColor(Color::black());
-		spr->setFont(PLAYER_HP_FONT);
-		m_playerHpTextSprites[id] = std::move(spr);
+void InGameController::updateSpritesByActionMultiple(
+	const std::shared_ptr<CoreAction> action)
+{
+	const auto actionCast =
+		std::dynamic_pointer_cast<CoreActionMultiple>(action);
+	
+	for (const auto& a : actionCast->getActions()) {
+		updateSpritesByAction(a);
 	}
 }
 
-void InGameController::updateSprites()
+void InGameController::updateSpritesByActionAddObstacle(
+	const std::shared_ptr<CoreAction> action)
 {
-	updatePlayerSprites();
-	updatePlayerHpSprites();
+	const auto actionCast =
+		std::dynamic_pointer_cast<CoreActionAddObstacle>(action);
+
+	createObstacleSprite(actionCast->getShape());
 }
 
-void InGameController::updatePlayerSprites()
+void InGameController::updateSpritesByActionSetStageSize(
+	const std::shared_ptr<CoreAction> action)
 {
-	auto plStates = m_core->getPlayerStates();
+	const auto actionCast =
+		std::dynamic_pointer_cast<CoreActionSetStageSize>(action);
 
-	for (const auto& [id, state] : plStates) {
-		auto& spr = m_playerSprites[id];
-
-		PointF posF = m_viewport->stageToScreen(PointF(state.x, state.y));
-		double radiusF = state.size * m_viewport->getZoom();
-
-		spr->setCenterPos(static_cast<Point>(posF));
-		spr->setRadius(static_cast<int>(radiusF));
-	}
+	Rect stageRect(0, 0, actionCast->getSize());
+	RectF holeF = m_viewport->stageToScreen(static_cast<RectF>(stageRect));
+	Rect hole = static_cast<Rect>(holeF);
+	m_stageBoundsSprite->setHole(hole);
 }
 
-void InGameController::updatePlayerHpSprites()
+void InGameController::updateSpritesByActionAddPlayer(
+	const std::shared_ptr<CoreAction> action)
 {
-	auto plStates = m_core->getPlayerStates();
+	const auto actionCast =
+		std::dynamic_pointer_cast<CoreActionAddPlayer>(action);
 
-	for (const auto& [id, state] : plStates) {
-		auto& spr = m_playerHpTextSprites[id];
-		const auto& bgSpr = m_playerHpBgSprites.at(id);
+	createPlayerSprite(actionCast->getId());
+	createPlayerHpBgSprite(actionCast->getId());
+	createPlayerHpTextSprite(actionCast->getId());
+}
 
-		auto text = std::to_string(static_cast<int>(state.hp));
+void InGameController::updateSpritesByActionSetPlayerPos(
+	const std::shared_ptr<CoreAction> action)
+{
+	const auto actionCast =
+		std::dynamic_pointer_cast<CoreActionSetPlayerPos>(action);
 
-		Rect textRect(0, 0, sysProxy->getTextSize(text, PLAYER_HP_FONT));
-		textRect.x = bgSpr->getBounds().getRight() - PLAYER_HP_RIGHT_MARGIN
-			- textRect.w;
-		textRect.y = bgSpr->getY() + PLAYER_HP_TOP_MARGIN;
-		
-		spr->setTextRect(textRect);
-		spr->setText(text);
-	}
+	updatePlayerPos(actionCast->getId(), actionCast->getPos());
+}
+
+void InGameController::updateSpritesByActionSetPlayerHp(
+	const std::shared_ptr<CoreAction> action)
+{
+	const auto actionCast =
+		std::dynamic_pointer_cast<CoreActionSetPlayerHp>(action);
+
+	updatePlayerHp(actionCast->getId(), actionCast->getHp());
+}
+
+void InGameController::updateSpritesByActionSetPlayerSize(
+	const std::shared_ptr<CoreAction> action)
+{
+	const auto actionCast =
+		std::dynamic_pointer_cast<CoreActionSetPlayerSize>(action);
+	
+	updatePlayerSize(actionCast->getId(), actionCast->getSize());
 }
 
 void InGameController::initializeViewport()
@@ -217,22 +298,19 @@ void InGameController::onStarted()
 {
 	GeneralControllerBase::onStarted();
 
-	// This will initialize the core
-	// FIXME: remove?
-	m_core->loopEvent();
-
 	initializeViewport();
-	createPlayerSprites();
-	createObstacleSprites();
 	createStageBoundsSprite();
-	createPlayerStatusBarSprites();
-	updateSprites();
+	createStatusBarSprite();
+
+	// This will initialize the core
+	auto action = m_core->loopEvent();
+	updateSpritesByAction(action);
 }
 
 void InGameController::onLoop()
 {
-	m_core->loopEvent();
-	updateSprites();
+	auto action = m_core->loopEvent();
+	updateSpritesByAction(action);
 }
 
 void InGameController::onPaint(std::shared_ptr<ICanvas> canvas,

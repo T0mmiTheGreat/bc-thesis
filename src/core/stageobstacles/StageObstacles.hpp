@@ -126,13 +126,6 @@ public:
 #else // OLD_TRAJECTORY_ALGORITHM
 class StageObstacles {
 private:
-	// These are kept just because the controller will query them, but this
-	// class doesn't use these variables. (Only once, to initialize other
-	// things.)
-
- 	std::vector<StageObstacle> m_obstacles;
-	Size2d m_bounds;
-
 	// Collision objects
 	std::vector<Triangle_2> m_collObjs;
 
@@ -156,8 +149,6 @@ private:
 public:
 	StageObstacles(const std::vector<StageObstacle>& obstacles,
 		const Size2d& bounds);
-	const std::vector<StageObstacle>& getObstaclesList() const;
-	const Size2d& getStageSize() const;
 	/**
 	 * @brief Creates the player trajectory, taking the obstacles into account.
 	 */

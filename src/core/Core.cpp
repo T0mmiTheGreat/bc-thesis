@@ -54,12 +54,15 @@ void Core::inputToVector(const PlayerInputFlags & input, double & x, double & y)
 
 Core::Core(const std::shared_ptr<IStageSerializer> stage,
 	const std::vector<std::shared_ptr<IPlayerInput>>& players)
-	: m_tickTimer(TICK_INTERVAL)
+	: m_isInitialized{false}
+	, m_stageInitializer{stage}
+	, m_playersInitializer{players}
+	, m_tickTimer(TICK_INTERVAL)
 {
-	initializeStage(stage, players);
+	assert(players.size() <= stage->getPlayers().size());
 }
 
-void Core::initTurnData(TurnData& turnData)
+std::shared_ptr<CoreAction> Core::initTurnData(TurnData& turnData)
 {
 	turnData.playerTurns.reserve(m_players.size());
 	
@@ -75,9 +78,11 @@ void Core::initTurnData(TurnData& turnData)
 			.playerCollisions = std::unordered_set<PlayerId>(),
 		};
 	}
+
+	return std::make_shared<CoreActionNone>();
 }
 
-void Core::calculateTrajectories(TurnData& turnData)
+std::shared_ptr<CoreAction> Core::calculateTrajectories(TurnData& turnData)
 {
 	double vx, vy;
 	Point_2 source;
@@ -92,9 +97,11 @@ void Core::calculateTrajectories(TurnData& turnData)
 		playerTurn.trajectory = m_stageObstacles->getPlayerTrajectory(source,
 			v, getPlayerSize(id));
 	}
+
+	return std::make_shared<CoreActionNone>();
 }
 
-void Core::findPlayerCollisions(TurnData& turnData)
+std::shared_ptr<CoreAction> Core::findPlayerCollisions(TurnData& turnData)
 {
 	for (auto& [idA, playerTurnA] : turnData.playerTurns) {
 		for (auto& [idB, playerTurnB] : turnData.playerTurns) {
@@ -109,10 +116,15 @@ void Core::findPlayerCollisions(TurnData& turnData)
 			}
 		}
 	}
+
+	return std::make_shared<CoreActionNone>();
 }
 
-void Core::movePlayers(TurnData& turnData)
+std::shared_ptr<CoreAction> Core::movePlayers(TurnData& turnData)
 {
+	CoreActionMultiple::ActionsCollection actionsGroup;
+	std::shared_ptr<CoreActionSetPlayerPos> actionSetPlayerPos;
+
 	for (auto& [id, playerTurn] : turnData.playerTurns) {
 		auto& player = m_players[id];
 
@@ -121,18 +133,49 @@ void Core::movePlayers(TurnData& turnData)
 #else
 		player.pos = playerTurn.trajectory.last().getPEnd();
 #endif
+
+		// Add to actions list
+		actionSetPlayerPos = std::make_shared<CoreActionSetPlayerPos>(id,
+			fromCgalPoint(player.pos));
+		actionsGroup.push_back(actionSetPlayerPos);
 	}
+
+	auto res = std::make_shared<CoreActionMultiple>(actionsGroup);
+	return res;
 }
 
-void Core::changePlayersHp(TurnData& turnData)
+std::shared_ptr<CoreAction> Core::changePlayersHp(TurnData& turnData)
 {
+	CoreActionMultiple::ActionsCollection actionSetPlayerHpGroup;
+	std::shared_ptr<CoreActionSetPlayerHp> actionSetPlayerHp;
+	CoreActionMultiple::ActionsCollection actionSetPlayerSizeGroup;
+	std::shared_ptr<CoreActionSetPlayerSize> actionSetPlayerSize;
+
 	for (auto& [id, playerTurn] : turnData.playerTurns) {
 		auto& player = m_players[id];
 
 		for (const auto& otherId : playerTurn.playerCollisions) {
 			player.hp -= TICK_INTERVAL * getPlayerStrength(otherId);
 		}
+
+		// Add to actions list
+		actionSetPlayerHp = std::make_shared<CoreActionSetPlayerHp>(id,
+			player.hp * PLAYER_HP_FACTOR);
+		actionSetPlayerSize = std::make_shared<CoreActionSetPlayerSize>(id,
+			getPlayerSize(player.hp));
+		actionSetPlayerHpGroup.push_back(actionSetPlayerHp);
+		actionSetPlayerSizeGroup.push_back(actionSetPlayerSize);
 	}
+
+	// Merge
+	auto actionsGroup1 = std::make_shared<CoreActionMultiple>(
+		actionSetPlayerHpGroup);
+	auto actionsGroup2 = std::make_shared<CoreActionMultiple>(
+		actionSetPlayerSizeGroup);
+	auto res = std::make_shared<CoreActionMultiple>(actionsGroup1,
+		actionsGroup2);
+	
+	return res;
 }
 
 double Core::getPlayerSize(PlayerId id) const
@@ -203,49 +246,112 @@ void Core::getPlayerMovementVector(const PlayerInputFlags& inputFlags,
 	y *= speed * TICK_INTERVAL;
 }
 
-void Core::initializeStage(const std::shared_ptr<IStageSerializer> stage,
-	const std::vector<std::shared_ptr<IPlayerInput>>& players)
+std::shared_ptr<CoreAction> Core::initializeStage()
 {
-	assert(players.size() <= stage->getPlayers().size());
-
 	PlayerStateInternal newPlayer;
 
+	CoreActionMultiple::ActionsCollection actionPlayerGroup;
+	std::shared_ptr<CoreActionAddPlayer> actionAddPlayer;
+	std::shared_ptr<CoreActionSetPlayerPos> actionSetPlayerPos;
+	std::shared_ptr<CoreActionSetPlayerHp> actionSetPlayerHp;
+	std::shared_ptr<CoreActionSetPlayerSize> actionSetPlayerSize;
+	CoreActionMultiple::ActionsCollection actionObstacleGroup;
+	std::shared_ptr<CoreActionAddObstacle> actionAddObstacle;
+	std::shared_ptr<CoreActionSetStageSize> actionSetStageSize;
+
 	// Players
-	for (size_t i = 0; i < players.size(); i++) {
-		const auto& playerPos = stage->getPlayers()[i];
+	for (PlayerId id = 0; id < m_playersInitializer.size(); id++) {
+		// Initialize player
+		const auto& playerPos = m_stageInitializer->getPlayers()[id];
 		newPlayer.pos = Point_2(playerPos.x, playerPos.y);
 		newPlayer.hp = PLAYER_HP_INITIAL;
-		newPlayer.input = players[i];
-		m_players[i] = newPlayer;
+		newPlayer.input = m_playersInitializer[id];
+		m_players[id] = std::move(newPlayer);
+
+		// Add to actions list
+		actionAddPlayer = std::make_shared<CoreActionAddPlayer>(id);
+		actionSetPlayerPos = std::make_shared<CoreActionSetPlayerPos>(id,
+			fromCgalPoint(newPlayer.pos));
+		actionSetPlayerHp = std::make_shared<CoreActionSetPlayerHp>(id,
+			newPlayer.hp * PLAYER_HP_FACTOR);
+		actionSetPlayerSize = std::make_shared<CoreActionSetPlayerSize>(id,
+			getPlayerSize(newPlayer.hp));
+		actionPlayerGroup.push_back(actionAddPlayer);
+		actionPlayerGroup.push_back(actionSetPlayerPos);
+		actionPlayerGroup.push_back(actionSetPlayerHp);
+		actionPlayerGroup.push_back(actionSetPlayerSize);
 	}
 
-	// Obstacles
-	Size2d bounds(stage->getWidth(), stage->getHeight());
-	m_stageObstacles = std::make_unique<StageObstacles>(stage->getObstacles(),
-		bounds);
+	// Obstacles and bounds
+	Size2d bounds = getStageSize();;
+	m_stageObstacles = std::make_unique<StageObstacles>(
+		getObstaclesList(), bounds);
+	
+	// Add to actions list (obstacles)
+	auto obstacles = m_stageInitializer->getObstacles();
+	for (const auto& obstacle : obstacles) {
+		actionAddObstacle = std::make_shared<CoreActionAddObstacle>(
+			PolygonF(obstacle));
+		actionObstacleGroup.push_back(actionAddObstacle);
+	}
+
+	m_isInitialized = true;
+
+	// Add to actions list (bounds)
+	actionSetStageSize = std::make_shared<CoreActionSetStageSize>(bounds);
+	
+	// Merge
+	auto actionsGroup1 = std::make_shared<CoreActionMultiple>(
+		actionPlayerGroup);
+	auto actionsGroup2 = std::make_shared<CoreActionMultiple>(
+		actionObstacleGroup);
+	auto res = std::make_shared<CoreActionMultiple>(actionsGroup1,
+		actionsGroup2, actionSetStageSize);
+	
+	return res;
 }
 
-void Core::tick()
+std::shared_ptr<CoreAction> Core::tick()
 {
-	playersActions();
+	return playersActions();
 }
 
-void Core::playersActions()
+std::shared_ptr<CoreAction> Core::playersActions()
 {
 	TurnData turnData;
 
-	initTurnData(turnData);
-	calculateTrajectories(turnData);
-	findPlayerCollisions(turnData);
-	movePlayers(turnData);
-	changePlayersHp(turnData);
+	auto action1 = initTurnData(turnData);
+	auto action2 = calculateTrajectories(turnData);
+	auto action3 = findPlayerCollisions(turnData);
+	auto action4 = movePlayers(turnData);
+	auto action5 = changePlayersHp(turnData);
+
+	auto res = std::make_shared<CoreActionMultiple>(action1, action2, action3,
+		action4, action5);
+	return res;
 }
 
-void Core::loopEvent()
+const std::shared_ptr<CoreAction> Core::loopEvent()
 {
-	if (m_tickTimer.isLap()) {
-		tick();
+	if (!m_isInitialized) {
+		// This should happen only once -- `initializeStage()` changes the flag
+
+		return initializeStage();
+	} else {
+		// Is initialized
+
+		if (m_tickTimer.isLap()) {
+			// Tick
+
+			return tick();
+		} else {
+			// No tick
+
+			return std::make_shared<CoreActionNone>();
+		}
 	}
+
+	assert(m_isInitialized);
 }
 
 std::unordered_map<PlayerId,PlayerState> Core::getPlayerStates() const
@@ -264,10 +370,11 @@ std::unordered_map<PlayerId,PlayerState> Core::getPlayerStates() const
 
 std::vector<StageObstacle> Core::getObstaclesList() const
 {
-	return m_stageObstacles->getObstaclesList();
+	return m_stageInitializer->getObstacles();
 }
 
 Size2d Core::getStageSize() const
 {
-	return m_stageObstacles->getStageSize();
+	Size2d res(m_stageInitializer->getWidth(), m_stageInitializer->getHeight());
+	return res;
 }

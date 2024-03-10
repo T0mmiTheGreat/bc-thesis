@@ -69,6 +69,7 @@ set(SOURCE_FILES
 	sprite/StageItemSprite.cpp
 	sprite/HollowRectSprite.cpp
 	core/Core.cpp
+	core/CoreAction.cpp
 	core/stageobstacles/StageObstacles.cpp
 	core/trajectory/Trajectory.cpp
 	core/playerstate/PlayerState.cpp
@@ -149,6 +150,7 @@ set(HEADER_FILES
 	paintingproxy/IPaintingProxy.hpp
 	core/Common.hpp
 	core/Core.hpp
+	core/CoreAction.hpp
 	core/stageobstacles/StageObstacles.hpp
 	core/trajectory/Trajectory.hpp
 	core/playerstate/PlayerState.hpp

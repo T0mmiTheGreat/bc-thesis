@@ -90,20 +90,8 @@ void StageObstacles::addBoundsToCollisionObjects(const Size2d& bounds)
 
 StageObstacles::StageObstacles(
 	const std::vector<StageObstacle>& obstacles, const Size2d& bounds)
-	: m_obstacles{obstacles}
-	, m_bounds{bounds}
 {
 	initializeCollisionObjects(obstacles, bounds);
-}
-
-const std::vector<StageObstacle>& StageObstacles::getObstaclesList() const
-{
-	return m_obstacles;
-}
-
-const Size2d& StageObstacles::getStageSize() const
-{
-	return m_bounds;
 }
 
 bool hasCollision(const Triangle_2& collObj, const Segment_2& seg,

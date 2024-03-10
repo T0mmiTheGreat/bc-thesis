@@ -152,6 +152,14 @@ inline Point_2 toCgalPoint(const PointGeneric<T>& p)
 }
 
 /**
+ * @brief Converts `p` to `PointF` type.
+ */
+inline PointF fromCgalPoint(const Point_2& p)
+{
+	return PointF(p.x(), p.y());
+}
+
+/**
  * @brief Converts `trg` to CGAL triangle type.
  */
 inline Triangle_2 toCgalTriangle(const TriangleF& trg)
