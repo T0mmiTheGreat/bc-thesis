@@ -110,8 +110,11 @@ void InGameController::updatePlayerHp(PlayerId id, double hp)
 
 void InGameController::updatePlayerSize(PlayerId id, double size)
 {
+	// Size transformed
 	double sizeTf = size * m_viewport->getZoom();
+	// Truncate the transformed size to get the new radius value
 	int newRadius = static_cast<int>(sizeTf);
+	
 	auto& spr = m_playerSprites[id];
 	Point sprPos(spr->getX(), spr->getY());
 	int sprRadius = spr->getRadius();

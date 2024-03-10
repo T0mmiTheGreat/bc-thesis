@@ -28,9 +28,12 @@
 
 class Core {
 private:
+	struct PlayerCollision {
+		double opponentStrength;
+	};
 	struct PlayerTurn {
 		Trajectory trajectory;
-		std::unordered_set<PlayerId> playerCollisions;
+		std::vector<PlayerCollision> playerCollisions;
 	};
 	struct TurnData {
 		std::unordered_map<PlayerId, PlayerTurn> playerTurns;

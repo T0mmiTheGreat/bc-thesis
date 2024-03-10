@@ -75,7 +75,7 @@ std::shared_ptr<CoreAction> Core::initTurnData(TurnData& turnData)
 #else
 			.trajectory = Trajectory(),
 #endif
-			.playerCollisions = std::unordered_set<PlayerId>(),
+			.playerCollisions = std::vector<PlayerCollision>(),
 		};
 	}
 
@@ -111,7 +111,10 @@ std::shared_ptr<CoreAction> Core::findPlayerCollisions(TurnData& turnData)
 				double playerSqsizes = sqr(getPlayerSize(idA)
 					+ getPlayerSize(idB));
 				if (minSqdist <= playerSqsizes) {
-					playerTurnA.playerCollisions.insert(idB);
+					PlayerCollision collision = {
+						.opponentStrength = getPlayerStrength(idB)
+					};
+					playerTurnA.playerCollisions.push_back(collision);
 				}
 			}
 		}
@@ -154,8 +157,8 @@ std::shared_ptr<CoreAction> Core::changePlayersHp(TurnData& turnData)
 	for (auto& [id, playerTurn] : turnData.playerTurns) {
 		auto& player = m_players[id];
 
-		for (const auto& otherId : playerTurn.playerCollisions) {
-			player.hp -= TICK_INTERVAL * getPlayerStrength(otherId);
+		for (const auto& collision : playerTurn.playerCollisions) {
+			player.hp -= TICK_INTERVAL * collision.opponentStrength;
 		}
 
 		// Add to actions list
