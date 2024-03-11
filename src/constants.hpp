@@ -40,10 +40,11 @@
 #define IMAGE_PATH_ICON_OBSTACLE_TOOL IMAGES_PATH "obstacle-tool.png"
 #define IMAGE_PATH_ICON_TRASH_CAN     IMAGES_PATH "trash-can.png"
 #define IMAGE_PATH_ICON_RESIZE        IMAGES_PATH "resize.png"
-#define IMAGE_ICON_INPUT_WSAD         IMAGES_PATH "wsad.png"
-#define IMAGE_ICON_INPUT_TGFH         IMAGES_PATH "tgfh.png"
-#define IMAGE_ICON_INPUT_IKJL         IMAGES_PATH "ikjl.png"
-#define IMAGE_ICON_INPUT_ARROWS       IMAGES_PATH "arrow-keys.png"
-#define IMAGE_ICON_BOT                IMAGES_PATH "bot.png"
+#define IMAGE_PATH_ICON_INPUT_WSAD    IMAGES_PATH "wsad.png"
+#define IMAGE_PATH_ICON_INPUT_TGFH    IMAGES_PATH "tgfh.png"
+#define IMAGE_PATH_ICON_INPUT_IKJL    IMAGES_PATH "ikjl.png"
+#define IMAGE_PATH_ICON_INPUT_ARROWS  IMAGES_PATH "arrow-keys.png"
+#define IMAGE_PATH_ICON_BOT           IMAGES_PATH "bot.png"
+#define IMAGE_PATH_BONUS_HP           IMAGES_PATH "bonus-hp.png"
 
 #endif // CONSTANTS_HPP

@@ -56,6 +56,7 @@ set(SOURCE_FILES
 	sprite/MainMenuTitleSprite.cpp
 	sprite/PlayerSprite.cpp
 	sprite/ObstacleSprite.cpp
+	sprite/BonusSprite.cpp
 	sprite/ObstacleEdgesSprite.cpp
 	sprite/ImageSprite.cpp
 	sprite/EditorIconSprite.cpp
@@ -135,6 +136,7 @@ set(HEADER_FILES
 	sprite/MainMenuTitleSprite.hpp
 	sprite/PlayerSprite.hpp
 	sprite/ObstacleSprite.hpp
+	sprite/BonusSprite.hpp
 	sprite/ObstacleEdgesSprite.hpp
 	sprite/ImageSprite.hpp
 	sprite/EditorIconSprite.hpp

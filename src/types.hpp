@@ -125,6 +125,7 @@ enum ImageId {
 	IMG_ICON_INPUT_IKJL,
 	IMG_ICON_INPUT_ARROWS,
 	IMG_ICON_BOT,
+	IMG_BONUS_HP,
 	// XXX: Add new images to SDL manager too (constructor)
 
 	COUNT_IMAGEID // Number of images used by the program
