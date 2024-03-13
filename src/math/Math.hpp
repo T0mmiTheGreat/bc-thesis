@@ -110,6 +110,97 @@ inline constexpr T roundfToMultiple(T x, T y)
 }
 
 /**
+ * @brief Rounds `x` UP to the nearest multiple of `y`.
+ * 
+ * @example `roundUpToMultiple(14, 5) == 15`
+ *          `roundUpToMultiple(16, 5) == 20`
+ *          `roundUpToMultiple(20, 5) == 20`
+ *          `roundUpToMultiple(-14, 5) == -10`
+ *          `roundUpToMultiple(-16, 5) == -15`
+ *          `roundUpToMultiple(-20, 5) == -20`
+ *          `roundUpToMultiple(14, -5) == 15`
+ *          `roundUpToMultiple(16, -5) == 20`
+ *          `roundUpToMultiple(20, -5) == 20`
+ *          `roundUpToMultiple(-14, -5) == -10`
+ *          `roundUpToMultiple(-16, -5) == -15`
+ *          `roundUpToMultiple(-20, -5) == -20`
+ *          `roundUpToMultiple(9, 6) == 12`
+ *          `roundUpToMultiple(-9, 6) == -6`
+ *          `roundUpToMultiple(9, -6) == 12`
+ *          `roundUpToMultiple(-9, -6) == -6`
+ */
+template <Integral T>
+inline constexpr T roundUpToMultiple(T x, T y)
+{
+	T xabs = std::abs(x);
+	// The sign of `y` does not matter (15 == 3*5 == (-3)*(-5))
+	T yabs = std::abs(y);
+
+	if (x < 0) {
+		// Round absolute values DOWN
+
+		// Don't forget the sign---`x` is negative!
+		return -((xabs / yabs) * yabs);
+	} else {
+		// Round absolute values UP
+
+		T xmody = xabs % yabs;
+
+		// If `x` is multiple of `y`, return `x`, else round up
+		return (xmody == 0 ? xabs : xabs + (yabs - xmody));
+	}
+}
+
+/**
+ * @brief Rounds `x` UP to the nearest multiple of `y`.
+ */
+template <FloatingPoint T>
+inline constexpr T roundfUpToMultiple(T x, T y)
+{
+	T yabs = std::abs(y);
+	return std::ceil(x / yabs) * yabs;
+}
+
+/**
+ * @brief Rounds `x` DOWN to the nearest multiple of `y`.
+ * 
+ * @example `roundDownToMultiple(14, 5) == 10`
+ *          `roundDownToMultiple(16, 5) == 15`
+ *          `roundDownToMultiple(20, 5) == 20`
+ *          `roundDownToMultiple(-14, 5) == -15`
+ *          `roundDownToMultiple(-16, 5) == -20`
+ *          `roundDownToMultiple(-20, 5) == -20`
+ *          `roundDownToMultiple(14, -5) == 10`
+ *          `roundDownToMultiple(16, -5) == 15`
+ *          `roundDownToMultiple(20, -5) == 20`
+ *          `roundDownToMultiple(-14, -5) == -15`
+ *          `roundDownToMultiple(-16, -5) == -20`
+ *          `roundDownToMultiple(-20, -5) == -20`
+ *          `roundDownToMultiple(9, 6) == 6`
+ *          `roundDownToMultiple(-9, 6) == -12`
+ *          `roundDownToMultiple(9, -6) == 6`
+ *          `roundDownToMultiple(-9, -6) == -12`
+ */
+template <Integral T>
+inline constexpr T roundDownToMultiple(T x, T y)
+{
+	// This works because rounding negative `x` UP is equivalent to rounding
+	// its absolute value DOWN and then negating it. Similarly, rounding
+	// negative `x` DOWN is rounding its absolute value UP and then negating it.
+	return -roundUpToMultiple(-x, y);
+}
+
+/**
+ * @brief Rounds `x` DOWN to the nearest multiple of `y`.
+ */
+template <FloatingPoint T>
+inline constexpr T roundfDownToMultiple(T x, T y)
+{
+	T yabs = std::abs(y);
+	return std::floor(x / yabs) * yabs;
+}
+
+/**
  * @brief Calculates the squared distance between a point and a line segment.
  * 
  * @remark The returned value is the square of the distance. The caller may
