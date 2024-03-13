@@ -23,8 +23,8 @@ void StageEditor::getSnappedPoint(const PointF& p, ObjectSnap snapping,
 	PointF& pSnap)
 {
 	if (snapping != OBJECT_SNAP_NONE) {
-		pSnap.x = roundToMultiple(p.x, static_cast<PointF::ValueType>(snapping));
-		pSnap.y = roundToMultiple(p.y, static_cast<PointF::ValueType>(snapping));
+		pSnap.x = roundfToMultiple(p.x, static_cast<PointF::ValueType>(snapping));
+		pSnap.y = roundfToMultiple(p.y, static_cast<PointF::ValueType>(snapping));
 	} else {
 		pSnap = p;
 	}

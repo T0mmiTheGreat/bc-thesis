@@ -23,6 +23,9 @@ concept Scalar = std::is_scalar<T>::value;
 template <typename T>
 concept Integral = std::is_integral<T>::value;
 
+template <typename T>
+concept FloatingPoint = std::is_floating_point<T>::value;
+
 template <Scalar T>
 inline constexpr T sqr(T x)
 {
@@ -65,20 +68,45 @@ inline constexpr T sign(T x)
 /**
  * @brief Rounds `x` to the nearest multiple of `y`.
  * 
- * @tparam T Scalar type.
+ * @example `roundToMultiple(14, 5) == 15`
+ *          `roundToMultiple(16, 5) == 15`
+ *          `roundToMultiple(20, 5) == 20`
+ *          `roundToMultiple(-14, 5) == -15`
+ *          `roundToMultiple(-16, 5) == -15`
+ *          `roundToMultiple(-20, 5) == -20`
+ *          `roundToMultiple(14, -5) == 15`
+ *          `roundToMultiple(16, -5) == 15`
+ *          `roundToMultiple(20, -5) == 20`
+ *          `roundToMultiple(-14, -5) == -15`
+ *          `roundToMultiple(-16, -5) == -15`
+ *          `roundToMultiple(-20, -5) == -20`
+ *          `roundToMultiple(9, 6) == 12`
+ *          `roundToMultiple(-9, 6) == -12`
+ *          `roundToMultiple(9, -6) == 12`
+ *          `roundToMultiple(-9, -6) == -12`
  */
-template <Scalar T>
+template <Integral T>
 inline constexpr T roundToMultiple(T x, T y)
 {
-	if (std::is_integral_v<T>) {
-		// Integral type
+	T xabs = std::abs(x);
+	// The sign of `y` does not matter.
+	// `multiples(5) == multiples(-5)`, considering that `multiples(n)` is
+	// a set (mathematical).
+	// `15 == 3*5 == (-3)*(-5)`
+	T yabs = std::abs(y);
+	
+	T resabs = ((xabs + yabs/2) / yabs) * yabs;
 
-		return ((x + y/2) / y) * y;
-	} else {
-		// Floating point type or error
+	return (x < 0 ? -resabs : resabs);
+}
 
-		return std::round(x / y) * y;
-	}
+/**
+ * @brief Rounds `x` to the nearest multiple of `y`.
+ */
+template <FloatingPoint T>
+inline constexpr T roundfToMultiple(T x, T y)
+{
+	return std::round(x / y) * y;
 }
 
 /**
