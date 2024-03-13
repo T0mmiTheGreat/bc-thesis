@@ -318,12 +318,17 @@ struct PointGeneric {
 	typedef T ValueType;
 
 	/**
-	 * @brief Hasher for PointGeneric type.
+	 * @brief Hash function object for PointGeneric type.
 	 */
 	struct Hash {
 		size_t operator() (const PointGeneric<T>& key) const {
 			size_t h1 = std::hash<T>{}(key.x);
 			size_t h2 = std::hash<T>{}(key.y);
+
+			// ROL
+			h2 = (h2 << (sizeof(size_t) / 2))
+				| (h2 >> (sizeof(size_t) - (sizeof(size_t) / 2)));
+
 			return h1 ^ h2;
 		}
 	};
@@ -871,6 +876,18 @@ struct TriangleF {
 		res.transform(tm);
 		return res;
 	}
+
+	inline RectF getBoundingBox() const;
+
+	/**
+	 * @brief Returns the squared distance between this triangle and a point.
+	 * 
+	 * @remark The distance is 0 if the point lies inside the triangle bounds.
+	 * 
+	 * @remark The returned value is the square of the distance. The caller may
+	 *         apply square root on the returned value if they need to.
+	 */
+	inline double sqrDistance(const PointF& p) const;
 };
 
 /**
@@ -1441,6 +1458,18 @@ constexpr T msToClocks(T ms) {
 	// The operands are swapped here to avoid unnecessary FP conversions
 	// but keep precision
 	return ms * CLOCKS_PER_SEC / 1000;
+}
+
+double TriangleF::sqrDistance(const PointF& p) const
+{
+	PolygonF pog(*this);
+	return pog.sqrDistance(p);
+}
+
+RectF TriangleF::getBoundingBox() const
+{
+	PolygonF pog(*this);
+	return pog.getBoundingBox();
 }
 
 #endif // TYPES_HPP
