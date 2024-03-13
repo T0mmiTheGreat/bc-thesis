@@ -25,6 +25,7 @@
 #include "playerinput/IPlayerInput.hpp"
 #include "sprite/PlayerSprite.hpp"
 #include "sprite/ObstacleSprite.hpp"
+#include "sprite/BonusSprite.hpp"
 #include "sprite/HollowRectSprite.hpp"
 #include "sprite/OptionBarSprite.hpp"
 #include "sprite/TextSprite.hpp"
@@ -49,6 +50,7 @@ private:
 
 	std::unordered_map<PlayerId, std::unique_ptr<PlayerSprite>> m_playerSprites;
 	std::vector<std::unique_ptr<ObstacleSprite>> m_obstacleSprites;
+	std::unordered_map<BonusId, std::unique_ptr<BonusSprite>> m_bonusSprites;
 	std::unique_ptr<HollowRectSprite> m_stageBoundsSprite;
 
 	std::unique_ptr<OptionBarSprite> m_statusBarSprite;
@@ -61,6 +63,7 @@ private:
 	std::unique_ptr<StageViewport> m_viewport;
 
 	void createPlayerSprite(PlayerId id);
+	void createBonusSprite(BonusId id, const PointF& pos);
 	void createPlayerHpBgSprite(PlayerId id);
 	void createPlayerHpTextSprite(PlayerId id);
 	void createObstacleSprite(const PolygonF& shape);
@@ -88,6 +91,8 @@ private:
 	void updateSpritesByActionSetPlayerHp(
 		const std::shared_ptr<CoreAction> action);
 	void updateSpritesByActionSetPlayerSize(
+		const std::shared_ptr<CoreAction> action);
+	void updateSpritesByActionAddBonus(
 		const std::shared_ptr<CoreAction> action);
 
 	void initializeViewport();

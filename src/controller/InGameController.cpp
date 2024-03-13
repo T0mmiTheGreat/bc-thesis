@@ -30,6 +30,16 @@ void InGameController::createPlayerSprite(PlayerId id)
 	m_playerSprites[id] = std::move(playerSprite);
 }
 
+void InGameController::createBonusSprite(BonusId id, const PointF& pos)
+{
+	auto bonusSprite = std::make_unique<BonusSprite>(sysProxy);
+	double radiusF = BONUS_RADIUS * m_viewport->getZoom();
+	PointF posTf = m_viewport->stageToScreen(pos);
+	bonusSprite->setRadius(static_cast<int>(radiusF));
+	bonusSprite->setCenterPos(static_cast<Point>(posTf));
+	m_bonusSprites[id] = std::move(bonusSprite);
+}
+
 void InGameController::createPlayerHpBgSprite(PlayerId id)
 {
 	auto spr = std::make_unique<OptionBarSprite>(sysProxy);
@@ -158,6 +168,9 @@ void InGameController::updateSpritesByAction(
 		case CoreAction::ACTION_SET_PLAYER_SIZE:
 			updateSpritesByActionSetPlayerSize(action);
 			break;
+		case CoreAction::ACTION_ADD_BONUS:
+			updateSpritesByActionAddBonus(action);
+			break;
 	}
 }
 
@@ -236,6 +249,15 @@ void InGameController::updateSpritesByActionSetPlayerSize(
 		std::dynamic_pointer_cast<CoreActionSetPlayerSize>(action);
 	
 	updatePlayerSize(actionCast->getId(), actionCast->getSize());
+}
+
+void InGameController::updateSpritesByActionAddBonus(
+	const std::shared_ptr<CoreAction> action)
+{
+	const auto actionCast =
+		std::dynamic_pointer_cast<CoreActionAddBonus>(action);
+	
+	createBonusSprite(actionCast->getId(), actionCast->getPos());
 }
 
 void InGameController::initializeViewport()
@@ -319,6 +341,10 @@ void InGameController::onLoop()
 void InGameController::onPaint(std::shared_ptr<ICanvas> canvas,
 	const Rect& invalidRect)
 {
+	for (auto& [id, spr] : m_bonusSprites) {
+		spr->repaint(canvas, invalidRect);
+	}
+
 	for (auto& [id, spr] : m_playerSprites) {
 		spr->repaint(canvas, invalidRect);
 	}

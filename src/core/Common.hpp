@@ -17,8 +17,11 @@
 #include "types.hpp"
 
 typedef size_t PlayerId;
+typedef size_t BonusId;
 
 typedef TriangleF StageObstacle;
+
+constexpr BonusId BONUS_ID_NULL = 0;
 
 /**
  * @brief The number of milliseconds between ticks.
@@ -26,5 +29,7 @@ typedef TriangleF StageObstacle;
  * @details I.e., how often the tick() events should be sent.
  */
 constexpr std::clock_t TICK_INTERVAL = 17;
+
+constexpr double BONUS_RADIUS = 25.0;
 
 #endif // CORE_COMMON_HPP

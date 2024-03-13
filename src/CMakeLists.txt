@@ -72,6 +72,7 @@ set(SOURCE_FILES
 	core/Core.cpp
 	core/CoreAction.cpp
 	core/stageobstacles/StageObstacles.cpp
+	core/stagebonuses/StageBonuses.cpp
 	core/trajectory/Trajectory.cpp
 	core/playerstate/PlayerState.cpp
 	playerinput/PlayerInputFactory.cpp
@@ -154,6 +155,7 @@ set(HEADER_FILES
 	core/Core.hpp
 	core/CoreAction.hpp
 	core/stageobstacles/StageObstacles.hpp
+	core/stagebonuses/StageBonuses.hpp
 	core/trajectory/Trajectory.hpp
 	core/playerstate/PlayerState.hpp
 	core/geometry/Geometry.hpp

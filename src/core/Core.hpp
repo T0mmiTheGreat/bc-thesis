@@ -21,6 +21,7 @@
 #include "core/Common.hpp"
 #include "core/geometry/Geometry.hpp"
 #include "core/stageobstacles/StageObstacles.hpp"
+#include "core/stagebonuses/StageBonuses.hpp"
 #include "stageserializer/IStageSerializer.hpp"
 #include "playerinput/IPlayerInput.hpp"
 #include "core/playerstate/PlayerState.hpp"
@@ -56,6 +57,9 @@ private:
 	Timer m_tickTimer;
 	std::unordered_map<PlayerId, PlayerStateInternal> m_players;
 	std::unique_ptr<StageObstacles> m_stageObstacles;
+	std::unique_ptr<StageBonuses> m_stageBonuses;
+
+	Timer m_bonusTimer;
 
 	/**
 	 * @brief Initializes the internal stage state.

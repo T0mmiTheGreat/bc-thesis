@@ -36,6 +36,7 @@ public:
 		ACTION_SET_PLAYER_POS,
 		ACTION_SET_PLAYER_HP,
 		ACTION_SET_PLAYER_SIZE,
+		ACTION_ADD_BONUS,
 	};
 
 	virtual ~CoreAction() {}
@@ -320,6 +321,38 @@ public:
 	 * @brief New size.
 	 */
 	double getSize() const { return m_size; }
+};
+
+class CoreActionAddBonus : public CoreAction {
+private:
+	BonusId m_id;
+	PointF m_pos;
+public:
+	/**
+	 * @brief Constructs a new CoreActionAddBonus object.
+	 * 
+	 * @param id ID of the new bonus.
+	 * @param pos Bonus position.
+	 */
+	CoreActionAddBonus(BonusId id, const PointF& pos)
+		: m_id{id}
+		, m_pos{pos}
+	{}
+
+	/**
+	 * @brief Returns the action type.
+	 */
+	ActionType getType() const override { return ACTION_ADD_BONUS; }
+
+	/**
+	 * @brief ID of the new bonus.
+	 */
+	BonusId getId() const { return m_id; }
+
+	/**
+	 * @brief Bonus position..
+	 */
+	const PointF& getPos() const { return m_pos; }
 };
 
 #endif // COREACTION_HPP

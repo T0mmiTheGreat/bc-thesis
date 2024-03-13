@@ -58,6 +58,7 @@ Core::Core(const std::shared_ptr<IStageSerializer> stage,
 	, m_stageInitializer{stage}
 	, m_playersInitializer{players}
 	, m_tickTimer(TICK_INTERVAL)
+	, m_bonusTimer(1000)
 {
 	assert(players.size() <= stage->getPlayers().size());
 }
@@ -298,6 +299,9 @@ std::shared_ptr<CoreAction> Core::initializeStage()
 		actionObstacleGroup.push_back(actionAddObstacle);
 	}
 
+	m_stageBonuses = std::make_unique<StageBonuses>(
+		getObstaclesList(), getStageSize());
+
 	m_isInitialized = true;
 
 	// Add to actions list (bounds)
@@ -328,9 +332,18 @@ std::shared_ptr<CoreAction> Core::playersActions()
 	auto action3 = findPlayerCollisions(turnData);
 	auto action4 = movePlayers(turnData);
 	auto action5 = changePlayersHp(turnData);
+	std::shared_ptr<CoreAction> action6;
+	
+	if (m_bonusTimer.isLap()) {
+		BonusId bonusId = m_stageBonuses->generateBonus();
+		const PointF& bonusPos = m_stageBonuses->getBonuses().at(bonusId);
+		action6 = std::make_shared<CoreActionAddBonus>(bonusId, bonusPos);
+	} else {
+		action6 = std::make_shared<CoreActionNone>();
+	}
 
 	auto res = std::make_shared<CoreActionMultiple>(action1, action2, action3,
-		action4, action5);
+		action4, action5, action6);
 	return res;
 }
 
