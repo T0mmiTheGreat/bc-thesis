@@ -14,7 +14,7 @@
 
 #include "sprite/PositionedSpriteBase.hpp"
 
-class BonusSprite : PositionedSpriteBase {
+class BonusSprite : public PositionedSpriteBase {
 private:
 	static constexpr ImageId IMAGE_ID = IMG_BONUS_HP;
 
