@@ -175,6 +175,7 @@ set(HEADER_FILES
 	stageserializer/StageSerializerBase.hpp
 	stageserializer/StageSerializerFactory.hpp
 	stageserializer/YAMLStageSerializer.hpp
+	utilities/unorderedSetWithIndexes/UnorderedSetWithIndexes.hpp
 )
 
 # Create the executable in the repo root directory
