@@ -123,8 +123,8 @@ void StageBonuses::reportPlayerStates(const std::vector<PlayerState>& states)
 BonusId StageBonuses::generateBonus()
 {
 	BonusId id = generateBonusId();
-	// FIXME: Not enough possible values
-	int posIdx = rand();
+	std::uniform_int_distribution<size_t> distrib(0, m_validPositions.size());
+	size_t posIdx = distrib(getRNGine());
 	PointF pt = m_validPositions.atIndex(static_cast<size_t>(posIdx));
 	m_bonuses[id] = pt;
 	return id;

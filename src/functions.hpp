@@ -12,9 +12,15 @@
 #ifndef FUNCTIONS_HPP
 #define FUNCTIONS_HPP
 
+#include <random>
 #include <string>
 #include <type_traits>
 #include <vector>
+
+/**
+ * @brief Random number engine type.
+ */
+typedef std::minstd_rand RNGineType;
 
 /**
  * @brief Removes the last character from string treating it as UTF-8 string.
@@ -82,6 +88,16 @@ inline bool vectorHasDuplicates(const std::vector<T>& v)
 	}
 
 	return false;
+}
+
+/**
+ * @brief Returns initialized random number engine.
+ */
+inline RNGineType& getRNGine()
+{
+	// Seeded using non-deterministic random value using `std::random_device`
+	static RNGineType res(std::random_device{}());
+	return res;
 }
 
 #endif // FUNCTIONS_HPP
