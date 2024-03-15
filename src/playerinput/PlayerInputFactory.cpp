@@ -17,31 +17,31 @@
 
 std::shared_ptr<IPlayerInput> PlayerInputFactory::createKeyboardPlayerInput(
 	std::shared_ptr<ISysProxyPlayerInput> sysProxy, KeyCode keyLeft,
-	KeyCode keyUp, KeyCode keyRight, KeyCode keyDown)
+	KeyCode keyUp, KeyCode keyRight, KeyCode keyDown, KeyCode keyDeflate)
 {
 	return std::make_shared<KeyboardPlayerInput>(sysProxy, keyLeft, keyUp,
-		keyRight, keyDown);
+		keyRight, keyDown, keyDeflate);
 }
 
-std::shared_ptr<IPlayerInput> PlayerInputFactory::createKeyboardPlayerInputWSAD(
+std::shared_ptr<IPlayerInput> PlayerInputFactory::createKeyboardPlayerInputWSADQ(
 	std::shared_ptr<ISysProxyPlayerInput> sysProxy)
 {
 	return std::make_shared<KeyboardPlayerInput>(
-		KeyboardPlayerInput::constructWSAD(sysProxy));
+		KeyboardPlayerInput::constructWSADQ(sysProxy));
 }
 
-std::shared_ptr<IPlayerInput> PlayerInputFactory::createKeyboardPlayerInputIKJL(
+std::shared_ptr<IPlayerInput> PlayerInputFactory::createKeyboardPlayerInputIKJLU(
 	std::shared_ptr<ISysProxyPlayerInput> sysProxy)
 {
 	return std::make_shared<KeyboardPlayerInput>(
-		KeyboardPlayerInput::constructIKJL(sysProxy));
+		KeyboardPlayerInput::constructIKJLU(sysProxy));
 }
 
-std::shared_ptr<IPlayerInput> PlayerInputFactory::createKeyboardPlayerInputArrows(
+std::shared_ptr<IPlayerInput> PlayerInputFactory::createKeyboardPlayerInputArrowsShift(
 	std::shared_ptr<ISysProxyPlayerInput> sysProxy)
 {
 	return std::make_shared<KeyboardPlayerInput>(
-		KeyboardPlayerInput::constructArrows(sysProxy));
+		KeyboardPlayerInput::constructArrowsShift(sysProxy));
 }
 
 std::shared_ptr<IPlayerInput> PlayerInputFactory::createImmobilePlayerInput()

@@ -87,9 +87,9 @@ MainMenuController::getPlayersForGame() const
 {
 	// FIXME
 	std::vector<std::shared_ptr<IPlayerInput>> res;
-	res.push_back(PlayerInputFactory::createKeyboardPlayerInputWSAD(sysProxy));
-	res.push_back(PlayerInputFactory::createKeyboardPlayerInputIKJL(sysProxy));
-	res.push_back(PlayerInputFactory::createKeyboardPlayerInputArrows(sysProxy));
+	res.push_back(PlayerInputFactory::createKeyboardPlayerInputWSADQ(sysProxy));
+	res.push_back(PlayerInputFactory::createKeyboardPlayerInputIKJLU(sysProxy));
+	res.push_back(PlayerInputFactory::createKeyboardPlayerInputArrowsShift(sysProxy));
 	return res;
 }
 

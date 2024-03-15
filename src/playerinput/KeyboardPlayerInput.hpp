@@ -25,6 +25,7 @@ private:
 	KeyCode m_keyUp;
 	KeyCode m_keyRight;
 	KeyCode m_keyDown;
+	KeyCode m_keyDeflate;
 public:
 	/**
 	 * @brief Constructs a new PlayerInputFactory object.
@@ -34,14 +35,16 @@ public:
 	 * @param keyUp Key code for the "move up" action.
 	 * @param keyRight Key code for the "move right" action.
 	 * @param keyDown Key code for the "move down" action.
+	 * @param keyDeflate Key code for the "deflate" action.
 	 */
 	KeyboardPlayerInput(std::shared_ptr<ISysProxyPlayerInput> sysProxy,
-		KeyCode keyLeft, KeyCode keyUp, KeyCode keyRight, KeyCode keyDown);
-	static KeyboardPlayerInput constructWSAD(
+		KeyCode keyLeft, KeyCode keyUp, KeyCode keyRight, KeyCode keyDown,
+		KeyCode keyDeflate);
+	static KeyboardPlayerInput constructWSADQ(
 		std::shared_ptr<ISysProxyPlayerInput> sysProxy);
-	static KeyboardPlayerInput constructIKJL(
+	static KeyboardPlayerInput constructIKJLU(
 		std::shared_ptr<ISysProxyPlayerInput> sysProxy);
-	static KeyboardPlayerInput constructArrows(
+	static KeyboardPlayerInput constructArrowsShift(
 		std::shared_ptr<ISysProxyPlayerInput> sysProxy);
 	PlayerInputFlags readInput() override;
 };

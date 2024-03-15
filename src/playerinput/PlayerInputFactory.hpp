@@ -30,15 +30,16 @@ public:
 	 * @param keyUp Key code for the "move up" action.
 	 * @param keyRight Key code for the "move right" action.
 	 * @param keyDown Key code for the "move down" action.
+	 * @param keyDeflate Key code for the "deflate" action.
 	 */
 	static std::shared_ptr<IPlayerInput> createKeyboardPlayerInput(
 		std::shared_ptr<ISysProxyPlayerInput> sysProxy, KeyCode keyLeft,
-		KeyCode keyUp, KeyCode keyRight, KeyCode keyDown);
-	static std::shared_ptr<IPlayerInput> createKeyboardPlayerInputWSAD(
+		KeyCode keyUp, KeyCode keyRight, KeyCode keyDown, KeyCode keyDeflate);
+	static std::shared_ptr<IPlayerInput> createKeyboardPlayerInputWSADQ(
 		std::shared_ptr<ISysProxyPlayerInput> sysProxy);
-	static std::shared_ptr<IPlayerInput> createKeyboardPlayerInputIKJL(
+	static std::shared_ptr<IPlayerInput> createKeyboardPlayerInputIKJLU(
 		std::shared_ptr<ISysProxyPlayerInput> sysProxy);
-	static std::shared_ptr<IPlayerInput> createKeyboardPlayerInputArrows(
+	static std::shared_ptr<IPlayerInput> createKeyboardPlayerInputArrowsShift(
 		std::shared_ptr<ISysProxyPlayerInput> sysProxy);
 	static std::shared_ptr<IPlayerInput> createImmobilePlayerInput();
 	static std::shared_ptr<IPlayerInput> createAIPlayerInput();

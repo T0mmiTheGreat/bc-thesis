@@ -20,12 +20,14 @@ struct PlayerInputFlags {
 	bool up: 1;
 	bool right: 1;
 	bool down: 1;
+	bool deflate: 1;
 
 	PlayerInputFlags()
 		: left{false}
 		, up{false}
 		, right{false}
 		, down{false}
+		, deflate{false}
 	{}
 };
 

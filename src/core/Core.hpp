@@ -58,6 +58,7 @@ private:
 	// Internally, full HP is equal to `1.0`. Externally (as shown to the user),
 	// full HP is equal to `100.0`.
 	static constexpr double PLAYER_HP_FACTOR = 100.0;
+	static constexpr double DEFLATE_AMOUNT = 1.0/3400.0 * TICK_INTERVAL;
 
 	bool m_isInitialized;
 	std::shared_ptr<IStageSerializer> m_stageInitializer;

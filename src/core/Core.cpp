@@ -230,6 +230,11 @@ std::shared_ptr<CoreAction> Core::changePlayersHp(TurnData& turnData)
 			hpDelta -= TICK_INTERVAL * collision.opponentStrength;
 		}
 
+		// Decrement HP from "deflate"
+		if (player.input->readInput().deflate) {
+			hpDelta -= DEFLATE_AMOUNT;
+		}
+
 		// Increment HP from bonus effects
 		hpDelta += playerTurn.effectAttributes.getAttributeChangeHp();
 
