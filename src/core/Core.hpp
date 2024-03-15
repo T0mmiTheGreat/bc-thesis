@@ -89,6 +89,7 @@ private:
 	std::shared_ptr<CoreAction> findPlayerCollisions(TurnData& turnData);
 	std::shared_ptr<CoreAction> movePlayers(TurnData& turnData);
 	std::shared_ptr<CoreAction> changePlayersHp(TurnData& turnData);
+	std::shared_ptr<CoreAction> generateBonus(TurnData& turnData);
 
 	double getPlayerSize(PlayerId id) const;
 	static double getPlayerSize(double hp);

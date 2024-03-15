@@ -355,6 +355,14 @@ public:
 	}
 
 	/**
+	 * @brief Erases all elements from the set.
+	 */
+	void clear() {
+		m_set.clear();
+		m_vector.clear();
+	}
+
+	/**
 	 * @brief Reserves space for at least `count` elements.
 	 */
 	void reserve(size_t count) {

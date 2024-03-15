@@ -182,6 +182,31 @@ std::shared_ptr<CoreAction> Core::changePlayersHp(TurnData& turnData)
 	return res;
 }
 
+std::shared_ptr<CoreAction> Core::generateBonus(TurnData& turnData)
+{
+	(void)turnData;
+
+	if (m_bonusTimer.isLap()) {
+#ifdef ENABLE_BONUS_CONSTRAINTS
+		auto playerStatesMap = getPlayerStates();
+		std::vector<PlayerState> playerStatesVec;
+		playerStatesVec.reserve(playerStatesMap.size());
+		for (const auto& [id, state] : playerStatesMap) {
+			playerStatesVec.push_back(state);
+		}
+		m_stageBonuses->reportPlayerStates(playerStatesVec);
+#endif // ENABLE_BONUS_CONSTRAINTS
+
+		BonusId bonusId = m_stageBonuses->generateBonus();
+		const PointF& bonusPos = m_stageBonuses->getBonuses().at(bonusId);
+
+		auto res = std::make_shared<CoreActionAddBonus>(bonusId, bonusPos);
+		return res;
+	} else {
+		return std::make_shared<CoreActionNone>();
+	}
+}
+
 double Core::getPlayerSize(PlayerId id) const
 {
 	return getPlayerSize(m_players.at(id).hp);
@@ -332,15 +357,7 @@ std::shared_ptr<CoreAction> Core::playersActions()
 	auto action3 = findPlayerCollisions(turnData);
 	auto action4 = movePlayers(turnData);
 	auto action5 = changePlayersHp(turnData);
-	std::shared_ptr<CoreAction> action6;
-	
-	if (m_bonusTimer.isLap()) {
-		BonusId bonusId = m_stageBonuses->generateBonus();
-		const PointF& bonusPos = m_stageBonuses->getBonuses().at(bonusId);
-		action6 = std::make_shared<CoreActionAddBonus>(bonusId, bonusPos);
-	} else {
-		action6 = std::make_shared<CoreActionNone>();
-	}
+	auto action6 = generateBonus(turnData);
 
 	auto res = std::make_shared<CoreActionMultiple>(action1, action2, action3,
 		action4, action5, action6);

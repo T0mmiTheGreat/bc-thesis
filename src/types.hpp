@@ -702,10 +702,16 @@ struct RectGeneric {
 		return res;
 	}
 
+	/**
+	 * @brief Increments the rectangle position.
+	 */
 	constexpr void offset(T x, T y) {
 		this->x += x;
 		this->y += y;
 	}
+	/**
+	 * @brief Increments the rectangle position.
+	 */
 	constexpr void offset(const PointGeneric<T>& offsetPoint) {
 		offset(offsetPoint.x, offsetPoint.y);
 	}
