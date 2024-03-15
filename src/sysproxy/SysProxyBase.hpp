@@ -18,10 +18,27 @@
 
 /**
  * @brief Base class for sys proxies.
- * 
- * @details In future, there might be some definitions common to all proxies,
- *          so it is better for all proxies to inherit from this one.
  */
-class SysProxyBase : public ISysProxy {};
+class SysProxyBase : public ISysProxy {
+public:
+	/**
+	 * @brief Returns true if either left or right Ctrl is pressed.
+	 * 
+	 * @remark May only be called if the event loop is running.
+	 */
+	virtual bool isCtrlPressed() override;
+	/**
+	 * @brief Returns true if either left or right Shift is pressed.
+	 * 
+	 * @remark May only be called if the event loop is running.
+	 */
+	virtual bool isShiftPressed() override;
+	/**
+	 * @brief Returns true if either left or right Alt is pressed.
+	 * 
+	 * @remark May only be called if the event loop is running.
+	 */
+	virtual bool isAltPressed() override;
+};
 
 #endif // SYSPROXYBASE_HPP

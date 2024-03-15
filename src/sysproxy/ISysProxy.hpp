@@ -54,6 +54,24 @@ public:
 	 */
 	virtual bool isKeyPressed(KeyCode keyCode) = 0;
 	/**
+	 * @brief Returns true if either left or right Ctrl is pressed.
+	 * 
+	 * @remark May only be called if the event loop is running.
+	 */
+	virtual bool isCtrlPressed() = 0;
+	/**
+	 * @brief Returns true if either left or right Shift is pressed.
+	 * 
+	 * @remark May only be called if the event loop is running.
+	 */
+	virtual bool isShiftPressed() = 0;
+	/**
+	 * @brief Returns true if either left or right Alt is pressed.
+	 * 
+	 * @remark May only be called if the event loop is running.
+	 */
+	virtual bool isAltPressed() = 0;
+	/**
 	 * @brief Returns the current mouse position.
 	 * 
 	 * @remark May only be called if the event loop is running.

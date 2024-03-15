@@ -50,9 +50,12 @@ typedef enum KeyCode {
 	KEY_UNKNOWN,
 	KEY_RETURN, // Or ENTER
 	KEY_BACKSPACE,
-	KEY_CTRL, // If Ctrl is not present, looks for Cmd
-	KEY_SHIFT,
-	KEY_ALT, // If Alt is not present, looks for Opt/Option
+	KEY_LCTRL, // If Ctrl is not present, looks for Cmd
+	KEY_RCTRL,
+	KEY_LSHIFT,
+	KEY_RSHIFT,
+	KEY_LALT, // If Alt is not present, looks for Opt/Option
+	KEY_RALT,
 	KEY_LEFT_ARROW,
 	KEY_UP_ARROW,
 	KEY_RIGHT_ARROW,
@@ -64,6 +67,7 @@ typedef enum KeyCode {
 	KEY_J,
 	KEY_K,
 	KEY_L,
+	KEY_Q,
 	KEY_S,
 	KEY_U,
 	KEY_W,

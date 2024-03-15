@@ -158,7 +158,7 @@ void StageEditorController::mouseBtnDownWorkspace(MouseBtn btn, int x, int y)
 			ObjectSnap snapping = getSnapping();
 
 			const auto lastAction = m_stageEditor->mouseLeftBtnDown(pos, snapping,
-				sysProxy->isKeyPressed(KEY_SHIFT),
+				sysProxy->isShiftPressed(),
 				getGrabZoneSizeByViewportZoom());
 			updateSpritesByAction(lastAction);
 		} break;
@@ -181,7 +181,7 @@ void StageEditorController::mouseWheelWorkspace(int dx, int dy)
 {
 	(void)dx;
 
-	if (sysProxy->isKeyPressed(KEY_CTRL)) {
+	if (sysProxy->isCtrlPressed()) {
 		if (dy != 0) {
 			// Zoom
 			
@@ -1239,7 +1239,7 @@ ObjectSnap StageEditorController::getSnappingByViewportZoom(unsigned& solidsFreq
 
 ObjectSnap StageEditorController::getSnapping()
 {
-	return (sysProxy->isKeyPressed(KEY_ALT) ? OBJECT_SNAP_NONE
+	return (sysProxy->isKeyPressed(KEY_LALT) ? OBJECT_SNAP_NONE
 		: getSnappingByViewportZoom());
 }
 
