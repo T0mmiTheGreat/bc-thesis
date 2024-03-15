@@ -37,6 +37,7 @@ public:
 		ACTION_SET_PLAYER_HP,
 		ACTION_SET_PLAYER_SIZE,
 		ACTION_ADD_BONUS,
+		ACTION_REMOVE_BONUS,
 	};
 
 	virtual ~CoreAction() {}
@@ -323,6 +324,9 @@ public:
 	double getSize() const { return m_size; }
 };
 
+/**
+ * @brief A bonus has spawned.
+ */
 class CoreActionAddBonus : public CoreAction {
 private:
 	BonusId m_id;
@@ -353,6 +357,33 @@ public:
 	 * @brief Bonus position..
 	 */
 	const PointF& getPos() const { return m_pos; }
+};
+
+/**
+ * @brief A bonus has been picked up.
+ */
+class CoreActionRemoveBonus : public CoreAction {
+private:
+	BonusId m_id;
+public:
+	/**
+	 * @brief Constructs a new CoreActionRemoveBonus object.
+	 * 
+	 * @param id ID of the removed bonus
+	 */
+	CoreActionRemoveBonus(BonusId id)
+		: m_id{id}
+	{}
+
+	/**
+	 * @brief Returns the action type.
+	 */
+	ActionType getType() const override { return ACTION_REMOVE_BONUS; }
+
+	/**
+	 * @brief ID of the removed bonus.
+	 */
+	BonusId getId() const { return m_id; }
 };
 
 #endif // COREACTION_HPP

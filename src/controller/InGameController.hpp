@@ -94,6 +94,8 @@ private:
 		const std::shared_ptr<CoreAction> action);
 	void updateSpritesByActionAddBonus(
 		const std::shared_ptr<CoreAction> action);
+	void updateSpritesByActionRemoveBonus(
+		const std::shared_ptr<CoreAction> action);
 
 	void initializeViewport();
 

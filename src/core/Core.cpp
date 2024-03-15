@@ -77,6 +77,7 @@ std::shared_ptr<CoreAction> Core::initTurnData(TurnData& turnData)
 			.trajectory = Trajectory(),
 #endif
 			.playerCollisions = std::vector<PlayerCollision>(),
+			.bonusCollisions = std::vector<BonusCollision>(),
 		};
 	}
 
@@ -106,17 +107,46 @@ std::shared_ptr<CoreAction> Core::findPlayerCollisions(TurnData& turnData)
 {
 	for (auto& [idA, playerTurnA] : turnData.playerTurns) {
 		for (auto& [idB, playerTurnB] : turnData.playerTurns) {
-			if (idA != idB) {
+			if (idA != idB) { // A player cannot collide with itself
+				// Minimum distance between players' trajectories
 				double minSqdist = playerTurnA.trajectory.minSqdist(
 					playerTurnB.trajectory);
+				// Square of sum of the players' sizes
 				double playerSqsizes = sqr(getPlayerSize(idA)
 					+ getPlayerSize(idB));
 				if (minSqdist <= playerSqsizes) {
+					// Add collision with B to A's player collisions
 					PlayerCollision collision = {
 						.opponentStrength = getPlayerStrength(idB)
 					};
 					playerTurnA.playerCollisions.push_back(collision);
 				}
+			}
+		}
+	}
+
+	return std::make_shared<CoreActionNone>();
+}
+
+std::shared_ptr<CoreAction> Core::findBonusCollisions(TurnData& turnData)
+{
+	const auto& bonuses = m_stageBonuses->getBonuses();
+
+	for (auto& [playerId, playerTurn] : turnData.playerTurns) {
+		for (const auto& [bonusId, bonusData] : bonuses) {
+			// Create zero length trajectory representing the movement of the
+			// bonus (it doesn't move, but we need the trajectory).
+			Trajectory bonusTraj(toCgalPoint(bonusData.position));
+			// Minimum distance between the player's and bonus's trajectories
+			double minSqdist = playerTurn.trajectory.minSqdist(bonusTraj);
+			// Square of sum of the player's and bonus's size
+			double sqSizes = sqr(getPlayerSize(playerId) + BONUS_RADIUS);
+			if (minSqdist <= sqSizes) {
+				// Add the collision to the player's bonus collisions
+				BonusCollision collision = {.id = bonusId};
+				playerTurn.bonusCollisions.push_back(std::move(collision));
+				// Add the collision to turn data
+				turnData.collectedBonuses.insert(bonusId);
 			}
 		}
 	}
@@ -132,6 +162,7 @@ std::shared_ptr<CoreAction> Core::movePlayers(TurnData& turnData)
 	for (auto& [id, playerTurn] : turnData.playerTurns) {
 		auto& player = m_players[id];
 
+		// Move player
 #ifndef OLD_TRAJECTORY_ALGORITHM
 		player.pos = playerTurn.trajectory.end();
 #else
@@ -179,6 +210,26 @@ std::shared_ptr<CoreAction> Core::changePlayersHp(TurnData& turnData)
 	auto res = std::make_shared<CoreActionMultiple>(actionsGroup1,
 		actionsGroup2);
 	
+	return res;
+}
+
+std::shared_ptr<CoreAction> Core::clearBonuses(TurnData& turnData)
+{
+	std::vector<std::shared_ptr<CoreAction>> actionsGroup;
+	std::shared_ptr<CoreActionRemoveBonus> actionRemoveBonus;
+
+	for (BonusId id : turnData.collectedBonuses) {
+		// Clear
+		m_stageBonuses->clearBonus(id);
+
+		// Add to actions list
+		actionRemoveBonus = std::make_shared<CoreActionRemoveBonus>(id);
+		actionsGroup.push_back(std::move(actionRemoveBonus));
+	}
+
+	// Merge
+	auto res = std::make_shared<CoreActionMultiple>(actionsGroup);
+
 	return res;
 }
 
@@ -352,15 +403,25 @@ std::shared_ptr<CoreAction> Core::playersActions()
 {
 	TurnData turnData;
 
-	auto action1 = initTurnData(turnData);
-	auto action2 = calculateTrajectories(turnData);
-	auto action3 = findPlayerCollisions(turnData);
-	auto action4 = movePlayers(turnData);
-	auto action5 = changePlayersHp(turnData);
-	auto action6 = generateBonus(turnData);
+	auto actionInitTurnData = initTurnData(turnData);
+	auto actionCalculateTrajectories = calculateTrajectories(turnData);
+	auto actionFindPlayerCollisions = findPlayerCollisions(turnData);
+	auto actionFindBonusCollisions = findBonusCollisions(turnData);
+	auto actionMovePlayers = movePlayers(turnData);
+	auto actionChangePlayersHp = changePlayersHp(turnData);
+	auto actionClearBonuses = clearBonuses(turnData);
+	auto actionGenerateBonus = generateBonus(turnData);
 
-	auto res = std::make_shared<CoreActionMultiple>(action1, action2, action3,
-		action4, action5, action6);
+	auto res = std::make_shared<CoreActionMultiple>(
+		actionInitTurnData,
+		actionCalculateTrajectories,
+		actionFindPlayerCollisions,
+		actionFindBonusCollisions,
+		actionMovePlayers,
+		actionChangePlayersHp,
+		actionClearBonuses,
+		actionGenerateBonus
+	);
 	return res;
 }
 

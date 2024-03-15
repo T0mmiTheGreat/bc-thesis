@@ -32,12 +32,17 @@ private:
 	struct PlayerCollision {
 		double opponentStrength;
 	};
+	struct BonusCollision {
+		BonusId id;
+	};
 	struct PlayerTurn {
 		Trajectory trajectory;
 		std::vector<PlayerCollision> playerCollisions;
+		std::vector<BonusCollision> bonusCollisions;
 	};
 	struct TurnData {
 		std::unordered_map<PlayerId, PlayerTurn> playerTurns;
+		std::unordered_set<BonusId> collectedBonuses;
 	};
 	struct PlayerStateInternal {
 		Point_2 pos;
@@ -87,8 +92,10 @@ private:
 	std::shared_ptr<CoreAction> initTurnData(TurnData& turnData);
 	std::shared_ptr<CoreAction> calculateTrajectories(TurnData& turnData);
 	std::shared_ptr<CoreAction> findPlayerCollisions(TurnData& turnData);
+	std::shared_ptr<CoreAction> findBonusCollisions(TurnData& turnData);
 	std::shared_ptr<CoreAction> movePlayers(TurnData& turnData);
 	std::shared_ptr<CoreAction> changePlayersHp(TurnData& turnData);
+	std::shared_ptr<CoreAction> clearBonuses(TurnData& turnData);
 	std::shared_ptr<CoreAction> generateBonus(TurnData& turnData);
 
 	double getPlayerSize(PlayerId id) const;

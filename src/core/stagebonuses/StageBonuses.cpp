@@ -358,6 +358,7 @@ BonusId StageBonuses::generateBonus()
 
 void StageBonuses::clearBonus(BonusId id)
 {
+	m_bonuses.erase(id);
 	(void)id;
 	// TODO
 }

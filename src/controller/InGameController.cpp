@@ -171,6 +171,9 @@ void InGameController::updateSpritesByAction(
 		case CoreAction::ACTION_ADD_BONUS:
 			updateSpritesByActionAddBonus(action);
 			break;
+		case CoreAction::ACTION_REMOVE_BONUS:
+			updateSpritesByActionRemoveBonus(action);
+			break;
 	}
 }
 
@@ -258,6 +261,15 @@ void InGameController::updateSpritesByActionAddBonus(
 		std::dynamic_pointer_cast<CoreActionAddBonus>(action);
 	
 	createBonusSprite(actionCast->getId(), actionCast->getPos());
+}
+
+void InGameController::updateSpritesByActionRemoveBonus(
+	const std::shared_ptr<CoreAction> action)
+{
+	const auto actionCast =
+		std::dynamic_pointer_cast<CoreActionRemoveBonus>(action);
+	
+	m_bonusSprites.erase(actionCast->getId());
 }
 
 void InGameController::initializeViewport()
