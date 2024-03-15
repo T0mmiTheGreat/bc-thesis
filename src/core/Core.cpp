@@ -198,7 +198,7 @@ std::shared_ptr<CoreAction> Core::generateBonus(TurnData& turnData)
 #endif // ENABLE_BONUS_CONSTRAINTS
 
 		BonusId bonusId = m_stageBonuses->generateBonus();
-		const PointF& bonusPos = m_stageBonuses->getBonuses().at(bonusId);
+		const PointF& bonusPos = m_stageBonuses->getBonuses().at(bonusId).position;
 
 		auto res = std::make_shared<CoreActionAddBonus>(bonusId, bonusPos);
 		return res;

@@ -32,6 +32,17 @@
 #include "utilities/unorderedSetWithIndexes/UnorderedSetWithIndexes.hpp"
 
 class StageBonuses {
+public:
+	struct BonusData {
+		PointF position;
+		double hpRecovery;
+
+		BonusData(const PointF& position_, const double& hpRecovery_)
+			: position{position_}
+			, hpRecovery{hpRecovery_}
+		{}
+		BonusData() : BonusData(PointF(), 0.0) {}
+	};
 private:
 	typedef UnorderedSetWithIndexes<PointF, PointF::Hash> PointFSet;
 
@@ -45,7 +56,7 @@ private:
 
 	double m_gridOffsetX;
 	double m_gridOffsetY;
-	std::unordered_map<BonusId, PointF> m_bonuses;
+	std::unordered_map<BonusId, BonusData> m_bonuses;
 
 	// Rules:
 	//  This must be always true:
@@ -130,6 +141,10 @@ private:
 	 *          precisely.
 	 */
 	static double generateGridOffset();
+	/**
+	 * @brief Chooses random HP recovery amount for a bonus.
+	 */
+	static double generateHpRecovery();
 public:
 	/**
 	 * @brief Constructs a new StageBonuses object.
@@ -167,7 +182,7 @@ public:
 	/**
 	 * @brief Returns collection of bonuses.
 	 */
-	const std::unordered_map<BonusId, PointF>& getBonuses() const;
+	const std::unordered_map<BonusId, StageBonuses::BonusData>& getBonuses() const;
 };
 
 #endif // STAGEBONUSES_HPP

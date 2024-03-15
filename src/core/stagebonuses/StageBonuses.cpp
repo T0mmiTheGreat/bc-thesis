@@ -281,6 +281,25 @@ double StageBonuses::generateGridOffset()
 	return res;
 }
 
+double StageBonuses::generateHpRecovery()
+{
+	//  x   | 0.25 | 0.50 | 0.75 | 1.00
+	// p(x) | 2/8  | 3/8  | 2/8  | 1/8
+	// F(x) | 2/8  | 5/8  | 7/8  | 8/8
+
+	static std::uniform_int_distribution<int> distrib(0, 7);
+	int Fx = distrib(getRNGine());
+
+	if (Fx < 2)
+		return 0.25;
+	else if (Fx < 5)
+		return 0.5;
+	else if (Fx < 7)
+		return 0.75;
+	else
+		return 1.0;
+}
+
 StageBonuses::StageBonuses(const std::vector<StageObstacle>& obstacles,
 	const Size2d& stageSize)
 {
@@ -321,10 +340,13 @@ BonusId StageBonuses::generateBonus()
 		std::uniform_int_distribution<size_t> distrib(0,
 			m_validPositions.size() - 1);
 		size_t posIdx = distrib(getRNGine());
-		PointF pt = m_validPositions.atIndex(static_cast<size_t>(posIdx));
+		PointF position = m_validPositions.atIndex(static_cast<size_t>(posIdx));
+
+		// Choose HP recovery
+		double hpRecovery = generateHpRecovery();
 		
-		// Place
-		m_bonuses[id] = pt;
+		// Create
+		m_bonuses[id] = BonusData(position, hpRecovery);
 
 #ifdef ENABLE_BONUS_CONSTRAINTS
 		invalidateCircle(pt, 2*BONUS_RADIUS, m_bonusInvalidPositions);
@@ -340,7 +362,8 @@ void StageBonuses::clearBonus(BonusId id)
 	// TODO
 }
 
-const std::unordered_map<BonusId,PointF>& StageBonuses::getBonuses() const
+const std::unordered_map<BonusId, StageBonuses::BonusData>&
+StageBonuses::getBonuses() const
 {
 	return m_bonuses;
 }
