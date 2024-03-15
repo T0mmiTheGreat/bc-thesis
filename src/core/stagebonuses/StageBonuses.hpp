@@ -29,19 +29,20 @@
 #include "types.hpp"
 #include "core/Common.hpp"
 #include "core/playerstate/PlayerState.hpp"
+#include "core/bonuseffect/BonusEffect.hpp"
 #include "utilities/unorderedSetWithIndexes/UnorderedSetWithIndexes.hpp"
 
 class StageBonuses {
 public:
 	struct BonusData {
 		PointF position;
-		double hpRecovery;
+		BonusEffectHp::HpRecovery hpRecovery;
 
-		BonusData(const PointF& position_, const double& hpRecovery_)
+		BonusData(const PointF& position_, BonusEffectHp::HpRecovery hpRecovery_)
 			: position{position_}
 			, hpRecovery{hpRecovery_}
 		{}
-		BonusData() : BonusData(PointF(), 0.0) {}
+		BonusData() : BonusData(PointF(), BonusEffectHp::RECOVER_50) {}
 	};
 private:
 	typedef UnorderedSetWithIndexes<PointF, PointF::Hash> PointFSet;
@@ -144,7 +145,7 @@ private:
 	/**
 	 * @brief Chooses random HP recovery amount for a bonus.
 	 */
-	static double generateHpRecovery();
+	static BonusEffectHp::HpRecovery generateHpRecovery();
 public:
 	/**
 	 * @brief Constructs a new StageBonuses object.
@@ -178,6 +179,7 @@ public:
 	 * @param id ID of the removed bonus.
 	 */
 	void clearBonus(BonusId id);
+	std::shared_ptr<BonusEffect> getBonusEffect(BonusId id) const;
 
 	/**
 	 * @brief Returns collection of bonuses.

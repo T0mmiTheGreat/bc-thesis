@@ -78,7 +78,40 @@ std::shared_ptr<CoreAction> Core::initTurnData(TurnData& turnData)
 #endif
 			.playerCollisions = std::vector<PlayerCollision>(),
 			.bonusCollisions = std::vector<BonusCollision>(),
+			.effectAttributes = EffectAttributes(),
 		};
+	}
+
+	return std::make_shared<CoreActionNone>();
+}
+
+std::shared_ptr<CoreAction> Core::applyPlayerEffects(TurnData& turnData)
+{
+	for (auto& [id, turn] : turnData.playerTurns) {
+		auto& player = m_players[id];
+
+		// For each active bonus effect...
+		auto iter = player.bonusEffects.begin();
+		while (iter != player.bonusEffects.end()) {
+			// Access the effect object through iterator
+			auto& effect = *iter;
+			
+			// Apply
+			effect->applyEffect(turn.effectAttributes);
+
+			if (effect->isActive()) {
+				// Still active -- move on to the next one
+
+				iter++;
+			} else {
+				// The effect has run out -- erase it and then move on to the
+				// next one
+
+				// Note: `erase()` returns the iterator following the removed
+				// element
+				iter = player.bonusEffects.erase(iter);
+			}
+		}
 	}
 
 	return std::make_shared<CoreActionNone>();
@@ -189,9 +222,24 @@ std::shared_ptr<CoreAction> Core::changePlayersHp(TurnData& turnData)
 	for (auto& [id, playerTurn] : turnData.playerTurns) {
 		auto& player = m_players[id];
 
+		double hpDelta = 0.0;
+
+		// Decrement HP from player collisions
 		for (const auto& collision : playerTurn.playerCollisions) {
-			player.hp -= TICK_INTERVAL * collision.opponentStrength;
+			hpDelta -= TICK_INTERVAL * collision.opponentStrength;
 		}
+
+		// Increment HP from bonus effects
+		hpDelta += playerTurn.effectAttributes.getAttributeChangeHp();
+
+		// Don't grow if that would make you collide with an obstacle
+		if (m_stageObstacles->playerHasCollision(player.pos, getPlayerSize(
+			player.hp + hpDelta)))
+		{
+			hpDelta = 0.0;
+		}
+
+		player.hp += hpDelta;
 
 		// Add to actions list
 		actionSetPlayerHp = std::make_shared<CoreActionSetPlayerHp>(id,
@@ -211,6 +259,20 @@ std::shared_ptr<CoreAction> Core::changePlayersHp(TurnData& turnData)
 		actionsGroup2);
 	
 	return res;
+}
+
+std::shared_ptr<CoreAction> Core::applyBonusCollisions(TurnData& turnData)
+{
+	for (const auto& [id, turn] : turnData.playerTurns) {
+		auto& player = m_players[id];
+
+		for (const auto& coll : turn.bonusCollisions) {
+			auto effect = m_stageBonuses->getBonusEffect(coll.id);
+			player.bonusEffects.insert(effect);
+		}
+	}
+
+	return std::make_shared<CoreActionNone>();
 }
 
 std::shared_ptr<CoreAction> Core::clearBonuses(TurnData& turnData)
@@ -404,21 +466,25 @@ std::shared_ptr<CoreAction> Core::playersActions()
 	TurnData turnData;
 
 	auto actionInitTurnData = initTurnData(turnData);
+	auto actionApplyPlayerEffects = applyPlayerEffects(turnData);
 	auto actionCalculateTrajectories = calculateTrajectories(turnData);
 	auto actionFindPlayerCollisions = findPlayerCollisions(turnData);
 	auto actionFindBonusCollisions = findBonusCollisions(turnData);
 	auto actionMovePlayers = movePlayers(turnData);
 	auto actionChangePlayersHp = changePlayersHp(turnData);
+	auto actionApplyBonusCollisions = applyBonusCollisions(turnData);
 	auto actionClearBonuses = clearBonuses(turnData);
 	auto actionGenerateBonus = generateBonus(turnData);
 
 	auto res = std::make_shared<CoreActionMultiple>(
 		actionInitTurnData,
+		actionApplyPlayerEffects,
 		actionCalculateTrajectories,
 		actionFindPlayerCollisions,
 		actionFindBonusCollisions,
 		actionMovePlayers,
 		actionChangePlayersHp,
+		actionApplyBonusCollisions,
 		actionClearBonuses,
 		actionGenerateBonus
 	);

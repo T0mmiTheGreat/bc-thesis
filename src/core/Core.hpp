@@ -19,13 +19,15 @@
 
 #include "types.hpp"
 #include "core/Common.hpp"
-#include "core/geometry/Geometry.hpp"
-#include "core/stageobstacles/StageObstacles.hpp"
-#include "core/stagebonuses/StageBonuses.hpp"
-#include "stageserializer/IStageSerializer.hpp"
-#include "playerinput/IPlayerInput.hpp"
-#include "core/playerstate/PlayerState.hpp"
 #include "core/CoreAction.hpp"
+#include "core/bonuseffect/BonusEffect.hpp"
+#include "core/bonuseffect/EffectAttributes.hpp"
+#include "core/geometry/Geometry.hpp"
+#include "core/playerstate/PlayerState.hpp"
+#include "core/stagebonuses/StageBonuses.hpp"
+#include "core/stageobstacles/StageObstacles.hpp"
+#include "playerinput/IPlayerInput.hpp"
+#include "stageserializer/IStageSerializer.hpp"
 
 class Core {
 private:
@@ -39,6 +41,7 @@ private:
 		Trajectory trajectory;
 		std::vector<PlayerCollision> playerCollisions;
 		std::vector<BonusCollision> bonusCollisions;
+		EffectAttributes effectAttributes;
 	};
 	struct TurnData {
 		std::unordered_map<PlayerId, PlayerTurn> playerTurns;
@@ -47,6 +50,7 @@ private:
 	struct PlayerStateInternal {
 		Point_2 pos;
 		double hp;
+		std::unordered_set<std::shared_ptr<BonusEffect>> bonusEffects;
 		std::shared_ptr<IPlayerInput> input;
 	};
 private:
@@ -90,11 +94,13 @@ private:
 	 */
 	std::shared_ptr<CoreAction> playersActions();
 	std::shared_ptr<CoreAction> initTurnData(TurnData& turnData);
+	std::shared_ptr<CoreAction> applyPlayerEffects(TurnData& turnData);
 	std::shared_ptr<CoreAction> calculateTrajectories(TurnData& turnData);
 	std::shared_ptr<CoreAction> findPlayerCollisions(TurnData& turnData);
 	std::shared_ptr<CoreAction> findBonusCollisions(TurnData& turnData);
 	std::shared_ptr<CoreAction> movePlayers(TurnData& turnData);
 	std::shared_ptr<CoreAction> changePlayersHp(TurnData& turnData);
+	std::shared_ptr<CoreAction> applyBonusCollisions(TurnData& turnData);
 	std::shared_ptr<CoreAction> clearBonuses(TurnData& turnData);
 	std::shared_ptr<CoreAction> generateBonus(TurnData& turnData);
 

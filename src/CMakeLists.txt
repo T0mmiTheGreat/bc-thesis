@@ -75,6 +75,8 @@ set(SOURCE_FILES
 	core/stagebonuses/StageBonuses.cpp
 	core/trajectory/Trajectory.cpp
 	core/playerstate/PlayerState.cpp
+	core/bonuseffect/BonusEffect.cpp
+	core/bonuseffect/EffectAttributes.cpp
 	playerinput/PlayerInputFactory.cpp
 	playerinput/PlayerInputBase.cpp
 	playerinput/ImmobilePlayerInput.cpp
@@ -159,6 +161,8 @@ set(HEADER_FILES
 	core/trajectory/Trajectory.hpp
 	core/playerstate/PlayerState.hpp
 	core/geometry/Geometry.hpp
+	core/bonuseffect/BonusEffect.hpp
+	core/bonuseffect/EffectAttributes.hpp
 	playerinput/IPlayerInput.hpp
 	playerinput/PlayerInputFactory.hpp
 	playerinput/PlayerInputBase.hpp

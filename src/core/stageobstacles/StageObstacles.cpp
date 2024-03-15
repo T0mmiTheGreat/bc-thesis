@@ -186,6 +186,14 @@ Trajectory StageObstacles::getPlayerTrajectory(const Point_2& playerPos,
 	return res;
 }
 
+bool StageObstacles::playerHasCollision(const Point_2& playerPos,
+	double playerRadius)
+{
+	Triangle_2 devnull;
+	return findNearestCollision(m_collObjs, Segment_2(playerPos, playerPos),
+		playerRadius, devnull);
+}
+
 #else // OLD_TRAJECTORY_ALGORITHM
 
 #include "functions.hpp"

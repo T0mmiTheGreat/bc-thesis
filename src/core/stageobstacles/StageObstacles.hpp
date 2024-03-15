@@ -154,6 +154,11 @@ public:
 	 */
 	Trajectory getPlayerTrajectory(const Point_2& playerPos,
 		const Vector_2& playerMove, double playerRadius);
+	/**
+	 * @brief Checks whether a player at `playerPos` position having
+	 *        `playerRadius` radius collides with any collision object.
+	 */
+	bool playerHasCollision(const Point_2& playerPos, double playerRadius);
 };
 #endif // !OLD_TRAJECTORY_ALGORITHM
 

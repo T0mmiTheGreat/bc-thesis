@@ -281,7 +281,7 @@ double StageBonuses::generateGridOffset()
 	return res;
 }
 
-double StageBonuses::generateHpRecovery()
+BonusEffectHp::HpRecovery StageBonuses::generateHpRecovery()
 {
 	//  x   | 0.25 | 0.50 | 0.75 | 1.00
 	// p(x) | 2/8  | 3/8  | 2/8  | 1/8
@@ -291,13 +291,13 @@ double StageBonuses::generateHpRecovery()
 	int Fx = distrib(getRNGine());
 
 	if (Fx < 2)
-		return 0.25;
+		return BonusEffectHp::RECOVER_25;
 	else if (Fx < 5)
-		return 0.5;
+		return BonusEffectHp::RECOVER_50;
 	else if (Fx < 7)
-		return 0.75;
+		return BonusEffectHp::RECOVER_75;
 	else
-		return 1.0;
+		return BonusEffectHp::RECOVER_100;
 }
 
 StageBonuses::StageBonuses(const std::vector<StageObstacle>& obstacles,
@@ -343,7 +343,7 @@ BonusId StageBonuses::generateBonus()
 		PointF position = m_validPositions.atIndex(static_cast<size_t>(posIdx));
 
 		// Choose HP recovery
-		double hpRecovery = generateHpRecovery();
+		auto hpRecovery = generateHpRecovery();
 		
 		// Create
 		m_bonuses[id] = BonusData(position, hpRecovery);
@@ -359,8 +359,12 @@ BonusId StageBonuses::generateBonus()
 void StageBonuses::clearBonus(BonusId id)
 {
 	m_bonuses.erase(id);
-	(void)id;
-	// TODO
+}
+
+std::shared_ptr<BonusEffect> StageBonuses::getBonusEffect(BonusId id) const
+{
+	auto res = std::make_shared<BonusEffectHp>(m_bonuses.at(id).hpRecovery);
+	return res;
 }
 
 const std::unordered_map<BonusId, StageBonuses::BonusData>&
