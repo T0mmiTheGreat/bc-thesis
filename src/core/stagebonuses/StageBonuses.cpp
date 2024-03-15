@@ -367,6 +367,11 @@ std::shared_ptr<BonusEffect> StageBonuses::getBonusEffect(BonusId id) const
 	return res;
 }
 
+bool StageBonuses::canGenerateBonus() const
+{
+	return m_bonuses.empty();
+}
+
 const std::unordered_map<BonusId, StageBonuses::BonusData>&
 StageBonuses::getBonuses() const
 {

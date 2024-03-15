@@ -179,7 +179,15 @@ public:
 	 * @param id ID of the removed bonus.
 	 */
 	void clearBonus(BonusId id);
+	/**
+	 * @brief Creates effect which is caused by picking up a bonus.
+	 */
 	std::shared_ptr<BonusEffect> getBonusEffect(BonusId id) const;
+
+	/**
+	 * @brief Checks whether a bonus may be spawned.
+	 */
+	bool canGenerateBonus() const;
 
 	/**
 	 * @brief Returns collection of bonuses.

@@ -11,6 +11,7 @@
 
 #include "core/Core.hpp"
 
+#include "functions.hpp"
 #include "core/trajectory/Trajectory.hpp"
 #include "math/Math.hpp"
 
@@ -58,7 +59,7 @@ Core::Core(const std::shared_ptr<IStageSerializer> stage,
 	, m_stageInitializer{stage}
 	, m_playersInitializer{players}
 	, m_tickTimer(TICK_INTERVAL)
-	, m_bonusTimer(1000)
+	, m_bonusTimer{createNewBonusTimer()}
 {
 	assert(players.size() <= stage->getPlayers().size());
 }
@@ -284,6 +285,9 @@ std::shared_ptr<CoreAction> Core::clearBonuses(TurnData& turnData)
 		// Clear
 		m_stageBonuses->clearBonus(id);
 
+		// Reset timer
+		resetBonusTimer();
+
 		// Add to actions list
 		actionRemoveBonus = std::make_shared<CoreActionRemoveBonus>(id);
 		actionsGroup.push_back(std::move(actionRemoveBonus));
@@ -299,25 +303,43 @@ std::shared_ptr<CoreAction> Core::generateBonus(TurnData& turnData)
 {
 	(void)turnData;
 
-	if (m_bonusTimer.isLap()) {
+	if (m_stageBonuses->canGenerateBonus()) {
+		if (m_bonusTimer.isLap()) {
 #ifdef ENABLE_BONUS_CONSTRAINTS
-		auto playerStatesMap = getPlayerStates();
-		std::vector<PlayerState> playerStatesVec;
-		playerStatesVec.reserve(playerStatesMap.size());
-		for (const auto& [id, state] : playerStatesMap) {
-			playerStatesVec.push_back(state);
-		}
-		m_stageBonuses->reportPlayerStates(playerStatesVec);
+			auto playerStatesMap = getPlayerStates();
+			std::vector<PlayerState> playerStatesVec;
+			playerStatesVec.reserve(playerStatesMap.size());
+			for (const auto& [id, state] : playerStatesMap) {
+				playerStatesVec.push_back(state);
+			}
+			m_stageBonuses->reportPlayerStates(playerStatesVec);
 #endif // ENABLE_BONUS_CONSTRAINTS
 
-		BonusId bonusId = m_stageBonuses->generateBonus();
-		const PointF& bonusPos = m_stageBonuses->getBonuses().at(bonusId).position;
+			BonusId bonusId = m_stageBonuses->generateBonus();
+			const PointF& bonusPos = m_stageBonuses->getBonuses().at(bonusId).position;
 
-		auto res = std::make_shared<CoreActionAddBonus>(bonusId, bonusPos);
-		return res;
-	} else {
-		return std::make_shared<CoreActionNone>();
+			auto res = std::make_shared<CoreActionAddBonus>(bonusId, bonusPos);
+			return res;
+		}
 	}
+	
+	// Else
+	return std::make_shared<CoreActionNone>();
+}
+
+Timer Core::createNewBonusTimer()
+{
+	static constexpr double PARAM_ALPHA = 11.625;
+	static constexpr double PARAM_BETA = 0.6;
+	static std::gamma_distribution distrib(PARAM_ALPHA, PARAM_BETA);
+	
+	double interval = distrib(getRNGine());
+	return Timer(static_cast<std::clock_t>(interval * 1000.0));
+}
+
+void Core::resetBonusTimer()
+{
+	m_bonusTimer = createNewBonusTimer();
 }
 
 double Core::getPlayerSize(PlayerId id) const

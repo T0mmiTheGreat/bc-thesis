@@ -104,6 +104,9 @@ private:
 	std::shared_ptr<CoreAction> clearBonuses(TurnData& turnData);
 	std::shared_ptr<CoreAction> generateBonus(TurnData& turnData);
 
+	static Timer createNewBonusTimer();
+	void resetBonusTimer();
+
 	double getPlayerSize(PlayerId id) const;
 	static double getPlayerSize(double hp);
 	double getPlayerSpeed(PlayerId id) const;
