@@ -341,11 +341,11 @@ void InGameController::onLoop()
 void InGameController::onPaint(std::shared_ptr<ICanvas> canvas,
 	const Rect& invalidRect)
 {
-	for (auto& [id, spr] : m_bonusSprites) {
+	for (auto& [id, spr] : m_playerSprites) {
 		spr->repaint(canvas, invalidRect);
 	}
 
-	for (auto& [id, spr] : m_playerSprites) {
+	for (auto& [id, spr] : m_bonusSprites) {
 		spr->repaint(canvas, invalidRect);
 	}
 
