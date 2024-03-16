@@ -99,11 +99,11 @@ Rect StageSelectController::getCancelButtonRect()
 	Size2d screenSize = sysProxy->getPaintAreaSize();
 
 	// Horizontally centered
-	int x = (screenSize.w - OptionButtonSprite::BUTTON_WIDTH) / 2;
+	int x = (screenSize.w - OptionButtonSprite::BUTTON_SIZE_MENU.w) / 2;
 	int y = screenSize.h - CANCEL_BUTTON_BOTTOM_MARGIN
-		- OptionButtonSprite::BUTTON_HEIGHT;
-	Rect res(x, y, OptionButtonSprite::BUTTON_WIDTH,
-		OptionButtonSprite::BUTTON_HEIGHT);
+		- OptionButtonSprite::BUTTON_SIZE_MENU.h;
+	Rect res(x, y, OptionButtonSprite::BUTTON_SIZE_MENU.w,
+		OptionButtonSprite::BUTTON_SIZE_MENU.h);
 	return res;
 }
 

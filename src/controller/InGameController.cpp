@@ -13,6 +13,7 @@
 
 #include <memory>
 
+#include "controller/ControllerFactory.hpp"
 #include "core/Core.hpp"
 #include "playerinput/PlayerInputFactory.hpp"
 
@@ -73,6 +74,13 @@ void InGameController::createObstacleSprite(const PolygonF& shape)
 	m_obstacleSprites.push_back(std::move(obstacleSprite));
 }
 
+void InGameController::createSprites()
+{
+	createStageBoundsSprite();
+	createStatusBarSprite();
+	createExitBtnSprite();
+}
+
 void InGameController::createStageBoundsSprite()
 {
 	Size2d screenSize = sysProxy->getPaintAreaSize();
@@ -94,6 +102,47 @@ void InGameController::createStatusBarSprite()
 	m_statusBarSprite->setStrokingColor(Color::white());
 	m_statusBarSprite->setBorders(
 		OptionBarSprite::Borders(true, false, false, false));
+}
+
+void InGameController::createExitBtnSprite()
+{
+	Size2d screenSize = sysProxy->getPaintAreaSize();
+
+	m_exitBtnSprite = std::make_unique<OptionButtonSprite>(sysProxy);
+	m_exitBtnSprite->setSize(OptionButtonSprite::BUTTON_SIZE_NARROWED);
+
+	// Centered horizontally at the status bar
+	int spriteW = OptionButtonSprite::BUTTON_SIZE_NARROWED.w;
+	int spriteH = OptionButtonSprite::BUTTON_SIZE_NARROWED.h;
+	int spriteRight = (STATUS_BAR_WIDTH - spriteW) / 2;
+	int x = screenSize.w - spriteRight - spriteW;
+	int y = screenSize.h - EXIT_BTN_BOTTOM_MARGIN - spriteH;
+	m_exitBtnSprite->setPos(x, y);
+
+	m_exitBtnSprite->setText(EXIT_BTN_TEXT);
+
+	checkExitBtnMouseHover(sysProxy->getMousePos());
+}
+
+void InGameController::checkExitBtnMouseHover(const Point& mouse)
+{
+	if (m_exitBtnSprite->getBounds().containsPoint(mouse)) {
+		m_exitBtnSprite->setCostume(OptionButtonSprite::COSTUME_HOVER);
+	} else {
+		m_exitBtnSprite->setCostume(OptionButtonSprite::COSTUME_NORMAL);
+	}
+}
+
+void InGameController::checkExitBtnClick(const Point& mouse)
+{
+	if (m_exitBtnSprite->getBounds().containsPoint(mouse)) {
+		exitBtnClick();
+	}
+}
+
+void InGameController::exitBtnClick()
+{
+	finishedEvent();
 }
 
 void InGameController::updatePlayerPos(PlayerId id, const PointF& pos)
@@ -331,13 +380,17 @@ int InGameController::getPlayerHpTextHeight()
 	return sysProxy->getTextSize("Lorem ipsum", PLAYER_HP_FONT).h;
 }
 
+std::shared_ptr<IControllerChild> InGameController::createReplacement()
+{
+	return ControllerFactory::createMainMenuController(sysProxy);
+}
+
 void InGameController::onStarted()
 {
 	GeneralControllerBase::onStarted();
 
 	initializeViewport();
-	createStageBoundsSprite();
-	createStatusBarSprite();
+	createSprites();
 
 	// This will initialize the core
 	auto action = m_core->loopEvent();
@@ -348,6 +401,18 @@ void InGameController::onLoop()
 {
 	auto action = m_core->loopEvent();
 	updateSpritesByAction(action);
+}
+
+void InGameController::onMouseMove(int x, int y)
+{
+	checkExitBtnMouseHover(Point(x, y));
+}
+
+void InGameController::onMouseBtnDown(MouseBtn btn, int x, int y)
+{
+	if (btn == BTN_LEFT) {
+		checkExitBtnClick(Point(x, y));
+	}
 }
 
 void InGameController::onPaint(std::shared_ptr<ICanvas> canvas,
@@ -376,4 +441,6 @@ void InGameController::onPaint(std::shared_ptr<ICanvas> canvas,
 	for (auto& [id, spr] : m_playerHpTextSprites) {
 		spr->repaint(canvas, invalidRect);
 	}
+
+	m_exitBtnSprite->repaint(canvas, invalidRect);
 }

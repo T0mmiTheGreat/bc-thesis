@@ -26,25 +26,20 @@ public:
 		COSTUME_HOVER,
 	};
 private:
-	// Non-scaled rectangle width
-	static constexpr int RECT_WIDTH_NORMAL = 165;
-	// Non-scaled rectangle height
-	static constexpr int RECT_HEIGHT_NORMAL = 35;
-	// Scaled rectangle width
-	static constexpr int RECT_WIDTH_SCALED = 198;
-	// Scaled rectangle height
-	static constexpr int RECT_HEIGHT_SCALED = 42;
-
-	const FontId FONT = FONT_BRLNSTR_20;
+	static constexpr FontId FONT = FONT_BRLNSTR_20;
 
 	std::string m_text;
 	Costume m_costume;
+	Size2d m_size;
+
+	Size2d getSizeUnscaled() const;
 protected:
 	void repaintAsVisible(std::shared_ptr<ICanvas> canvas,
 		const Rect& invalidRect) override;
 public:
-	static constexpr int BUTTON_WIDTH = RECT_WIDTH_SCALED;
-	static constexpr int BUTTON_HEIGHT = RECT_HEIGHT_SCALED;
+	static constexpr Size2d BUTTON_SIZE_MENU = Size2d(198, 42);
+	static constexpr Size2d BUTTON_SIZE_NARROWED = Size2d(140,
+		BUTTON_SIZE_MENU.h);
 
 	OptionButtonSprite(std::shared_ptr<IPaintingProxy> paintingProxy);
 
@@ -57,6 +52,10 @@ public:
 	 *          to gain performance.
 	 */
 	Size2d getSize() override;
+	/**
+	 * @brief Setter for the `m_size`.
+	 */
+	void setSize(const Size2d& value);
 
 	/**
 	 * @brief Getter for the `m_text`.

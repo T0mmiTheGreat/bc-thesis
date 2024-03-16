@@ -28,6 +28,7 @@
 #include "sprite/BonusSprite.hpp"
 #include "sprite/HollowRectSprite.hpp"
 #include "sprite/OptionBarSprite.hpp"
+#include "sprite/OptionButtonSprite.hpp"
 #include "sprite/TextSprite.hpp"
 #include "stageserializer/IStageSerializer.hpp"
 #include "stageviewport/StageViewport.hpp"
@@ -42,11 +43,14 @@ private:
 	static constexpr int MIN_STAGE_BOTTOM_MARGIN = MIN_STAGE_TOP_MARGIN;
 
 	static constexpr int STATUS_BAR_WIDTH = 180;
+	static constexpr int EXIT_BTN_BOTTOM_MARGIN = 30;
 	static constexpr int PLAYER_HP_RIGHT_MARGIN = 14;
 	static constexpr int PLAYER_HP_TOP_MARGIN = 8;
 	static constexpr int PLAYER_HP_BOTTOM_MARGIN = PLAYER_HP_TOP_MARGIN;
 
 	static constexpr FontId PLAYER_HP_FONT = FONT_BRLNSTR_20;
+
+	static constexpr const char* EXIT_BTN_TEXT = "Quit";
 
 	std::unordered_map<PlayerId, std::unique_ptr<PlayerSprite>> m_playerSprites;
 	std::vector<std::unique_ptr<ObstacleSprite>> m_obstacleSprites;
@@ -58,6 +62,7 @@ private:
 	m_playerHpBgSprites;
 	std::unordered_map<PlayerId, std::unique_ptr<TextSprite>>
 	m_playerHpTextSprites;
+	std::unique_ptr<OptionButtonSprite> m_exitBtnSprite;
 
 	std::unique_ptr<Core> m_core;
 	std::unique_ptr<StageViewport> m_viewport;
@@ -67,8 +72,15 @@ private:
 	void createPlayerHpBgSprite(PlayerId id);
 	void createPlayerHpTextSprite(PlayerId id);
 	void createObstacleSprite(const PolygonF& shape);
+
+	void createSprites();
 	void createStageBoundsSprite();
 	void createStatusBarSprite();
+	void createExitBtnSprite();
+
+	void checkExitBtnMouseHover(const Point& mouse);
+	void checkExitBtnClick(const Point& mouse);
+	void exitBtnClick();
 
 	void updatePlayerPos(PlayerId id, const PointF& pos);
 	void updatePlayerHp(PlayerId id, double hp);
@@ -103,8 +115,12 @@ private:
 	Rect getPlayerHpBarRect(PlayerId playerId);
 	int getPlayerHpTextHeight();
 protected:
+	std::shared_ptr<IControllerChild> createReplacement() override;
+
 	void onStarted() override;
 	void onLoop() override;
+	void onMouseMove(int x, int y) override;
+	void onMouseBtnDown(MouseBtn btn, int x, int y) override;
 	void onPaint(std::shared_ptr<ICanvas> canvas,
 		const Rect& invalidRect) override;
 public:

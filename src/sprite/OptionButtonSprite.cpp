@@ -16,32 +16,52 @@ OptionButtonSprite::OptionButtonSprite(std::shared_ptr<IPaintingProxy> paintingP
 	, BoundedSpriteBase(paintingProxy)
 	, PositionedSpriteBase(paintingProxy)
 	, m_costume{COSTUME_NORMAL}
+	, m_size{BUTTON_SIZE_MENU}
 {}
 
 Size2d OptionButtonSprite::getSize()
 {
-	return Size2d(RECT_WIDTH_SCALED, RECT_HEIGHT_SCALED);
+	return propertyGetter(m_size);
 }
 
-void OptionButtonSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas, const Rect& invalidRect)
+void OptionButtonSprite::setSize(const Size2d& value)
+{
+	propertySetterComparable(m_size, value);
+}
+
+Size2d OptionButtonSprite::getSizeUnscaled() const
+{
+	static constexpr int MUL_V = 5, DIV_V = 6;
+
+	Size2d res((m_size.w * MUL_V) / DIV_V, (m_size.h * MUL_V) / DIV_V);
+	return res;
+}
+
+void OptionButtonSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas,
+	const Rect& invalidRect)
 {
 	(void)invalidRect;
 
-	Size2d spriteSize = getSize();
-
 	// Bounds
 	canvas->setStrokingColor(Color::white());
-	int rectW = ((m_costume == COSTUME_HOVER) ? RECT_WIDTH_SCALED : RECT_WIDTH_NORMAL);
-	int rectH = ((m_costume == COSTUME_HOVER) ? RECT_HEIGHT_SCALED : RECT_HEIGHT_NORMAL);
-	int rectX = x + ((spriteSize.w - rectW) / 2);
-	int rectY = y + ((spriteSize.h - rectH) / 2);
-	canvas->strokeRectangle(rectX, rectY, rectW, rectH);
+	Rect hitboxRect(getX(), getY(), getSize()), boundsRect;
+	switch (m_costume) {
+		case COSTUME_NORMAL:
+			boundsRect = Rect(0, 0, getSizeUnscaled());
+			boundsRect.centerAt(hitboxRect);
+			break;
+		case COSTUME_HOVER:
+			boundsRect = hitboxRect;
+			break;
+	}
+	canvas->strokeRectangle(boundsRect.x, boundsRect.y, boundsRect.w,
+		boundsRect.h);
 
 	// Text
 	canvas->setFillingColor(Color::white());
 	Size2d textSize = paintingProxy->getTextSize(m_text, FONT);
-	int textX = x + ((spriteSize.w - textSize.w) / 2);
-	int textY = y + ((spriteSize.h - textSize.h) / 2);
+	int textX = x + ((hitboxRect.w - textSize.w) / 2);
+	int textY = y + ((hitboxRect.h - textSize.h) / 2);
 	canvas->fillText(textX, textY, m_text, FONT);
 }
 

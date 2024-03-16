@@ -16,10 +16,10 @@
 Rect StagePropertiesController::getOkBtnRect()
 {
 	Rect res(
-		(sysProxy->getPaintAreaSize().w - OptionButtonSprite::BUTTON_WIDTH) / 2,
+		(sysProxy->getPaintAreaSize().w - OptionButtonSprite::BUTTON_SIZE_MENU.w) / 2,
 		BUTTONS_TOP,
-		OptionButtonSprite::BUTTON_WIDTH,
-		OptionButtonSprite::BUTTON_HEIGHT
+		OptionButtonSprite::BUTTON_SIZE_MENU.w,
+		OptionButtonSprite::BUTTON_SIZE_MENU.h
 	);
 	return res;
 }
@@ -27,11 +27,11 @@ Rect StagePropertiesController::getOkBtnRect()
 Rect StagePropertiesController::getCancelBtnRect()
 {
 	Rect res(
-		(sysProxy->getPaintAreaSize().w - OptionButtonSprite::BUTTON_WIDTH) / 2,
+		(sysProxy->getPaintAreaSize().w - OptionButtonSprite::BUTTON_SIZE_MENU.w) / 2,
 		// Top      + height of OK btn                + the space between buttons
-		BUTTONS_TOP + OptionButtonSprite::BUTTON_HEIGHT + BUTTONS_SPACING,
-		OptionButtonSprite::BUTTON_WIDTH,
-		OptionButtonSprite::BUTTON_HEIGHT
+		BUTTONS_TOP + OptionButtonSprite::BUTTON_SIZE_MENU.h + BUTTONS_SPACING,
+		OptionButtonSprite::BUTTON_SIZE_MENU.w,
+		OptionButtonSprite::BUTTON_SIZE_MENU.h
 	);
 	return res;
 }
