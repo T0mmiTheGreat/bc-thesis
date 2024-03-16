@@ -1029,8 +1029,8 @@ struct PolygonF {
 
 			if (p0.y <= pt.y && pt.y < p1.y) {
 				// The line intersects this edge. Also, the line and the edge
-				// are not collinear, because the edge is not parallel to the
-				// Y axis -- `p0.y < p1.y`
+				// are not collinear, because the edge is not perpendicular to
+				// the Y axis -- `p0.y < p1.y`
 
 				// v1 = p1 - p0
 				// v2 = pt - p0

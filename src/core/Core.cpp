@@ -68,10 +68,9 @@ std::shared_ptr<CoreAction> Core::initTurnData(TurnData& turnData)
 {
 	turnData.playerTurns.reserve(m_players.size());
 	
-	for (const auto& [id, state] : m_players) {
-		(void)state;
-
+	for (auto& [id, state] : m_players) {
 		turnData.playerTurns[id] = PlayerTurn{
+			.playerRef = &state,
 #ifndef OLD_TRAJECTORY_ALGORITHM
 			.trajectory = Trajectory(state.pos),
 #else
@@ -89,7 +88,7 @@ std::shared_ptr<CoreAction> Core::initTurnData(TurnData& turnData)
 std::shared_ptr<CoreAction> Core::applyPlayerEffects(TurnData& turnData)
 {
 	for (auto& [id, turn] : turnData.playerTurns) {
-		auto& player = m_players[id];
+		auto& player = *turn.playerRef;
 
 		// For each active bonus effect...
 		auto iter = player.bonusEffects.begin();
@@ -137,148 +136,53 @@ std::shared_ptr<CoreAction> Core::calculateTrajectories(TurnData& turnData)
 	return std::make_shared<CoreActionNone>();
 }
 
-std::shared_ptr<CoreAction> Core::findPlayerCollisions(TurnData& turnData)
-{
-	for (auto& [idA, playerTurnA] : turnData.playerTurns) {
-		for (auto& [idB, playerTurnB] : turnData.playerTurns) {
-			if (idA != idB) { // A player cannot collide with itself
-				// Minimum distance between players' trajectories
-				double minSqdist = playerTurnA.trajectory.minSqdist(
-					playerTurnB.trajectory);
-				// Square of sum of the players' sizes
-				double playerSqsizes = sqr(getPlayerSize(idA)
-					+ getPlayerSize(idB));
-				if (minSqdist <= playerSqsizes) {
-					// Add collision with B to A's player collisions
-					PlayerCollision collision = {
-						.opponentStrength = getPlayerStrength(idB)
-					};
-					playerTurnA.playerCollisions.push_back(collision);
-				}
-			}
-		}
-	}
-
-	return std::make_shared<CoreActionNone>();
-}
-
-std::shared_ptr<CoreAction> Core::findBonusCollisions(TurnData& turnData)
-{
-	const auto& bonuses = m_stageBonuses->getBonuses();
-
-	for (auto& [playerId, playerTurn] : turnData.playerTurns) {
-		for (const auto& [bonusId, bonusData] : bonuses) {
-			// Create zero length trajectory representing the movement of the
-			// bonus (it doesn't move, but we need the trajectory).
-			Trajectory bonusTraj(toCgalPoint(bonusData.position));
-			// Minimum distance between the player's and bonus's trajectories
-			double minSqdist = playerTurn.trajectory.minSqdist(bonusTraj);
-			// Square of sum of the player's and bonus's size
-			double sqSizes = sqr(getPlayerSize(playerId) + BONUS_RADIUS);
-			if (minSqdist <= sqSizes) {
-				// Add the collision to the player's bonus collisions
-				BonusCollision collision = {.id = bonusId};
-				playerTurn.bonusCollisions.push_back(std::move(collision));
-				// Add the collision to turn data
-				turnData.collectedBonuses.insert(bonusId);
-			}
-		}
-	}
-
-	return std::make_shared<CoreActionNone>();
-}
-
-std::shared_ptr<CoreAction> Core::movePlayers(TurnData& turnData)
+std::shared_ptr<CoreAction> Core::findPlayerAndBonusCollisions(
+	TurnData& turnData)
 {
 	CoreActionMultiple::ActionsCollection actionsGroup;
-	std::shared_ptr<CoreActionSetPlayerPos> actionSetPlayerPos;
+	std::shared_ptr<CoreAction> actionFindPlayerPlayerCollisions,
+		actionFindPlayerBonusCollisions;
 
 	for (auto& [id, playerTurn] : turnData.playerTurns) {
-		auto& player = m_players[id];
-
-		// Move player
-#ifndef OLD_TRAJECTORY_ALGORITHM
-		player.pos = playerTurn.trajectory.end();
-#else
-		player.pos = playerTurn.trajectory.last().getPEnd();
-#endif
-
+		actionFindPlayerPlayerCollisions = findPlayerPlayerCollisions(id,
+			playerTurn, turnData);
+		actionFindPlayerBonusCollisions = findPlayerBonusCollisions(id,
+			playerTurn, turnData);
+		
 		// Add to actions list
-		actionSetPlayerPos = std::make_shared<CoreActionSetPlayerPos>(id,
-			fromCgalPoint(player.pos));
-		actionsGroup.push_back(actionSetPlayerPos);
-	}
-
-	auto res = std::make_shared<CoreActionMultiple>(actionsGroup);
-	return res;
-}
-
-std::shared_ptr<CoreAction> Core::changePlayersHp(TurnData& turnData)
-{
-	CoreActionMultiple::ActionsCollection actionSetPlayerHpGroup;
-	std::shared_ptr<CoreActionSetPlayerHp> actionSetPlayerHp;
-	CoreActionMultiple::ActionsCollection actionSetPlayerSizeGroup;
-	std::shared_ptr<CoreActionSetPlayerSize> actionSetPlayerSize;
-
-	for (auto& [id, playerTurn] : turnData.playerTurns) {
-		auto& player = m_players[id];
-
-		double hpDelta = 0.0;
-
-		// Decrement HP from player collisions
-		for (const auto& collision : playerTurn.playerCollisions) {
-			hpDelta -= TICK_INTERVAL * collision.opponentStrength;
-		}
-
-		// Decrement HP from "deflate"
-		if (player.input->readInput().deflate) {
-			hpDelta -= DEFLATE_AMOUNT;
-		}
-
-		// Increment HP from bonus effects
-		hpDelta += playerTurn.effectAttributes.getAttributeChangeHp();
-
-		// Don't grow if that would make you collide with an obstacle
-		if (m_stageObstacles->playerHasCollision(player.pos, getPlayerSize(
-			player.hp + hpDelta)))
-		{
-			hpDelta = 0.0;
-		}
-
-		player.hp += hpDelta;
-
-		// Add to actions list
-		actionSetPlayerHp = std::make_shared<CoreActionSetPlayerHp>(id,
-			player.hp * PLAYER_HP_FACTOR);
-		actionSetPlayerSize = std::make_shared<CoreActionSetPlayerSize>(id,
-			getPlayerSize(player.hp));
-		actionSetPlayerHpGroup.push_back(actionSetPlayerHp);
-		actionSetPlayerSizeGroup.push_back(actionSetPlayerSize);
+		actionsGroup.push_back(actionFindPlayerPlayerCollisions);
+		actionsGroup.push_back(actionFindPlayerBonusCollisions);
 	}
 
 	// Merge
-	auto actionsGroup1 = std::make_shared<CoreActionMultiple>(
-		actionSetPlayerHpGroup);
-	auto actionsGroup2 = std::make_shared<CoreActionMultiple>(
-		actionSetPlayerSizeGroup);
-	auto res = std::make_shared<CoreActionMultiple>(actionsGroup1,
-		actionsGroup2);
-	
+	auto res = std::make_shared<CoreActionMultiple>(
+		actionFindPlayerPlayerCollisions, actionFindPlayerBonusCollisions);
+
 	return res;
 }
 
-std::shared_ptr<CoreAction> Core::applyBonusCollisions(TurnData& turnData)
+std::shared_ptr<CoreAction> Core::updatePlayersStates(TurnData& turnData)
 {
-	for (const auto& [id, turn] : turnData.playerTurns) {
-		auto& player = m_players[id];
-
-		for (const auto& coll : turn.bonusCollisions) {
-			auto effect = m_stageBonuses->getBonusEffect(coll.id);
-			player.bonusEffects.insert(effect);
-		}
+	CoreActionMultiple::ActionsCollection actionsGroup;
+	std::shared_ptr<CoreAction> actionMovePlayer, actionChangePlayerHp,
+		actionApplyPlayerBonusCollisions;
+	
+	for (auto& [id, playerTurn] : turnData.playerTurns) {
+		actionMovePlayer = movePlayer(id, playerTurn, turnData);
+		actionChangePlayerHp = changePlayerHp(id, playerTurn, turnData);
+		actionApplyPlayerBonusCollisions = applyPlayerBonusCollisions(id,
+			playerTurn, turnData);
+		
+		// Add to actions list
+		actionsGroup.push_back(actionMovePlayer);
+		actionsGroup.push_back(actionChangePlayerHp);
+		actionsGroup.push_back(actionApplyPlayerBonusCollisions);
 	}
 
-	return std::make_shared<CoreActionNone>();
+	// Merge
+	auto res = std::make_shared<CoreActionMultiple>(actionsGroup);
+
+	return res;
 }
 
 std::shared_ptr<CoreAction> Core::clearBonuses(TurnData& turnData)
@@ -329,6 +233,150 @@ std::shared_ptr<CoreAction> Core::generateBonus(TurnData& turnData)
 	}
 	
 	// Else
+	return std::make_shared<CoreActionNone>();
+}
+
+std::shared_ptr<CoreAction> Core::findPlayerPlayerCollisions(PlayerId id,
+	PlayerTurn& playerTurn, TurnData& turnData)
+{
+	// Aliases
+	PlayerId& idA = id;
+	PlayerTurn& playerTurnA = playerTurn;
+
+	for (const auto& [idB, playerTurnB] : turnData.playerTurns) {
+		if (idA == idB) continue; // A player cannot collide with itself
+
+		// Minimum distance between players' trajectories
+		double minSqdist = playerTurnA.trajectory.minSqdist(
+			playerTurnB.trajectory);
+		// Square of sum of the players' sizes
+		double playerSqsizes = sqr(getPlayerSize(idA) + getPlayerSize(idB));
+
+		if (minSqdist <= playerSqsizes) {
+			// Add collision with B to A's player collisions
+			PlayerCollision collision = {
+				.opponentStrength = getPlayerStrength(idB)
+			};
+			playerTurnA.playerCollisions.push_back(collision);
+		}
+	}
+
+	return std::make_shared<CoreActionNone>();
+}
+
+std::shared_ptr<CoreAction> Core::findPlayerBonusCollisions(PlayerId id,
+	PlayerTurn& playerTurn, TurnData& turnData)
+{
+	// Alias
+	PlayerId& playerId = id;
+
+	for (const auto& [bonusId, bonusData] : m_stageBonuses->getBonuses()) {
+		// Create zero length trajectory representing the movement of the
+		// bonus (it doesn't move, but we need the trajectory).
+		Trajectory bonusTraj(toCgalPoint(bonusData.position));
+
+		// Minimum distance between the player's and bonus's trajectories
+		double minSqdist = playerTurn.trajectory.minSqdist(bonusTraj);
+		// Square of sum of the player's and bonus's size
+		double sqSizes = sqr(getPlayerSize(playerId) + BONUS_RADIUS);
+
+		if (minSqdist <= sqSizes) {
+			// Add the collision to the player's bonus collisions
+			BonusCollision collision = {.id = bonusId};
+			playerTurn.bonusCollisions.push_back(std::move(collision));
+
+			// Add the collision to turn data
+			turnData.collectedBonuses.insert(bonusId);
+		}
+	}
+
+	return std::make_shared<CoreActionNone>();
+}
+
+std::shared_ptr<CoreAction> Core::movePlayer(PlayerId id,
+	PlayerTurn& playerTurn, TurnData& turnData)
+{
+	(void)turnData;
+
+	// Alias
+	auto& player = *playerTurn.playerRef;
+
+	// Move player
+#ifndef OLD_TRAJECTORY_ALGORITHM
+	player.pos = playerTurn.trajectory.end();
+#else
+	player.pos = playerTurn.trajectory.last().getPEnd();
+#endif
+
+	// Create action
+	auto res = std::make_shared<CoreActionSetPlayerPos>(id,
+		fromCgalPoint(player.pos));
+	
+	return res;
+}
+
+std::shared_ptr<CoreAction> Core::changePlayerHp(PlayerId id,
+	PlayerTurn& playerTurn, TurnData& turnData)
+{
+	(void)turnData;
+
+	// Alias
+	auto& player = *playerTurn.playerRef;
+
+	std::shared_ptr<CoreActionSetPlayerHp> actionSetPlayerHp;
+	std::shared_ptr<CoreActionSetPlayerSize> actionSetPlayerSize;
+
+	double hpDelta = 0.0;
+
+	// Decrement HP from player collisions
+	for (const auto& collision : playerTurn.playerCollisions) {
+		hpDelta -= TICK_INTERVAL * collision.opponentStrength;
+	}
+
+	// Decrement HP from "deflate"
+	if (player.input->readInput().deflate) {
+		hpDelta -= DEFLATE_AMOUNT;
+	}
+
+	// Increment HP from bonus effects
+	hpDelta += playerTurn.effectAttributes.getAttributeChangeHp();
+
+	// Don't grow if that would make you collide with an obstacle
+	if (m_stageObstacles->playerHasCollision(player.pos, getPlayerSize(
+		player.hp + hpDelta)))
+	{
+		hpDelta = 0.0;
+	}
+
+	player.hp += hpDelta;
+
+	// Create actions
+	actionSetPlayerHp = std::make_shared<CoreActionSetPlayerHp>(id,
+		player.hp * PLAYER_HP_FACTOR);
+	actionSetPlayerSize = std::make_shared<CoreActionSetPlayerSize>(id,
+		getPlayerSize(player.hp));
+
+	// Merge
+	auto res = std::make_shared<CoreActionMultiple>(actionSetPlayerHp,
+		actionSetPlayerSize);
+	
+	return res;
+}
+
+std::shared_ptr<CoreAction> Core::applyPlayerBonusCollisions(PlayerId id,
+	PlayerTurn& playerTurn, TurnData& turnData)
+{
+	(void)id;
+	(void)turnData;
+
+	// Alias
+	auto& player = *playerTurn.playerRef;
+
+	for (const auto& coll : playerTurn.bonusCollisions) {
+		auto effect = m_stageBonuses->getBonusEffect(coll.id);
+		player.bonusEffects.insert(effect);
+	}
+
 	return std::make_shared<CoreActionNone>();
 }
 
@@ -495,11 +543,9 @@ std::shared_ptr<CoreAction> Core::playersActions()
 	auto actionInitTurnData = initTurnData(turnData);
 	auto actionApplyPlayerEffects = applyPlayerEffects(turnData);
 	auto actionCalculateTrajectories = calculateTrajectories(turnData);
-	auto actionFindPlayerCollisions = findPlayerCollisions(turnData);
-	auto actionFindBonusCollisions = findBonusCollisions(turnData);
-	auto actionMovePlayers = movePlayers(turnData);
-	auto actionChangePlayersHp = changePlayersHp(turnData);
-	auto actionApplyBonusCollisions = applyBonusCollisions(turnData);
+	auto actionFindPlayerAndBonusCollisions =
+		findPlayerAndBonusCollisions(turnData);
+	auto actionUpdatePlayersStates = updatePlayersStates(turnData);
 	auto actionClearBonuses = clearBonuses(turnData);
 	auto actionGenerateBonus = generateBonus(turnData);
 
@@ -507,11 +553,8 @@ std::shared_ptr<CoreAction> Core::playersActions()
 		actionInitTurnData,
 		actionApplyPlayerEffects,
 		actionCalculateTrajectories,
-		actionFindPlayerCollisions,
-		actionFindBonusCollisions,
-		actionMovePlayers,
-		actionChangePlayersHp,
-		actionApplyBonusCollisions,
+		actionFindPlayerAndBonusCollisions,
+		actionUpdatePlayersStates,
 		actionClearBonuses,
 		actionGenerateBonus
 	);
