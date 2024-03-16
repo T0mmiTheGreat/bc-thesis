@@ -64,7 +64,7 @@ Core::Core(const std::shared_ptr<IStageSerializer> stage,
 	assert(players.size() <= stage->getPlayers().size());
 }
 
-std::shared_ptr<CoreAction> Core::initTurnData(TurnData& turnData)
+CoreActionPtr Core::initTurnData(TurnData& turnData)
 {
 	turnData.playerTurns.reserve(m_players.size());
 	
@@ -85,7 +85,7 @@ std::shared_ptr<CoreAction> Core::initTurnData(TurnData& turnData)
 	return std::make_shared<CoreActionNone>();
 }
 
-std::shared_ptr<CoreAction> Core::applyPlayerEffects(TurnData& turnData)
+CoreActionPtr Core::applyPlayerEffects(TurnData& turnData)
 {
 	for (auto& [id, turn] : turnData.playerTurns) {
 		auto& player = *turn.playerRef;
@@ -117,7 +117,7 @@ std::shared_ptr<CoreAction> Core::applyPlayerEffects(TurnData& turnData)
 	return std::make_shared<CoreActionNone>();
 }
 
-std::shared_ptr<CoreAction> Core::calculateTrajectories(TurnData& turnData)
+CoreActionPtr Core::calculateTrajectories(TurnData& turnData)
 {
 	double vx, vy;
 	Point_2 source;
@@ -136,11 +136,11 @@ std::shared_ptr<CoreAction> Core::calculateTrajectories(TurnData& turnData)
 	return std::make_shared<CoreActionNone>();
 }
 
-std::shared_ptr<CoreAction> Core::findPlayerAndBonusCollisions(
+CoreActionPtr Core::findPlayerAndBonusCollisions(
 	TurnData& turnData)
 {
 	CoreActionMultiple::ActionsCollection actionsGroup;
-	std::shared_ptr<CoreAction> actionFindPlayerPlayerCollisions,
+	CoreActionPtr actionFindPlayerPlayerCollisions,
 		actionFindPlayerBonusCollisions;
 
 	for (auto& [id, playerTurn] : turnData.playerTurns) {
@@ -155,16 +155,15 @@ std::shared_ptr<CoreAction> Core::findPlayerAndBonusCollisions(
 	}
 
 	// Merge
-	auto res = std::make_shared<CoreActionMultiple>(
-		actionFindPlayerPlayerCollisions, actionFindPlayerBonusCollisions);
+	auto res = CoreActionMultiple::getMergedActions(actionsGroup);
 
 	return res;
 }
 
-std::shared_ptr<CoreAction> Core::updatePlayersStates(TurnData& turnData)
+CoreActionPtr Core::updatePlayersStates(TurnData& turnData)
 {
 	CoreActionMultiple::ActionsCollection actionsGroup;
-	std::shared_ptr<CoreAction> actionMovePlayer, actionChangePlayerHp,
+	CoreActionPtr actionMovePlayer, actionChangePlayerHp,
 		actionApplyPlayerBonusCollisions;
 	
 	for (auto& [id, playerTurn] : turnData.playerTurns) {
@@ -180,14 +179,14 @@ std::shared_ptr<CoreAction> Core::updatePlayersStates(TurnData& turnData)
 	}
 
 	// Merge
-	auto res = std::make_shared<CoreActionMultiple>(actionsGroup);
+	auto res = CoreActionMultiple::getMergedActions(actionsGroup);
 
 	return res;
 }
 
-std::shared_ptr<CoreAction> Core::clearBonuses(TurnData& turnData)
+CoreActionPtr Core::clearBonuses(TurnData& turnData)
 {
-	std::vector<std::shared_ptr<CoreAction>> actionsGroup;
+	std::vector<CoreActionPtr> actionsGroup;
 	std::shared_ptr<CoreActionRemoveBonus> actionRemoveBonus;
 
 	for (BonusId id : turnData.collectedBonuses) {
@@ -203,12 +202,12 @@ std::shared_ptr<CoreAction> Core::clearBonuses(TurnData& turnData)
 	}
 
 	// Merge
-	auto res = std::make_shared<CoreActionMultiple>(actionsGroup);
+	auto res = CoreActionMultiple::getMergedActions(actionsGroup);
 
 	return res;
 }
 
-std::shared_ptr<CoreAction> Core::generateBonus(TurnData& turnData)
+CoreActionPtr Core::generateBonus(TurnData& turnData)
 {
 	(void)turnData;
 
@@ -236,7 +235,7 @@ std::shared_ptr<CoreAction> Core::generateBonus(TurnData& turnData)
 	return std::make_shared<CoreActionNone>();
 }
 
-std::shared_ptr<CoreAction> Core::findPlayerPlayerCollisions(PlayerId id,
+CoreActionPtr Core::findPlayerPlayerCollisions(PlayerId id,
 	PlayerTurn& playerTurn, TurnData& turnData)
 {
 	// Aliases
@@ -264,7 +263,7 @@ std::shared_ptr<CoreAction> Core::findPlayerPlayerCollisions(PlayerId id,
 	return std::make_shared<CoreActionNone>();
 }
 
-std::shared_ptr<CoreAction> Core::findPlayerBonusCollisions(PlayerId id,
+CoreActionPtr Core::findPlayerBonusCollisions(PlayerId id,
 	PlayerTurn& playerTurn, TurnData& turnData)
 {
 	// Alias
@@ -293,7 +292,7 @@ std::shared_ptr<CoreAction> Core::findPlayerBonusCollisions(PlayerId id,
 	return std::make_shared<CoreActionNone>();
 }
 
-std::shared_ptr<CoreAction> Core::movePlayer(PlayerId id,
+CoreActionPtr Core::movePlayer(PlayerId id,
 	PlayerTurn& playerTurn, TurnData& turnData)
 {
 	(void)turnData;
@@ -315,7 +314,7 @@ std::shared_ptr<CoreAction> Core::movePlayer(PlayerId id,
 	return res;
 }
 
-std::shared_ptr<CoreAction> Core::changePlayerHp(PlayerId id,
+CoreActionPtr Core::changePlayerHp(PlayerId id,
 	PlayerTurn& playerTurn, TurnData& turnData)
 {
 	(void)turnData;
@@ -357,13 +356,13 @@ std::shared_ptr<CoreAction> Core::changePlayerHp(PlayerId id,
 		getPlayerSize(player.hp));
 
 	// Merge
-	auto res = std::make_shared<CoreActionMultiple>(actionSetPlayerHp,
+	auto res = CoreActionMultiple::getMergedActions(actionSetPlayerHp,
 		actionSetPlayerSize);
 	
 	return res;
 }
 
-std::shared_ptr<CoreAction> Core::applyPlayerBonusCollisions(PlayerId id,
+CoreActionPtr Core::applyPlayerBonusCollisions(PlayerId id,
 	PlayerTurn& playerTurn, TurnData& turnData)
 {
 	(void)id;
@@ -463,7 +462,7 @@ void Core::getPlayerMovementVector(const PlayerInputFlags& inputFlags,
 	y *= speed * TICK_INTERVAL;
 }
 
-std::shared_ptr<CoreAction> Core::initializeStage()
+CoreActionPtr Core::initializeStage()
 {
 	PlayerStateInternal newPlayer;
 
@@ -521,22 +520,22 @@ std::shared_ptr<CoreAction> Core::initializeStage()
 	actionSetStageSize = std::make_shared<CoreActionSetStageSize>(bounds);
 	
 	// Merge
-	auto actionsGroup1 = std::make_shared<CoreActionMultiple>(
+	auto actionsGroup1 = CoreActionMultiple::getMergedActions(
 		actionPlayerGroup);
-	auto actionsGroup2 = std::make_shared<CoreActionMultiple>(
+	auto actionsGroup2 = CoreActionMultiple::getMergedActions(
 		actionObstacleGroup);
-	auto res = std::make_shared<CoreActionMultiple>(actionsGroup1,
+	auto res = CoreActionMultiple::getMergedActions(actionsGroup1,
 		actionsGroup2, actionSetStageSize);
 	
 	return res;
 }
 
-std::shared_ptr<CoreAction> Core::tick()
+CoreActionPtr Core::tick()
 {
 	return playersActions();
 }
 
-std::shared_ptr<CoreAction> Core::playersActions()
+CoreActionPtr Core::playersActions()
 {
 	TurnData turnData;
 
@@ -549,7 +548,7 @@ std::shared_ptr<CoreAction> Core::playersActions()
 	auto actionClearBonuses = clearBonuses(turnData);
 	auto actionGenerateBonus = generateBonus(turnData);
 
-	auto res = std::make_shared<CoreActionMultiple>(
+	auto res = CoreActionMultiple::getMergedActions(
 		actionInitTurnData,
 		actionApplyPlayerEffects,
 		actionCalculateTrajectories,
@@ -561,7 +560,7 @@ std::shared_ptr<CoreAction> Core::playersActions()
 	return res;
 }
 
-const std::shared_ptr<CoreAction> Core::loopEvent()
+const CoreActionPtr Core::loopEvent()
 {
 	if (!m_isInitialized) {
 		// This should happen only once -- `initializeStage()` changes the flag

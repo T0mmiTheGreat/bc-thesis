@@ -48,6 +48,8 @@ public:
 	virtual ActionType getType() const = 0;
 };
 
+typedef std::shared_ptr<CoreAction> CoreActionPtr;
+
 /**
  * @brief Class which inherits from CoreAction.
  */
@@ -74,7 +76,7 @@ public:
  */
 class CoreActionMultiple : public CoreAction {
 public:
-	typedef std::vector<std::shared_ptr<CoreAction>> ActionsCollection;
+	typedef std::vector<CoreActionPtr> ActionsCollection;
 private:
 	ActionsCollection m_actions;
 public:
@@ -107,6 +109,60 @@ public:
 	CoreActionMultiple(ActionsCollection&& actions)
 		: m_actions{std::move(actions)}
 	{}
+
+
+
+	/**
+	 * @brief Creates one action from multiple actions.
+	 * 
+	 * @details The action is created using the following rules:
+	 *            - If no action is passed, or all actions are of type
+	 *              ACTION_NONE, CoreActionNone is returned.
+	 *            - If one action is passed, or all actions except one are of
+	 *              type ACTION_NONE, the one action is returned.
+	 *            - If multiple actions are passed and at least two of them are
+	 *              not of type ACTION_NONE, CoreActionMultiple is
+	 *              returned containing only those actions which are not NONE.
+	 * 
+	 * @param actions The actions to merge.
+	 */
+	static CoreActionPtr getMergedActions(
+		const std::vector<CoreActionPtr>& actions)
+	{
+		std::vector<CoreActionPtr> actionsGroup;
+
+		for (auto& a : actions) {
+			if (a->getType() != CoreAction::ACTION_NONE) {
+				actionsGroup.push_back(a);
+			}
+		}
+
+		if (actionsGroup.empty()) {
+			return std::make_shared<CoreActionNone>();
+		} else if (actionsGroup.size() == 1) {
+			return actionsGroup[0];
+		} else {
+			auto res = std::make_shared<CoreActionMultiple>(
+				std::move(actionsGroup));
+			return res;
+		}
+	}
+
+	/**
+	 * @brief Creates one action from multiple actions.
+	 * 
+	 * @copydetail CoreActionMultiple::getMergedActions(std::vector<CoreActionPtr>)
+	 * 
+	 * @tparam Args CoreAction descendants.
+	 * @param actions The actions to merge.
+	 */
+	template <CoreActionDerived... Args>
+	static CoreActionPtr getMergedActions(std::shared_ptr<Args>&... actions) {
+		std::vector<CoreActionPtr> v;
+		v.reserve(sizeof...(actions));
+		(v.push_back(actions), ...);
+		return getMergedActions(v);
+	}
 
 	/**
 	 * @brief Returns the action type.

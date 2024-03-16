@@ -79,7 +79,7 @@ private:
 	 * 
 	 * @return The action performed.
 	 */
-	std::shared_ptr<CoreAction> initializeStage();
+	CoreActionPtr initializeStage();
 	/**
 	 * @brief Game tick event.
 	 * 
@@ -88,7 +88,7 @@ private:
 	 * 
 	 * @return The action performed.
 	 */
-	std::shared_ptr<CoreAction> tick();
+	CoreActionPtr tick();
 	/**
 	 * @brief Processes actions of players (movement, bonuses, etc).
 	 * 
@@ -96,84 +96,84 @@ private:
 	 * 
 	 * @return The action performed.
 	 */
-	std::shared_ptr<CoreAction> playersActions();
+	CoreActionPtr playersActions();
 	/**
 	 * @brief Initializes turn data structure.
 	 * 
 	 * @return The action performed.
 	 */
-	std::shared_ptr<CoreAction> initTurnData(TurnData& turnData);
+	CoreActionPtr initTurnData(TurnData& turnData);
 	/**
 	 * @brief Applies active bonus effects on players.
 	 * 
 	 * @return The action performed.
 	 */
-	std::shared_ptr<CoreAction> applyPlayerEffects(TurnData& turnData);
+	CoreActionPtr applyPlayerEffects(TurnData& turnData);
 	/**
 	 * @brief Calculates trajectories of players' movement.
 	 * 
 	 * @return The action performed.
 	 */
-	std::shared_ptr<CoreAction> calculateTrajectories(TurnData& turnData);
+	CoreActionPtr calculateTrajectories(TurnData& turnData);
 	/**
 	 * @brief Finds collisions of players with other players and bonuses.
 	 * 
 	 * @return The action performed.
 	 */
-	std::shared_ptr<CoreAction> findPlayerAndBonusCollisions(TurnData& turnData);
+	CoreActionPtr findPlayerAndBonusCollisions(TurnData& turnData);
 	/**
 	 * @brief Updates the players' position, healts, and active bonus effects.
 	 * 
 	 * @return The action performed.
 	 */
-	std::shared_ptr<CoreAction> updatePlayersStates(TurnData& turnData);
+	CoreActionPtr updatePlayersStates(TurnData& turnData);
 	/**
 	 * @brief Removes the collected bonuses.
 	 * 
 	 * @return The action performed.
 	 */
-	std::shared_ptr<CoreAction> clearBonuses(TurnData& turnData);
+	CoreActionPtr clearBonuses(TurnData& turnData);
 	/**
 	 * @brief Attempts to generate new bonuses.
 	 * 
 	 * @return The action performed.
 	 */
-	std::shared_ptr<CoreAction> generateBonus(TurnData& turnData);
+	CoreActionPtr generateBonus(TurnData& turnData);
 	
 	/**
 	 * @brief Finds collisions of the given player and other players.
 	 * 
 	 * @return The action performed.
 	 */
-	std::shared_ptr<CoreAction> findPlayerPlayerCollisions(PlayerId id,
+	CoreActionPtr findPlayerPlayerCollisions(PlayerId id,
 		PlayerTurn& playerTurn, TurnData& turnData);
 	/**
 	 * @brief Finds collisions of the given player and bonuses.
 	 * 
 	 * @return The action performed.
 	 */
-	std::shared_ptr<CoreAction> findPlayerBonusCollisions(PlayerId id,
+	CoreActionPtr findPlayerBonusCollisions(PlayerId id,
 		PlayerTurn& playerTurn, TurnData& turnData);
 	/**
 	 * @brief Updates the position of the given player.
 	 * 
 	 * @return The action performed.
 	 */
-	std::shared_ptr<CoreAction> movePlayer(PlayerId id,
+	CoreActionPtr movePlayer(PlayerId id,
 		PlayerTurn& playerTurn, TurnData& turnData);
 	/**
 	 * @brief Updates the health points of the given player.
 	 * 
 	 * @return The action performed.
 	 */
-	std::shared_ptr<CoreAction> changePlayerHp(PlayerId id,
+	CoreActionPtr changePlayerHp(PlayerId id,
 		PlayerTurn& playerTurn, TurnData& turnData);
 	/**
 	 * @brief Updates the active bonus effects of the given player.
 	 * 
 	 * @return The action performed.
 	 */
-	std::shared_ptr<CoreAction> applyPlayerBonusCollisions(PlayerId id,
+	CoreActionPtr applyPlayerBonusCollisions(PlayerId id,
 		PlayerTurn& playerTurn, TurnData& turnData);
 
 	static Timer createNewBonusTimer();
@@ -246,7 +246,7 @@ public:
 	 * 
 	 * @return The action performed.
 	 */
-	const std::shared_ptr<CoreAction> loopEvent();
+	const CoreActionPtr loopEvent();
 	std::unordered_map<PlayerId, PlayerState> getPlayerStates() const;
 	std::vector<StageObstacle> getObstaclesList() const;
 	Size2d getStageSize() const;
