@@ -208,6 +208,9 @@ void InGameController::updateSpritesByAction(
 		case CoreAction::ACTION_ADD_PLAYER:
 			updateSpritesByActionAddPlayer(action);
 			break;
+		case CoreAction::ACTION_REMOVE_PLAYER:
+			updateSpritesByActionRemovePlayer(action);
+			break;
 		case CoreAction::ACTION_SET_PLAYER_POS:
 			updateSpritesByActionSetPlayerPos(action);
 			break;
@@ -274,6 +277,19 @@ void InGameController::updateSpritesByActionAddPlayer(
 	createPlayerSprite(actionCast->getId());
 	createPlayerHpBgSprite(actionCast->getId());
 	createPlayerHpTextSprite(actionCast->getId());
+}
+
+void InGameController::updateSpritesByActionRemovePlayer(
+	const std::shared_ptr<CoreAction> action)
+{
+	const auto actionCast =
+		std::dynamic_pointer_cast<CoreActionRemovePlayer>(action);
+	
+	PlayerId id = actionCast->getId();
+
+	m_playerSprites.erase(id);
+	m_playerHpBgSprites.erase(id);
+	m_playerHpTextSprites.erase(id);
 }
 
 void InGameController::updateSpritesByActionSetPlayerPos(

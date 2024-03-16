@@ -98,6 +98,8 @@ private:
 		const std::shared_ptr<CoreAction> action);
 	void updateSpritesByActionAddPlayer(
 		const std::shared_ptr<CoreAction> action);
+	void updateSpritesByActionRemovePlayer(
+		const std::shared_ptr<CoreAction> action);
 	void updateSpritesByActionSetPlayerPos(
 		const std::shared_ptr<CoreAction> action);
 	void updateSpritesByActionSetPlayerHp(

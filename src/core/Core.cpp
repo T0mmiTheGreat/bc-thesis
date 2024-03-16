@@ -322,9 +322,6 @@ CoreActionPtr Core::changePlayerHp(PlayerId id,
 	// Alias
 	auto& player = *playerTurn.playerRef;
 
-	std::shared_ptr<CoreActionSetPlayerHp> actionSetPlayerHp;
-	std::shared_ptr<CoreActionSetPlayerSize> actionSetPlayerSize;
-
 	double hpDelta = 0.0;
 
 	// Decrement HP from player collisions
@@ -349,17 +346,31 @@ CoreActionPtr Core::changePlayerHp(PlayerId id,
 
 	player.hp += hpDelta;
 
-	// Create actions
-	actionSetPlayerHp = std::make_shared<CoreActionSetPlayerHp>(id,
-		player.hp * PLAYER_HP_FACTOR);
-	actionSetPlayerSize = std::make_shared<CoreActionSetPlayerSize>(id,
-		getPlayerSize(player.hp));
+	if (player.hp <= 0.0) {
+		// Player is dead
 
-	// Merge
-	auto res = CoreActionMultiple::getMergedActions(actionSetPlayerHp,
-		actionSetPlayerSize);
-	
-	return res;
+		// "Kill"
+		m_players.erase(id);
+
+		// Create action
+		auto res = std::make_shared<CoreActionRemovePlayer>(id);
+
+		return res;
+	} else {
+		// Player is still alive
+
+		// Create actions
+		auto actionSetPlayerHp = std::make_shared<CoreActionSetPlayerHp>(id,
+			player.hp * PLAYER_HP_FACTOR);
+		auto actionSetPlayerSize = std::make_shared<CoreActionSetPlayerSize>(id,
+			getPlayerSize(player.hp));
+
+		// Merge
+		auto res = CoreActionMultiple::getMergedActions(actionSetPlayerHp,
+			actionSetPlayerSize);
+		
+		return res;
+	}
 }
 
 CoreActionPtr Core::applyPlayerBonusCollisions(PlayerId id,

@@ -33,6 +33,7 @@ public:
 		ACTION_ADD_OBSTACLE,
 		ACTION_SET_STAGE_SIZE,
 		ACTION_ADD_PLAYER,
+		ACTION_REMOVE_PLAYER,
 		ACTION_SET_PLAYER_POS,
 		ACTION_SET_PLAYER_HP,
 		ACTION_SET_PLAYER_SIZE,
@@ -271,6 +272,33 @@ public:
 
 	/**
 	 * @brief Player ID of the new player.
+	 */
+	PlayerId getId() const { return m_id; }
+};
+
+/**
+ * @brief A player has been eliminated.
+ */
+class CoreActionRemovePlayer : public CoreAction {
+private:
+	PlayerId m_id;
+public:
+	/**
+	 * @brief Constructs a new CoreActionRemovePlayer object.
+	 * 
+	 * @param id ID of the removed player.
+	 */
+	CoreActionRemovePlayer(PlayerId id)
+		: m_id{id}
+	{}
+
+	/**
+	 * @brief Returns the action type.
+	 */
+	ActionType getType() const override { return ACTION_REMOVE_PLAYER; }
+
+	/**
+	 * @brief ID of the removed player.
 	 */
 	PlayerId getId() const { return m_id; }
 };
