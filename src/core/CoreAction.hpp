@@ -39,6 +39,8 @@ public:
 		ACTION_SET_PLAYER_SIZE,
 		ACTION_ADD_BONUS,
 		ACTION_REMOVE_BONUS,
+		ACTION_ANNOUNCE_WINNER,
+		ACTION_ANNOUNCE_DRAW_GAME,
 	};
 
 	virtual ~CoreAction() {}
@@ -474,6 +476,46 @@ public:
 	 * @brief How much HP the bonus will recover in total.
 	 */
 	double getHpRecovery() const { return m_hpRecovery; }
+};
+
+/**
+ * @brief Player won the game.
+ */
+class CoreActionAnnounceWinner : public CoreAction {
+private:
+	PlayerId m_id;
+public:
+	/**
+	 * @brief Constructs a new CoreActionAnnounceWinner object.
+	 * 
+	 * @param id Player ID of the winner.
+	 */
+	CoreActionAnnounceWinner(PlayerId id)
+		: m_id{id}
+	{}
+
+	/**
+	 * @brief Returns the action type.
+	 */
+	ActionType getType() const override { return ACTION_ANNOUNCE_WINNER; }
+
+	/**
+	 * @brief Player ID of the winner.
+	 */
+	PlayerId getId() const { return m_id; }
+};
+
+/**
+ * @brief All players have been eliminated.
+ */
+class CoreActionAnnounceDrawGame : public CoreAction {
+public:
+	CoreActionAnnounceDrawGame() {}
+
+	/**
+	 * @brief Returns the action type.
+	 */
+	ActionType getType() const override { return ACTION_ANNOUNCE_DRAW_GAME; }
 };
 
 #endif // COREACTION_HPP

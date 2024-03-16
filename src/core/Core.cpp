@@ -56,6 +56,7 @@ void Core::inputToVector(const PlayerInputFlags & input, double & x, double & y)
 Core::Core(const std::shared_ptr<IStageSerializer> stage,
 	const std::vector<std::shared_ptr<IPlayerInput>>& players)
 	: m_isInitialized{false}
+	, m_isOver{false}
 	, m_stageInitializer{stage}
 	, m_playersInitializer{players}
 	, m_tickTimer(TICK_INTERVAL)
@@ -182,6 +183,30 @@ CoreActionPtr Core::updatePlayersStates(TurnData& turnData)
 	auto res = CoreActionMultiple::getMergedActions(actionsGroup);
 
 	return res;
+}
+
+CoreActionPtr Core::checkIsGameOver(TurnData& turnData)
+{
+	(void)turnData;
+
+	if (m_players.size() == 0) {
+		// Draw game
+
+		auto res = std::make_shared<CoreActionAnnounceDrawGame>();
+		return res;
+	}
+	else if (m_players.size() == 1) {
+		// Winner
+
+		auto iter = m_players.cbegin();
+		PlayerId id = iter->first;
+
+		auto res = std::make_shared<CoreActionAnnounceWinner>(id);
+		return res;
+	}
+	else {
+		return std::make_shared<CoreActionNone>();
+	}
 }
 
 CoreActionPtr Core::clearBonuses(TurnData& turnData)
@@ -568,6 +593,7 @@ CoreActionPtr Core::playersActions()
 	auto actionFindPlayerAndBonusCollisions =
 		findPlayerAndBonusCollisions(turnData);
 	auto actionUpdatePlayersStates = updatePlayersStates(turnData);
+	auto actionCheckIsGameOver = checkIsGameOver(turnData);
 	auto actionClearBonuses = clearBonuses(turnData);
 	auto actionGenerateBonus = generateBonus(turnData);
 
@@ -577,6 +603,7 @@ CoreActionPtr Core::playersActions()
 		actionCalculateTrajectories,
 		actionFindPlayerAndBonusCollisions,
 		actionUpdatePlayersStates,
+		actionCheckIsGameOver,
 		actionClearBonuses,
 		actionGenerateBonus
 	);

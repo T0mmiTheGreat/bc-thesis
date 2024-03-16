@@ -63,6 +63,8 @@ private:
 
 	// Has the `initializeStage()` method been called yet?
 	bool m_isInitialized;
+	// Is the game over?
+	bool m_isOver;
 	std::shared_ptr<IStageSerializer> m_stageInitializer;
 	std::vector<std::shared_ptr<IPlayerInput>> m_playersInitializer;
 
@@ -126,6 +128,12 @@ private:
 	 * @return The action performed.
 	 */
 	CoreActionPtr updatePlayersStates(TurnData& turnData);
+	/**
+	 * @brief Check if there is less than two players alive.
+	 * 
+	 * @return The action performed.
+	 */
+	CoreActionPtr checkIsGameOver(TurnData& turnData);
 	/**
 	 * @brief Removes the collected bonuses.
 	 * 

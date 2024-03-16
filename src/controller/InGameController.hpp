@@ -58,6 +58,11 @@ private:
 
 	static constexpr const char* EXIT_BTN_TEXT = "Quit";
 
+	static constexpr Color GAME_OVER_TEXT_COLOR = Color::white();
+	static constexpr FontId GAME_OVER_TEXT_FONT = FONT_SEGOEPR_66;
+	static constexpr const char* GAME_OVER_TEXT_WINNER = "WINNER";
+	static constexpr const char* GAME_OVER_TEXT_DRAW_GAME = "DRAW GAME";
+
 	std::unordered_map<PlayerId, std::unique_ptr<PlayerSprite>> m_playerSprites;
 	std::vector<std::unique_ptr<ObstacleSprite>> m_obstacleSprites;
 	std::unordered_map<BonusId, std::unique_ptr<BonusSprite>> m_bonusSprites;
@@ -71,6 +76,7 @@ private:
 	std::unordered_map<PlayerId, std::unique_ptr<TextSprite>>
 	m_playerHpTextSprites;
 	std::unique_ptr<OptionButtonSprite> m_exitBtnSprite;
+	std::unique_ptr<TextSprite> m_gameOverTextSprite;
 
 	std::unique_ptr<Core> m_core;
 	std::unique_ptr<StageViewport> m_viewport;
@@ -85,6 +91,7 @@ private:
 	void createStageBoundsSprite();
 	void createStatusBarSprite();
 	void createExitBtnSprite();
+	void createGameOverTextSprite();
 
 	void checkExitBtnMouseHover(const Point& mouse);
 	void checkExitBtnClick(const Point& mouse);
@@ -119,6 +126,10 @@ private:
 	void updateSpritesByActionAddBonus(
 		const std::shared_ptr<CoreAction> action);
 	void updateSpritesByActionRemoveBonus(
+		const std::shared_ptr<CoreAction> action);
+	void updateSpritesByActionAnnounceWinner(
+		const std::shared_ptr<CoreAction> action);
+	void updateSpritesByActionAnnounceDrawGame(
 		const std::shared_ptr<CoreAction> action);
 
 	void initializeViewport();

@@ -79,6 +79,7 @@ void InGameController::createSprites()
 	createStageBoundsSprite();
 	createStatusBarSprite();
 	createExitBtnSprite();
+	createGameOverTextSprite();
 }
 
 void InGameController::createStageBoundsSprite()
@@ -122,6 +123,16 @@ void InGameController::createExitBtnSprite()
 	m_exitBtnSprite->setText(EXIT_BTN_TEXT);
 
 	checkExitBtnMouseHover(sysProxy->getMousePos());
+}
+
+void InGameController::createGameOverTextSprite()
+{
+	Rect stageAreaRect = getStageAreaRect();
+
+	m_gameOverTextSprite = std::make_unique<TextSprite>(sysProxy);
+	m_gameOverTextSprite->setTextRect(stageAreaRect);
+	m_gameOverTextSprite->setColor(GAME_OVER_TEXT_COLOR);
+	m_gameOverTextSprite->setFont(GAME_OVER_TEXT_FONT);
 }
 
 void InGameController::checkExitBtnMouseHover(const Point& mouse)
@@ -247,6 +258,12 @@ void InGameController::updateSpritesByAction(
 		case CoreAction::ACTION_REMOVE_BONUS:
 			updateSpritesByActionRemoveBonus(action);
 			break;
+		case CoreAction::ACTION_ANNOUNCE_WINNER:
+			updateSpritesByActionAnnounceWinner(action);
+			break;
+		case CoreAction::ACTION_ANNOUNCE_DRAW_GAME:
+			updateSpritesByActionAnnounceDrawGame(action);
+			break;
 	}
 }
 
@@ -371,6 +388,22 @@ void InGameController::updateSpritesByActionRemoveBonus(
 	m_bonusSprites.erase(bonusSprIter);
 }
 
+void InGameController::updateSpritesByActionAnnounceWinner(
+	const std::shared_ptr<CoreAction> action)
+{
+	(void)action;
+
+	m_gameOverTextSprite->setText(GAME_OVER_TEXT_WINNER);
+}
+
+void InGameController::updateSpritesByActionAnnounceDrawGame(
+	const std::shared_ptr<CoreAction> action)
+{
+	(void)action;
+
+	m_gameOverTextSprite->setText(GAME_OVER_TEXT_DRAW_GAME);
+}
+
 void InGameController::initializeViewport()
 {
 	Rect stageArea = getStageAreaRect();
@@ -487,6 +520,8 @@ void InGameController::onPaint(std::shared_ptr<ICanvas> canvas,
 	for (auto& spr : m_bonusHpRecoverySprites) {
 		spr->repaint(canvas, invalidRect);
 	}
+
+	m_gameOverTextSprite->repaint(canvas, invalidRect);
 
 	m_statusBarSprite->repaint(canvas, invalidRect);
 
