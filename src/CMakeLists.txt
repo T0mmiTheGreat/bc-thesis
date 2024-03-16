@@ -69,6 +69,7 @@ set(SOURCE_FILES
 	sprite/TextSprite.cpp
 	sprite/StageItemSprite.cpp
 	sprite/HollowRectSprite.cpp
+	sprite/BonusHpRecoverySprite.cpp
 	core/Core.cpp
 	core/CoreAction.cpp
 	core/stageobstacles/StageObstacles.cpp
@@ -152,6 +153,7 @@ set(HEADER_FILES
 	sprite/TextSprite.hpp
 	sprite/StageItemSprite.hpp
 	sprite/HollowRectSprite.hpp
+	sprite/BonusHpRecoverySprite.hpp
 	paintingproxy/IPaintingProxy.hpp
 	core/Common.hpp
 	core/Core.hpp

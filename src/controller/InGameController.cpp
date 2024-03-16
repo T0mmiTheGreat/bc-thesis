@@ -189,6 +189,27 @@ void InGameController::updatePlayerSize(PlayerId id, double size)
 	spr->setRadius(newRadius);
 }
 
+void InGameController::updateHpRecoverySprites()
+{
+	auto sprIter = m_bonusHpRecoverySprites.begin();
+
+	while (sprIter != m_bonusHpRecoverySprites.end()) {
+		auto& spr = *sprIter;
+
+		spr->loopEvent();
+		
+		if (!spr->isAnimationRunning()) {
+			// Animation is finished
+
+			sprIter = m_bonusHpRecoverySprites.erase(sprIter);
+		} else {
+			// Not finished, move on to the next one
+
+			++sprIter;
+		}
+	}
+}
+
 void InGameController::updateSpritesByAction(
 	const std::shared_ptr<CoreAction> action)
 {
@@ -334,7 +355,20 @@ void InGameController::updateSpritesByActionRemoveBonus(
 	const auto actionCast =
 		std::dynamic_pointer_cast<CoreActionRemoveBonus>(action);
 	
-	m_bonusSprites.erase(actionCast->getId());
+	// Find the collected bonus sprite
+	auto bonusSprIter = m_bonusSprites.find(actionCast->getId());
+
+	// Create the HP recovery sprite
+	auto recovSpr = std::make_unique<BonusHpRecoverySprite>(sysProxy);
+	recovSpr->setBonusRect(bonusSprIter->second->getBounds());
+	double hpRecoveryF = actionCast->getHpRecovery() * PLAYER_HP_FACTOR;
+	recovSpr->setHpRecovery(static_cast<int>(hpRecoveryF));
+	recovSpr->startAnimation();
+	// ... and insert it to the set
+	m_bonusHpRecoverySprites.insert(std::move(recovSpr));
+
+	// Delete the collected bonus sprite
+	m_bonusSprites.erase(bonusSprIter);
 }
 
 void InGameController::initializeViewport()
@@ -415,6 +449,8 @@ void InGameController::onStarted()
 
 void InGameController::onLoop()
 {
+	updateHpRecoverySprites();
+
 	auto action = m_core->loopEvent();
 	updateSpritesByAction(action);
 }
@@ -447,6 +483,10 @@ void InGameController::onPaint(std::shared_ptr<ICanvas> canvas,
 	}
 
 	m_stageBoundsSprite->repaint(canvas, invalidRect);
+
+	for (auto& spr : m_bonusHpRecoverySprites) {
+		spr->repaint(canvas, invalidRect);
+	}
 
 	m_statusBarSprite->repaint(canvas, invalidRect);
 

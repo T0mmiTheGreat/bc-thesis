@@ -183,6 +183,10 @@ public:
 	 * @brief Creates effect which is caused by picking up a bonus.
 	 */
 	std::shared_ptr<BonusEffect> getBonusEffect(BonusId id) const;
+	/**
+	 * @brief Returns the amount of HP a bonus will recover in total.
+	 */
+	double getBonusHpRecovery(BonusId id) const;
 
 	/**
 	 * @brief Checks whether a bonus may be spawned.

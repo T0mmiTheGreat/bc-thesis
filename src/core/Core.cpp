@@ -190,6 +190,8 @@ CoreActionPtr Core::clearBonuses(TurnData& turnData)
 	std::shared_ptr<CoreActionRemoveBonus> actionRemoveBonus;
 
 	for (BonusId id : turnData.collectedBonuses) {
+		double hpRecovery = m_stageBonuses->getBonusHpRecovery(id);
+
 		// Clear
 		m_stageBonuses->clearBonus(id);
 
@@ -197,7 +199,8 @@ CoreActionPtr Core::clearBonuses(TurnData& turnData)
 		resetBonusTimer();
 
 		// Add to actions list
-		actionRemoveBonus = std::make_shared<CoreActionRemoveBonus>(id);
+		actionRemoveBonus = std::make_shared<CoreActionRemoveBonus>(id,
+			hpRecovery);
 		actionsGroup.push_back(std::move(actionRemoveBonus));
 	}
 

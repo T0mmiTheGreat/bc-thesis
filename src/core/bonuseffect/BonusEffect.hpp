@@ -33,10 +33,6 @@ public:
 		RECOVER_75,
 		RECOVER_100,
 	};
-private:
-	static constexpr double RECOVERY_PER_MS = 0.8 / 1000.0;
-
-	double m_recoveryToGo;
 
 	static double hpRecoveryToValue(HpRecovery recovery) {
 		switch (recovery) {
@@ -48,6 +44,10 @@ private:
 		assert(((void)"Invalid HpRecovery value", false));
 		return 0.0;
 	}
+private:
+	static constexpr double RECOVERY_PER_MS = 0.8 / 1000.0;
+
+	double m_recoveryToGo;
 public:
 	BonusEffectHp(HpRecovery recovery)
 		: m_recoveryToGo{hpRecoveryToValue(recovery)}

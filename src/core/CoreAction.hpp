@@ -111,8 +111,6 @@ public:
 		: m_actions{std::move(actions)}
 	{}
 
-
-
 	/**
 	 * @brief Creates one action from multiple actions.
 	 * 
@@ -449,14 +447,17 @@ public:
 class CoreActionRemoveBonus : public CoreAction {
 private:
 	BonusId m_id;
+	double m_hpRecovery;
 public:
 	/**
 	 * @brief Constructs a new CoreActionRemoveBonus object.
 	 * 
-	 * @param id ID of the removed bonus
+	 * @param id ID of the removed bonus.
+	 * @param hpRecovery How much HP the bonus will recover in total.
 	 */
-	CoreActionRemoveBonus(BonusId id)
+	CoreActionRemoveBonus(BonusId id, double hpRecovery)
 		: m_id{id}
+		, m_hpRecovery{hpRecovery}
 	{}
 
 	/**
@@ -468,6 +469,11 @@ public:
 	 * @brief ID of the removed bonus.
 	 */
 	BonusId getId() const { return m_id; }
+
+	/**
+	 * @brief How much HP the bonus will recover in total.
+	 */
+	double getHpRecovery() const { return m_hpRecovery; }
 };
 
 #endif // COREACTION_HPP

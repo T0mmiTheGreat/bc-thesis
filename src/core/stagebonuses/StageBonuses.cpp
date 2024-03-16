@@ -367,6 +367,11 @@ std::shared_ptr<BonusEffect> StageBonuses::getBonusEffect(BonusId id) const
 	return res;
 }
 
+double StageBonuses::getBonusHpRecovery(BonusId id) const
+{
+	return BonusEffectHp::hpRecoveryToValue(m_bonuses.at(id).hpRecovery);
+}
+
 bool StageBonuses::canGenerateBonus() const
 {
 	return m_bonuses.empty();

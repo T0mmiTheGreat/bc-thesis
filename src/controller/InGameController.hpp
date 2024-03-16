@@ -15,6 +15,7 @@
 #include <ctime>
 #include <memory>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 #include "types.hpp"
@@ -26,6 +27,7 @@
 #include "sprite/PlayerSprite.hpp"
 #include "sprite/ObstacleSprite.hpp"
 #include "sprite/BonusSprite.hpp"
+#include "sprite/BonusHpRecoverySprite.hpp"
 #include "sprite/HollowRectSprite.hpp"
 #include "sprite/OptionBarSprite.hpp"
 #include "sprite/OptionButtonSprite.hpp"
@@ -38,7 +40,7 @@ private:
 	// Internally, full HP is equal to `1.0`. Externally (as shown to the user),
 	// full HP is equal to `100.0`.
 	static constexpr double PLAYER_HP_FACTOR = 100.0;
-	
+
 	static constexpr int STAGE_AREA_LEFT = 0;
 	static constexpr int STAGE_AREA_TOP = 0;
 	static constexpr int MIN_STAGE_LEFT_MARGIN = 16;
@@ -59,6 +61,8 @@ private:
 	std::unordered_map<PlayerId, std::unique_ptr<PlayerSprite>> m_playerSprites;
 	std::vector<std::unique_ptr<ObstacleSprite>> m_obstacleSprites;
 	std::unordered_map<BonusId, std::unique_ptr<BonusSprite>> m_bonusSprites;
+	std::unordered_set<std::unique_ptr<BonusHpRecoverySprite>>
+	m_bonusHpRecoverySprites;
 	std::unique_ptr<HollowRectSprite> m_stageBoundsSprite;
 
 	std::unique_ptr<OptionBarSprite> m_statusBarSprite;
@@ -89,6 +93,8 @@ private:
 	void updatePlayerPos(PlayerId id, const PointF& pos);
 	void updatePlayerHp(PlayerId id, double hp);
 	void updatePlayerSize(PlayerId id, double size);
+
+	void updateHpRecoverySprites();
 
 	void updateSpritesByAction(
 		const std::shared_ptr<CoreAction> action);
