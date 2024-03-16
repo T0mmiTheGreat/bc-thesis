@@ -329,13 +329,17 @@ CoreActionPtr Core::changePlayerHp(PlayerId id,
 		hpDelta -= TICK_INTERVAL * collision.opponentStrength;
 	}
 
-	// Decrement HP from "deflate"
-	if (player.input->readInput().deflate) {
-		hpDelta -= DEFLATE_AMOUNT;
-	}
-
 	// Increment HP from bonus effects
 	hpDelta += playerTurn.effectAttributes.getAttributeChangeHp();
+
+	// Decrement HP from "deflate"
+	if (player.input->readInput().deflate) {
+		double newDelta = hpDelta - DEFLATE_AMOUNT;
+		if (!(player.hp + newDelta <= 0.0)) {
+			// Can deflate, because it won't kill the player
+			hpDelta = newDelta;
+		}
+	}
 
 	// Don't grow if that would make you collide with an obstacle
 	if (m_stageObstacles->playerHasCollision(player.pos, getPlayerSize(
