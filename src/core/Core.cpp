@@ -365,7 +365,7 @@ CoreActionPtr Core::changePlayerHp(PlayerId id,
 
 		// Create actions
 		auto actionSetPlayerHp = std::make_shared<CoreActionSetPlayerHp>(id,
-			player.hp * PLAYER_HP_FACTOR);
+			player.hp);
 		auto actionSetPlayerSize = std::make_shared<CoreActionSetPlayerSize>(id,
 			getPlayerSize(player.hp));
 
@@ -509,7 +509,7 @@ CoreActionPtr Core::initializeStage()
 		actionSetPlayerPos = std::make_shared<CoreActionSetPlayerPos>(id,
 			fromCgalPoint(newPlayer.pos));
 		actionSetPlayerHp = std::make_shared<CoreActionSetPlayerHp>(id,
-			newPlayer.hp * PLAYER_HP_FACTOR);
+			newPlayer.hp);
 		actionSetPlayerSize = std::make_shared<CoreActionSetPlayerSize>(id,
 			getPlayerSize(newPlayer.hp));
 		actionPlayerGroup.push_back(actionAddPlayer);
@@ -610,7 +610,7 @@ std::unordered_map<PlayerId,PlayerState> Core::getPlayerStates() const
 		res[id] = PlayerState{
 			.x = CGAL::to_double(state.pos.x()),
 			.y = CGAL::to_double(state.pos.y()),
-			.hp = state.hp * PLAYER_HP_FACTOR,
+			.hp = state.hp,
 			.size = getPlayerSize(id),
 		};
 	}

@@ -35,6 +35,10 @@
 
 class InGameController : public GeneralControllerBase {
 private:
+	// Internally, full HP is equal to `1.0`. Externally (as shown to the user),
+	// full HP is equal to `100.0`.
+	static constexpr double PLAYER_HP_FACTOR = 100.0;
+	
 	static constexpr int STAGE_AREA_LEFT = 0;
 	static constexpr int STAGE_AREA_TOP = 0;
 	static constexpr int MIN_STAGE_LEFT_MARGIN = 16;

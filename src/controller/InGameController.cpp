@@ -156,7 +156,7 @@ void InGameController::updatePlayerHp(PlayerId id, double hp)
 	auto& spr = m_playerHpTextSprites[id];
 	const auto& bgSpr = m_playerHpBgSprites.at(id);
 
-	auto text = std::to_string(static_cast<int>(hp));
+	auto text = std::to_string(static_cast<int>(hp * PLAYER_HP_FACTOR));
 
 	Rect textRect(0, 0, sysProxy->getTextSize(text, PLAYER_HP_FONT));
 	textRect.x = bgSpr->getBounds().getRight() - PLAYER_HP_RIGHT_MARGIN
