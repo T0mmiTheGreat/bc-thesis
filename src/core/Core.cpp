@@ -438,13 +438,18 @@ double Core::getPlayerStrength(PlayerId id) const
 
 double Core::getPlayerStrength(double hp)
 {
-	constexpr double BASE_STRENGTH = 1.0/3400.0;
+	static constexpr double STEP = 0.01;
 
 	// Full HP -> 1/3400
 	// 0 HP -> 0.0
 	// 2x Full HP -> 1/1700
 	// 1/2x Full HP -> 1/6800
-	return hp * BASE_STRENGTH;
+
+	// Multiplication with of very low numbers may introduce strange behavior,
+	// so instead, we define this as a step function and let the low numbers
+	// round down to 0
+
+	return roundfDownToMultiple(hp, STEP) * BASE_STRENGTH;
 }
 
 void Core::getPlayerMovementVector(PlayerId id, double& x, double& y) const
