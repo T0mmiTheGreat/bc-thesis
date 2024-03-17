@@ -204,6 +204,7 @@ set(SDL2PP_WITH_TTF ON)
 set(SDL2PP_WITH_IMAGE ON)
 set(SDL2PP_WITH_MIXER OFF)
 add_subdirectory(../libSDL2pp/ ../libSDL2pp/)
+add_subdirectory(../yaml-cpp/ ../yaml-cpp/)
 
 # Include packages
 find_package(SDL2 REQUIRED)
@@ -215,8 +216,6 @@ include_directories(${SDL2_image_INCLUDE_DIRS})
 set(CGAL_DO_NOT_WARN_ABOUT_CMAKE_BUILD_TYPE TRUE)
 find_package(CGAL REQUIRED)
 include_directories(${CGAL_INCLUDE_DIRS})
-find_package(YAML-CPP REQUIRED)
-include_directories(${YAML_CPP_INCLUDE_DIR})
 
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES} ${IMGUI_SOURCES})
 
@@ -227,5 +226,5 @@ target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${SDL2_ttf_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${SDL2_image_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${CGAL_LIBRARIES})
-target_link_libraries(${PROJECT_NAME} ${YAML_CPP_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} SDL2pp::SDL2pp)
+target_link_libraries(${PROJECT_NAME} yaml-cpp::yaml-cpp)
