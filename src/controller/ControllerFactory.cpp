@@ -21,6 +21,7 @@
 #include "controller/StageEditorController.hpp"
 #include "controller/StagePropertiesController.hpp"
 #include "controller/StageSelectController.hpp"
+#include "controller/GameSetupController.hpp"
 
 std::shared_ptr<IRootController> ControllerFactory::createRootController(std::shared_ptr<ISysProxy> sysProxy)
 {
@@ -43,11 +44,9 @@ std::shared_ptr<IControllerChild> ControllerFactory::createMainMenuController(st
 }
 
 std::shared_ptr<IControllerChild> ControllerFactory::createInGameController(
-	std::shared_ptr<ISysProxy> sysProxy,
-	const std::shared_ptr<IStageSerializer> stage,
-	const std::vector<std::shared_ptr<IPlayerInput>>& players)
+	std::shared_ptr<ISysProxy> sysProxy, const GameSetupData& gsdata)
 {
-	return std::make_unique<InGameController>(sysProxy, stage, players);
+	return std::make_unique<InGameController>(sysProxy, gsdata);
 }
 
 std::shared_ptr<IControllerChild> ControllerFactory::createStageEditorController(std::shared_ptr<ISysProxy> sysProxy)
@@ -70,4 +69,11 @@ ControllerFactory::createStageSelectController(
 {
 	return std::make_shared<StageSelectController>(sysProxy, selectedStage,
 		isSelectedStageValid);
+}
+
+std::shared_ptr<IControllerChild> ControllerFactory::createGameSetupController(
+	std::shared_ptr<ISysProxy> sysProxy, GameSetupData& gsdata,
+	bool& isCancel)
+{
+	return std::make_shared<GameSetupController>(sysProxy, gsdata, isCancel);
 }

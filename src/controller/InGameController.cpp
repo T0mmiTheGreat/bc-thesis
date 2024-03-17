@@ -18,10 +18,9 @@
 #include "playerinput/PlayerInputFactory.hpp"
 
 InGameController::InGameController(std::shared_ptr<ISysProxy> sysProxy,
-	const std::shared_ptr<IStageSerializer> stage,
-	const std::vector<std::shared_ptr<IPlayerInput>>& players)
+	const GameSetupData& gsdata)
 	: GeneralControllerBase(sysProxy)
-	, m_core{std::make_unique<Core>(stage, players)}
+	, m_core{std::make_unique<Core>(gsdata)}
 {}
 
 void InGameController::createPlayerSprite(PlayerId id)

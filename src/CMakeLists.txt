@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 cmake_policy(SET CMP0153 OLD)
 
-include_directories(.)
+include_directories(. ../imgui/)
 
 # Preprocessor macros
 
@@ -45,6 +45,7 @@ set(SOURCE_FILES
 	controller/StageEditorController.cpp
 	controller/StagePropertiesController.cpp
 	controller/StageSelectController.cpp
+	controller/GameSetupController.cpp
 	math/Math.cpp
 	sprite/SpriteBase.cpp
 	sprite/BoundedSpriteBase.cpp
@@ -126,6 +127,7 @@ set(HEADER_FILES
 	controller/StageEditorController.hpp
 	controller/StagePropertiesController.hpp
 	controller/StageSelectController.hpp
+	controller/GameSetupController.hpp
 	math/Math.hpp
 	sprite/ISprite.hpp
 	sprite/IPositionedSprite.hpp
@@ -184,11 +186,20 @@ set(HEADER_FILES
 	stageserializer/StageSerializerFactory.hpp
 	stageserializer/YAMLStageSerializer.hpp
 	utilities/unorderedSetWithIndexes/UnorderedSetWithIndexes.hpp
+	gamesetupdata/GameSetupData.hpp
+)
+
+# Imgui files
+file (GLOB IMGUI_SOURCES
+	../imgui/*.cpp ../imgui/*.h
+	../imgui/backends/imgui_impl_sdl2.h ../imgui/backends/imgui_impl_sdl2.cpp
+	../imgui/backends/imgui_impl_sdlrenderer2.h ../imgui/backends/imgui_impl_sdlrenderer2.cpp
 )
 
 # Create the executable in the repo root directory
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../)
 
+# Setup libSDL2pp
 set(SDL2PP_WITH_TTF ON)
 set(SDL2PP_WITH_IMAGE ON)
 set(SDL2PP_WITH_MIXER OFF)
@@ -207,7 +218,7 @@ include_directories(${CGAL_INCLUDE_DIRS})
 find_package(YAML-CPP REQUIRED)
 include_directories(${YAML_CPP_INCLUDE_DIR})
 
-add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
+add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES} ${IMGUI_SOURCES})
 
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
 

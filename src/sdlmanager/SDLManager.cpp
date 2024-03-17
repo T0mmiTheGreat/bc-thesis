@@ -13,6 +13,10 @@
 
 #include <cassert>
 
+#include "../imgui/imgui.h"
+#include "../imgui/backends/imgui_impl_sdl2.h"
+#include "../imgui/backends/imgui_impl_sdlrenderer2.h"
+
 #include "constants.hpp"
 
 SDLManager::SDLManager()
@@ -55,6 +59,16 @@ SDLManager::SDLManager()
 
 void SDLManager::runEventLoop()
 {
+	// Setup Imgui
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	ImGui::StyleColorsDark();
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+	io.Fonts->AddFontFromFileTTF(FONT_PATH_TAHOMA, 20.0);
+	ImGui_ImplSDL2_InitForSDLRenderer(window.Get(), renderer.Get());
+	ImGui_ImplSDLRenderer2_Init(renderer.Get());
+
 	// There would be no point in running the event loop if there wasn't
 	// a subscriber which subscribes to the events
 	assert(m_subscriber != nullptr);
@@ -72,6 +86,7 @@ void SDLManager::runEventLoop()
 	while (isRunning) {
 		// Poll all events
 		while (SDL_PollEvent(&ev)) {
+			ImGui_ImplSDL2_ProcessEvent(&ev);
 			m_subscriber->generalEvent(ev);
 			if (ev.type == SDL_QUIT) {
 				isRunning = false;
@@ -80,10 +95,15 @@ void SDLManager::runEventLoop()
 		}
 		if (!isRunning) break;
 
+		ImGui_ImplSDLRenderer2_NewFrame();
+		ImGui_ImplSDL2_NewFrame();
+		ImGui::NewFrame();
 		m_subscriber->loopEvent();
 
 		// Painting
 		if (this->needsRepaint()) {
+			ImGui::Render();
+
 			// Crop the invalid rect to window
 			SDL_Rect viewport = renderer.GetViewport();
 			SDL_IntersectRect(&m_invalidRect, &viewport, &m_invalidRect);
@@ -100,11 +120,14 @@ void SDLManager::runEventLoop()
 
 			// Present
 			renderer.SetClipRect();  // Glitches without this, IDK why
+			ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
 			renderer.Present();
 
 			// The screen is now valid - set invalid rect area to 0
 			m_invalidRect.w = 0;
 			m_invalidRect.h = 0;
+		} else {
+			ImGui::EndFrame();
 		}
 	}
 

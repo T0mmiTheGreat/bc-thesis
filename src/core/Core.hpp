@@ -26,6 +26,7 @@
 #include "core/playerstate/PlayerState.hpp"
 #include "core/stagebonuses/StageBonuses.hpp"
 #include "core/stageobstacles/StageObstacles.hpp"
+#include "gamesetupdata/GameSetupData.hpp"
 #include "playerinput/IPlayerInput.hpp"
 #include "stageserializer/IStageSerializer.hpp"
 
@@ -65,8 +66,7 @@ private:
 	bool m_isInitialized;
 	// Is the game over?
 	bool m_isOver;
-	std::shared_ptr<IStageSerializer> m_stageInitializer;
-	std::vector<std::shared_ptr<IPlayerInput>> m_playersInitializer;
+	GameSetupData m_gsdata;
 
 	Timer m_tickTimer;
 	std::unordered_map<PlayerId, PlayerStateInternal> m_players;
@@ -241,13 +241,8 @@ private:
 public:
 	/**
 	 * @brief Constructs a new Core object.
-	 * 
-	 * @param stage Stage data.
-	 * @param players Player input classes. Should map to the players of `stage`
-	 *                parameter (stage.players[i] <-> players[i]).
 	 */
-	Core(const std::shared_ptr<IStageSerializer> stage,
-		const std::vector<std::shared_ptr<IPlayerInput>>& players);
+	Core(const GameSetupData& gsdata);
 	/**
 	 * @brief Event that happens every event loop iteration.
 	 * 

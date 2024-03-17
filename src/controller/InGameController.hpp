@@ -23,7 +23,7 @@
 #include "core/Common.hpp"
 #include "core/Core.hpp"
 #include "core/CoreAction.hpp"
-#include "playerinput/IPlayerInput.hpp"
+#include "gamesetupdata/GameSetupData.hpp"
 #include "sprite/PlayerSprite.hpp"
 #include "sprite/ObstacleSprite.hpp"
 #include "sprite/BonusSprite.hpp"
@@ -32,7 +32,6 @@
 #include "sprite/OptionBarSprite.hpp"
 #include "sprite/OptionButtonSprite.hpp"
 #include "sprite/TextSprite.hpp"
-#include "stageserializer/IStageSerializer.hpp"
 #include "stageviewport/StageViewport.hpp"
 
 class InGameController : public GeneralControllerBase {
@@ -148,8 +147,7 @@ protected:
 		const Rect& invalidRect) override;
 public:
 	InGameController(std::shared_ptr<ISysProxy> sysProxy,
-		const std::shared_ptr<IStageSerializer> stage,
-		const std::vector<std::shared_ptr<IPlayerInput>>& players);
+		const GameSetupData& gsdata);
 };
 
 #endif // INGAMECONTROLLER_HPP

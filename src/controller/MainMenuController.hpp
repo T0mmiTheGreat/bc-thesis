@@ -17,6 +17,7 @@
 
 #include "types.hpp"
 #include "controller/GeneralControllerBase.hpp"
+#include "gamesetupdata/GameSetupData.hpp"
 #include "playerinput/IPlayerInput.hpp"
 #include "sprite/MainMenuItemSprite.hpp"
 #include "sprite/MainMenuTitleSprite.hpp"
@@ -47,11 +48,10 @@ private:
 
 	ExitResult m_exitResult;
 
-	// Used when selecting a stage for playing (passed as parameters to
-	// StageSelectController constructor).
+	// Passed as parameters to GameSetupController constructor
 
-	IStageSerializer::IdType m_selectedStage;
-	bool m_isSelectedStageValid;
+	GameSetupData m_gameSetupData;
+	bool m_isGameSetupValid;
 
 	void createSprites();
 	/**
@@ -62,9 +62,6 @@ private:
 	 * @return Index to `m_menuBtns` or -1 if no item is at the given position.
 	 */
 	int getMenuItemAt(int x, int y);
-
-	const std::shared_ptr<IStageSerializer> getStageForGame() const;
-	const std::vector<std::shared_ptr<IPlayerInput>> getPlayersForGame() const;
 protected:
 	std::shared_ptr<IControllerChild> createReplacement() override;
 	

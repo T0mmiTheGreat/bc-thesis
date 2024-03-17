@@ -16,6 +16,7 @@
 
 #include "controller/IRootController.hpp"
 #include "controller/IControllerChild.hpp"
+#include "gamesetupdata/GameSetupData.hpp"
 #include "playerinput/IPlayerInput.hpp"
 #include "stageeditor/StageEditor.hpp"
 #include "stageserializer/IStageSerializer.hpp"
@@ -61,9 +62,7 @@ public:
 	 *                 (dependency injection). 
 	 */
 	static std::shared_ptr<IControllerChild> createInGameController(
-		std::shared_ptr<ISysProxy> sysProxy,
-		const std::shared_ptr<IStageSerializer> stage,
-		const std::vector<std::shared_ptr<IPlayerInput>>& players);
+		std::shared_ptr<ISysProxy> sysProxy, const GameSetupData& gsdata);
 	/**
 	 * @brief Constructs a new StageEditorController object.
 	 * 
@@ -77,6 +76,9 @@ public:
 	static std::shared_ptr<IControllerChild> createStageSelectController(
 		std::shared_ptr<ISysProxy> sysProxy,
 		IStageSerializer::IdType& selectedStage, bool& isSelectedStageValid);
+	static std::shared_ptr<IControllerChild> createGameSetupController(
+		std::shared_ptr<ISysProxy> sysProxy, GameSetupData& gsdata,
+		bool& isCancel);
 };
 
 #endif // CONTROLLERFACTORY_HPP

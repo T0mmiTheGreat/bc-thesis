@@ -53,16 +53,14 @@ void Core::inputToVector(const PlayerInputFlags & input, double & x, double & y)
 	}
 }
 
-Core::Core(const std::shared_ptr<IStageSerializer> stage,
-	const std::vector<std::shared_ptr<IPlayerInput>>& players)
+Core::Core(const GameSetupData& gsdata)
 	: m_isInitialized{false}
 	, m_isOver{false}
-	, m_stageInitializer{stage}
-	, m_playersInitializer{players}
+	, m_gsdata{gsdata}
 	, m_tickTimer(TICK_INTERVAL)
 	, m_bonusTimer{createNewBonusTimer()}
 {
-	assert(players.size() <= stage->getPlayers().size());
+	assert(gsdata.players.size() <= gsdata.stage->getPlayers().size());
 }
 
 CoreActionPtr Core::initTurnData(TurnData& turnData)
@@ -524,12 +522,12 @@ CoreActionPtr Core::initializeStage()
 	std::shared_ptr<CoreActionSetStageSize> actionSetStageSize;
 
 	// Players
-	for (PlayerId id = 0; id < m_playersInitializer.size(); id++) {
+	for (PlayerId id = 0; id < m_gsdata.players.size(); id++) {
 		// Initialize player
-		const auto& playerPos = m_stageInitializer->getPlayers()[id];
+		const auto& playerPos = m_gsdata.stage->getPlayers()[id];
 		newPlayer.pos = Point_2(playerPos.x, playerPos.y);
 		newPlayer.hp = PLAYER_HP_INITIAL;
-		newPlayer.input = m_playersInitializer[id];
+		newPlayer.input = m_gsdata.players[id];
 		m_players[id] = std::move(newPlayer);
 
 		// Add to actions list
@@ -552,7 +550,7 @@ CoreActionPtr Core::initializeStage()
 		getObstaclesList(), bounds);
 	
 	// Add to actions list (obstacles)
-	auto obstacles = m_stageInitializer->getObstacles();
+	auto obstacles = m_gsdata.stage->getObstacles();
 	for (const auto& obstacle : obstacles) {
 		actionAddObstacle = std::make_shared<CoreActionAddObstacle>(
 			PolygonF(obstacle));
@@ -649,11 +647,11 @@ std::unordered_map<PlayerId,PlayerState> Core::getPlayerStates() const
 
 std::vector<StageObstacle> Core::getObstaclesList() const
 {
-	return m_stageInitializer->getObstacles();
+	return m_gsdata.stage->getObstacles();
 }
 
 Size2d Core::getStageSize() const
 {
-	Size2d res(m_stageInitializer->getWidth(), m_stageInitializer->getHeight());
+	Size2d res(m_gsdata.stage->getWidth(), m_gsdata.stage->getHeight());
 	return res;
 }

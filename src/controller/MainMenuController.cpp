@@ -72,36 +72,15 @@ int MainMenuController::getMenuItemAt(int x, int y)
 	return -1;
 }
 
-const std::shared_ptr<IStageSerializer>
-MainMenuController::getStageForGame() const
-{
-	assert(m_isSelectedStageValid);
-
-	auto res = StageSerializerFactory::createDefault();
-	res->load(m_selectedStage);
-	return res;
-}
-
-const std::vector<std::shared_ptr<IPlayerInput>>
-MainMenuController::getPlayersForGame() const
-{
-	// FIXME
-	std::vector<std::shared_ptr<IPlayerInput>> res;
-	res.push_back(PlayerInputFactory::createKeyboardPlayerInputWSADQ(sysProxy));
-	res.push_back(PlayerInputFactory::createKeyboardPlayerInputIKJLU(sysProxy));
-	res.push_back(PlayerInputFactory::createKeyboardPlayerInputArrowsShift(sysProxy));
-	return res;
-}
-
 std::shared_ptr<IControllerChild> MainMenuController::createReplacement()
 {
 	switch (m_exitResult) {
 		case RES_STAGE_SELECT:
-			return ControllerFactory::createStageSelectController(sysProxy,
-				m_selectedStage, m_isSelectedStageValid);
+			return ControllerFactory::createGameSetupController(sysProxy,
+				m_gameSetupData, m_isGameSetupValid);
 		case RES_PLAY:
 			return ControllerFactory::createInGameController(sysProxy,
-				getStageForGame(), getPlayersForGame());
+				m_gameSetupData);
 		case RES_EDITOR:
 			return ControllerFactory::createStageEditorController(sysProxy);
 	}
@@ -120,7 +99,7 @@ void MainMenuController::onResumed()
 {
 	GeneralControllerBase::onResumed();
 	if (m_exitResult == RES_STAGE_SELECT) {
-		if (m_isSelectedStageValid) {
+		if (m_isGameSetupValid) {
 			m_exitResult = RES_PLAY;
 			finishedEvent();
 		}
