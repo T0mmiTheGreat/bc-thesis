@@ -55,6 +55,7 @@ void GameSetupController::imguiWindowContent()
 		? m_gsdataInternal.stage->getPlayers().size()
 		: 0
 	);
+	if (maxStagePlayers > MAX_PLAYERS) maxStagePlayers = MAX_PLAYERS;
 
 	// Stage selection
 	ImGui::Text("Stage:");
