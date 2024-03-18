@@ -54,12 +54,6 @@ public:
 typedef std::shared_ptr<CoreAction> CoreActionPtr;
 
 /**
- * @brief Class which inherits from CoreAction.
- */
-template <class T>
-concept CoreActionDerived = std::is_base_of<CoreAction, T>::value;
-
-/**
  * @brief No action was performed.
  */
 class CoreActionNone : public CoreAction {
@@ -89,7 +83,7 @@ public:
 	 * @tparam Args Any descendant of CoreAction.
 	 * @param actions Any number of actions (their order is significant).
 	 */
-	template <CoreActionDerived... Args>
+	template <typename... Args>
 	CoreActionMultiple(std::shared_ptr<Args>... actions) {
 		m_actions.reserve(sizeof...(actions));
 		(m_actions.push_back(actions), ...);
@@ -157,7 +151,7 @@ public:
 	 * @tparam Args CoreAction descendants.
 	 * @param actions The actions to merge.
 	 */
-	template <CoreActionDerived... Args>
+	template <typename... Args>
 	static CoreActionPtr getMergedActions(std::shared_ptr<Args>&... actions) {
 		std::vector<CoreActionPtr> v;
 		v.reserve(sizeof...(actions));

@@ -29,8 +29,8 @@ private:
 	static constexpr int BUTTONS_TOP = 272;
 	static constexpr int BUTTONS_SPACING = 8;
 
-	static constexpr std::string OK_BTN_TEXT = "OK";
-	static constexpr std::string CANCEL_BTN_TEXT = "Cancel";
+	static constexpr const char* OK_BTN_TEXT = "OK";
+	static constexpr const char* CANCEL_BTN_TEXT = "Cancel";
 
 	static constexpr FontId TEXTBOX_FONT = FONT_TAHOMA_20;
 	static constexpr FontId FILENAME_FONT = FONT_TAHOMA_16;

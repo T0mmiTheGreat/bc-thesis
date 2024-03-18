@@ -14,37 +14,47 @@
 
 #include <array>
 #include <cmath>
-#include <type_traits>
 #include <vector>
 
+/**
+ * @brief Calculate the square of `x`.
+ * 
+ * @tparam T Scalar type.
+ */
 template <typename T>
-concept Scalar = std::is_scalar<T>::value;
-
-template <typename T>
-concept Integral = std::is_integral<T>::value;
-
-template <typename T>
-concept FloatingPoint = std::is_floating_point<T>::value;
-
-template <Scalar T>
 inline constexpr T sqr(T x)
 {
 	return x*x;
 }
 
-template <Integral T>
+/**
+ * @brief Check if `divident` is divisible by `divisor`.
+ * 
+ * @tparam T Integral type.
+ */
+template <typename T>
 inline constexpr bool isDivisibleBy(T divident, T divisor)
 {
 	return ((divident % divisor) == 0);
 }
 
-template <Integral T>
+/**
+ * @brief Check if `x` is odd.
+ * 
+ * @tparam T Integral type.
+ */
+template <typename T>
 inline constexpr bool isOdd(T x)
 {
 	return !isDivisibleBy(x, 2);
 }
 
-template <Integral T>
+/**
+ * @brief Check if `x` is even.
+ * 
+ * @tparam T Integral type.
+ */
+template <typename T>
 inline constexpr bool isEven(T x)
 {
 	return isDivisibleBy(x, 2);
@@ -52,8 +62,10 @@ inline constexpr bool isEven(T x)
 
 /**
  * @brief Returns 1 if `x` is positive, -1 if `x` is negative or 0 if it's zero.
+ * 
+ * @tparam T Scalar type.
  */
-template <Scalar T>
+template <typename T>
 inline constexpr T sign(T x)
 {
 	if (x > 0) {
@@ -67,6 +79,8 @@ inline constexpr T sign(T x)
 
 /**
  * @brief Rounds `x` to the nearest multiple of `y`.
+ * 
+ * @tparam T Integral type.
  * 
  * @example `roundToMultiple(14, 5) == 15`
  *          `roundToMultiple(16, 5) == 15`
@@ -85,7 +99,7 @@ inline constexpr T sign(T x)
  *          `roundToMultiple(9, -6) == 12`
  *          `roundToMultiple(-9, -6) == -12`
  */
-template <Integral T>
+template <typename T>
 inline constexpr T roundToMultiple(T x, T y)
 {
 	T xabs = std::abs(x);
@@ -102,8 +116,10 @@ inline constexpr T roundToMultiple(T x, T y)
 
 /**
  * @brief Rounds `x` to the nearest multiple of `y`.
+ * 
+ * @tparam T Floating point type.
  */
-template <FloatingPoint T>
+template <typename T>
 inline constexpr T roundfToMultiple(T x, T y)
 {
 	return std::round(x / y) * y;
@@ -111,6 +127,8 @@ inline constexpr T roundfToMultiple(T x, T y)
 
 /**
  * @brief Rounds `x` UP to the nearest multiple of `y`.
+ * 
+ * @tparam T Integral type.
  * 
  * @example `roundUpToMultiple(14, 5) == 15`
  *          `roundUpToMultiple(16, 5) == 20`
@@ -129,7 +147,7 @@ inline constexpr T roundfToMultiple(T x, T y)
  *          `roundUpToMultiple(9, -6) == 12`
  *          `roundUpToMultiple(-9, -6) == -6`
  */
-template <Integral T>
+template <typename T>
 inline constexpr T roundUpToMultiple(T x, T y)
 {
 	T xabs = std::abs(x);
@@ -153,8 +171,10 @@ inline constexpr T roundUpToMultiple(T x, T y)
 
 /**
  * @brief Rounds `x` UP to the nearest multiple of `y`.
+ * 
+ * @tparam T Floating point type.
  */
-template <FloatingPoint T>
+template <typename T>
 inline constexpr T roundfUpToMultiple(T x, T y)
 {
 	T yabs = std::abs(y);
@@ -163,6 +183,8 @@ inline constexpr T roundfUpToMultiple(T x, T y)
 
 /**
  * @brief Rounds `x` DOWN to the nearest multiple of `y`.
+ * 
+ * @tparam T Integral type.
  * 
  * @example `roundDownToMultiple(14, 5) == 10`
  *          `roundDownToMultiple(16, 5) == 15`
@@ -181,7 +203,7 @@ inline constexpr T roundfUpToMultiple(T x, T y)
  *          `roundDownToMultiple(9, -6) == 6`
  *          `roundDownToMultiple(-9, -6) == -12`
  */
-template <Integral T>
+template <typename T>
 inline constexpr T roundDownToMultiple(T x, T y)
 {
 	// This works because rounding negative `x` UP is equivalent to rounding
@@ -192,8 +214,10 @@ inline constexpr T roundDownToMultiple(T x, T y)
 
 /**
  * @brief Rounds `x` DOWN to the nearest multiple of `y`.
+ * 
+ * @tparam T Floating point type.
  */
-template <FloatingPoint T>
+template <typename T>
 inline constexpr T roundfDownToMultiple(T x, T y)
 {
 	T yabs = std::abs(y);

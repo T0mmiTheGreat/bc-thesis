@@ -229,10 +229,10 @@ SDL_Scancode SDLManager::enumToSdlScancode(KeyCode keyCode)
 SDL_Rect SDLManager::rectToSdlRect(const Rect& rect)
 {
 	return SDL_Rect{
-		.x = rect.x,
-		.y = rect.y,
-		.w = rect.w,
-		.h = rect.h
+		rect.x,
+		rect.y,
+		rect.w,
+		rect.h,
 	};
 }
 

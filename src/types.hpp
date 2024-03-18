@@ -270,7 +270,7 @@ struct Matrix3x3 {
 	constexpr void transform(ValueType x, ValueType y, ValueType& xOut,
 		ValueType& yOut) const
 	{
-		ValueType hOut;
+		ValueType hOut = 0.0;
 
 		transform(x, y, 1.0, xOut, yOut, hOut);
 
@@ -405,8 +405,18 @@ struct PointGeneric {
 		return sqr(this->x - rhs.x) + sqr(this->y - rhs.y);
 	}
 
+	/**
+	 * @brief Compares two points for equality.
+	 */
 	constexpr bool operator== (const PointGeneric<T>& rhs) const {
 		return (this->x == rhs.x && this->y == rhs.y);
+	}
+
+	/**
+	 * @brief Compares two points for inequality.
+	 */
+	constexpr bool operator!= (const PointGeneric<T>& rhs) const {
+		return !(*this == rhs);
 	}
 
 	constexpr PointGeneric<T> operator+ (const PointGeneric<T>& rhs) const {
@@ -515,6 +525,12 @@ struct Size2dGeneric {
 	constexpr bool operator== (const Size2dGeneric<T>& rhs) const {
 		return (this->w == rhs.w)
 			&& (this->h == rhs.h);
+	}
+	/**
+	 * @brief Compares two sizes for inequality.
+	 */
+	constexpr bool operator!= (const Size2dGeneric<T>& rhs) const {
+		return !(*this == rhs);
 	}
 
 	/**
@@ -809,11 +825,20 @@ struct RectGeneric {
 		return *this;
 	}
 
+	/**
+	 * @brief Compares two rectangles for equality.
+	 */
 	constexpr bool operator== (const RectGeneric<T>& rhs) {
 		return (x == rhs.x)
 			&& (y == rhs.y)
 			&& (w == rhs.w)
 			&& (h == rhs.h);
+	}
+	/**
+	 * @brief Compares two rectangles for inequality.
+	 */
+	constexpr bool operator!= (const RectGeneric<T>& rhs) {
+		return !(*this == rhs);
 	}
 
 	/**
@@ -910,7 +935,7 @@ struct PolygonF {
 
 	CollectionType corners;
 
-	constexpr PolygonF() {}
+	PolygonF() {}
 
 	/**
 	 * @brief Constructs a new PolygonF object from the provided list
@@ -942,7 +967,7 @@ struct PolygonF {
 		}
 	}
 
-	constexpr PolygonF(CollectionType&& corners)
+	PolygonF(CollectionType&& corners)
 		: corners{std::move(corners)}
 	{}
 
@@ -961,18 +986,18 @@ struct PolygonF {
 	 * 
 	 * @details A valid polygon in Euclidean plane has at least 3 corners.
 	 */
-	constexpr bool isValidEuclidean() const {
+	bool isValidEuclidean() const {
 		return (cornerCount() >= 3);
 	}
 
-	constexpr size_t cornerCount() const {
+	size_t cornerCount() const {
 		return corners.size();
 	}
 
 	/**
 	 * @brief Returns a list of the polygon edges.
 	 */
-	constexpr std::vector<std::pair<CornerType, CornerType>> getEdges() const {
+	std::vector<std::pair<CornerType, CornerType>> getEdges() const {
 		std::vector<std::pair<CornerType, CornerType>> res;
 
 		if (cornerCount() > 1) {
@@ -993,7 +1018,7 @@ struct PolygonF {
 	 * @remark Inclusive, i.e., returns true even if it lies on the polygon
 	 *         edge.
 	 */
-	constexpr bool containsPoint(const CornerType& pt) const {
+	bool containsPoint(const CornerType& pt) const {
 		// Ray casting algorithm -- cast a ray in any direction starting at the
 		// point, then count the number of intersections with the polygon
 		// borders. Odd count means that the point is inside the polygon, even
@@ -1098,7 +1123,7 @@ struct PolygonF {
 	 * @brief Returns the smallest rectangle that can be formed around the
 	 *        polygon.
 	 */
-	constexpr RectF getBoundingBox() const {
+	RectF getBoundingBox() const {
 		PointF topLeft = corners[0];
 		PointF bottomRight = corners[0];
 
@@ -1122,7 +1147,7 @@ struct PolygonF {
 	 * @details The polygon location is determined by the top left corner
 	 *          of its bounding box.
 	 */
-	constexpr void setLocation(ValueType x, ValueType y) {
+	void setLocation(ValueType x, ValueType y) {
 		// Determine its current location
 		PointF topLeft = getBoundingBox().getTopLeft();
 
@@ -1142,7 +1167,7 @@ struct PolygonF {
 	 * @details The polygon location is determined by the top left corner
 	 *          of its bounding box.
 	 */
-	constexpr void setLocation(const PointF& p) {
+	void setLocation(const PointF& p) {
 		setLocation(p.x, p.y);
 	}
 
@@ -1151,7 +1176,7 @@ struct PolygonF {
 	 * 
 	 * @param tm Transformation matrix.
 	 */
-	constexpr void transform(const Matrix3x3& tm) {
+	void transform(const Matrix3x3& tm) {
 		for (size_t i = 0; i < cornerCount(); i++) {
 			corners[i].transform(tm);
 		}
@@ -1162,7 +1187,7 @@ struct PolygonF {
 	 * 
 	 * @param tm Transformation matrix.
 	 */
-	constexpr PolygonF getTransformed(const Matrix3x3& tm) const {
+	PolygonF getTransformed(const Matrix3x3& tm) const {
 		PolygonF res(*this);
 		res.transform(tm);
 		return res;
@@ -1175,7 +1200,7 @@ struct PolygonF {
 	 * @remark The returned value is the square of the distance. The caller may
 	 *         apply square root on the returned value if they need to.
 	 */
-	constexpr ValueType sqrDistanceBounds(const PointF& pt) const {
+	ValueType sqrDistanceBounds(const PointF& pt) const {
 		ValueType minDist = INFINITY, dist;
 		for (auto edge : getEdges()) {
 			CornerType& p0 = edge.first;
@@ -1200,7 +1225,7 @@ struct PolygonF {
 	 * @remark The returned value is the square of the distance. The caller may
 	 *         apply square root on the returned value if they need to.
 	 */
-	constexpr ValueType sqrDistance(const PointF& pt) const {
+	ValueType sqrDistance(const PointF& pt) const {
 		return (containsPoint(pt) ? 0 : sqrDistanceBounds(pt));
 	}
 };
@@ -1312,12 +1337,21 @@ struct Color {
 	// Used in editor for brushes, dragged objects, etc.
 	static constexpr Color badGhost() { return Color::bad().setAlpha(GHOST_ALPHA); }
 
+	/**
+	 * @brief Compares two colors for equality.
+	 */
 	constexpr bool operator== (const Color& rhs) const {
 		return
 			(this->r == rhs.r) &&
 			(this->g == rhs.g) &&
 			(this->b == rhs.b) &&
 			(this->a == rhs.a);
+	}
+	/**
+	 * @brief Compares two colors for inequality.
+	 */
+	constexpr bool operator!= (const Color& rhs) const {
+		return !(*this == rhs);
 	}
 
 	constexpr Color& operator= (const Color&) = default;

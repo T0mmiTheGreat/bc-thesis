@@ -69,15 +69,15 @@ CoreActionPtr Core::initTurnData(TurnData& turnData)
 	
 	for (auto& [id, state] : m_players) {
 		turnData.playerTurns[id] = PlayerTurn{
-			.playerRef = &state,
+			&state, // playerRef
 #ifndef OLD_TRAJECTORY_ALGORITHM
-			.trajectory = Trajectory(state.pos),
+			Trajectory(state.pos), // trajectory
 #else
-			.trajectory = Trajectory(),
+			Trajectory(), // trajectory
 #endif
-			.playerCollisions = std::vector<PlayerCollision>(),
-			.bonusCollisions = std::vector<BonusCollision>(),
-			.effectAttributes = EffectAttributes(),
+			std::vector<PlayerCollision>(), // playerCollisions
+			std::vector<BonusCollision>(), // bonusCollisions
+			EffectAttributes(), // effectAttributes
 		};
 	}
 
@@ -280,7 +280,7 @@ CoreActionPtr Core::findPlayerPlayerCollisions(PlayerId id,
 		if (minSqdist <= playerSqsizes) {
 			// Add collision with B to A's player collisions
 			PlayerCollision collision = {
-				.opponentStrength = getPlayerStrength(idB)
+				getPlayerStrength(idB) // opponentStrength
 			};
 			playerTurnA.playerCollisions.push_back(collision);
 		}
@@ -307,7 +307,7 @@ CoreActionPtr Core::findPlayerBonusCollisions(PlayerId id,
 
 		if (minSqdist <= sqSizes) {
 			// Add the collision to the player's bonus collisions
-			BonusCollision collision = {.id = bonusId};
+			BonusCollision collision = {bonusId};
 			playerTurn.bonusCollisions.push_back(std::move(collision));
 
 			// Add the collision to turn data
@@ -636,10 +636,10 @@ std::unordered_map<PlayerId,PlayerState> Core::getPlayerStates() const
 	std::unordered_map<PlayerId,PlayerState> res;
 	for (const auto& [id, state] : m_players) {
 		res[id] = PlayerState{
-			.x = CGAL::to_double(state.pos.x()),
-			.y = CGAL::to_double(state.pos.y()),
-			.hp = state.hp,
-			.size = getPlayerSize(id),
+			CGAL::to_double(state.pos.x()), // x
+			CGAL::to_double(state.pos.y()), // y
+			state.hp, // hp
+			getPlayerSize(id), // size
 		};
 	}
 	return res;

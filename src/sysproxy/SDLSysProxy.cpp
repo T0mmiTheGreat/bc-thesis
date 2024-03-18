@@ -93,12 +93,11 @@ void SDLSysProxy::showErrorMessage(const std::string& msg)
 void SDLSysProxy::quit()
 {
 	// This event will be pushed to the event queue
-	SDL_Event ev = {
-		.quit = {
-			.type = SDL_QUIT,
-			.timestamp = SDL_GetTicks(), // See SDL_QuitEvent why it's
-			                             // initialized like this
-		},
+	SDL_Event ev;
+	ev.quit = {
+		SDL_QUIT, // `type`
+		SDL_GetTicks(), // `timestamp`; see SDL_QuitEvent why it's
+						// initialized like this
 	};
 
 	if (SDL_PushEvent(&ev) < 0) {

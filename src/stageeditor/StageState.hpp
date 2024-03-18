@@ -24,7 +24,7 @@
 struct StageState {
 	static constexpr int STAGE_WIDTH_INITIAL = 1280;
 	static constexpr int STAGE_HEIGHT_INITIAL = 720;
-	static constexpr std::string STAGE_TITLE_DEFAULT = "My stage";
+	static constexpr const char* STAGE_TITLE_DEFAULT = "My stage";
 	static constexpr int STAGE_WIDTH_MIN = 100;
 	static constexpr int STAGE_HEIGHT_MIN = 100;
 

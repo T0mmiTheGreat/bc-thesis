@@ -58,15 +58,12 @@ void PlayerSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas, const Rect&
 
 Color PlayerSprite::getColor() const
 {
-	return m_color;
+	return propertyGetter(m_color);
 }
 
 void PlayerSprite::setColor(const Color& value)
 {
-	if (m_color != value) {
-		m_color = value;
-		invalidate();
-	}
+	propertySetterComparable(m_color, value);
 }
 
 int PlayerSprite::getRadius() const

@@ -11,7 +11,7 @@
 
 #include "sprite/BonusHpRecoverySprite.hpp"
 
-#include <format>
+#include <sstream>
 
 void BonusHpRecoverySprite::startAnimationPhase(AnimationPhase phase)
 {
@@ -153,8 +153,9 @@ void BonusHpRecoverySprite::setHpRecovery(int value)
 {
 	propertySetterComparable(m_hpRecovery, value);
 
-	auto text = std::format("+ {} HP", value);
-	propertySetterComparable(m_hpRecoveryText, text);
+	std::stringstream ss;
+	ss << "+ " << value << " HP";
+	propertySetterComparable(m_hpRecoveryText, ss.str());
 }
 
 const Rect& BonusHpRecoverySprite::getBonusRect() const

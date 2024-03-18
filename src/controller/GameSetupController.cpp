@@ -344,10 +344,10 @@ GameSetupController::GameSetupController(std::shared_ptr<ISysProxy> sysProxy,
 	, m_gsdata{gsdata}
 	, m_isConfirmSetup{isConfirmSetup}
 	, m_gsdataInternal{
-		.stage = StageSerializerFactory::createDefault(),
-		.isStageIdValid = false,
-		.players = std::array<PlayerDataInternal, MAX_PLAYERS>(),
-		.playerCount = 0,
+		StageSerializerFactory::createDefault(), // stage
+		false, // isStageIdValid
+		std::array<PlayerDataInternal, MAX_PLAYERS>(), // players
+		0, // playerCount
 	}
 	, m_clickedBtn{BTNCL_NONE}
 	, m_loadedStageId()

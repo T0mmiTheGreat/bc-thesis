@@ -127,7 +127,7 @@ private:
 	 * @tparam Args StageEditorAction descendant.
 	 * @param actions The actions to merge.
 	 */
-	template <StageEditorActionDerived... Args>
+	template <typename... Args>
 	std::shared_ptr<StageEditorAction> getMergedActions(
 		std::shared_ptr<Args>&... actions);
 	/**

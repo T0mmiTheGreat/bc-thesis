@@ -42,6 +42,9 @@ public:
 				&& this->right  == rhs.right
 				&& this->bottom == rhs.bottom;
 		}
+		constexpr bool operator!= (const Borders& rhs) const {
+			return !(*this == rhs);
+		}
 	};
 private:
 	int m_barWidth;

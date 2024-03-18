@@ -142,7 +142,7 @@ std::shared_ptr<StageEditorAction> StageEditor::createActionDeselectObstacleObje
 std::shared_ptr<StageEditorAction> StageEditor::createActionDeselectPlayerIfSelected(
 	EditorOID oid)
 {
-	if (m_selectedPlayers.contains(oid)) {
+	if (m_selectedPlayers.find(oid) != m_selectedPlayers.end()) {
 		return createActionDeselectPlayerObject(oid);
 	} else {
 		return createActionNone();
@@ -152,7 +152,7 @@ std::shared_ptr<StageEditorAction> StageEditor::createActionDeselectPlayerIfSele
 std::shared_ptr<StageEditorAction> StageEditor::createActionDeselectObstacleIfSelected(
 	EditorOID oid)
 {
-	if (m_selectedObstacles.contains(oid)) {
+	if (m_selectedObstacles.find(oid) != m_selectedPlayers.end()) {
 		return createActionDeselectObstacleObject(oid);
 	} else {
 		return createActionNone();
@@ -412,7 +412,7 @@ std::shared_ptr<StageEditorAction> StageEditor::createActionChangeStageId(
 	return res;
 }
 
-template <StageEditorActionDerived... Args>
+template <typename... Args>
 std::shared_ptr<StageEditorAction> StageEditor::getMergedActions(
 	std::shared_ptr<Args>&... actions)
 {
@@ -1458,7 +1458,7 @@ bool StageEditor::canPlacePlayer(const StageEditorPlayerObject& player,
 		const EditorOID& oid = playerPair.first;
 		const auto& object = playerPair.second;
 
-		if (ignoredPlayers.contains(oid)) continue;
+		if (ignoredPlayers.find(oid) != ignoredPlayers.end()) continue;
 
 		if (object.collidesWithPlayer(player)) {
 			return false;
@@ -1470,7 +1470,7 @@ bool StageEditor::canPlacePlayer(const StageEditorPlayerObject& player,
 		const EditorOID& oid = obstaclePair.first;
 		const auto& object = obstaclePair.second;
 
-		if (ignoredObstacles.contains(oid)) continue;
+		if (ignoredObstacles.find(oid) != ignoredObstacles.end()) continue;
 
 		if (object.collidesWithPlayer(player)) {
 			return false;
@@ -1495,7 +1495,7 @@ bool StageEditor::canPlaceObstacle(const StageEditorObstacleObject& obstacle,
 		EditorOID oid = playerPair.first;
 		const auto& object = playerPair.second;
 
-		if (ignoredPlayers.contains(oid)) continue;
+		if (ignoredPlayers.find(oid) != ignoredPlayers.end()) continue;
 
 		if (obstacle.collidesWithPlayer(object)) {
 			return false;
@@ -1744,7 +1744,7 @@ const std::shared_ptr<StageEditorAction> StageEditor::predictPlaceObstacleCorner
 const std::shared_ptr<StageEditorAction> StageEditor::predictEndDragPlayerObject(
 	EditorOID oid, const PointF& pos, ObjectSnap snapping, bool& isSuccess)
 {
-	if (!m_selectedPlayers.contains(oid) || !m_isDraggingSelected) {
+	if ((m_selectedPlayers.find(oid) == m_selectedPlayers.end()) || !m_isDraggingSelected) {
 		isSuccess = true;
 		return createActionNone();
 	} else {
@@ -1760,7 +1760,9 @@ const std::shared_ptr<StageEditorAction> StageEditor::predictEndDragPlayerObject
 const std::shared_ptr<StageEditorAction> StageEditor::predictEndDragObstacleObject(
 	EditorOID oid, const PointF& pos, ObjectSnap snapping, bool& isSuccess)
 {
-	if (!m_selectedObstacles.contains(oid) || !m_isDraggingSelected) {
+	if ((m_selectedObstacles.find(oid) == m_selectedObstacles.end())
+		|| !m_isDraggingSelected)
+	{
 		isSuccess = true;
 		return createActionNone();
 	} else {

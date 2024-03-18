@@ -61,35 +61,27 @@ void OptionBarSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas, const Re
 
 int OptionBarSprite::getBarWidth() const
 {
-	return m_barWidth;
+	return propertyGetter(m_barWidth);
 }
 
 void OptionBarSprite::setBarWidth(int value)
 {
-	if (m_barWidth != value) {
-		invalidate();
-		m_barWidth = value;
-		invalidate();
-	}
+	propertySetterComparable(m_barWidth, value);
 }
 
 int OptionBarSprite::getBarHeight() const
 {
-	return m_barHeight;
+	return propertyGetter(m_barHeight);
 }
 
 void OptionBarSprite::setBarHeight(int value)
 {
-	if (m_barHeight != value) {
-		invalidate();
-		m_barHeight = value;
-		invalidate();
-	}
+	propertySetterComparable(m_barHeight, value);
 }
 
 const OptionBarSprite::Borders& OptionBarSprite::getBorders() const
 {
-	return m_borders;
+	return propertyGetter(m_borders);
 }
 
 void OptionBarSprite::setBorders(const OptionBarSprite::Borders& value)
@@ -100,11 +92,7 @@ void OptionBarSprite::setBorders(const OptionBarSprite::Borders& value)
 
 void OptionBarSprite::setBorders(OptionBarSprite::Borders&& value)
 {
-	if (m_borders != value) {
-		invalidate();
-		m_borders = std::move(value);
-		invalidate();
-	}
+	propertySetterComparable(m_borders, value);
 }
 
 void OptionBarSprite::setBorders(bool left, bool top, bool right, bool bottom)
@@ -114,28 +102,20 @@ void OptionBarSprite::setBorders(bool left, bool top, bool right, bool bottom)
 
 const Color& OptionBarSprite::getFillingColor() const
 {
-	return m_fColor;
+	return propertyGetter(m_fColor);
 }
 
 void OptionBarSprite::setFillingColor(const Color& value)
 {
-	if (m_fColor != value) {
-		invalidate();
-		m_fColor = value;
-		invalidate();
-	}
+	propertySetterComparable(m_fColor, value);
 }
 
 const Color& OptionBarSprite::getStrokingColor() const
 {
-	return m_sColor;
+	return propertyGetter(m_sColor);
 }
 
 void OptionBarSprite::setStrokingColor(const Color& value)
 {
-	if (m_sColor != value) {
-		invalidate();
-		m_sColor = value;
-		invalidate();
-	}
+	propertySetterComparable(m_sColor, value);
 }

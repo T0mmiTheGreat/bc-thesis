@@ -29,7 +29,7 @@ private:
 	static constexpr int STAGE_ITEM_TOP_MARGIN = 50;
 	static constexpr int STAGE_ITEM_DISTANCES = 90;
 	static constexpr int CANCEL_BUTTON_BOTTOM_MARGIN = 110;
-	static constexpr std::string CANCEL_BUTTON_TEXT = "Cancel";
+	static constexpr const char* CANCEL_BUTTON_TEXT = "Cancel";
 
 	// Return values
 

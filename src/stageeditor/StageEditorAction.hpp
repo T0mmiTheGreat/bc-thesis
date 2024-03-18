@@ -82,12 +82,6 @@ public:
 };
 
 /**
- * @brief Class which inherits from StageEditorAction.
- */
-template <class T>
-concept StageEditorActionDerived = std::is_base_of<StageEditorAction, T>::value;
-
-/**
  * @brief No action was performed.
  * 
  * @details Pretty sure this will find its use.
@@ -126,7 +120,7 @@ public:
 	 * @tparam Args Any descendant of StageEditorAction.
 	 * @param actions Any number of actions.
 	 */
-	template <StageEditorActionDerived... Args>
+	template <typename... Args>
 	StageEditorActionMultiple(std::shared_ptr<Args>... actions) {
 		m_actions.reserve(sizeof...(actions));
 		(m_actions.push_back(actions), ...);

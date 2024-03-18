@@ -110,42 +110,30 @@ void ObstacleBrushSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas,
 
 ObstacleBrushSprite::Costume ObstacleBrushSprite::getCostume() const
 {
-	return m_costume;
+	return propertyGetter(m_costume);
 }
 
 void ObstacleBrushSprite::setCostume(ObstacleBrushSprite::Costume value)
 {
-	if (m_costume != value) {
-		invalidate();
-		m_costume = value;
-		invalidate();
-	}
+	propertySetterComparable(m_costume, value);
 }
 
 const Point& ObstacleBrushSprite::getP0() const
 {
-	return m_p0;
+	return propertyGetter(m_p0);
 }
 
 void ObstacleBrushSprite::setP0(const Point& value)
 {
-	if (m_p0 != value) {
-		invalidate();
-		m_p0 = value;
-		invalidate();
-	}
+	propertySetterComparable(m_p0, value);
 }
 
 const Point& ObstacleBrushSprite::getP1() const
 {
-	return m_p1;
+	return propertyGetter(m_p1);
 }
 
 void ObstacleBrushSprite::setP1(const Point& value)
 {
-	if (m_p1 != value) {
-		invalidate();
-		m_p1 = value;
-		invalidate();
-	}
+	propertySetterComparable(m_p1, value);
 }

@@ -57,7 +57,7 @@ public:
 		, pos(pos)
 	{}
 
-	constexpr void moveBy(double dx, double dy) override {
+	void moveBy(double dx, double dy) override {
 		pos.x += dx;
 		pos.y += dy;
 	}
@@ -66,7 +66,7 @@ public:
 		return EDITOR_PLAYER_RADIUS;
 	}
 
-	constexpr bool containsPoint(const PointF& pt) const override {
+	bool containsPoint(const PointF& pt) const override {
 		double sqrDist = this->pos.sqrDistance(pt);
 		return (sqrDist <= sqr(this->getRadius()));
 	}
@@ -98,18 +98,18 @@ public:
 		, shape(shape)
 	{}
 
-	constexpr void moveBy(double dx, double dy) override {
+	void moveBy(double dx, double dy) override {
 		for (auto& corner : shape.corners) {
 			corner.x += dx;
 			corner.y += dy;
 		}
 	}
 
-	constexpr bool containsPoint(const PointF& pt) const override {
+	bool containsPoint(const PointF& pt) const override {
 		return shape.containsPoint(pt);
 	}
 
-	constexpr bool collidesWithPlayer(const StageEditorPlayerObject& player)
+	bool collidesWithPlayer(const StageEditorPlayerObject& player)
 		const
 	{
 		double sqrMinDistance = sqr(player.getRadius());

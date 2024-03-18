@@ -76,7 +76,7 @@ IStageSerializer::IdType StageSerializerBase::generateIdByTitle(
 	auto ids = getAllIds();
 	// First, try it without the suffix
 	res = baseName;
-	while (ids.contains(res)) {
+	while (ids.find(res) != ids.end()) {
 		suffix++;
 		// Add suffix
 		res = baseName + std::to_string(suffix);

@@ -177,11 +177,7 @@ void EditorWorkspaceGridSprite::setSize(const Size2d& value)
 
 void EditorWorkspaceGridSprite::setSize(Size2d&& value)
 {
-	if (m_size != value) {
-		invalidate();
-		m_size = std::move(value);
-		invalidate();
-	}
+	propertySetterComparable(m_size, value);
 }
 
 double EditorWorkspaceGridSprite::getXSpacing() const

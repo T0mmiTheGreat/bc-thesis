@@ -149,7 +149,6 @@ public:
 		bool operator== (const GenericIterator<SetIteratorTypeOther>& rhs) const {
 			return (this->getNestedIterator() == rhs.getNestedIterator());
 		}
-
 		/**
 		 * @brief Compare two iterators for inequality.
 		 * 
@@ -159,7 +158,7 @@ public:
 		 */
 		template <typename SetIteratorTypeOther>
 		bool operator!= (const GenericIterator<SetIteratorTypeOther>& rhs) const {
-			return !(*this == rhs);
+			return (this->getNestedIterator() != rhs.getNestedIterator());
 		}
 
 		/**
