@@ -38,7 +38,6 @@ SDLManager::SDLManager()
 		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_NEW),
 		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_OPEN),
 		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_SAVE),
-		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_SAVE_AS),
 		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_UNDO),
 		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_REDO),
 		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_COGWHEEL),
@@ -48,11 +47,6 @@ SDLManager::SDLManager()
 		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_OBSTACLE_TOOL),
 		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_TRASH_CAN),
 		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_RESIZE),
-		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_INPUT_WSAD),
-		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_INPUT_TGFH),
-		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_INPUT_IKJL),
-		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_INPUT_ARROWS),
-		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_BOT),
 		SDL2pp::Texture(renderer, IMAGE_PATH_BONUS_HP)
 	}
 {}
