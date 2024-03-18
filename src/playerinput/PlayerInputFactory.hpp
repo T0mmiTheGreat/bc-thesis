@@ -16,7 +16,7 @@
 
 #include "types.hpp"
 #include "playerinput/IPlayerInput.hpp"
-#include "playerinput/ISysProxyplayerInput.hpp"
+#include "playerinput/ISysProxyPlayerInput.hpp"
 
 /**
  * @brief Factory for the IPlayerInput interface.
