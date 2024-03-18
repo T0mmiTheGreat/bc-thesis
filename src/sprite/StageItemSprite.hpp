@@ -29,8 +29,8 @@ private:
 	static constexpr int PADDING_VERT = 12;
 	static constexpr int PADDING_LEFT = PADDING_VERT;
 	static constexpr int TEXT_SPACING = 4;
-	static constexpr FontId STAGE_TITLE_FONT = FONT_TAHOMA_20;
-	static constexpr FontId STAGE_PATH_FONT = FONT_TAHOMA_16;
+	static constexpr FontId STAGE_TITLE_FONT = FONT_ROBOTO_20;
+	static constexpr FontId STAGE_PATH_FONT = FONT_ROBOTO_16;
 	static constexpr Color STAGE_TITLE_TEXT_COLOR = Color::white();
 	static constexpr uint8_t STAGE_PATH_TEXT_ALPHA = 0x88;
 	static constexpr Color STAGE_PATH_TEXT_COLOR = Color::white()

@@ -89,7 +89,7 @@ private:
 	
 	static constexpr int STATUSBAR_HEIGHT = 30;
 	static constexpr int STATUSBAR_TEXT_LEFT_MARGIN = 8;
-	static constexpr FontId STATUSBAR_TEXT_FONT = FONT_TAHOMA_16;
+	static constexpr FontId STATUSBAR_TEXT_FONT = FONT_ROBOTO_16;
 	static constexpr Color STATUSBAR_FCOLOR = MENUBAR_FCOLOR;
 	static constexpr Color STATUSBAR_SCOLOR = MENUBAR_SCOLOR;
 

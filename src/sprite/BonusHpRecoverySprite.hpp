@@ -31,7 +31,7 @@ private:
 	};
 private:
 	static constexpr Color TEXT_COLOR = Color::white();
-	static constexpr FontId TEXT_FONT = FONT_BRLNSTR_20;
+	static constexpr FontId TEXT_FONT = FONT_MCLAREN_20;
 
 	// Approx. 60 animation frames per second
 	static constexpr std::clock_t TIMER_INTERVAL = 17;

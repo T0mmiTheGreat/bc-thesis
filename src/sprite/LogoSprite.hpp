@@ -12,8 +12,6 @@
 #ifndef LOGOSPRITE_HPP
 #define LOGOSPRITE_HPP
 
-#include <string>
-
 #include "types.hpp"
 #include "sprite/AnimatedSpriteBase.hpp"
 #include "sprite/PositionedSpriteBase.hpp"
@@ -30,20 +28,18 @@ private:
 		ANIM_FADEOUT,
 	};
 private:
-	// The logo text to show
-	const std::string LOGO_TEXT = "Awesome Logo";
-	// The font of the logo text
-	const FontId LOGO_FONT = FONT_OLDENGL_72;
+	// The logo image to show
+	static constexpr ImageId LOGO_IMAGE = IMG_PTERO;
 
 	// Approx. 60 animation frames per second
-	const std::clock_t TIMER_INTERVAL = 17;
+	static constexpr std::clock_t TIMER_INTERVAL = 17;
 
 	// Number of milliseconds it takes to fade in
-	const double FADEIN_TIME = 1088.0;
+	static constexpr double FADEIN_TIME = 1088.0;
 	// Number of milliseconds the logo is shown at full brightness
-	const double FULLBRIGHT_TIME = 612.0;
+	static constexpr double FULLBRIGHT_TIME = 612.0;
 	// Number of milliseconds it takes to fade out
-	const double FADEOUT_TIME = FADEIN_TIME;
+	static constexpr double FADEOUT_TIME = FADEIN_TIME;
 
 	Timer m_timer;
 	AnimationContinuous m_anim;

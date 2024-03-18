@@ -32,8 +32,8 @@ private:
 	static constexpr const char* OK_BTN_TEXT = "OK";
 	static constexpr const char* CANCEL_BTN_TEXT = "Cancel";
 
-	static constexpr FontId TEXTBOX_FONT = FONT_TAHOMA_20;
-	static constexpr FontId FILENAME_FONT = FONT_TAHOMA_16;
+	static constexpr FontId TEXTBOX_FONT = FONT_ROBOTO_20;
+	static constexpr FontId FILENAME_FONT = FONT_ROBOTO_16;
 	static constexpr Color TEXTBOX_TEXT_COLOR = Color::white();
 	static constexpr Color FILENAME_TEXT_COLOR = Color::white().setAlpha(0x88);
 

@@ -53,12 +53,12 @@ private:
 	static constexpr int PLAYER_HP_TOP_MARGIN = 8;
 	static constexpr int PLAYER_HP_BOTTOM_MARGIN = PLAYER_HP_TOP_MARGIN;
 
-	static constexpr FontId PLAYER_HP_FONT = FONT_BRLNSTR_20;
+	static constexpr FontId PLAYER_HP_FONT = FONT_MCLAREN_20;
 
 	static constexpr const char* EXIT_BTN_TEXT = "Quit";
 
 	static constexpr Color GAME_OVER_TEXT_COLOR = Color::white();
-	static constexpr FontId GAME_OVER_TEXT_FONT = FONT_SEGOEPR_66;
+	static constexpr FontId GAME_OVER_TEXT_FONT = FONT_JULEE_66;
 	static constexpr const char* GAME_OVER_TEXT_WINNER = "WINNER";
 	static constexpr const char* GAME_OVER_TEXT_DRAW_GAME = "DRAW GAME";
 

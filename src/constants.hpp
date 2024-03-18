@@ -22,11 +22,11 @@
 #define FONTS_PATH "font/"
 #define IMAGES_PATH "sprite/"
 
-#define FONT_PATH_OLDENGL FONTS_PATH "OLDENGL.ttf"
-#define FONT_PATH_SEGOEPR FONTS_PATH "segoepr.ttf"
-#define FONT_PATH_BRLNSTR FONTS_PATH "brlnstr.ttf"
-#define FONT_PATH_TAHOMA  FONTS_PATH "tahoma.ttf"
+#define FONT_PATH_JULEE   FONTS_PATH "Julee-Regular.ttf"
+#define FONT_PATH_MCLAREN FONTS_PATH "McLaren-Regular.ttf"
+#define FONT_PATH_ROBOTO  FONTS_PATH "Roboto-Regular.ttf"
 
+#define IMAGE_PATH_PTERO              IMAGES_PATH "ptero.png"
 #define IMAGE_PATH_ICON_NEW           IMAGES_PATH "new.png"
 #define IMAGE_PATH_ICON_OPEN          IMAGES_PATH "open.png"
 #define IMAGE_PATH_ICON_SAVE          IMAGES_PATH "save.png"

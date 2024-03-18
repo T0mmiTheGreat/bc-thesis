@@ -21,7 +21,7 @@
 
 class StatusbarTextSprite : public PositionedSpriteBase {
 private:
-	static constexpr FontId FONT = FONT_TAHOMA_16;
+	static constexpr FontId FONT = FONT_ROBOTO_16;
 
 	std::string m_text;
 protected:

@@ -95,11 +95,10 @@ typedef enum MouseBtn {
  * @note The naming is "FONT_<font_file_name>_<font_size>"
  */
 enum FontId {
-	FONT_OLDENGL_72 = 0, // Old English Text MT
-	FONT_SEGOEPR_66,     // Segoe Print
-	FONT_BRLNSTR_20,     // Berlin Sans FB
-	FONT_TAHOMA_16,      // Tahoma
-	FONT_TAHOMA_20,      // Tahoma
+	FONT_JULEE_66,       // Julee
+	FONT_MCLAREN_20,     // McLaren
+	FONT_ROBOTO_16,      // Roboto
+	FONT_ROBOTO_20,      // Roboto
 	// XXX: Add new fonts to SDL manager too (constructor)
 
 	COUNT_FONTID // Number of fonts used by the program
@@ -111,7 +110,8 @@ constexpr size_t fontIdCount = static_cast<size_t>(COUNT_FONTID);
  * @brief Images used by the program.
  */
 enum ImageId {
-	IMG_ICON_NEW = 0,
+	IMG_PTERO = 0,
+	IMG_ICON_NEW,
 	IMG_ICON_OPEN,
 	IMG_ICON_SAVE,
 	IMG_ICON_SAVE_AS,

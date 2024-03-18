@@ -116,7 +116,7 @@ void LogoSprite::frameEventAnimFadeout()
 
 Size2d LogoSprite::getSize()
 {
-	return paintingProxy->getTextSize(LOGO_TEXT, LOGO_FONT);
+	return paintingProxy->getImageSize(IMG_PTERO);
 }
 
 void LogoSprite::startAnimation()
@@ -142,6 +142,7 @@ void LogoSprite::repaintAsVisible(std::shared_ptr<ICanvas> canvas, const Rect& i
 {
 	(void)invalidRect;
 
-	canvas->setFillingColor(Color(m_opacity, m_opacity, m_opacity));
-	canvas->fillText(getX(), getY(), LOGO_TEXT, LOGO_FONT);
+	canvas->setColorMod(Color::white().setAlpha(m_opacity));
+	canvas->copyImage(IMG_PTERO, getBounds());
+	canvas->setColorMod(Color::white());
 }

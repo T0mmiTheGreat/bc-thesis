@@ -27,7 +27,7 @@ TextBoxSprite::TextBoxSprite(std::shared_ptr<IPaintingProxy> paintingProxy)
 	, BoundedSpriteBase(paintingProxy)
 	, m_textRect()
 	, m_text()
-	, m_font{FONT_TAHOMA_16}
+	, m_font{FONT_ROBOTO_16}
 	, m_color()
 {}
 

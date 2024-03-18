@@ -26,7 +26,7 @@ public:
 		COSTUME_HOVER,
 	};
 private:
-	static constexpr FontId FONT = FONT_BRLNSTR_20;
+	static constexpr FontId FONT = FONT_MCLAREN_20;
 
 	std::string m_text;
 	Costume m_costume;

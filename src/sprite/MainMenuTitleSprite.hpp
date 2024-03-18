@@ -22,7 +22,7 @@ private:
 	// The title text to show
 	const std::string TITLE_TEXT = "BUBBLE BRAWL";
 	// The font of the title text
-	const FontId TITLE_FONT = FONT_SEGOEPR_66;
+	const FontId TITLE_FONT = FONT_JULEE_66;
 protected:
 	void repaintAsVisible(std::shared_ptr<ICanvas> canvas,
 		const Rect& invalidRect) override;

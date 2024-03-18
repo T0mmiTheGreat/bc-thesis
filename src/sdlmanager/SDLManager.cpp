@@ -27,14 +27,14 @@ SDLManager::SDLManager()
 	, m_eventLoopstate{EVENTLOOP_PRERUN}
 	, m_fonts{
 		//           font file path     font size
-		SDL2pp::Font(FONT_PATH_OLDENGL, 72),
-		SDL2pp::Font(FONT_PATH_SEGOEPR, 66),
-		SDL2pp::Font(FONT_PATH_BRLNSTR, 20),
-		SDL2pp::Font(FONT_PATH_TAHOMA,  16),
-		SDL2pp::Font(FONT_PATH_TAHOMA,  20),
+		SDL2pp::Font(FONT_PATH_JULEE,   66),
+		SDL2pp::Font(FONT_PATH_MCLAREN, 20),
+		SDL2pp::Font(FONT_PATH_ROBOTO,  16),
+		SDL2pp::Font(FONT_PATH_ROBOTO,  20),
 	}
 	, m_images{
 		//              renderer  image file path
+		SDL2pp::Texture(renderer, IMAGE_PATH_PTERO),
 		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_NEW),
 		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_OPEN),
 		SDL2pp::Texture(renderer, IMAGE_PATH_ICON_SAVE),
@@ -65,7 +65,7 @@ void SDLManager::runEventLoop()
 	ImGuiIO& io = ImGui::GetIO();
 	ImGui::StyleColorsDark();
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
-	io.Fonts->AddFontFromFileTTF(FONT_PATH_TAHOMA, 20.0);
+	io.Fonts->AddFontFromFileTTF(FONT_PATH_ROBOTO, 20.0);
 	ImGui_ImplSDL2_InitForSDLRenderer(window.Get(), renderer.Get());
 	ImGui_ImplSDLRenderer2_Init(renderer.Get());
 
