@@ -140,6 +140,7 @@ protected:
 	std::shared_ptr<IControllerChild> createReplacement() override;
 
 	void onStarted() override;
+	void onFinished() override;
 	void onLoop() override;
 	void onMouseMove(int x, int y) override;
 	void onMouseBtnDown(MouseBtn btn, int x, int y) override;

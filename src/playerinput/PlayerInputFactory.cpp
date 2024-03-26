@@ -49,7 +49,8 @@ std::shared_ptr<IPlayerInput> PlayerInputFactory::createImmobilePlayerInput()
 	return std::make_shared<ImmobilePlayerInput>();
 }
 
-std::shared_ptr<IPlayerInput> PlayerInputFactory::createAIPlayerInput()
+std::shared_ptr<IPlayerInput> PlayerInputFactory::createAIPlayerInput(
+	std::shared_ptr<IAIPlayerAgent> agent)
 {
-	return std::make_shared<AIPlayerInput>();
+	return std::make_shared<AIPlayerInput>(agent);
 }

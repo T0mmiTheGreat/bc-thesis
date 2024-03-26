@@ -100,11 +100,12 @@ private:
 		const PlayerDataInternal& playerData);
 	
 	std::shared_ptr<IPlayerInput> playerDataToPlayerInput(
-		const PlayerDataInternal& playerData) const;
+		const PlayerDataInternal& playerData,
+		std::shared_ptr<IAIPlayerAgent>& botAgent) const;
 	std::shared_ptr<IPlayerInput> playerHumanToPlayerInput(
-		PlayerInputType input) const;
+		PlayerInputType input, std::shared_ptr<IAIPlayerAgent>& botAgent) const;
 	std::shared_ptr<IPlayerInput> playerBotToPlayerInput(
-		PlayerBrainType brain) const;
+		PlayerBrainType brain, std::shared_ptr<IAIPlayerAgent>& botAgent) const;
 protected:
 	std::shared_ptr<IControllerChild> createReplacement() override;
 	

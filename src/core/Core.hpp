@@ -18,6 +18,7 @@
 #include <vector>
 
 #include "types.hpp"
+#include "aiplayeragent/IAIPlayerAgent.hpp"
 #include "core/Common.hpp"
 #include "core/CoreAction.hpp"
 #include "core/bonuseffect/BonusEffect.hpp"
@@ -70,6 +71,7 @@ private:
 
 	Timer m_tickTimer;
 	std::unordered_map<PlayerId, PlayerStateInternal> m_players;
+	std::vector<std::shared_ptr<IAIPlayerAgent>> m_aiAgents;
 	std::unique_ptr<StageObstacles> m_stageObstacles;
 	std::unique_ptr<StageBonuses> m_stageBonuses;
 
@@ -186,6 +188,8 @@ private:
 	static Timer createNewBonusTimer();
 	void resetBonusTimer();
 
+	void notifyAgents();
+
 	/**
 	 * @brief Calculates the size (radius) of the player based on their HP.
 	 */
@@ -243,6 +247,13 @@ public:
 	 * @brief Constructs a new Core object.
 	 */
 	Core(const GameSetupData& gsdata);
+	/**
+	 * @brief Quits the core.
+	 * 
+	 * @details This method must be called before calling the object destructor,
+	 *          exactly once. 
+	 */
+	void quit();
 	/**
 	 * @brief Event that happens every event loop iteration.
 	 * 

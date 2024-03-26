@@ -13,6 +13,7 @@
 
 #include "imgui.h"
 
+#include "aiplayeragent/AIPlayerAgentFactory.hpp"
 #include "controller/ControllerFactory.hpp"
 #include "playerinput/PlayerInputFactory.hpp"
 #include "stageserializer/StageSerializerFactory.hpp"
@@ -23,10 +24,17 @@ void GameSetupController::updateGsdata()
 
 	m_gsdata.stage = m_gsdataInternal.stage;
 
+	std::shared_ptr<IAIPlayerAgent> botAgent;
+
 	m_gsdata.players.clear();
+	m_gsdata.aiAgents.clear();
 	for (int i = 0; i < m_gsdataInternal.playerCount; ++i) {
 		m_gsdata.players.push_back(playerDataToPlayerInput(
-			m_gsdataInternal.players[i]));
+			m_gsdataInternal.players[i], botAgent));
+		
+		if (botAgent != nullptr) {
+			m_gsdata.aiAgents.push_back(std::move(botAgent));
+		}
 	}
 }
 
@@ -222,13 +230,14 @@ const char* GameSetupController::playerInputOrBrainToText(
 }
 
 std::shared_ptr<IPlayerInput> GameSetupController::playerDataToPlayerInput(
-	const PlayerDataInternal& playerData) const
+	const PlayerDataInternal& playerData,
+	std::shared_ptr<IAIPlayerAgent>& botAgent) const
 {
 	switch (playerData.species) {
 		case PLAYER_HUMAN:
-			return playerHumanToPlayerInput(playerData.humanInput);
+			return playerHumanToPlayerInput(playerData.humanInput, botAgent);
 		case PLAYER_BOT:
-			return playerBotToPlayerInput(playerData.botBrain);
+			return playerBotToPlayerInput(playerData.botBrain, botAgent);
 		case COUNT_PLAYERSPECIES: break;
 	}
 
@@ -238,8 +247,10 @@ std::shared_ptr<IPlayerInput> GameSetupController::playerDataToPlayerInput(
 }
 
 std::shared_ptr<IPlayerInput> GameSetupController::playerHumanToPlayerInput(
-	PlayerInputType input) const
+	PlayerInputType input, std::shared_ptr<IAIPlayerAgent>& botAgent) const
 {
+	botAgent = nullptr;
+
 	switch (input) {
 		case INPUT_WSAD_Q:
 			return PlayerInputFactory::createKeyboardPlayerInputWSADQ(sysProxy);
@@ -257,11 +268,12 @@ std::shared_ptr<IPlayerInput> GameSetupController::playerHumanToPlayerInput(
 }
 
 std::shared_ptr<IPlayerInput> GameSetupController::playerBotToPlayerInput(
-	PlayerBrainType brain) const
+	PlayerBrainType brain, std::shared_ptr<IAIPlayerAgent>& botAgent) const
 {
 	switch (brain) {
 		case BRAIN_LADYBUG:
-			return PlayerInputFactory::createAIPlayerInput();
+			botAgent = AIPlayerAgentFactory::createLadybugAIPlayerAgent();
+			return PlayerInputFactory::createAIPlayerInput(botAgent);
 		case COUNT_PLAYERBRAINTYPE: break;
 	}
 

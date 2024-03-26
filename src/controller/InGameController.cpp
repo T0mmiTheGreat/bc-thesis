@@ -479,6 +479,11 @@ void InGameController::onStarted()
 	updateSpritesByAction(action);
 }
 
+void InGameController::onFinished()
+{
+	m_core->quit();
+}
+
 void InGameController::onLoop()
 {
 	updateHpRecoverySprites();

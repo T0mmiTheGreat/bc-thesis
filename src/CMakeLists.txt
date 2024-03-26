@@ -93,6 +93,9 @@ set(SOURCE_FILES
 	stageserializer/StageSerializerBase.cpp
 	stageserializer/StageSerializerFactory.cpp
 	stageserializer/YAMLStageSerializer.cpp
+	aiplayeragent/AIPlayerAgentFactory.cpp
+	aiplayeragent/AIPlayerAgentBase.cpp
+	aiplayeragent/LadybugAIPlayerAgent.cpp
 )
 
 # Headers (*.hpp)
@@ -187,6 +190,10 @@ set(HEADER_FILES
 	stageserializer/YAMLStageSerializer.hpp
 	utilities/unorderedSetWithIndexes/UnorderedSetWithIndexes.hpp
 	gamesetupdata/GameSetupData.hpp
+	aiplayeragent/IAIPlayerAgent.hpp
+	aiplayeragent/AIPlayerAgentFactory.hpp
+	aiplayeragent/AIPlayerAgentBase.hpp
+	aiplayeragent/LadybugAIPlayerAgent.hpp
 )
 
 # Imgui files

@@ -14,13 +14,14 @@
 
 #include <memory>
 
+#include "aiplayeragent/IAIPlayerAgent.hpp"
 #include "playerinput/PlayerInputBase.hpp"
 
 class AIPlayerInput : public PlayerInputBase {
 private:
-	PlayerInputFlags m_prevMove;
+	std::shared_ptr<IAIPlayerAgent> m_agent;
 public:
-	AIPlayerInput();
+	AIPlayerInput(std::shared_ptr<IAIPlayerAgent> agent);
 	PlayerInputFlags readInput() override;
 };
 

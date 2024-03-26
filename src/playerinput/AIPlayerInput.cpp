@@ -13,18 +13,11 @@
 
 #include <cstdlib>
 
-AIPlayerInput::AIPlayerInput()
+AIPlayerInput::AIPlayerInput(std::shared_ptr<IAIPlayerAgent> agent)
+	: m_agent{agent}
 {}
 
 PlayerInputFlags AIPlayerInput::readInput()
 {
-	auto randVal = rand();
-	if ((randVal % 256) < (1 << 4)) {
-		m_prevMove.left  = (randVal & (1 << 0));
-		m_prevMove.up    = (randVal & (1 << 1));
-		m_prevMove.right = (randVal & (1 << 2));
-		m_prevMove.down  = (randVal & (1 << 3));
-	}
-
-	return m_prevMove;
+	return m_agent->getPlayerInput();
 }

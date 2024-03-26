@@ -15,6 +15,7 @@
 #include <memory>
 
 #include "types.hpp"
+#include "aiplayeragent/IAIPlayerAgent.hpp"
 #include "playerinput/IPlayerInput.hpp"
 #include "playerinput/ISysProxyPlayerInput.hpp"
 
@@ -42,7 +43,7 @@ public:
 	static std::shared_ptr<IPlayerInput> createKeyboardPlayerInputArrowsShift(
 		std::shared_ptr<ISysProxyPlayerInput> sysProxy);
 	static std::shared_ptr<IPlayerInput> createImmobilePlayerInput();
-	static std::shared_ptr<IPlayerInput> createAIPlayerInput();
+	static std::shared_ptr<IPlayerInput> createAIPlayerInput(std::shared_ptr<IAIPlayerAgent> agent);
 };
 
 #endif // PLAYERINPUTFACTORY_HPP

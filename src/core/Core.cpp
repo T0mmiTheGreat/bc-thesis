@@ -435,6 +435,13 @@ void Core::resetBonusTimer()
 	m_bonusTimer = createNewBonusTimer();
 }
 
+void Core::notifyAgents()
+{
+	for (auto& agent : m_aiAgents) {
+		agent->plan();
+	}
+}
+
 double Core::getPlayerSize(PlayerId id) const
 {
 	return getPlayerSize(m_players.at(id).hp);
@@ -544,6 +551,9 @@ CoreActionPtr Core::initializeStage()
 		actionPlayerGroup.push_back(actionSetPlayerSize);
 	}
 
+	// AI agents (copy)
+	m_aiAgents = m_gsdata.aiAgents;
+
 	// Obstacles and bounds
 	Size2d bounds = getStageSize();;
 	m_stageObstacles = std::make_unique<StageObstacles>(
@@ -578,7 +588,9 @@ CoreActionPtr Core::initializeStage()
 
 CoreActionPtr Core::tick()
 {
-	return playersActions();
+	auto res = playersActions();
+	notifyAgents();
+	return res;
 }
 
 CoreActionPtr Core::playersActions()
@@ -606,6 +618,13 @@ CoreActionPtr Core::playersActions()
 		actionGenerateBonus
 	);
 	return res;
+}
+
+void Core::quit()
+{
+	for (auto& agent : m_aiAgents) {
+		agent->kill();
+	}
 }
 
 const CoreActionPtr Core::loopEvent()

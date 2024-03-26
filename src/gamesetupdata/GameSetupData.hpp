@@ -15,12 +15,14 @@
 #include <memory>
 #include <vector>
 
+#include "aiplayeragent/IAIPlayerAgent.hpp"
 #include "playerinput/IPlayerInput.hpp"
 #include "stageserializer/IStageSerializer.hpp"
 
 struct GameSetupData {
 	std::shared_ptr<IStageSerializer> stage;
 	std::vector<std::shared_ptr<IPlayerInput>> players;
+	std::vector<std::shared_ptr<IAIPlayerAgent>> aiAgents;
 };
 
 #endif // GAMESETUPDATA_HPP
