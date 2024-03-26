@@ -553,6 +553,10 @@ CoreActionPtr Core::initializeStage()
 
 	// AI agents (copy)
 	m_aiAgents = m_gsdata.aiAgents;
+	// And assign them a game state proxy
+	for (auto& agent : m_aiAgents) {
+		agent->assignProxy(std::make_shared<GameStateAgentProxyImplem>(this));
+	}
 
 	// Obstacles and bounds
 	Size2d bounds = getStageSize();;

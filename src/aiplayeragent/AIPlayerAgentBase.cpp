@@ -53,8 +53,11 @@ AIPlayerAgentBase::AIPlayerAgentBase()
 	, m_isPlanNotify{false}
 	, m_cvIsPlanNotify()
 	, m_mutexIsPlanNotify()
+
+	, gsProxy{nullptr}
 #else // !USE_THREADS
 	: m_isThreadFinished{false}
+	, gsProxy{nullptr}
 #endif // !USE_THREADS
 {}
 
@@ -91,8 +94,18 @@ void AIPlayerAgentBase::plan()
 	waitForCondition(m_mutexIsPlanning, m_cvIsPlanning,
 		[this](){ return this->m_isPlanning; });
 #else // !USE_THREADS
+	assert(gsProxy != nullptr);
 	doPlan();
 #endif // !USE_THREADS
+}
+
+void AIPlayerAgentBase::assignProxy(GameStateAgentProxyP value)
+{
+#ifndef USE_THREADS
+	gsProxy = value;
+#else // USE_THREADS
+#	error Implement the game state proxy usage.
+#endif
 }
 
 void AIPlayerAgentBase::kill()

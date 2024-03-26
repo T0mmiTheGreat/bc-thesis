@@ -72,6 +72,8 @@ private:
 		Predicate pred);
 #endif // USE_THREADS
 protected:
+	GameStateAgentProxyP gsProxy;
+
 	/**
 	 * @brief Performs planning.
 	 * 
@@ -88,6 +90,7 @@ public:
 	~AIPlayerAgentBase();
 	PlayerInputFlags getPlayerInput() override;
 	void plan() override;
+	void assignProxy(GameStateAgentProxyP value) override;
 	void kill() override;
 };
 

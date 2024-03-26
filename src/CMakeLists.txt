@@ -194,6 +194,7 @@ set(HEADER_FILES
 	aiplayeragent/AIPlayerAgentFactory.hpp
 	aiplayeragent/AIPlayerAgentBase.hpp
 	aiplayeragent/LadybugAIPlayerAgent.hpp
+	aiplayeragent/GameStateAgentProxy.hpp
 )
 
 # Imgui files

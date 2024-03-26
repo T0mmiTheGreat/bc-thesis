@@ -18,6 +18,7 @@
 #include <vector>
 
 #include "types.hpp"
+#include "aiplayeragent/GameStateAgentProxy.hpp"
 #include "aiplayeragent/IAIPlayerAgent.hpp"
 #include "core/Common.hpp"
 #include "core/CoreAction.hpp"
@@ -56,6 +57,34 @@ private:
 		std::unordered_map<PlayerId, PlayerTurn> playerTurns;
 		std::unordered_set<BonusId> collectedBonuses;
 	};
+
+	friend class GameStateAgentProxyImplem;
+	class GameStateAgentProxyImplem : public GameStateAgentProxy {
+	private:
+		const Core* m_core;
+	public:
+		GameStateAgentProxyImplem(const Core* core)
+			: m_core{core}
+		{}
+		PlayerStateCollection getPlayers() override {
+			PlayerStateCollection res;
+			PlayerState ps;
+
+			res.reserve(m_core->m_players.size());
+			for (const auto& playerPair : m_core->m_players) {
+				const auto& player = playerPair.second;
+
+				// FIXME: Is it good idea to cast it?
+				ps.pos = fromCgalPoint(player.pos);
+				ps.hp = player.hp;
+				ps.strength = getPlayerStrength(player.hp);
+				
+				res.push_back(std::move(ps));
+			}
+			return res;
+		}
+	};
+	
 private:
 	static constexpr double PLAYER_HP_INITIAL = 1.0;
 	// Strength (damage dealt per millisecond) of a player with full HP

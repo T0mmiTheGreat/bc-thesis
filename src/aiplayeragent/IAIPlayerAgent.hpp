@@ -12,6 +12,7 @@
 #ifndef IAIPLAYERAGENT_HPP
 #define IAIPLAYERAGENT_HPP
 
+#include "aiplayeragent/GameStateAgentProxy.hpp"
 #include "playerinput/IPlayerInput.hpp"
 
 class IAIPlayerAgent {
@@ -37,10 +38,23 @@ public:
 	 * @details The planning will be run in a separate thread. If the planning
 	 *          is already running, waits until it's finished.
 	 * 
+	 *          The game state proxy must have been assigned using the 
+	 *          `assignProxy()` method before calling this method.
+	 * 
 	 * @note Not thread safe; a call to this method must be finished before
 	 *       calling it again.
 	 */
 	virtual void plan() = 0;
+	/**
+	 * @brief Provides a game state proxy objects to the agent.
+	 * 
+	 * @details The agent has no means of planning if they don't have access to
+	 *          the game state. The reason why it is not passed as a constructor
+	 *          parameter is because generally the agents are created before the
+	 *          proxy may exist (proxies are created in `Core` which gets the
+	 *          agents as a constructor parameter).
+	 */
+	virtual void assignProxy(GameStateAgentProxyP value) = 0;
 	/**
 	 * @brief Kill the agent.
 	 * 
