@@ -12,9 +12,16 @@
 #include "aiplayeragent/AIPlayerAgentFactory.hpp"
 
 #include "aiplayeragent/LadybugAIPlayerAgent.hpp"
+#include "aiplayeragent/BlindPredatorAIPlayerAgent.hpp"
 
 std::shared_ptr<IAIPlayerAgent>
 AIPlayerAgentFactory::createLadybugAIPlayerAgent(PlayerId playerId)
 {
 	return std::make_shared<LadybugAIPlayerAgent>(playerId);
+}
+
+std::shared_ptr<IAIPlayerAgent>
+AIPlayerAgentFactory::createBlindPredatorAIPlayerAgent(PlayerId playerId)
+{
+	return std::make_shared<BlindPredatorAIPlayerAgent>(playerId);
 }

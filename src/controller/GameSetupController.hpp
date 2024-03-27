@@ -43,6 +43,7 @@ private:
 	};
 	enum PlayerBrainType {
 		BRAIN_LADYBUG,
+		BRAIN_BLIND_PREDATOR,
 
 		COUNT_PLAYERBRAINTYPE,
 	};

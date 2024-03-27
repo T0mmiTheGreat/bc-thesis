@@ -19,7 +19,10 @@
 
 class AIPlayerAgentFactory {
 public:
-	static std::shared_ptr<IAIPlayerAgent> createLadybugAIPlayerAgent(PlayerId playerId);
+	static std::shared_ptr<IAIPlayerAgent> createLadybugAIPlayerAgent(
+		PlayerId playerId);
+	static std::shared_ptr<IAIPlayerAgent> createBlindPredatorAIPlayerAgent(
+		PlayerId playerId);
 };
 
 #endif // AIPLAYERAGENTFACTORY_HPP

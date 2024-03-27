@@ -96,6 +96,7 @@ set(SOURCE_FILES
 	aiplayeragent/AIPlayerAgentFactory.cpp
 	aiplayeragent/AIPlayerAgentBase.cpp
 	aiplayeragent/LadybugAIPlayerAgent.cpp
+	aiplayeragent/BlindPredatorAIPlayerAgent.cpp
 )
 
 # Headers (*.hpp)
@@ -194,8 +195,9 @@ set(HEADER_FILES
 	aiplayeragent/IAIPlayerAgent.hpp
 	aiplayeragent/AIPlayerAgentFactory.hpp
 	aiplayeragent/AIPlayerAgentBase.hpp
-	aiplayeragent/LadybugAIPlayerAgent.hpp
 	aiplayeragent/GameStateAgentProxy.hpp
+	aiplayeragent/LadybugAIPlayerAgent.hpp
+	aiplayeragent/BlindPredatorAIPlayerAgent.hpp
 )
 
 # Imgui files
