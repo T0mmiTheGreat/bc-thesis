@@ -208,8 +208,9 @@ const char* GameSetupController::playerInputToText(PlayerInputType input)
 const char* GameSetupController::playerBrainToText(PlayerBrainType brain)
 {
 	switch (brain) {
-		case BRAIN_LADYBUG: return "Ladybug";
+		case BRAIN_LADYBUG:        return "Ladybug";
 		case BRAIN_BLIND_PREDATOR: return "Blind predator";
+		case BRAIN_BLIND_PREY:     return "Blind prey";
 		case COUNT_PLAYERBRAINTYPE: break;
 	}
 
@@ -278,21 +279,27 @@ std::shared_ptr<IPlayerInput> GameSetupController::playerBotToPlayerInput(
 	PlayerBrainType brain, PlayerId playerId,
 	std::shared_ptr<IAIPlayerAgent>& botAgent) const
 {
+	botAgent = nullptr;
+
 	switch (brain) {
 		case BRAIN_LADYBUG:
 			botAgent = AIPlayerAgentFactory::createLadybugAIPlayerAgent(
 				playerId);
-			return PlayerInputFactory::createAIPlayerInput(botAgent);
+			break;
 		case BRAIN_BLIND_PREDATOR:
 			botAgent = AIPlayerAgentFactory::createBlindPredatorAIPlayerAgent(
 				playerId);
-			return PlayerInputFactory::createAIPlayerInput(botAgent);
+			break;
+		case BRAIN_BLIND_PREY:
+			botAgent = AIPlayerAgentFactory::createBlindPreyAIPlayerAgent(
+				playerId);
+			break;
 		case COUNT_PLAYERBRAINTYPE: break;
 	}
 
-	// Default
-	assert(((void)"Invalid player brain", false));
-	return nullptr;
+	assert(((void)"Invalid player brain", botAgent != nullptr));
+
+	return PlayerInputFactory::createAIPlayerInput(botAgent);
 }
 
 std::shared_ptr<IControllerChild> GameSetupController::createReplacement()

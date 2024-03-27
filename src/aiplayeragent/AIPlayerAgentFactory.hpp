@@ -23,6 +23,8 @@ public:
 		PlayerId playerId);
 	static std::shared_ptr<IAIPlayerAgent> createBlindPredatorAIPlayerAgent(
 		PlayerId playerId);
+	static std::shared_ptr<IAIPlayerAgent> createBlindPreyAIPlayerAgent(
+		PlayerId playerId);
 };
 
 #endif // AIPLAYERAGENTFACTORY_HPP
