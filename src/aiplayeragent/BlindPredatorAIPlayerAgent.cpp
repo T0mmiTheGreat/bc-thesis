@@ -11,44 +11,21 @@
 
 #include "aiplayeragent/BlindPredatorAIPlayerAgent.hpp"
 
-std::vector<PlayerInputFlags> BlindPredatorAIPlayerAgent::generateInputs()
+Point_2 BlindPredatorAIPlayerAgent::calculateNewPosition(
+	const PlayerInputFlags& input) const
 {
-	static constexpr size_t NUM_INPUTS = 9;
+	const auto& me = gsProxy->getPlayers().at(playerId);
 
-	std::vector<PlayerInputFlags> res;
-	res.reserve(NUM_INPUTS);
-
-	res.push_back(PlayerInputFlags());
-	res.push_back(PlayerInputFlags::createW());
-	res.push_back(PlayerInputFlags::createNW());
-	res.push_back(PlayerInputFlags::createN());
-	res.push_back(PlayerInputFlags::createNE());
-	res.push_back(PlayerInputFlags::createE());
-	res.push_back(PlayerInputFlags::createSE());
-	res.push_back(PlayerInputFlags::createS());
-	res.push_back(PlayerInputFlags::createSW());
-
-	return res;
-}
-
-double BlindPredatorAIPlayerAgent::evaluatePosition(const PointF& pos) const
-{
-	double res = 0.0;
-
-	for (const auto& [id, player] : gsProxy->getPlayers()) {
-		// Don't evaluate yourself
-		if (id == playerId) continue;
-
-		res += evaluatePlayer(player, pos);
-	}
-
+	double vx, vy;
+	input.toVector(vx, vy);
+	auto res = me.pos + Vector_2(vx, vy);
 	return res;
 }
 
 double BlindPredatorAIPlayerAgent::evaluatePlayer(
-	const GameStateAgentProxy::PlayerState& player, const PointF& pos)
+	const GameStateAgentProxy::PlayerState& player, const Point_2& pos) const
 {
-	double sqdist = pos.sqrDistance(player.pos);
+	double sqdist = CGAL::squared_distance(pos, player.pos);
 	double hp = player.hp;
 
 	// Player HP significance
@@ -64,43 +41,6 @@ double BlindPredatorAIPlayerAgent::evaluatePlayer(
 	return hpEval + sqdistEval;
 }
 
-void BlindPredatorAIPlayerAgent::doPlan()
-{
-	// This agent state
-	const auto& me = gsProxy->getPlayers().at(playerId);
-
-	// Possible inputs
-	auto inputs = generateInputs();
-
-	// Best evaluation of all inputs
-	double bestEval = -std::numeric_limits<double>::infinity();
-	// Index of the best evaluated input
-	size_t bestEvalIdx = 0;
-	
-	PointF mvVect;
-	double eval;
-
-	for (size_t i = 0; i < inputs.size(); ++i) {
-		// Calculate the movement vector for the given input
-		inputs[i].toVector(mvVect.x, mvVect.y);
-
-		eval = evaluatePosition(me.pos + mvVect);
-		if (eval > bestEval) {
-			// Found a better input
-
-			bestEval = eval;
-			bestEvalIdx = i;
-		}
-	}
-
-	m_input = inputs[bestEvalIdx];
-}
-
-PlayerInputFlags BlindPredatorAIPlayerAgent::doGetPlayerInput()
-{
-	return m_input;
-}
-
 BlindPredatorAIPlayerAgent::BlindPredatorAIPlayerAgent(PlayerId playerId)
-	: AIPlayerAgentBase(playerId)
+	: OneStepLookaheadAIPlayerAgentBase(playerId)
 {}

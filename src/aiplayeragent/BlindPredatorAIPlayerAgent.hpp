@@ -12,23 +12,14 @@
 #ifndef BLINDPREDATORAIPLAYERAGENT_HPP
 #define BLINDPREDATORAIPLAYERAGENT_HPP
 
-#include <vector>
+#include "aiplayeragent/OneStepLookaheadAIPlayerAgentBase.hpp"
 
-#include "types.hpp"
-#include "aiplayeragent/AIPlayerAgentBase.hpp"
-#include "playerinput/PlayerInputFlags.hpp"
-
-class BlindPredatorAIPlayerAgent : public AIPlayerAgentBase {
-private:
-	PlayerInputFlags m_input;
-
-	static std::vector<PlayerInputFlags> generateInputs();
-	double evaluatePosition(const PointF& pos) const;
-	static double evaluatePlayer(const GameStateAgentProxy::PlayerState& player,
-		const PointF& pos);
+class BlindPredatorAIPlayerAgent : public OneStepLookaheadAIPlayerAgentBase {
 protected:
-	void doPlan() override;
-	PlayerInputFlags doGetPlayerInput() override;
+	Point_2 calculateNewPosition(const PlayerInputFlags& input) const override;
+	double evaluatePlayer(
+		const GameStateAgentProxy::PlayerState& player, const Point_2& pos)
+		const override;
 public:
 	BlindPredatorAIPlayerAgent(PlayerId playerId);
 };

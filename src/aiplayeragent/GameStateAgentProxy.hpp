@@ -15,8 +15,7 @@
 #include <memory>
 #include <unordered_map>
 
-#include "types.hpp"
-#include "core/Common.hpp"
+#include "core/geometry/Geometry.hpp"
 #include "core/stageobstacles/StageObstacles.hpp"
 
 /**
@@ -25,7 +24,7 @@
 class GameStateAgentProxy {
 public:
 	struct PlayerState {
-		PointF pos;      // Player's position
+		Point_2 pos;     // Player's position
 		double hp;       // Player's health
 		double speed;    // Player's speed (steps per ms)
 		double strength; // Player's strength (damage dealt per ms).

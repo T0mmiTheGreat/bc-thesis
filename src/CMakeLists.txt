@@ -95,6 +95,7 @@ set(SOURCE_FILES
 	stageserializer/YAMLStageSerializer.cpp
 	aiplayeragent/AIPlayerAgentFactory.cpp
 	aiplayeragent/AIPlayerAgentBase.cpp
+	aiplayeragent/OneStepLookaheadAIPlayerAgentBase.cpp
 	aiplayeragent/LadybugAIPlayerAgent.cpp
 	aiplayeragent/BlindPredatorAIPlayerAgent.cpp
 	aiplayeragent/BlindPreyAIPlayerAgent.cpp
@@ -196,6 +197,7 @@ set(HEADER_FILES
 	aiplayeragent/IAIPlayerAgent.hpp
 	aiplayeragent/AIPlayerAgentFactory.hpp
 	aiplayeragent/AIPlayerAgentBase.hpp
+	aiplayeragent/OneStepLookaheadAIPlayerAgentBase.hpp
 	aiplayeragent/GameStateAgentProxy.hpp
 	aiplayeragent/LadybugAIPlayerAgent.hpp
 	aiplayeragent/BlindPredatorAIPlayerAgent.hpp

@@ -73,7 +73,7 @@ private:
 			for (const auto& [id, playerState] : m_core.m_players) {
 				auto& playerRef = m_players[id];
 
-				playerRef.pos      = fromCgalPoint(playerState.pos);
+				playerRef.pos      = playerState.pos;
 				playerRef.hp       = playerState.hp;
 				playerRef.speed    = Core::getPlayerSpeed(playerState.hp);
 				playerRef.strength = Core::getPlayerStrength(playerState.hp);
