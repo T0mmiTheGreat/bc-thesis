@@ -100,6 +100,7 @@ set(SOURCE_FILES
 	aiplayeragent/BlindPredatorAIPlayerAgent.cpp
 	aiplayeragent/BlindPreyAIPlayerAgent.cpp
 	aiplayeragent/WallAwarePredatorAIPlayerAgent.cpp
+	aiplayeragent/WallAwarePreyAIPlayerAgent.cpp
 )
 
 # Headers (*.hpp)
@@ -204,6 +205,7 @@ set(HEADER_FILES
 	aiplayeragent/BlindPredatorAIPlayerAgent.hpp
 	aiplayeragent/BlindPreyAIPlayerAgent.hpp
 	aiplayeragent/WallAwarePredatorAIPlayerAgent.hpp
+	aiplayeragent/WallAwarePreyAIPlayerAgent.hpp
 )
 
 # Imgui files

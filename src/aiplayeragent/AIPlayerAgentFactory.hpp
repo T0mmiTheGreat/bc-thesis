@@ -27,6 +27,8 @@ public:
 		PlayerId playerId);
 	static std::shared_ptr<IAIPlayerAgent> createWallAwarePredatorAIPlayerAgent(
 		PlayerId playerId);
+	static std::shared_ptr<IAIPlayerAgent> createWallAwarePreyAIPlayerAgent(
+		PlayerId playerId);
 };
 
 #endif // AIPLAYERAGENTFACTORY_HPP
