@@ -111,6 +111,10 @@ private:
 	 * @return The action performed.
 	 */
 	CoreActionPtr initializeStage();
+	CoreActionPtr initializeStagePlayers();
+	CoreActionPtr initializeStageObstaclesAndBounds();
+	CoreActionPtr initializeStageBonuses();
+	CoreActionPtr initializeStageAiAgents();
 	/**
 	 * @brief Game tick event.
 	 * 

@@ -437,6 +437,8 @@ void Core::resetBonusTimer()
 
 void Core::notifyAgents()
 {
+	m_gsAgentProxy->update(this);
+
 	for (auto& agent : m_aiAgents) {
 		agent->plan();
 	}
@@ -517,18 +519,35 @@ void Core::getPlayerMovementVector(const PlayerInputFlags& inputFlags,
 
 CoreActionPtr Core::initializeStage()
 {
+	// Initialize all
+	auto actionInitPlayers = initializeStagePlayers();
+	auto actionInitObstaclesAndBounds = initializeStageObstaclesAndBounds();
+	auto actionInitBonuses = initializeStageBonuses();
+	auto actionInitAiAgents = initializeStageAiAgents();
+
+	m_isInitialized = true;
+	
+	// Merge
+	auto res = CoreActionMultiple::getMergedActions(
+		actionInitPlayers,
+		actionInitObstaclesAndBounds,
+		actionInitBonuses,
+		actionInitAiAgents
+	);
+	
+	return res;
+}
+
+CoreActionPtr Core::initializeStagePlayers()
+{
 	PlayerStateInternal newPlayer;
 
-	CoreActionMultiple::ActionsCollection actionPlayerGroup;
+	CoreActionMultiple::ActionsCollection actionGroup;
 	std::shared_ptr<CoreActionAddPlayer> actionAddPlayer;
 	std::shared_ptr<CoreActionSetPlayerPos> actionSetPlayerPos;
 	std::shared_ptr<CoreActionSetPlayerHp> actionSetPlayerHp;
 	std::shared_ptr<CoreActionSetPlayerSize> actionSetPlayerSize;
-	CoreActionMultiple::ActionsCollection actionObstacleGroup;
-	std::shared_ptr<CoreActionAddObstacle> actionAddObstacle;
-	std::shared_ptr<CoreActionSetStageSize> actionSetStageSize;
-
-	// Players
+	
 	for (PlayerId id = 0; id < m_gsdata.players.size(); id++) {
 		// Initialize player
 		const auto& playerPos = m_gsdata.stage->getPlayers()[id];
@@ -545,61 +564,68 @@ CoreActionPtr Core::initializeStage()
 			newPlayer.hp);
 		actionSetPlayerSize = std::make_shared<CoreActionSetPlayerSize>(id,
 			getPlayerSize(newPlayer.hp));
-		actionPlayerGroup.push_back(actionAddPlayer);
-		actionPlayerGroup.push_back(actionSetPlayerPos);
-		actionPlayerGroup.push_back(actionSetPlayerHp);
-		actionPlayerGroup.push_back(actionSetPlayerSize);
+		actionGroup.push_back(actionAddPlayer);
+		actionGroup.push_back(actionSetPlayerPos);
+		actionGroup.push_back(actionSetPlayerHp);
+		actionGroup.push_back(actionSetPlayerSize);
 	}
 
+	// Merge
+	auto res = CoreActionMultiple::getMergedActions(actionGroup);
 
-	// AI agents (copy)...
-	m_aiAgents = m_gsdata.aiAgents;
-	// ... create a game state proxy...
-	m_gsAgentProxy = std::make_shared<GameStateAgentProxyImplem>();
-	// ... and assign it to the agents
-	for (auto& agent : m_aiAgents) {
-		agent->assignProxy(m_gsAgentProxy);
-	}
+	return res;
+}
 
+CoreActionPtr Core::initializeStageObstaclesAndBounds()
+{
+	auto obstacles = getObstaclesList();
+	auto bounds = getStageSize();
 
-	// Obstacles and bounds
-	Size2d bounds = getStageSize();;
-	m_stageObstacles = std::make_unique<StageObstacles>(
-		getObstaclesList(), bounds);
-	
-	// Add to actions list (obstacles)
-	auto obstacles = m_gsdata.stage->getObstacles();
+	CoreActionMultiple::ActionsCollection actionsGroup;
+	std::shared_ptr<CoreActionAddObstacle> actionAddObstacle;
+	std::shared_ptr<CoreActionSetStageSize> actionSetStageSize;
+
+	m_stageObstacles = std::make_unique<StageObstacles>(obstacles, bounds);
+
+	// Actions
+	// Obstacles
 	for (const auto& obstacle : obstacles) {
 		actionAddObstacle = std::make_shared<CoreActionAddObstacle>(
 			PolygonF(obstacle));
-		actionObstacleGroup.push_back(actionAddObstacle);
+		actionsGroup.push_back(actionAddObstacle);
 	}
+	// Bounds
+	actionSetStageSize = std::make_shared<CoreActionSetStageSize>(bounds);
+	actionsGroup.push_back(actionSetStageSize);
 
+	// Merge
+	auto res = CoreActionMultiple::getMergedActions(actionsGroup);
 
-	// Bonuses
+	return res;
+}
+
+CoreActionPtr Core::initializeStageBonuses()
+{
 	m_stageBonuses = std::make_unique<StageBonuses>(
 		getObstaclesList(), getStageSize());
 	
+	return std::make_shared<CoreActionNone>();
+}
 
-	// Initial game state proxy update
-	m_gsAgentProxy->update(this);
+CoreActionPtr Core::initializeStageAiAgents()
+{
+	// Copy
+	m_aiAgents = m_gsdata.aiAgents;
 
+	// Create a game state proxy
+	m_gsAgentProxy = std::make_shared<GameStateAgentProxyImplem>();
 
-	m_isInitialized = true;
-
-
-	// Add to actions list (bounds)
-	actionSetStageSize = std::make_shared<CoreActionSetStageSize>(bounds);
+	// Assign it to the agents
+	for (auto& agent : m_aiAgents) {
+		agent->assignProxy(m_gsAgentProxy);
+	}
 	
-	// Merge
-	auto actionsGroup1 = CoreActionMultiple::getMergedActions(
-		actionPlayerGroup);
-	auto actionsGroup2 = CoreActionMultiple::getMergedActions(
-		actionObstacleGroup);
-	auto res = CoreActionMultiple::getMergedActions(actionsGroup1,
-		actionsGroup2, actionSetStageSize);
-	
-	return res;
+	return std::make_shared<CoreActionNone>();
 }
 
 CoreActionPtr Core::tick()
