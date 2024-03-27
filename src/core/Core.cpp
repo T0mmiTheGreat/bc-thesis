@@ -399,7 +399,7 @@ void Core::resetBonusTimer()
 
 void Core::notifyAgents()
 {
-	m_gsAgentProxy->update(this);
+	m_gsAgentProxy->update();
 
 	for (auto& agent : m_aiAgents) {
 		agent->plan();
@@ -580,7 +580,7 @@ CoreActionPtr Core::initializeStageAiAgents()
 	m_aiAgents = m_gsdata.aiAgents;
 
 	// Create a game state proxy
-	m_gsAgentProxy = std::make_shared<GameStateAgentProxyImplem>();
+	m_gsAgentProxy = std::make_shared<GameStateAgentProxyImplem>(*this);
 
 	// Assign it to the agents
 	for (auto& agent : m_aiAgents) {

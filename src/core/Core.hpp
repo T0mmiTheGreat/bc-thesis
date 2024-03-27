@@ -61,13 +61,16 @@ private:
 	friend class GameStateAgentProxyImplem;
 	class GameStateAgentProxyImplem : public GameStateAgentProxy {
 	private:
+		const Core& m_core;
 		PlayerStateCollection m_players;
 	public:
-		GameStateAgentProxyImplem() {}
+		GameStateAgentProxyImplem(const Core& core)
+			: m_core{core}
+		{}
 
-		void update(const Core* core) {
+		void update() {
 			// Update players
-			for (const auto& [id, playerState] : core->m_players) {
+			for (const auto& [id, playerState] : m_core.m_players) {
 				auto& playerRef = m_players[id];
 
 				playerRef.pos      = fromCgalPoint(playerState.pos);
@@ -79,6 +82,10 @@ private:
 
 		const PlayerStateCollection& getPlayers() const override {
 			return m_players;
+		}
+
+		const StageObstacles& getObstacles() const override {
+			return *m_core.m_stageObstacles;
 		}
 	};
 	

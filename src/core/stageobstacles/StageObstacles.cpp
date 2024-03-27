@@ -134,7 +134,7 @@ bool findNearestCollision(const std::vector<Triangle_2>& collObjs,
 }
 
 Trajectory StageObstacles::getPlayerTrajectory(const Point_2& playerPos,
-	const Vector_2& playerMove, double playerRadius)
+	const Vector_2& playerMove, double playerRadius) const
 {
 	// Square of the maximum error of the bisection method
 	static constexpr double SQR_MAX_ERROR = sqr(0.5);
@@ -187,7 +187,7 @@ Trajectory StageObstacles::getPlayerTrajectory(const Point_2& playerPos,
 }
 
 bool StageObstacles::playerHasCollision(const Point_2& playerPos,
-	double playerRadius)
+	double playerRadius) const
 {
 	Triangle_2 devnull;
 	return findNearestCollision(m_collObjs, Segment_2(playerPos, playerPos),

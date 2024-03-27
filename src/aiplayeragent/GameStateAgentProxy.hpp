@@ -17,6 +17,7 @@
 
 #include "types.hpp"
 #include "core/Common.hpp"
+#include "core/stageobstacles/StageObstacles.hpp"
 
 /**
  * @brief A proxy directing access to the game state for AI player agents.
@@ -37,6 +38,7 @@ public:
 	 * @brief Returns a collection of player states.
 	 */
 	virtual const PlayerStateCollection& getPlayers() const = 0;
+	virtual const StageObstacles& getObstacles() const = 0;
 };
 
 typedef std::shared_ptr<GameStateAgentProxy> GameStateAgentProxyP;

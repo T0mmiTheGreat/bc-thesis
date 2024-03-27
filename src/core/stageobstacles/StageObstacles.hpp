@@ -153,12 +153,12 @@ public:
 	 * @brief Creates the player trajectory, taking the obstacles into account.
 	 */
 	Trajectory getPlayerTrajectory(const Point_2& playerPos,
-		const Vector_2& playerMove, double playerRadius);
+		const Vector_2& playerMove, double playerRadius) const;
 	/**
 	 * @brief Checks whether a player at `playerPos` position having
 	 *        `playerRadius` radius collides with any collision object.
 	 */
-	bool playerHasCollision(const Point_2& playerPos, double playerRadius);
+	bool playerHasCollision(const Point_2& playerPos, double playerRadius) const;
 };
 #endif // !OLD_TRAJECTORY_ALGORITHM
 
