@@ -28,9 +28,11 @@ void GameSetupController::updateGsdata()
 
 	m_gsdata.players.clear();
 	m_gsdata.aiAgents.clear();
-	for (int i = 0; i < m_gsdataInternal.playerCount; ++i) {
+	for (PlayerId i = 0;
+		static_cast<PlayerId>(i) < m_gsdataInternal.playerCount; ++i)
+	{
 		m_gsdata.players.push_back(playerDataToPlayerInput(
-			m_gsdataInternal.players[i], botAgent));
+			m_gsdataInternal.players[i], i, botAgent));
 		
 		if (botAgent != nullptr) {
 			m_gsdata.aiAgents.push_back(std::move(botAgent));
@@ -230,14 +232,16 @@ const char* GameSetupController::playerInputOrBrainToText(
 }
 
 std::shared_ptr<IPlayerInput> GameSetupController::playerDataToPlayerInput(
-	const PlayerDataInternal& playerData,
+	const PlayerDataInternal& playerData, PlayerId playerId,
 	std::shared_ptr<IAIPlayerAgent>& botAgent) const
 {
 	switch (playerData.species) {
 		case PLAYER_HUMAN:
-			return playerHumanToPlayerInput(playerData.humanInput, botAgent);
+			return playerHumanToPlayerInput(playerData.humanInput, playerId,
+				botAgent);
 		case PLAYER_BOT:
-			return playerBotToPlayerInput(playerData.botBrain, botAgent);
+			return playerBotToPlayerInput(playerData.botBrain, playerId,
+				botAgent);
 		case COUNT_PLAYERSPECIES: break;
 	}
 
@@ -247,8 +251,10 @@ std::shared_ptr<IPlayerInput> GameSetupController::playerDataToPlayerInput(
 }
 
 std::shared_ptr<IPlayerInput> GameSetupController::playerHumanToPlayerInput(
-	PlayerInputType input, std::shared_ptr<IAIPlayerAgent>& botAgent) const
+	PlayerInputType input, PlayerId playerId,
+	std::shared_ptr<IAIPlayerAgent>& botAgent) const
 {
+	(void)playerId;
 	botAgent = nullptr;
 
 	switch (input) {
@@ -268,11 +274,13 @@ std::shared_ptr<IPlayerInput> GameSetupController::playerHumanToPlayerInput(
 }
 
 std::shared_ptr<IPlayerInput> GameSetupController::playerBotToPlayerInput(
-	PlayerBrainType brain, std::shared_ptr<IAIPlayerAgent>& botAgent) const
+	PlayerBrainType brain, PlayerId playerId,
+	std::shared_ptr<IAIPlayerAgent>& botAgent) const
 {
 	switch (brain) {
 		case BRAIN_LADYBUG:
-			botAgent = AIPlayerAgentFactory::createLadybugAIPlayerAgent();
+			botAgent = AIPlayerAgentFactory::createLadybugAIPlayerAgent(
+				playerId);
 			return PlayerInputFactory::createAIPlayerInput(botAgent);
 		case COUNT_PLAYERBRAINTYPE: break;
 	}

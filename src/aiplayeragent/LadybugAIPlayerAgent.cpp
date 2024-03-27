@@ -32,6 +32,7 @@ PlayerInputFlags LadybugAIPlayerAgent::doGetPlayerInput()
 	return m_input;
 }
 
-LadybugAIPlayerAgent::LadybugAIPlayerAgent()
-	: m_input()
+LadybugAIPlayerAgent::LadybugAIPlayerAgent(PlayerId playerId)
+	: AIPlayerAgentBase(playerId)
+	, m_input()
 {}

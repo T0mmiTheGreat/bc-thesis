@@ -41,9 +41,9 @@ void AIPlayerAgentBase::threadMain()
 
 #endif // USE_THREADS
 
-AIPlayerAgentBase::AIPlayerAgentBase()
+AIPlayerAgentBase::AIPlayerAgentBase(PlayerId playerId_)
 #ifdef USE_THREADS
-	: m_t(&threadMain, this)
+	: m_thr(&threadMain, this)
 	, m_isThreadFinished{false}
 
 	, m_isPlanning{false}
@@ -55,9 +55,11 @@ AIPlayerAgentBase::AIPlayerAgentBase()
 	, m_mutexIsPlanNotify()
 
 	, gsProxy{nullptr}
+	, playerId{playerId_}
 #else // !USE_THREADS
 	: m_isThreadFinished{false}
 	, gsProxy{nullptr}
+	, playerId{playerId_}
 #endif // !USE_THREADS
 {}
 
@@ -118,6 +120,6 @@ void AIPlayerAgentBase::kill()
 		[this](){ this->m_isPlanNotify = true; });
 
 	// Stop the thread
-	m_t.join();
+	m_thr.join();
 #endif // USE_THREADS
 }

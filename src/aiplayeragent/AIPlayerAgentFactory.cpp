@@ -13,7 +13,8 @@
 
 #include "aiplayeragent/LadybugAIPlayerAgent.hpp"
 
-std::shared_ptr<IAIPlayerAgent> AIPlayerAgentFactory::createLadybugAIPlayerAgent()
+std::shared_ptr<IAIPlayerAgent>
+AIPlayerAgentFactory::createLadybugAIPlayerAgent(PlayerId playerId)
 {
-	return std::make_shared<LadybugAIPlayerAgent>();
+	return std::make_shared<LadybugAIPlayerAgent>(playerId);
 }

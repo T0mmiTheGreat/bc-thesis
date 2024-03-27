@@ -21,7 +21,7 @@ protected:
 	void doPlan() override;
 	PlayerInputFlags doGetPlayerInput() override;
 public:
-	LadybugAIPlayerAgent();
+	LadybugAIPlayerAgent(PlayerId playerId);
 };
 
 #endif // LADYBUGAIPLAYERAGENT_HPP

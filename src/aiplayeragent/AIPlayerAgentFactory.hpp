@@ -15,10 +15,11 @@
 #include <memory>
 
 #include "aiplayeragent/IAIPlayerAgent.hpp"
+#include "core/Common.hpp"
 
 class AIPlayerAgentFactory {
 public:
-	static std::shared_ptr<IAIPlayerAgent> createLadybugAIPlayerAgent();
+	static std::shared_ptr<IAIPlayerAgent> createLadybugAIPlayerAgent(PlayerId playerId);
 };
 
 #endif // AIPLAYERAGENTFACTORY_HPP

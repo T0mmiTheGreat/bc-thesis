@@ -21,12 +21,13 @@
 #endif // USE_THREADS
 
 #include "aiplayeragent/IAIPlayerAgent.hpp"
+#include "core/Common.hpp"
 
 class AIPlayerAgentBase : public IAIPlayerAgent {
 private:
 #ifdef USE_THREADS
 	// The thread in which the agent runs
-	std::thread m_t;
+	std::thread m_thr;
 #endif // USE_THREADS
 	// Whether the `kill()` method has been called
 	bool m_isThreadFinished;
@@ -73,12 +74,13 @@ private:
 #endif // USE_THREADS
 protected:
 	GameStateAgentProxyP gsProxy;
+	const PlayerId playerId;
 
 	/**
 	 * @brief Performs planning.
 	 * 
 	 * @details In the worst case, the execution time should be `TICK_INTERVAL
-	 *          / MAX_PLAYERS` (17 / 2 ~ 2 ms).
+	 *          / MAX_PLAYERS` (17 / 8 ~ 2 ms).
 	 */
 	virtual void doPlan() = 0;
 	/**
@@ -86,7 +88,7 @@ protected:
 	 */
 	virtual PlayerInputFlags doGetPlayerInput() = 0;
 public:
-	AIPlayerAgentBase();
+	AIPlayerAgentBase(PlayerId playerId);
 	~AIPlayerAgentBase();
 	PlayerInputFlags getPlayerInput() override;
 	void plan() override;
