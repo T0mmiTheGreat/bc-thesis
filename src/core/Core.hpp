@@ -77,6 +77,7 @@ private:
 				playerRef.hp       = playerState.hp;
 				playerRef.speed    = Core::getPlayerSpeed(playerState.hp);
 				playerRef.strength = Core::getPlayerStrength(playerState.hp);
+				playerRef.size     = Core::getPlayerSize(playerState.hp);
 			}
 		}
 

@@ -28,6 +28,7 @@ public:
 		double hp;       // Player's health
 		double speed;    // Player's speed (steps per ms)
 		double strength; // Player's strength (damage dealt per ms).
+		double size;     // Player's radius
 	};
 
 	typedef std::unordered_map<PlayerId, PlayerState> PlayerStateCollection;
