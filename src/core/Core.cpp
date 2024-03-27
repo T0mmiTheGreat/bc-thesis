@@ -551,12 +551,16 @@ CoreActionPtr Core::initializeStage()
 		actionPlayerGroup.push_back(actionSetPlayerSize);
 	}
 
-	// AI agents (copy)
+
+	// AI agents (copy)...
 	m_aiAgents = m_gsdata.aiAgents;
-	// And assign them a game state proxy
+	// ... create a game state proxy...
+	m_gsAgentProxy = std::make_shared<GameStateAgentProxyImplem>();
+	// ... and assign it to the agents
 	for (auto& agent : m_aiAgents) {
-		agent->assignProxy(std::make_shared<GameStateAgentProxyImplem>(this));
+		agent->assignProxy(m_gsAgentProxy);
 	}
+
 
 	// Obstacles and bounds
 	Size2d bounds = getStageSize();;
@@ -571,10 +575,18 @@ CoreActionPtr Core::initializeStage()
 		actionObstacleGroup.push_back(actionAddObstacle);
 	}
 
+
+	// Bonuses
 	m_stageBonuses = std::make_unique<StageBonuses>(
 		getObstaclesList(), getStageSize());
+	
+
+	// Initial game state proxy update
+	m_gsAgentProxy->update(this);
+
 
 	m_isInitialized = true;
+
 
 	// Add to actions list (bounds)
 	actionSetStageSize = std::make_shared<CoreActionSetStageSize>(bounds);

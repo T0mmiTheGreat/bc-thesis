@@ -13,8 +13,10 @@
 #define GAMESTATEAGENTPROXY_HPP
 
 #include <memory>
+#include <unordered_map>
 
 #include "types.hpp"
+#include "core/Common.hpp"
 
 /**
  * @brief A proxy directing access to the game state for AI player agents.
@@ -24,16 +26,17 @@ public:
 	struct PlayerState {
 		PointF pos;      // Player's position
 		double hp;       // Player's health
+		double speed;    // Player's speed (steps per ms)
 		double strength; // Player's strength (damage dealt per ms).
 	};
 
-	typedef std::vector<PlayerState> PlayerStateCollection;
+	typedef std::unordered_map<PlayerId, PlayerState> PlayerStateCollection;
 public:
 	virtual ~GameStateAgentProxy() {}
 	/**
 	 * @brief Returns a collection of player states.
 	 */
-	virtual PlayerStateCollection getPlayers() = 0;
+	virtual const PlayerStateCollection& getPlayers() const = 0;
 };
 
 typedef std::shared_ptr<GameStateAgentProxy> GameStateAgentProxyP;

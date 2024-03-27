@@ -28,8 +28,8 @@ void GameSetupController::updateGsdata()
 
 	m_gsdata.players.clear();
 	m_gsdata.aiAgents.clear();
-	for (PlayerId i = 0;
-		static_cast<PlayerId>(i) < m_gsdataInternal.playerCount; ++i)
+	for (PlayerId i = 0; static_cast<int>(i) < m_gsdataInternal.playerCount;
+		++i)
 	{
 		m_gsdata.players.push_back(playerDataToPlayerInput(
 			m_gsdataInternal.players[i], i, botAgent));

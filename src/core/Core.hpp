@@ -61,27 +61,24 @@ private:
 	friend class GameStateAgentProxyImplem;
 	class GameStateAgentProxyImplem : public GameStateAgentProxy {
 	private:
-		const Core* m_core;
+		PlayerStateCollection m_players;
 	public:
-		GameStateAgentProxyImplem(const Core* core)
-			: m_core{core}
-		{}
-		PlayerStateCollection getPlayers() override {
-			PlayerStateCollection res;
-			PlayerState ps;
+		GameStateAgentProxyImplem() {}
 
-			res.reserve(m_core->m_players.size());
-			for (const auto& playerPair : m_core->m_players) {
-				const auto& player = playerPair.second;
+		void update(const Core* core) {
+			// Update players
+			for (const auto& [id, playerState] : core->m_players) {
+				auto& playerRef = m_players[id];
 
-				// FIXME: Is it good idea to cast it?
-				ps.pos = fromCgalPoint(player.pos);
-				ps.hp = player.hp;
-				ps.strength = getPlayerStrength(player.hp);
-				
-				res.push_back(std::move(ps));
+				playerRef.pos      = fromCgalPoint(playerState.pos);
+				playerRef.hp       = playerState.hp;
+				playerRef.speed    = Core::getPlayerSpeed(playerState.hp);
+				playerRef.strength = Core::getPlayerStrength(playerState.hp);
 			}
-			return res;
+		}
+
+		const PlayerStateCollection& getPlayers() const override {
+			return m_players;
 		}
 	};
 	
@@ -103,6 +100,8 @@ private:
 	std::vector<std::shared_ptr<IAIPlayerAgent>> m_aiAgents;
 	std::unique_ptr<StageObstacles> m_stageObstacles;
 	std::unique_ptr<StageBonuses> m_stageBonuses;
+
+	std::shared_ptr<GameStateAgentProxyImplem> m_gsAgentProxy;
 
 	Timer m_bonusTimer;
 
