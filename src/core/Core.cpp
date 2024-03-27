@@ -15,44 +15,6 @@
 #include "core/trajectory/Trajectory.hpp"
 #include "math/Math.hpp"
 
-void Core::inputToVector(const PlayerInputFlags & input, double & x, double & y)
-{
-	// sin(pi/4)
-	// Position delta per axis for diagonal movement (same for X and Y axis)
-	constexpr double DIAG_MOVEMENT_PERAXIS_LENGTH =
-		0.70710678118654752440084436210485;
-
-	// If none or both keys for horizontal movement are pressed, the player
-	// won't move horizontally
-	bool isHorzMove = (input.left != input.right);
-	// Same as isHorzMove
-	bool isVertMove = (input.up != input.down);
-
-	if (!isHorzMove && !isVertMove) {
-		// Doesn't move
-
-		x = 0.0;
-		y = 0.0;
-	} else if (isHorzMove && isVertMove) {
-		// Diagonal
-
-		x = (input.left ? -DIAG_MOVEMENT_PERAXIS_LENGTH
-			: DIAG_MOVEMENT_PERAXIS_LENGTH);
-		y = (input.up ? -DIAG_MOVEMENT_PERAXIS_LENGTH
-			: DIAG_MOVEMENT_PERAXIS_LENGTH);
-	} else {
-		// Orthogonal
-		
-		if (isHorzMove) {
-			x = (input.left ? -1.0 : 1.0);
-			y = 0.0;
-		} else {
-			x = 0.0;
-			y = (input.up ? -1.0 : 1.0);
-		}
-	}
-}
-
 Core::Core(const GameSetupData& gsdata)
 	: m_isInitialized{false}
 	, m_isOver{false}
@@ -512,7 +474,7 @@ void Core::getPlayerMovementVector(PlayerId id, double& x, double& y) const
 void Core::getPlayerMovementVector(const PlayerInputFlags& inputFlags,
 	double speed, double& x, double& y)
 {
-	inputToVector(inputFlags, x, y);
+	inputFlags.toVector(x, y);
 	x *= speed * TICK_INTERVAL;
 	y *= speed * TICK_INTERVAL;
 }

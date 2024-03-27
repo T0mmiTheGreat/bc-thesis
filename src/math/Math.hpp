@@ -16,6 +16,10 @@
 #include <cmath>
 #include <vector>
 
+// sin(pi/4)
+// Position delta per axis for diagonal movement (same for X and Y axis)
+constexpr double DXY_DIAGONAL = 0.70710678118654752440084436210485;
+
 /**
  * @brief Calculate the square of `x`.
  * 

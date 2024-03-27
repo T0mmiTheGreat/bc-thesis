@@ -261,19 +261,6 @@ private:
 	 */
 	static void getPlayerMovementVector(const PlayerInputFlags& inputFlags,
 		double speed, double& x, double& y);
-		
-	/**
-	 * @brief Convert player input value to a vector.
-	 * 
-	 * @details Based on the player input creates a unit vector in the direction
-	 *          the player wants to move.
-	 * 
-	 * @param input The player input.
-	 * @param x Vector X coordinate.
-	 * @param y Vector Y coordinate.
-	 */
-	static void inputToVector(const PlayerInputFlags& input, double& x,
-		double& y);
 public:
 	/**
 	 * @brief Constructs a new Core object.

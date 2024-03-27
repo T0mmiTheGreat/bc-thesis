@@ -173,6 +173,7 @@ set(HEADER_FILES
 	playerinput/IPlayerInput.hpp
 	playerinput/PlayerInputFactory.hpp
 	playerinput/PlayerInputBase.hpp
+	playerinput/PlayerInputFlags.hpp
 	playerinput/KeyboardPlayerInput.hpp
 	playerinput/ImmobilePlayerInput.hpp
 	playerinput/AIPlayerInput.hpp
