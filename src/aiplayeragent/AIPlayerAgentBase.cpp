@@ -41,7 +41,7 @@ void AIPlayerAgentBase::threadMain()
 
 #endif // USE_THREADS
 
-AIPlayerAgentBase::AIPlayerAgentBase(PlayerId playerId_)
+AIPlayerAgentBase::AIPlayerAgentBase(PlayerId myId_)
 #ifdef USE_THREADS
 	: m_thr(&threadMain, this)
 	, m_isThreadFinished{false}
@@ -55,13 +55,18 @@ AIPlayerAgentBase::AIPlayerAgentBase(PlayerId playerId_)
 	, m_mutexIsPlanNotify()
 
 	, gsProxy{nullptr}
-	, playerId{playerId_}
+	, myId{myId_}
 #else // !USE_THREADS
 	: m_isThreadFinished{false}
 	, gsProxy{nullptr}
-	, playerId{playerId_}
+	, myId{myId_}
 #endif // !USE_THREADS
 {}
+
+const GameStateAgentProxy::PlayerState& AIPlayerAgentBase::getMyState() const
+{
+	return gsProxy->getPlayers().at(myId);
+}
 
 AIPlayerAgentBase::~AIPlayerAgentBase()
 {

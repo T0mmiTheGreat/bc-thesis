@@ -74,7 +74,12 @@ private:
 #endif // USE_THREADS
 protected:
 	GameStateAgentProxyP gsProxy;
-	const PlayerId playerId;
+	const PlayerId myId;
+
+	/**
+	 * @brief Returns player state which belongs to this agent.
+	 */
+	const GameStateAgentProxy::PlayerState& getMyState() const;
 
 	/**
 	 * @brief Performs planning.
@@ -88,7 +93,7 @@ protected:
 	 */
 	virtual PlayerInputFlags doGetPlayerInput() = 0;
 public:
-	AIPlayerAgentBase(PlayerId playerId);
+	AIPlayerAgentBase(PlayerId myId);
 	~AIPlayerAgentBase();
 	PlayerInputFlags getPlayerInput() override;
 	void plan() override;

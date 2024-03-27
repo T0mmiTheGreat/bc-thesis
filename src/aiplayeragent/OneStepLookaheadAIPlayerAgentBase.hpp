@@ -32,6 +32,15 @@ protected:
 	virtual double evaluatePlayer(
 		const GameStateAgentProxy::PlayerState& player, const Point_2& pos)
 		const = 0;
+
+	Point_2 calculateNewPositionBlind(const PlayerInputFlags& input) const;
+	Point_2 calculateNewPositionWallAware(const PlayerInputFlags& input) const;
+	double evaluatePlayerPredator(
+		const GameStateAgentProxy::PlayerState& player, const Point_2& pos)
+		const;
+	double evaluatePlayerPrey(
+		const GameStateAgentProxy::PlayerState& player, const Point_2& pos)
+		const;
 public:
 	OneStepLookaheadAIPlayerAgentBase(PlayerId playerId);
 };

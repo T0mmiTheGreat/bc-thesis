@@ -39,7 +39,7 @@ double OneStepLookaheadAIPlayerAgentBase::evaluatePosition(
 
 	for (const auto& [id, player] : gsProxy->getPlayers()) {
 		// Don't evaluate yourself
-		if (id == playerId) continue;
+		if (id == myId) continue;
 
 		res += evaluatePlayer(player, pos);
 	}
@@ -78,6 +78,70 @@ void OneStepLookaheadAIPlayerAgentBase::doPlan()
 PlayerInputFlags OneStepLookaheadAIPlayerAgentBase::doGetPlayerInput()
 {
 	return playerInput;
+}
+
+Point_2 OneStepLookaheadAIPlayerAgentBase::calculateNewPositionBlind(
+	const PlayerInputFlags& input) const
+{
+	const auto& myState = getMyState();
+
+	double vx, vy;
+	input.toVector(vx, vy);
+	auto res = myState.pos + Vector_2(vx, vy);
+	return res;
+}
+
+Point_2 OneStepLookaheadAIPlayerAgentBase::calculateNewPositionWallAware(
+	const PlayerInputFlags& input) const
+{
+	const auto& myState = getMyState();
+
+	double vx, vy;
+	input.toVector(vx, vy);
+	Vector_2 playerMove(vx, vy);
+
+	auto traj = gsProxy->getObstacles().getPlayerTrajectory(myState.pos,
+		playerMove, myState.size);
+	
+	return traj.end();
+}
+
+double OneStepLookaheadAIPlayerAgentBase::evaluatePlayerPredator(
+	const GameStateAgentProxy::PlayerState& player, const Point_2& pos) const
+{
+	double sqdist = CGAL::squared_distance(pos, player.pos);
+	double hp = player.hp;
+
+	// Player HP significance
+	static constexpr double HP_SIGNIF = 10.0;
+	// Player squared distance significance
+	static constexpr double SQDIST_SIGNIF = 30.0;
+
+	// Weaker players are evaluated better than stronger ones
+	double hpEval = HP_SIGNIF / hp;
+	// Closer players are evaluated better than farther ones
+	double sqdistEval = SQDIST_SIGNIF / sqdist;
+
+	return hpEval + sqdistEval;
+}
+
+double OneStepLookaheadAIPlayerAgentBase::evaluatePlayerPrey(
+	const GameStateAgentProxy::PlayerState& player, const Point_2& pos) const
+{
+	double sqdist = CGAL::squared_distance(pos, player.pos);
+	double hp = player.hp;
+
+	// Player HP significance
+	static constexpr double HP_SIGNIF = 10.0;
+	// Player squared distance significance
+	static constexpr double SQDIST_SIGNIF = 30.0;
+
+	// Weaker players are evaluated better than stronger ones
+	double hpEval = -HP_SIGNIF * hp;
+	// Farther players are evaluated better than closer ones
+	double sqdistEval = -SQDIST_SIGNIF / sqdist;
+
+	return hpEval + sqdistEval;
 }
 
 OneStepLookaheadAIPlayerAgentBase::OneStepLookaheadAIPlayerAgentBase(
