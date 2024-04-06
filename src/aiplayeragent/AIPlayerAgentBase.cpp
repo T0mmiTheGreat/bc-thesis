@@ -122,7 +122,9 @@ void AIPlayerAgentBase::plan()
 		[this](){ return this->m_isPlanning; });
 #else // !USE_THREADS
 	assert(gsProxy != nullptr);
-	doPlan();
+	if (gsProxy->getPlayers().find(myId) != gsProxy->getPlayers().end()) {
+		doPlan();
+	}
 #endif // !USE_THREADS
 }
 

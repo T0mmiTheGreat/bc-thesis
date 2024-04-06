@@ -81,6 +81,10 @@ private:
 			}
 		}
 
+		void killPlayer(PlayerId id) {
+			m_players.erase(id);
+		}
+
 		const PlayerStateCollection& getPlayers() const override {
 			return m_players;
 		}

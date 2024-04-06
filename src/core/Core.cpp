@@ -343,6 +343,7 @@ CoreActionPtr Core::changePlayerHp(PlayerId id,
 
 		// "Kill"
 		m_players.erase(id);
+		m_gsAgentProxy->killPlayer(id);
 
 		// Create action
 		auto res = std::make_shared<CoreActionRemovePlayer>(id);
