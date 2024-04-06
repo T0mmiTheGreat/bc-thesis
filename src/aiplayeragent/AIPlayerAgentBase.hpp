@@ -80,6 +80,8 @@ protected:
 	 * @brief Returns player state which belongs to this agent.
 	 */
 	const GameStateAgentProxy::PlayerState& getMyState() const;
+	
+	static std::vector<PlayerInputFlags> generateInputs();
 
 	/**
 	 * @brief Performs planning.

@@ -11,27 +11,6 @@
 
 #include "aiplayeragent/OneStepLookaheadAIPlayerAgentBase.hpp"
 
-std::vector<PlayerInputFlags>
-OneStepLookaheadAIPlayerAgentBase::generateInputs()
-{
-	static constexpr size_t NUM_INPUTS = 9;
-
-	std::vector<PlayerInputFlags> res;
-	res.reserve(NUM_INPUTS);
-
-	res.push_back(PlayerInputFlags());
-	res.push_back(PlayerInputFlags::createW());
-	res.push_back(PlayerInputFlags::createNW());
-	res.push_back(PlayerInputFlags::createN());
-	res.push_back(PlayerInputFlags::createNE());
-	res.push_back(PlayerInputFlags::createE());
-	res.push_back(PlayerInputFlags::createSE());
-	res.push_back(PlayerInputFlags::createS());
-	res.push_back(PlayerInputFlags::createSW());
-
-	return res;
-}
-
 double OneStepLookaheadAIPlayerAgentBase::evaluatePosition(
 	const Point_2& pos) const
 {

@@ -19,7 +19,6 @@
 
 class OneStepLookaheadAIPlayerAgentBase : virtual public AIPlayerAgentBase {
 private:
-	static std::vector<PlayerInputFlags> generateInputs();
 	double evaluatePosition(const Point_2& pos) const;
 protected:
 	PlayerInputFlags playerInput;
