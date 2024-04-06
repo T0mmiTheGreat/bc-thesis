@@ -13,8 +13,12 @@
 #define WALLAWAREPREDATORAIPLAYERAGENT_HPP
 
 #include "aiplayeragent/OneStepLookaheadAIPlayerAgentBase.hpp"
+#include "aiplayeragent/PredatorAIPlayerAgentBase.hpp"
 
-class WallAwarePredatorAIPlayerAgent : public OneStepLookaheadAIPlayerAgentBase {
+class WallAwarePredatorAIPlayerAgent
+	: public OneStepLookaheadAIPlayerAgentBase
+	, public PredatorAIPlayerAgentBase
+{
 protected:
 	Point_2 calculateNewPosition(const PlayerInputFlags& input) const override;
 	double evaluatePlayer(

@@ -20,9 +20,11 @@ Point_2 WallAwarePreyAIPlayerAgent::calculateNewPosition(
 double WallAwarePreyAIPlayerAgent::evaluatePlayer(
 	const GameStateAgentProxy::PlayerState& player, const Point_2& pos) const
 {
-	return evaluatePlayerPrey(player, pos);
+	return PreyAIPlayerAgentBase::evaluatePlayer(player, pos);
 }
 
 WallAwarePreyAIPlayerAgent::WallAwarePreyAIPlayerAgent(PlayerId playerId)
-	: OneStepLookaheadAIPlayerAgentBase(playerId)
+	: AIPlayerAgentBase(playerId)
+	, OneStepLookaheadAIPlayerAgentBase(playerId)
+	, PreyAIPlayerAgentBase(playerId)
 {}

@@ -17,7 +17,7 @@
 #include "aiplayeragent/AIPlayerAgentBase.hpp"
 #include "playerinput/PlayerInputFlags.hpp"
 
-class OneStepLookaheadAIPlayerAgentBase : public AIPlayerAgentBase {
+class OneStepLookaheadAIPlayerAgentBase : virtual public AIPlayerAgentBase {
 private:
 	static std::vector<PlayerInputFlags> generateInputs();
 	double evaluatePosition(const Point_2& pos) const;
@@ -35,12 +35,6 @@ protected:
 
 	Point_2 calculateNewPositionBlind(const PlayerInputFlags& input) const;
 	Point_2 calculateNewPositionWallAware(const PlayerInputFlags& input) const;
-	double evaluatePlayerPredator(
-		const GameStateAgentProxy::PlayerState& player, const Point_2& pos)
-		const;
-	double evaluatePlayerPrey(
-		const GameStateAgentProxy::PlayerState& player, const Point_2& pos)
-		const;
 public:
 	OneStepLookaheadAIPlayerAgentBase(PlayerId playerId);
 };

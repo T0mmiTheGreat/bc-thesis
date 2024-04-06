@@ -20,9 +20,11 @@ Point_2 BlindPredatorAIPlayerAgent::calculateNewPosition(
 double BlindPredatorAIPlayerAgent::evaluatePlayer(
 	const GameStateAgentProxy::PlayerState& player, const Point_2& pos) const
 {
-	return evaluatePlayerPredator(player, pos);
+	return PredatorAIPlayerAgentBase::evaluatePlayer(player, pos);
 }
 
 BlindPredatorAIPlayerAgent::BlindPredatorAIPlayerAgent(PlayerId playerId)
-	: OneStepLookaheadAIPlayerAgentBase(playerId)
+	: AIPlayerAgentBase(playerId)
+	, OneStepLookaheadAIPlayerAgentBase(playerId)
+	, PredatorAIPlayerAgentBase(playerId)
 {}
