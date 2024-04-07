@@ -49,7 +49,7 @@ struct PlayerInputFlags {
 	 * @brief Merge the actions of `this` and `rhs`.
 	 */
 	PlayerInputFlags operator| (const PlayerInputFlags& rhs) const {
-		PlayerInputFlags res;
+		PlayerInputFlags res = *this;
 		res |= rhs;
 		return res;
 	}
