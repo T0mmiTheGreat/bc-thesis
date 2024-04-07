@@ -68,6 +68,11 @@ private:
 			: m_core{core}
 		{}
 
+		/**
+		 * @brief Updates the proxy after a change in the game state.
+		 * 
+		 * @details Must be called every time the game state changes.
+		 */
 		void update() {
 			// Update players
 			for (const auto& [id, playerState] : m_core.m_players) {
@@ -81,6 +86,13 @@ private:
 			}
 		}
 
+		/**
+		 * @brief Announces a loss of a player.
+		 * 
+		 * @details Must be called every time a player loses the game.
+		 * 
+		 * @param id ID of the killed player.
+		 */
 		void killPlayer(PlayerId id) {
 			m_players.erase(id);
 		}
@@ -91,6 +103,30 @@ private:
 
 		const StageObstacles& getObstacles() const override {
 			return *m_core.m_stageObstacles;
+		}
+
+		void getPlayerMovementVector(const PlayerInputFlags& input,
+			const PlayerState& ps, double& x, double& y) const override
+		{
+			return Core::getPlayerMovementVector(input, ps.speed, x, y);
+		}
+		void getPlayerMovementVector(const PlayerInputFlags& input,
+			PlayerId playerId, double& x, double& y) const override
+		{
+			return getPlayerMovementVector(input, m_players.at(playerId), x, y);
+		}
+		Point_2 calculateNewPlayerPos(const Point_2& currPos,
+			const PlayerInputFlags& input, const PlayerState& ps) const override
+		{
+			double vx, vy;
+			getPlayerMovementVector(input, ps, vx, vy);
+			return getObstacles().getPlayerTrajectory(currPos, Vector_2(vx, vy),
+				ps.size).end();
+		}
+		Point_2 calculateNewPlayerPos(const Point_2& currPos,
+			const PlayerInputFlags& input, PlayerId playerId) const
+		{
+			return calculateNewPlayerPos(currPos, input, m_players.at(playerId));
 		}
 	};
 	
