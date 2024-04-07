@@ -20,7 +20,7 @@ You need these tools:
 
 1.  Clone this repository using `git clone --recurse-submodules <repo-url>`. If you forgot to use the `--recurse-submodules` flag, you can still run `git submodule init` and then `git submodule update` (or combine these commands by running `git submodule update --init`) to get the submodules. You need them because this project uses the [libSDL2pp](https://github.com/libSDL2pp/libSDL2pp), [yaml-cpp](https://github.com/jbeder/yaml-cpp), and [ImGui](https://github.com/ocornut/imgui) libraries as a Git submodules.
 
-2.  `cd` to the "src/" directory and run `cmake .`. It should build the application.
+2.  `cd` to the "src/" directory and run `cmake --build .`. It should build the application.
 
 3.  ???
 
