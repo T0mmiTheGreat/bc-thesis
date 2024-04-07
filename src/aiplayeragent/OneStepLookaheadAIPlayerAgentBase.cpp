@@ -65,7 +65,7 @@ Point_2 OneStepLookaheadAIPlayerAgentBase::calculateNewPositionBlind(
 	const auto& myState = getMyState();
 
 	double vx, vy;
-	input.toVector(vx, vy);
+	gsProxy->getPlayerMovementVector(input, myState, vx, vy);
 	auto res = myState.pos + Vector_2(vx, vy);
 	return res;
 }
@@ -75,14 +75,9 @@ Point_2 OneStepLookaheadAIPlayerAgentBase::calculateNewPositionWallAware(
 {
 	const auto& myState = getMyState();
 
-	double vx, vy;
-	input.toVector(vx, vy);
-	Vector_2 playerMove(vx, vy);
-
-	auto traj = gsProxy->getObstacles().getPlayerTrajectory(myState.pos,
-		playerMove, myState.size);
+	auto res = gsProxy->calculateNewPlayerPos(myState.pos, input, myState);
 	
-	return traj.end();
+	return res;
 }
 
 OneStepLookaheadAIPlayerAgentBase::OneStepLookaheadAIPlayerAgentBase(
