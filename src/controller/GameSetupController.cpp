@@ -208,11 +208,12 @@ const char* GameSetupController::playerInputToText(PlayerInputType input)
 const char* GameSetupController::playerBrainToText(PlayerBrainType brain)
 {
 	switch (brain) {
-		case BRAIN_LADYBUG:             return "Ladybug";
-		case BRAIN_BLIND_PREDATOR:      return "Blind predator";
-		case BRAIN_BLIND_PREY:          return "Blind prey";
-		case BRAIN_WALL_AWARE_PREDATOR: return "Wall-aware predator";
-		case BRAIN_WALL_AWARE_PREY: return "Wall-aware prey";
+		case BRAIN_LADYBUG:                 return "Ladybug";
+		case BRAIN_BLIND_PREDATOR:          return "Blind predator";
+		case BRAIN_BLIND_PREY:              return "Blind prey";
+		case BRAIN_WALL_AWARE_PREDATOR:     return "Wall-aware predator";
+		case BRAIN_WALL_AWARE_PREY:         return "Wall-aware prey";
+		case BRAIN_WALL_AWARE_BFS_PREDATOR: return "Wall-aware BFS predator";
 		case COUNT_PLAYERBRAINTYPE: break;
 	}
 
@@ -303,6 +304,10 @@ std::shared_ptr<IPlayerInput> GameSetupController::playerBotToPlayerInput(
 		case BRAIN_WALL_AWARE_PREY:
 			botAgent = AIPlayerAgentFactory
 				::createWallAwarePreyAIPlayerAgent(playerId);
+			break;
+		case BRAIN_WALL_AWARE_BFS_PREDATOR:
+			botAgent = AIPlayerAgentFactory
+				::createWallAwareBFSPredatorAIPlayerAgent(playerId);
 			break;
 		case COUNT_PLAYERBRAINTYPE: break;
 	}
