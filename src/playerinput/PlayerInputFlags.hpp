@@ -12,6 +12,7 @@
 #ifndef PLAYERINPUTFLAGS_HPP
 #define PLAYERINPUTFLAGS_HPP
 
+#include "types.hpp"
 #include "math/Math.hpp"
 
 /**
@@ -31,6 +32,34 @@ struct PlayerInputFlags {
 		, down{false}
 		, deflate{false}
 	{}
+
+	PlayerInputFlags(Direction4 d)
+		: PlayerInputFlags()
+	{
+		switch(d) {
+			case DIR4_LEFT:  left  = true; break;
+			case DIR4_UP:    up    = true; break;
+			case DIR4_RIGHT: right = true; break;
+			case DIR4_DOWN:  down  = true; break;
+			case DIR4_NONE: break;
+		}
+	}
+
+	PlayerInputFlags(Direction8 d)
+		: PlayerInputFlags()
+	{
+		switch (d) {
+			case DIR8_N:  up = true;                 break;
+			case DIR8_NE: up = true;   right = true; break;
+			case DIR8_E:               right = true; break;
+			case DIR8_SE: down = true; right = true; break;
+			case DIR8_S:  down = true;               break;
+			case DIR8_SW: down = true; left = true;  break;
+			case DIR8_W:               left = true;  break;
+			case DIR8_NW: up = true;   left = true;  break;
+			case DIR8_NONE: break;
+		}
+	}
 
 	/**
 	 * @brief Modify `this` by merging the actions of `this` and `rhs`.

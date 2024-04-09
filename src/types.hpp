@@ -132,6 +132,37 @@ enum ImageId {
 constexpr size_t imageIdCount = static_cast<size_t>(COUNT_IMAGEID);
 
 /**
+ * @brief Enumeration of four directions.
+ * 
+ * @note Values can be negated to get the opposite direction. Also, can be
+ *       casted to `Direction8` type while keeping the same meaning.
+ */
+enum Direction4 {
+	DIR4_NONE  = 0,
+	DIR4_UP    = 1,
+	DIR4_RIGHT = 2,
+	DIR4_DOWN  = -1,
+	DIR4_LEFT  = -2,
+};
+
+/**
+ * @brief Enumeration of eight directions.
+ * 
+ * @note Values can be negated to get the opposite direction.
+ */
+enum Direction8 {
+	DIR8_NONE = 0,
+	DIR8_N    = 1,
+	DIR8_E    = 2,
+	DIR8_S    = -1,
+	DIR8_W    = -2,
+	DIR8_NE   = 3,
+	DIR8_SE   = 4,
+	DIR8_NW   = -3,
+	DIR8_SW   = -4,
+};
+
+/**
  * @brief Converts milliseconds to clocks.
  * 
  * @tparam T Scalar type.
