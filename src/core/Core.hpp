@@ -63,9 +63,11 @@ private:
 	private:
 		const Core& m_core;
 		PlayerStateCollection m_players;
+		StageGridModel m_stageGridModel;
 	public:
 		GameStateAgentProxyImplem(const Core& core)
 			: m_core{core}
+			, m_stageGridModel(core.getObstaclesList(), core.getStageSize())
 		{}
 
 		/**
@@ -103,6 +105,10 @@ private:
 
 		const StageObstacles& getObstacles() const override {
 			return *m_core.m_stageObstacles;
+		}
+		
+		const StageGridModel& getStageGridModel() const override {
+			return m_stageGridModel;
 		}
 
 		void getPlayerMovementVector(const PlayerInputFlags& input,

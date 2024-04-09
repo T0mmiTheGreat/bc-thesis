@@ -94,6 +94,7 @@ set(SOURCE_FILES
 	stageserializer/StageSerializerFactory.cpp
 	stageserializer/YAMLStageSerializer.cpp
 	aiplayeragent/AIPlayerAgentFactory.cpp
+	aiplayeragent/StageGridModel.cpp
 	aiplayeragent/AIPlayerAgentBase.cpp
 	aiplayeragent/PredatorAIPlayerAgentBase.cpp
 	aiplayeragent/PreyAIPlayerAgentBase.cpp
@@ -201,11 +202,12 @@ set(HEADER_FILES
 	gamesetupdata/GameSetupData.hpp
 	aiplayeragent/IAIPlayerAgent.hpp
 	aiplayeragent/AIPlayerAgentFactory.hpp
+	aiplayeragent/GameStateAgentProxy.hpp
+	aiplayeragent/StageGridModel.hpp
 	aiplayeragent/AIPlayerAgentBase.hpp
 	aiplayeragent/PredatorAIPlayerAgentBase.hpp
 	aiplayeragent/PreyAIPlayerAgentBase.hpp
 	aiplayeragent/OneStepLookaheadAIPlayerAgentBase.hpp
-	aiplayeragent/GameStateAgentProxy.hpp
 	aiplayeragent/LadybugAIPlayerAgent.hpp
 	aiplayeragent/BlindPredatorAIPlayerAgent.hpp
 	aiplayeragent/BlindPreyAIPlayerAgent.hpp

@@ -15,6 +15,7 @@
 #include <memory>
 #include <unordered_map>
 
+#include "aiplayeragent/StageGridModel.hpp"
 #include "core/geometry/Geometry.hpp"
 #include "core/stageobstacles/StageObstacles.hpp"
 #include "playerinput/PlayerInputFlags.hpp"
@@ -43,6 +44,7 @@ public:
 	 * @brief Returns an object representing the obstacles on the stage.
 	 */
 	virtual const StageObstacles& getObstacles() const = 0;
+	virtual const StageGridModel& getStageGridModel() const = 0;
 	/**
 	 * @brief Calculates the increment in X and Y coordinate of a player based
 	 *        on their input.
