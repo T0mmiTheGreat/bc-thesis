@@ -215,6 +215,7 @@ const char* GameSetupController::playerBrainToText(PlayerBrainType brain)
 		case BRAIN_WALL_AWARE_PREY:         return "Wall-aware prey";
 		case BRAIN_WALL_AWARE_BFS_PREDATOR: return "Wall-aware BFS predator";
 		case BRAIN_IDS_PREDATOR:            return "IDS predator";
+		case BRAIN_BFS_PREDATOR:            return "BFS predator";
 		case COUNT_PLAYERBRAINTYPE: break;
 	}
 
@@ -313,6 +314,10 @@ std::shared_ptr<IPlayerInput> GameSetupController::playerBotToPlayerInput(
 		case BRAIN_IDS_PREDATOR:
 			botAgent = AIPlayerAgentFactory
 				::createIDSPredatorAIPlayerAgent(playerId);
+			break;
+		case BRAIN_BFS_PREDATOR:
+			botAgent = AIPlayerAgentFactory
+				::createBFSPredatorAIPlayerAgent(playerId);
 			break;
 		case COUNT_PLAYERBRAINTYPE: break;
 	}

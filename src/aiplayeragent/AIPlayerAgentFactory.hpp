@@ -33,6 +33,8 @@ public:
 		PlayerId playerId);
 	static std::shared_ptr<IAIPlayerAgent> createIDSPredatorAIPlayerAgent(
 		PlayerId playerId);
+	static std::shared_ptr<IAIPlayerAgent> createBFSPredatorAIPlayerAgent(
+		PlayerId playerId);
 };
 
 #endif // AIPLAYERAGENTFACTORY_HPP
