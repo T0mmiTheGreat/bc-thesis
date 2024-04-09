@@ -169,13 +169,6 @@ private:
 	PlayerInputFlags m_input;
 
 	/**
-	 * @brief Chooses which player to chase after.
-	 * 
-	 * @return The chosen player, or `nullptr` if no player can be chosen
-	 *         (e.g., due to agent's victory).
-	 */
-	const GameStateAgentProxy::PlayerState* chooseVictim();
-	/**
 	 * @brief Chooses which action to take next.
 	 * 
 	 * @note Performs BFS.

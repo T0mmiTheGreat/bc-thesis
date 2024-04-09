@@ -16,6 +16,13 @@
 
 class PredatorAIPlayerAgentBase : virtual public AIPlayerAgentBase {
 protected:
+	/**
+	 * @brief Chooses which player to chase after.
+	 * 
+	 * @return The chosen player, or `nullptr` if no player can be chosen
+	 *         (e.g., due to agent's victory).
+	 */
+	const GameStateAgentProxy::PlayerState* chooseVictim();
 	double evaluatePlayer(const GameStateAgentProxy::PlayerState& player,
 		const Point_2& pos) const;
 public:

@@ -11,6 +11,34 @@
 
 #include "aiplayeragent/PredatorAIPlayerAgentBase.hpp"
 
+#include <limits>
+
+#include "core/geometry/Geometry.hpp"
+
+const GameStateAgentProxy::PlayerState*
+PredatorAIPlayerAgentBase::chooseVictim()
+{
+	Point_2 myPos = getMyState().pos;
+	const GameStateAgentProxy::PlayerState* bestVictimPtr = nullptr;
+	double victimEval = 0.0;
+	double bestVictimEval = -std::numeric_limits<double>::infinity();
+
+	for (const auto& [id, player] : gsProxy->getPlayers()) {
+		// Don't evaluate yourself
+		if (id == myId) continue;
+
+		victimEval = evaluatePlayer(player, myPos);
+		if (victimEval > bestVictimEval) {
+			// Found a better victim
+
+			bestVictimPtr = &player;
+			bestVictimEval = victimEval;
+		}
+	}
+
+	return bestVictimPtr;
+}
+
 double PredatorAIPlayerAgentBase::evaluatePlayer(
 	const GameStateAgentProxy::PlayerState& player, const Point_2& pos) const
 {
