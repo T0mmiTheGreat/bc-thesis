@@ -31,6 +31,8 @@ public:
 		PlayerId playerId);
 	static std::shared_ptr<IAIPlayerAgent> createWallAwareBFSPredatorAIPlayerAgent(
 		PlayerId playerId);
+	static std::shared_ptr<IAIPlayerAgent> createIDSPredatorAIPlayerAgent(
+		PlayerId playerId);
 };
 
 #endif // AIPLAYERAGENTFACTORY_HPP

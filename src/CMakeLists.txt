@@ -105,6 +105,8 @@ set(SOURCE_FILES
 	aiplayeragent/WallAwarePredatorAIPlayerAgent.cpp
 	aiplayeragent/WallAwarePreyAIPlayerAgent.cpp
 	aiplayeragent/WallAwareBFSPredatorAIPlayerAgent.cpp
+	aiplayeragent/IDSPredatorAIPlayerAgent.cpp
+	#aiplayeragent/searchalgos/BreadthFirstSearch.cpp
 )
 
 # Headers (*.hpp)
@@ -214,6 +216,9 @@ set(HEADER_FILES
 	aiplayeragent/WallAwarePredatorAIPlayerAgent.hpp
 	aiplayeragent/WallAwarePreyAIPlayerAgent.hpp
 	aiplayeragent/WallAwareBFSPredatorAIPlayerAgent.hpp
+	aiplayeragent/IDSPredatorAIPlayerAgent.hpp
+	#aiplayeragent/searchalgos/Common.hpp
+	#aiplayeragent/searchalgos/BreadthFirstSearch.hpp
 )
 
 # Imgui files
