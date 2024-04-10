@@ -54,7 +54,25 @@ PlayerInputFlags AstarPredatorAIPlayerAgent::chooseNextAction(
 		if ((generatedNodes >= MAX_GENERATED_NODES)
 			|| currNode->cell == sGoal)
 		{
+#if ASTAR_PREDATOR_VERSION == 1
 			return PlayerInputFlags(currNode->direction);
+#elif ASTAR_PREDATOR_VERSION == 2
+			auto initialDir = currNode->direction;
+			auto destPos = sStart.getNeighbor(initialDir).getPosition();
+
+			auto bestInput = PlayerInputFlags();
+			auto bestSqdist = std::numeric_limits<double>::infinity();
+
+			for (auto input : generateInputs()) {
+				auto posAtt = gsProxy->calculateNewPlayerPos(me.pos, input, me);
+				auto sqdist = CGAL::squared_distance(posAtt, destPos);
+				if (sqdist < bestSqdist) {
+					bestInput = input;
+					bestSqdist = sqdist;
+				}
+			}
+			return bestInput;
+#endif // ASTAR_PREDATOR_VERSION == 2
 		}
 
 		astarOpen.pop();

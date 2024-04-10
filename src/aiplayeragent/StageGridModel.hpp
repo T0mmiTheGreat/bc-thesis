@@ -32,7 +32,12 @@ private:
 	class GridInternal {
 	private:
 		// Cell width/height
-		static constexpr double CELL_SIZE = 16.0;
+		// It would make sense to keep this value equal to the maximum distance
+		// a player may move by during a single turn. Given the implementation
+		// in the Core it is MAX_SPEED * TICK_INTERVAL (1.0 * 17). Ideally, this
+		// constant should be derived from that instead of having a fixed value,
+		// but at this point I don't even care...
+		static constexpr double CELL_SIZE = 17.0;
 
 		const Size2d m_size;
 		// Stored by rows

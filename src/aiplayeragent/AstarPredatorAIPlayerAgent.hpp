@@ -12,6 +12,8 @@
 #ifndef ASTARPREDATORAIPLAYERAGENT_HPP
 #define ASTARPREDATORAIPLAYERAGENT_HPP
 
+#define ASTAR_PREDATOR_VERSION 2
+
 #include <memory>
 #include <queue>
 #include <unordered_set>
