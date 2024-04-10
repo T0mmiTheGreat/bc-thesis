@@ -77,6 +77,8 @@ public:
 
 		StageGridModel::CellKey getNeighKey(Direction8 neighDir) const {
 			switch (neighDir) {
+				case DIR8_NONE: return StageGridModel::CellKey(
+					m_value.key.x    , m_value.key.y    );
 				case DIR8_N: return StageGridModel::CellKey(
 					m_value.key.x    , m_value.key.y - 1);
 				case DIR8_NE: return StageGridModel::CellKey(
@@ -93,8 +95,6 @@ public:
 					m_value.key.x - 1, m_value.key.y    );
 				case DIR8_NW: return StageGridModel::CellKey(
 					m_value.key.x - 1, m_value.key.y - 1);
-				case DIR8_NONE:
-					break;
 			}
 			assert(((void)"Invalid Direction8 value", false));
 			return StageGridModel::CellKey();

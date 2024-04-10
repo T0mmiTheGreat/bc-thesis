@@ -20,12 +20,18 @@ PlayerInputFlags AstarPredatorAIPlayerAgent::chooseNextAction(
 	// Already in goal?
 	if (d.sStart == d.sGoal) return PlayerInputFlags();
 
+#if ASTAR_PREDATOR_VERSION == 3
+	while (!d.isFinished) {
+		astarProcessNextNode(d);
+	}
+#else // ASTAR_PREDATOR_VERSION != 3
 	while (!d.astarOpen.empty()) {
 		astarProcessNextNode(d);
 		if (d.isFinished) {
 			break;
 		}
 	}
+#endif // ASTAR_PREDATOR_VERSION != 3
 
 	return d.bestInput;
 }
@@ -39,21 +45,25 @@ AstarPredatorAIPlayerAgent::AstarData AstarPredatorAIPlayerAgent::astarDataCreat
 	auto sGoal = grid.getCellAt(victim->pos);
 
 	AstarData res = {
-		me,                // me
-		victim,            // victim
-		grid,              // grid
-		sqr(me.size),      // mySqsize
+		me,                 // me
+		victim,             // victim
+		grid,               // grid
+		sqr(me.size),       // mySqsize
 
-		sStart,            // sStart
-		sGoal,             // sGoal
+		sStart,             // sStart
+		sGoal,              // sGoal
 
-		AstarOpen(),       // astarOpen
-		AstarClosed(),     // astarClosed
+		AstarOpen(),        // astarOpen
+		AstarClosed(),      // astarClosed
 
-		1,                 // generatedNodes
+		1,                  // generatedNodes
 
-		false,             // isFinished
-		PlayerInputFlags() // bestInput
+		false,              // isFinished
+		PlayerInputFlags(), // bestInput
+
+#if ASTAR_PREDATOR_VERSION == 3
+		nullptr,            // nearestNode
+#endif // ASTAR_PREDATOR_VERSION == 3
 	};
 	return res;
 }
@@ -64,29 +74,34 @@ void AstarPredatorAIPlayerAgent::astarDataInit(AstarData& d) const
 	d.astarOpen.reserve(d.MAX_GENERATED_NODES);
 	d.astarClosed.reserve(d.MAX_GENERATED_NODES);
 
+	auto initialHvalue = getHvalue(d.sStart, d.sGoal);
 	// Initial node
 	auto astarStart = std::make_shared<AstarNode>(AstarNode{
-		d.sStart,                     // cell
-		DIR8_NONE,                    // direction
-		getHvalue(d.sStart, d.sGoal), // fvalue
-		0                             // gvalue
+		d.sStart,      // cell
+		DIR8_NONE,     // direction
+		0,             // gvalue
+		initialHvalue, // hvalue
 	});
 	d.astarOpen.push(astarStart);
 }
 
 void AstarPredatorAIPlayerAgent::astarProcessNextNode(AstarData& d) const
 {
+#if ASTAR_PREDATOR_VERSION == 3
+	astarRefreshNearestNode(d);
+#endif // ASTAR_PREDATOR_VERSION == 3
+
 	if (isAstarFinished(d)) {
 		d.isFinished = true;
 		d.bestInput = astarGetBestInput(d);
 	} else {
 		// Not finished; move the node from OPEN to CLOSED and expand it
-
-		// `n = d.astarOpen.pop()`
+		
+		// The "next" node
 		// MUST NOT be reference; the value will be "popped", invalidating the
 		// reference.
 		auto n = d.astarOpen.top();
-		d.astarOpen.pop();
+		d.astarOpen.pop(); // Pops `n`
 		d.astarClosed.insert(n);
 
 		astarExpandNode(d, n);
@@ -112,6 +127,7 @@ void AstarPredatorAIPlayerAgent::astarExpandNode(AstarData& d,
 				{
 					// Brand new node
 
+					// Insert it to OPEN
 					d.astarOpen.push(astarSucc);
 				}
 			}
@@ -127,7 +143,11 @@ bool AstarPredatorAIPlayerAgent::isAstarFinished(AstarData& d) const
 {
 	// Node at the top of the OPEN
 	const auto& n = d.astarOpen.top();
-	return (d.generatedNodes >= d.MAX_GENERATED_NODES) || (n->cell == d.sGoal);
+	return (d.generatedNodes >= d.MAX_GENERATED_NODES) || (n->cell == d.sGoal)
+#if ASTAR_PREDATOR_VERSION == 3
+		|| (d.astarOpen.empty())
+#endif // ASTAR_PREDATOR_VERSION == 3
+	;
 }
 
 PlayerInputFlags AstarPredatorAIPlayerAgent::astarGetBestInput(
@@ -135,9 +155,13 @@ PlayerInputFlags AstarPredatorAIPlayerAgent::astarGetBestInput(
 {
 #if ASTAR_PREDATOR_VERSION == 1
 	return PlayerInputFlags(currNode->direction);
-#elif ASTAR_PREDATOR_VERSION == 2
+#elif ASTAR_PREDATOR_VERSION >= 2
+#	if ASTAR_PREDATOR_VERSION == 2
 	// Node at the top of the OPEN
 	const auto& n = d.astarOpen.top();
+#	elif ASTAR_PREDATOR_VERSION == 3
+	const auto& n = d.nearestNode;
+#	endif // ASTAR_PREDATOR_VERSION == 3
 	// The direction taken in the root node to reach `n`
 	auto dir = n->direction;
 	// Neighbor of the root cell in the `dir` direction
@@ -159,8 +183,20 @@ PlayerInputFlags AstarPredatorAIPlayerAgent::astarGetBestInput(
 		}
 	}
 	return bestInput;
-#endif // ASTAR_PREDATOR_VERSION == 2
+#endif // ASTAR_PREDATOR_VERSION >= 2
 }
+
+#if ASTAR_PREDATOR_VERSION == 3
+void AstarPredatorAIPlayerAgent::astarRefreshNearestNode(AstarData& d) const
+{
+	if (d.astarOpen.empty()) return;
+
+	const auto& n = d.astarOpen.top();
+	if (d.nearestNode == nullptr || n->hvalue < d.nearestNode->hvalue) {
+		d.nearestNode = n;
+	}
+}
+#endif // ASTAR_PREDATOR_VERSION == 3
 
 AstarPredatorAIPlayerAgent::NodeEval AstarPredatorAIPlayerAgent::getHvalue(
 	const StageGridModel::Cell& s, const StageGridModel::Cell& sGoal)
@@ -188,11 +224,9 @@ AstarPredatorAIPlayerAgent::AstarNodeP AstarPredatorAIPlayerAgent::getSucc(
 	NodeEval nGvalue = n->gvalue + 1;
 	// Successor's h() value
 	NodeEval nHvalue = getHvalue(s, sGoal);
-	// Successor's f() value
-	NodeEval nFvalue = nGvalue + nHvalue;
 
 	auto res = std::make_shared<AstarNode>(AstarNode{s, nDirection, nGvalue,
-		nFvalue});
+		nHvalue});
 	return res;
 }
 

@@ -12,7 +12,23 @@
 #ifndef ASTARPREDATORAIPLAYERAGENT_HPP
 #define ASTARPREDATORAIPLAYERAGENT_HPP
 
-#define ASTAR_PREDATOR_VERSION 2
+// Versions:
+//  - version 1
+//    - Chooses the direction which was taken in the root to reach the goal
+//      node.
+//    - Once the maximum number of nodes is generated, the node at the top of
+//      the OPEN is selected as the goal.
+//    - If OPEN becomes empty, doesn't move at all.
+//  - version 2
+//    - Checks which neighbor of the root lies on the path to the goal, then
+//      chooses the action which gets him closest to that neighbor.
+//    - Once the maximum number of nodes is generated, the node at the top of
+//      the OPEN is selected as the goal.
+//    - If OPEN becomes empty, doesn't move at all.
+//  - version 3
+//    - Once the maximum number of nodes is generated, the node closest to the
+//      goal is selected as the goal.
+#define ASTAR_PREDATOR_VERSION 3
 
 #include <memory>
 #include <queue>
@@ -35,10 +51,12 @@ private:
 		StageGridModel::Cell cell;
 		// The direction taken in the root node
 		Direction8 direction;
-		// f(s)
-		NodeEval fvalue;
 		// g(s)
 		NodeEval gvalue;
+		// h(s)
+		NodeEval hvalue;
+
+		NodeEval fvalue() const { return gvalue + hvalue; }
 	};
 	/**
 	 * @brief Node in the A* search tree.
@@ -65,51 +83,92 @@ private:
 	 */
 	struct AstarNodeCompare {
 		bool operator()(const AstarNodeP& lhs, const AstarNodeP& rhs) const {
-			return (lhs->fvalue > rhs->fvalue);
+			return (lhs->fvalue() > rhs->fvalue());
 		}
 	};
+	/**
+	 * @brief Priority queue for A* nodes.
+	 */
 	class AstarPrioq
 		: public std::priority_queue<AstarNodeP, std::vector<AstarNodeP>,
 		  AstarNodeCompare>
 	{
 	public:
+		/**
+		 * @brief Increases the capacity of the container to a value greater
+		 *        or equal to `n`.
+		 */
 		void reserve(size_t n) {
 			c.reserve(n);
 		}
 	};
+	/**
+	 * @brief Unordered set of A* nodes.
+	 */
 	typedef std::unordered_set<AstarNodeP, AstarNodeHash, AstarNodeEqual> AstarSet;
+	/**
+	 * @brief A* "OPEN priority queue" type.
+	 */
 	class AstarOpen {
 	private:
 		AstarPrioq m_prioq;
 		AstarSet m_set;
 	public:
+		/**
+		 * @brief Pushes the given element to the priority queue.
+		 */
 		void push(const AstarNodeP& x) {
 			m_prioq.push(x);
 			m_set.insert(x);
 		}
+		/**
+		 * @brief Removes the top element from the priority queue.
+		 */
 		void pop() {
 			m_set.erase(m_prioq.top());
 			m_prioq.pop();
 		}
+		/**
+		 * @brief Returns reference to the top element in the priority queue.
+		 */
 		const AstarNodeP& top() const {
 			return m_prioq.top();
 		}
+		/**
+		 * @brief Checks if the container contains the given element.
+		 */
 		bool contains(const AstarNodeP& x) const {
 			return (m_set.find(x) != m_set.end());
 		}
+		/**
+		 * @brief Returns the number of elements in the container.
+		 */
 		size_t size() const {
 			return m_prioq.size();
 		}
+		/**
+		 * @brief Checks whether the container is empty.
+		 */
 		bool empty() const {
 			return m_prioq.empty();
 		}
+		/**
+		 * @brief Increases the capacity of the container to a value greater
+		 *        or equal to `n`.
+		 */
 		void reserve(size_t n) {
 			m_prioq.reserve(n);
 			m_set.reserve(n);
 		}
 	};
+	/**
+	 * @brief A* "CLOSED set" type.
+	 */
 	class AstarClosed : public AstarSet {
 	public:
+		/**
+		 * @brief Checks if the container contains the given element.
+		 */
 		bool contains(const AstarNodeP& x) const {
 			return (find(x) != end());
 		}
@@ -131,20 +190,33 @@ private:
 		// Goal state
 		StageGridModel::Cell sGoal;
 		
+		// OPEN priority queue
 		AstarOpen astarOpen;
+		// CLOSED set
 		AstarClosed astarClosed;
 		
+		// The maximum number of nodes generated per search. When this value is
+		// exceeded, the search must stop.
 		static constexpr int MAX_GENERATED_NODES = 2200;
+		// The number of nodes generated during this search
 		int generatedNodes;
 
+		// Whether the search has finished
 		bool isFinished;
+		// The best input as chosen by the search
 		PlayerInputFlags bestInput;
+
+#if ASTAR_PREDATOR_VERSION == 3
+		// The node which has been nearest to the goal during this search
+		AstarNodeP nearestNode;
+#endif // ASTAR_PREDATOR_VERSION == 3
 	};
 private:
 	// Possible actions
 	// The actions are limited to cardinal only, because diagonal movement
 	// is more likely to not work correctly.
 	static constexpr AstarActions ASTAR_ACTIONS{DIR8_N, DIR8_E, DIR8_S, DIR8_W};
+
 	PlayerInputFlags m_input;
 
 	/**
@@ -182,6 +254,7 @@ private:
 	/**
 	 * @brief Performs node "expansion".
 	 * 
+	 * @param d
 	 * @param n The node to expand.
 	 */
 	void astarExpandNode(AstarData& d, const AstarNodeP& n) const;
@@ -194,12 +267,35 @@ private:
 	 *        current state.
 	 */
 	PlayerInputFlags astarGetBestInput(AstarData& d) const;
+#if ASTAR_PREDATOR_VERSION == 3
+	/**
+	 * @brief Changes `d.nearestNode` for the node at the top of OPEN if it is
+	 *        a suitable candidate.
+	 * 
+	 * @remark OPEN may be empty, in which case the value will not be updated.
+	 */
+	void astarRefreshNearestNode(AstarData& d) const;
+#endif // ASTAR_PREDATOR_VERSION == 3
 
+	/**
+	 * @brief Calculates the `h(s)` value of the state `s`.
+	 * 
+	 * @param s 
+	 * @param sGoal Goal state.
+	 */
 	static AstarPredatorAIPlayerAgent::NodeEval getHvalue(
 		const StageGridModel::Cell& s, const StageGridModel::Cell& sGoal);
+	/**
+	 * @brief Creates successor of the `n` node in the `direction` direction.
+	 * 
+	 * @param n Node to generate successor for.
+	 * @param direction The direction of the successor from the `n` node.
+	 * @param sGoal Goal state.
+	 */
 	static AstarPredatorAIPlayerAgent::AstarNodeP getSucc(
 		const AstarPredatorAIPlayerAgent::AstarNodeP& n, Direction8 direction,
 		const StageGridModel::Cell& sGoal);
+
 protected:
 	void doPlan() override;
 	PlayerInputFlags doGetPlayerInput() override { return m_input; }
