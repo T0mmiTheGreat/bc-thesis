@@ -26,6 +26,7 @@
 class AstarPredatorAIPlayerAgent : public PredatorAIPlayerAgentBase {
 private:
 	typedef double NodeEval;
+	typedef std::array<Direction8, 4> AstarActions;
 	/**
 	 * @brief Node in the A* search tree.
 	 */
@@ -67,8 +68,15 @@ private:
 			return (lhs->fvalue > rhs->fvalue);
 		}
 	};
-	typedef std::priority_queue<AstarNodeP, std::vector<AstarNodeP>,
-		AstarNodeCompare> AstarPrioq;
+	class AstarPrioq
+		: public std::priority_queue<AstarNodeP, std::vector<AstarNodeP>,
+		  AstarNodeCompare>
+	{
+	public:
+		void reserve(size_t n) {
+			c.reserve(n);
+		}
+	};
 	typedef std::unordered_set<AstarNodeP, AstarNodeHash, AstarNodeEqual> AstarSet;
 	class AstarOpen {
 	private:
@@ -95,6 +103,10 @@ private:
 		bool empty() const {
 			return m_prioq.empty();
 		}
+		void reserve(size_t n) {
+			m_prioq.reserve(n);
+			m_set.reserve(n);
+		}
 	};
 	class AstarClosed : public AstarSet {
 	public:
@@ -102,7 +114,37 @@ private:
 			return (find(x) != end());
 		}
 	};
+
+	struct AstarData {
+		// Quick access
+
+		// Player state which belongs to this agent
+		const GameStateAgentProxy::PlayerState& me;
+		// The player to chase after
+		const GameStateAgentProxy::PlayerState* victim;
+		const StageGridModel& grid;
+		// Square of "my" player radius
+		double mySqsize;
+
+		// Initial state
+		StageGridModel::Cell sStart;
+		// Goal state
+		StageGridModel::Cell sGoal;
+		
+		AstarOpen astarOpen;
+		AstarClosed astarClosed;
+		
+		static constexpr int MAX_GENERATED_NODES = 2200;
+		int generatedNodes;
+
+		bool isFinished;
+		PlayerInputFlags bestInput;
+	};
 private:
+	// Possible actions
+	// The actions are limited to cardinal only, because diagonal movement
+	// is more likely to not work correctly.
+	static constexpr AstarActions ASTAR_ACTIONS{DIR8_N, DIR8_E, DIR8_S, DIR8_W};
 	PlayerInputFlags m_input;
 
 	/**
@@ -115,6 +157,44 @@ private:
 	PlayerInputFlags chooseNextAction(
 		const GameStateAgentProxy::PlayerState* victim);
 	
+	/**
+	 * @brief Creates an `AstarData` structure.
+	 * 
+	 * @param victim The player to chase after.
+	 * 
+	 * @note The `astarDataInit` method must be called afterwards to properly
+	 *       initialize the structure. This method only takes care of its
+	 *       successful creation.
+	 */
+	AstarPredatorAIPlayerAgent::AstarData astarDataCreate(
+		const GameStateAgentProxy::PlayerState* victim) const;
+	/**
+	 * @brief Initializes the values of `AstarData` structure.
+	 */
+	void astarDataInit(AstarData& d) const;
+	/**
+	 * @brief Fully processes the node at the top of OPEN.
+	 * 
+	 * @note May modify `d.isFinished` (besides others). Once the value of this
+	 *       variable is set to `true`, the search should not continue.
+	 */
+	void astarProcessNextNode(AstarData& d) const;
+	/**
+	 * @brief Performs node "expansion".
+	 * 
+	 * @param n The node to expand.
+	 */
+	void astarExpandNode(AstarData& d, const AstarNodeP& n) const;
+	/**
+	 * @brief Checks if A* should finish the execution.
+	 */
+	bool isAstarFinished(AstarData& d) const;
+	/**
+	 * @brief After A* search chooses the input which would be best made at the
+	 *        current state.
+	 */
+	PlayerInputFlags astarGetBestInput(AstarData& d) const;
+
 	static AstarPredatorAIPlayerAgent::NodeEval getHvalue(
 		const StageGridModel::Cell& s, const StageGridModel::Cell& sGoal);
 	static AstarPredatorAIPlayerAgent::AstarNodeP getSucc(
