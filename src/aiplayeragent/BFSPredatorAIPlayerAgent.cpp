@@ -48,6 +48,7 @@ PlayerInputFlags BFSPredatorAIPlayerAgent::chooseNextAction(
 
 	const auto& me = getMyState();
 	const auto& grid = gsProxy->getStageGridModel();
+	auto mySqsize = sqr(me.size);
 
 	// Initial state
 	auto sStart = grid.getCellAt(me.pos);
@@ -98,39 +99,42 @@ PlayerInputFlags BFSPredatorAIPlayerAgent::chooseNextAction(
 					currNode.get()                         // prev
 				});
 #ifdef DO_LOG_BFS
-					generated++;
+				generated++;
 #endif // DO_LOG_BFS
 
-				if (bfsSucc->cell == sGoal) {
-					// Found path
+				// The cell must be accessible by the player.
+				if (bfsSucc->cell.getNearestObstacleDistance() > mySqsize) {
+					if (bfsSucc->cell == sGoal) {
+						// Found path
 
 #ifdef DO_LOG_BFS
-		logFile << "  Generated: " << generated << std::endl;
-		logFile << "  Explored: " << explored << std::endl;
-		logFile << "  ----------------" << std::endl;
-		tmes.output();
+						logFile << "  Generated: " << generated << std::endl;
+						logFile << "  Explored: " << explored << std::endl;
+						logFile << "  ----------------" << std::endl;
+						tmes.output();
 #endif // DO_LOG_BFS
 
-					auto goalPtr = bfsSucc.get();
+						auto goalPtr = bfsSucc.get();
 
-					// Find the node at the depth just below the root.
-					while (goalPtr->prev->cell != sStart) {
-						goalPtr = goalPtr->prev;
+						// Find the node at the depth just below the root.
+						while (goalPtr->prev->cell != sStart) {
+							goalPtr = goalPtr->prev;
+						}
+
+						return goalPtr->action;
 					}
 
-					return goalPtr->action;
-				}
+					if (!bfsOpen.contains(bfsSucc)
+						&& bfsClosed.find(bfsSucc) == bfsClosed.end())
+					{
+						// Brand new state
 
-				if (!bfsOpen.contains(bfsSucc)
-					&& bfsClosed.find(bfsSucc) == bfsClosed.end())
-				{
-					// Brand new state
-
-					bfsOpen.push(bfsSucc);
+						bfsOpen.push(bfsSucc);
 #ifdef DO_LOG_BFS
 						explored++;
 #endif // DO_LOG_BFS
 
+					}
 				}
 			}
 		}
