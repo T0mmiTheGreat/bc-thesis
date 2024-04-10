@@ -32,7 +32,7 @@ private:
 	class GridInternal {
 	private:
 		// Cell width/height
-		static constexpr double CELL_SIZE = 5.0;
+		static constexpr double CELL_SIZE = 16.0;
 
 		const Size2d m_size;
 		// Stored by rows

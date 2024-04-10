@@ -78,6 +78,13 @@ double StageGridModel::GridInternal::getCellNearestObstacleDistance(
 	const Size2d& stageSize)
 {
 	Point_2 pos = getCellPosition(key);
+	Point_2 p(key.x * CELL_SIZE, key.y * CELL_SIZE);
+	Point_2 q((key.x + 1) * CELL_SIZE, key.y * CELL_SIZE);
+	Point_2 r((key.x + 1) * CELL_SIZE, (key.y + 1) * CELL_SIZE);
+	Point_2 s(key.x * CELL_SIZE, (key.y + 1) * CELL_SIZE);
+	Triangle_2 trg1(p, q, r);
+	Triangle_2 trg2(r, s, p);
+	
 	double lSqdist = sqr(pos.x());
 	double tSqdist = sqr(pos.y());
 	double rSqdist = sqr(stageSize.w - pos.x());
@@ -86,6 +93,13 @@ double StageGridModel::GridInternal::getCellNearestObstacleDistance(
 	double res = min({lSqdist, tSqdist, rSqdist, bSqdist});
 
 	for (const auto& obstacle : obstacles) {
+		auto obstTrg = toCgalTriangle(obstacle);
+		if ((CGAL::squared_distance(trg1, obstTrg) == 0.0)
+			|| (CGAL::squared_distance(trg2, obstTrg) == 0.0))
+		{
+			// Cell overlaps with the obstacle
+			return 0.0;
+		}
 		double sqdist = CGAL::squared_distance(pos, toCgalTriangle(obstacle));
 		if (res > sqdist) res = sqdist;
 	}
@@ -108,13 +122,13 @@ bool StageGridModel::GridInternal::isCellAt(
 	const StageGridModel::CellKey& key) const
 {
 	return (0 <= key.x && key.x < m_size.w)
-		&& (0 <= key.y && key.y < m_size.h);
+		&& (0 <= key.y && key.y < m_size.h)
+		&& (at(key).nearestObstacleDistance != 0.0);
 }
 
 const StageGridModel::CellValue& StageGridModel::GridInternal::at(
 	const StageGridModel::CellKey& key) const
 {
-	assert(isCellAt(key));
 	return m_cells.at(keyToIdx(key));
 }
 
