@@ -19,6 +19,7 @@
 #include "aiplayeragent/WallAwareBFSPredatorAIPlayerAgent.hpp"
 #include "aiplayeragent/IDSPredatorAIPlayerAgent.hpp"
 #include "aiplayeragent/BFSPredatorAIPlayerAgent.hpp"
+#include "aiplayeragent/AstarPredatorAIPlayerAgent.hpp"
 
 std::shared_ptr<IAIPlayerAgent>
 AIPlayerAgentFactory::createLadybugAIPlayerAgent(PlayerId playerId)
@@ -66,4 +67,10 @@ std::shared_ptr<IAIPlayerAgent>
 AIPlayerAgentFactory::createBFSPredatorAIPlayerAgent(PlayerId playerId)
 {
 	return std::make_shared<BFSPredatorAIPlayerAgent>(playerId);
+}
+
+std::shared_ptr<IAIPlayerAgent>
+AIPlayerAgentFactory::createAstarPredatorAIPlayerAgent(PlayerId playerId)
+{
+	return std::make_shared<AstarPredatorAIPlayerAgent>(playerId);
 }

@@ -107,6 +107,7 @@ set(SOURCE_FILES
 	aiplayeragent/WallAwareBFSPredatorAIPlayerAgent.cpp
 	aiplayeragent/IDSPredatorAIPlayerAgent.cpp
 	aiplayeragent/BFSPredatorAIPlayerAgent.cpp
+	aiplayeragent/AstarPredatorAIPlayerAgent.cpp
 	#aiplayeragent/searchalgos/BreadthFirstSearch.cpp
 )
 
@@ -219,6 +220,7 @@ set(HEADER_FILES
 	aiplayeragent/WallAwareBFSPredatorAIPlayerAgent.hpp
 	aiplayeragent/IDSPredatorAIPlayerAgent.hpp
 	aiplayeragent/BFSPredatorAIPlayerAgent.hpp
+	aiplayeragent/AstarPredatorAIPlayerAgent.hpp
 	#aiplayeragent/searchalgos/Common.hpp
 	#aiplayeragent/searchalgos/BreadthFirstSearch.hpp
 )
