@@ -25,8 +25,8 @@ Size2d StageGridModel::GridInternal::initSize(
 	(void)obstacles;
 
 	Size2d res(
-		stageSize.w / static_cast<int>(CELL_SIZE),
-		stageSize.h / static_cast<int>(CELL_SIZE)
+		(stageSize.w - 1) / static_cast<int>(CELL_SIZE) + 1,
+		(stageSize.h - 1) / static_cast<int>(CELL_SIZE) + 1
 	);
 	return res;
 }
