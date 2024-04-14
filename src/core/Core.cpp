@@ -385,8 +385,8 @@ CoreActionPtr Core::applyPlayerBonusCollisions(PlayerId id,
 
 Timer Core::createNewBonusTimer()
 {
-	static constexpr double PARAM_ALPHA = 11.625;
-	static constexpr double PARAM_BETA = 0.6;
+	static constexpr double PARAM_ALPHA = 10.95;
+	static constexpr double PARAM_BETA = 0.95;
 	static std::gamma_distribution distrib(PARAM_ALPHA, PARAM_BETA);
 	
 	double interval = distrib(getRNGine());
