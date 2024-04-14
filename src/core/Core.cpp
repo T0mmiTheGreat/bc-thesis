@@ -212,10 +212,16 @@ CoreActionPtr Core::generateBonus(TurnData& turnData)
 #endif // ENABLE_BONUS_CONSTRAINTS
 
 			BonusId bonusId = m_stageBonuses->generateBonus();
-			const PointF& bonusPos = m_stageBonuses->getBonuses().at(bonusId).position;
+			if (bonusId == BONUS_ID_NULL) {
+				// Bonus could not be generated
+				
+				return std::make_shared<CoreActionNone>();
+			} else {
+				const PointF& bonusPos = m_stageBonuses->getBonuses().at(bonusId).position;
 
-			auto res = std::make_shared<CoreActionAddBonus>(bonusId, bonusPos);
-			return res;
+				auto res = std::make_shared<CoreActionAddBonus>(bonusId, bonusPos);
+				return res;
+			}
 		}
 	}
 	
