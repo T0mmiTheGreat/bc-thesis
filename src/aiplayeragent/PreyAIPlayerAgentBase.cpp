@@ -11,6 +11,29 @@
 
 #include "aiplayeragent/PreyAIPlayerAgentBase.hpp"
 
+const GameStateAgentProxy::PlayerState* PreyAIPlayerAgentBase::chooseAttacker()
+{
+	Point_2 myPos = getMyState().pos;
+	const GameStateAgentProxy::PlayerState* worstAttackerPtr = nullptr;
+	double attackerEval = 0.0;
+	double worstAttackerEval = std::numeric_limits<double>::infinity();
+
+	for (const auto& [id, player] : gsProxy->getPlayers()) {
+		// Don't evaluate yourself
+		if (id == myId) continue;
+
+		attackerEval = evaluatePlayer(player, myPos);
+		if (attackerEval < worstAttackerEval) {
+			// Found a worse attacker
+
+			worstAttackerPtr = &player;
+			worstAttackerEval = attackerEval;
+		}
+	}
+
+	return worstAttackerPtr;
+}
+
 double PreyAIPlayerAgentBase::evaluatePlayer(
 	const GameStateAgentProxy::PlayerState& player, const Point_2& pos) const
 {

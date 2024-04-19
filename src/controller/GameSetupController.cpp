@@ -217,6 +217,7 @@ const char* GameSetupController::playerBrainToText(PlayerBrainType brain)
 		case BRAIN_IDS_PREDATOR:            return "IDS predator";
 		case BRAIN_BFS_PREDATOR:            return "BFS predator";
 		case BRAIN_ASTAR_PREDATOR:          return "A* predator";
+		case BRAIN_MINIMAX_PREY:            return "Minimax prey";
 		case COUNT_PLAYERBRAINTYPE: break;
 	}
 
@@ -323,6 +324,10 @@ std::shared_ptr<IPlayerInput> GameSetupController::playerBotToPlayerInput(
 		case BRAIN_ASTAR_PREDATOR:
 			botAgent = AIPlayerAgentFactory
 				::createAstarPredatorAIPlayerAgent(playerId);
+			break;
+		case BRAIN_MINIMAX_PREY:
+			botAgent = AIPlayerAgentFactory
+				::createMinimaxPreyAIPlayerAgent(playerId);
 			break;
 		case COUNT_PLAYERBRAINTYPE: break;
 	}

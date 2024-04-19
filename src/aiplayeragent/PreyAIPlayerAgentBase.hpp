@@ -16,6 +16,13 @@
 
 class PreyAIPlayerAgentBase : virtual public AIPlayerAgentBase {
 protected:
+	/**
+	 * @brief Chooses opponent which poses the biggest threat.
+	 * 
+	 * @return The chosen player, or `nullptr` if no player can be chosen
+	 *         (e.g., due to agent's victory).
+	 */
+	const GameStateAgentProxy::PlayerState* chooseAttacker();
 	double evaluatePlayer(const GameStateAgentProxy::PlayerState& player,
 		const Point_2& pos) const;
 public:

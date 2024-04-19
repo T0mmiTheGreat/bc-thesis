@@ -20,6 +20,7 @@
 #include "aiplayeragent/IDSPredatorAIPlayerAgent.hpp"
 #include "aiplayeragent/BFSPredatorAIPlayerAgent.hpp"
 #include "aiplayeragent/AstarPredatorAIPlayerAgent.hpp"
+#include "aiplayeragent/MinimaxPreyAIPlayerAgent.hpp"
 
 std::shared_ptr<IAIPlayerAgent>
 AIPlayerAgentFactory::createLadybugAIPlayerAgent(PlayerId playerId)
@@ -73,4 +74,10 @@ std::shared_ptr<IAIPlayerAgent>
 AIPlayerAgentFactory::createAstarPredatorAIPlayerAgent(PlayerId playerId)
 {
 	return std::make_shared<AstarPredatorAIPlayerAgent>(playerId);
+}
+
+std::shared_ptr<IAIPlayerAgent>
+AIPlayerAgentFactory::createMinimaxPreyAIPlayerAgent(PlayerId playerId)
+{
+	return std::make_shared<MinimaxPreyAIPlayerAgent>(playerId);
 }

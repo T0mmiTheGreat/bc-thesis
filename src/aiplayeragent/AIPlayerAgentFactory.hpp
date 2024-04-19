@@ -37,6 +37,8 @@ public:
 		PlayerId playerId);
 	static std::shared_ptr<IAIPlayerAgent> createAstarPredatorAIPlayerAgent(
 		PlayerId playerId);
+	static std::shared_ptr<IAIPlayerAgent> createMinimaxPreyAIPlayerAgent(
+		PlayerId playerId);
 };
 
 #endif // AIPLAYERAGENTFACTORY_HPP

@@ -108,6 +108,7 @@ set(SOURCE_FILES
 	aiplayeragent/IDSPredatorAIPlayerAgent.cpp
 	aiplayeragent/BFSPredatorAIPlayerAgent.cpp
 	aiplayeragent/AstarPredatorAIPlayerAgent.cpp
+	aiplayeragent/MinimaxPreyAIPlayerAgent.cpp
 	#aiplayeragent/searchalgos/BreadthFirstSearch.cpp
 )
 
@@ -221,6 +222,7 @@ set(HEADER_FILES
 	aiplayeragent/IDSPredatorAIPlayerAgent.hpp
 	aiplayeragent/BFSPredatorAIPlayerAgent.hpp
 	aiplayeragent/AstarPredatorAIPlayerAgent.hpp
+	aiplayeragent/MinimaxPreyAIPlayerAgent.hpp
 	#aiplayeragent/searchalgos/Common.hpp
 	#aiplayeragent/searchalgos/BreadthFirstSearch.hpp
 )
