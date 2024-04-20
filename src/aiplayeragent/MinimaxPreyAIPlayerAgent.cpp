@@ -35,31 +35,53 @@ PlayerInputFlags MinimaxPreyAIPlayerAgent::chooseNextAction(
 		0,         // bestActionIdx
 		0,         // nextActionIdx
 		1,         // depth
+#if MINIMAX_PREY_VERSION == 1
 		EVAL_LO,   // eval
+#else // MINIMAX_PREY_VERSION != 1
+		EVAL_LO,   // alpha
+		EVAL_HI,   // beta
+#endif // MINIMAX_PREY_VERSION != 1
 	});
 	nodeStack.push(initialNode);
 
 	while (!nodeStack.empty()) {
 		auto& top = nodeStack.top();
-		if (top->depth == MAX_DEPTH
-			|| top->nextActionIdx == static_cast<int>(MINIMAX_ACTIONS.size()))
-		{
+		if ((top->depth == MAX_DEPTH)
+			|| (top->nextActionIdx == static_cast<int>(MINIMAX_ACTIONS.size()))
+#if MINIMAX_PREY_VERSION > 1
+			|| (top->alpha >= top->beta)
+#endif // MINIMAX_PREY_VERSION > 1
+		) {
 			auto pop = top;
 			nodeStack.pop();
 			if (!nodeStack.empty()) {
 				auto& newTop = nodeStack.top();
 				if (isMaxTurn(newTop)) {
 					// Max's turn
+#if MINIMAX_PREY_VERSION == 1
 					if (newTop->eval < pop->eval) {
 						newTop->eval = pop->eval;
 						newTop->bestActionIdx = newTop->nextActionIdx - 1;
 					}
+#else // MINIMAX_PREY_VERSION != 1
+					if (pop->beta > newTop->alpha) {
+						newTop->alpha = pop->beta;
+						newTop->bestActionIdx = newTop->nextActionIdx - 1;
+					}
+#endif // MINIMAX_PREY_VERSION != 1
 				} else {
 					// Min's turn
+#if MINIMAX_PREY_VERSION == 1
 					if (newTop->eval > pop->eval) {
 						newTop->eval = pop->eval;
 						newTop->bestActionIdx = newTop->nextActionIdx - 1;
 					}
+#else // MINIMAX_PREY_VERSION != 1
+					if (pop->alpha < newTop->beta) {
+						newTop->beta = pop->alpha;
+						newTop->bestActionIdx = newTop->nextActionIdx - 1;
+					}
+#endif // MINIMAX_PREY_VERSION != 1
 				}	
 			}
 		} else {
@@ -85,9 +107,16 @@ MinimaxPreyAIPlayerAgent::MinimaxNodeP MinimaxPreyAIPlayerAgent::getSucc(
 		? n->minCell
 		: n->minCell.getNeighbor(direction));
 	int depth = n->depth + 1;
+#if MINIMAX_PREY_VERSION == 1
 	NodeEval eval = (depth == MAX_DEPTH
-		? getTaxicab(maxCell, minCell)
+		? evalLeaf(maxCell, minCell)
 		: (isMaxTurn(n) ? EVAL_HI : EVAL_LO));
+#else // MINIMAX_PREY_VERSION != 1
+	NodeEval alpha = n->alpha, beta = n->beta;
+	if (depth == MAX_DEPTH) {
+		alpha = beta = evalLeaf(maxCell, minCell);
+	}
+#endif // MINIMAX_PREY_VERSION != 1
 	
 	MinimaxNodeP res = std::make_shared<MinimaxNode>(MinimaxNode{
 		maxCell,   // maxCell
@@ -95,7 +124,12 @@ MinimaxPreyAIPlayerAgent::MinimaxNodeP MinimaxPreyAIPlayerAgent::getSucc(
 		0,         // bestActionIdx
 		0,         // nextActionIdx
 		depth,     // depth
+#if MINIMAX_PREY_VERSION == 1
 		eval,      // eval
+#else // MINIMAX_PREY_VERSION != 1
+		alpha,     // alpha
+		beta,     // beta
+#endif // MINIMAX_PREY_VERSION != 1
 	});
 	return res;
 }
@@ -119,6 +153,13 @@ bool MinimaxPreyAIPlayerAgent::isMaxTurn(
 	const MinimaxPreyAIPlayerAgent::MinimaxNodeP& n)
 {
 	return (n->depth % 2 == 1);
+}
+
+MinimaxPreyAIPlayerAgent::NodeEval MinimaxPreyAIPlayerAgent::evalLeaf(
+	const StageGridModel::Cell& maxCell,
+	const StageGridModel::Cell& minCell)
+{
+	return getTaxicab(maxCell, minCell);
 }
 
 MinimaxPreyAIPlayerAgent::NodeEval MinimaxPreyAIPlayerAgent::getTaxicab(

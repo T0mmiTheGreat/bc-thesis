@@ -12,6 +12,13 @@
 #ifndef MINIMAXPREYAIPLAYERAGENT_HPP
 #define MINIMAXPREYAIPLAYERAGENT_HPP
 
+// Versions:
+//  - version 1
+//    - Simple Minimax
+//  - version 2
+//    - Alpha-beta pruning
+#define MINIMAX_PREY_VERSION 2
+
 #include <array>
 #include <limits>
 #include <memory>
@@ -42,8 +49,15 @@ private:
 		int nextActionIdx;
 		// Depth of the node within the search tree
 		int depth;
+#if MINIMAX_PREY_VERSION == 1
 		// Evaluation of the node
 		NodeEval eval;
+#else // MINIMAX_PREY_VERSION != 1
+		// Alpha parameter of the node
+		NodeEval alpha;
+		// Beta parameter of the node
+		NodeEval beta;
+#endif // MINIMAX_PREY_VERSION != 1
 	};
 	/**
 	 * @brief Node in the Minimax search tree.
@@ -65,7 +79,13 @@ private:
 	static constexpr MinimaxActions MINIMAX_ACTIONS{DIR8_NONE, DIR8_E, DIR8_S,
 		DIR8_W, DIR8_N};
 	// Maximum depth of the search tree
-	static constexpr int MAX_DEPTH = 6;
+	static constexpr int MAX_DEPTH =
+#if MINIMAX_PREY_VERSION == 1
+		6
+#else // MINIMAX_PREY_VERSION != 1
+		10
+#endif // MINIMAX_PREY_VERSION != 1
+	;
 
 	static constexpr NodeEval EVAL_LO = std::numeric_limits<NodeEval>::min();
 	static constexpr NodeEval EVAL_HI = std::numeric_limits<NodeEval>::max();
@@ -104,10 +124,19 @@ private:
 	 */
 	static bool isMaxTurn(const MinimaxPreyAIPlayerAgent::MinimaxNodeP& n);
 	/**
+	 * @brief Evaluates a leaf node.
+	 * 
+	 * @param maxCell Max cell of the leaf node.
+	 * @param minCell Min cell of the leaf node.
+	 */
+	static MinimaxPreyAIPlayerAgent::NodeEval evalLeaf(
+		const StageGridModel::Cell& maxCell,
+		const StageGridModel::Cell& minCell);
+	/**
 	 * @brief Calculates the taxicab distance between two nodes.
 	 */
-	static NodeEval getTaxicab(const StageGridModel::Cell& c1,
-		const StageGridModel::Cell& c2);
+	static MinimaxPreyAIPlayerAgent::NodeEval getTaxicab(
+		const StageGridModel::Cell& c1, const StageGridModel::Cell& c2);
 	/**
 	 * @brief After Minimax search chooses the input which would be best made
 	 *        at the current state.
