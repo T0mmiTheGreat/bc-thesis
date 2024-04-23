@@ -83,7 +83,7 @@ private:
 #if MINIMAX_PREY_VERSION == 1
 		6
 #else // MINIMAX_PREY_VERSION != 1
-		10
+		8
 #endif // MINIMAX_PREY_VERSION != 1
 	;
 
