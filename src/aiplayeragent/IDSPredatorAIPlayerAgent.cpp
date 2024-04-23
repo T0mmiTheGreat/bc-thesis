@@ -9,7 +9,7 @@
  * 
  */
 
-#define DO_LOG_IDS
+//#define DO_LOG_IDS
 #define USE_CLOSED_LIST
 
 #include "aiplayeragent/IDSPredatorAIPlayerAgent.hpp"
