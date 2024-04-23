@@ -20,6 +20,11 @@ include_directories(. ../imgui/)
 # It turned out to be too slow.
 #add_compile_definitions(OLD_TRAJECTORY_ALGORITHM)
 
+# Excludes agents which make the application run extremely slow.
+# It doesn't actually exclude them from compilation, only hides them in the
+# game setup screen.
+add_compile_definitions(EXCLUDE_SLOW_AGENTS)
+
 
 # Sources (*.cpp)
 set(SOURCE_FILES

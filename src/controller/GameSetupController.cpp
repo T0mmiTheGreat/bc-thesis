@@ -213,9 +213,11 @@ const char* GameSetupController::playerBrainToText(PlayerBrainType brain)
 		case BRAIN_BLIND_PREY:              return "Blind prey";
 		case BRAIN_WALL_AWARE_PREDATOR:     return "Wall-aware predator";
 		case BRAIN_WALL_AWARE_PREY:         return "Wall-aware prey";
+#ifndef EXCLUDE_SLOW_AGENTS
 		case BRAIN_WALL_AWARE_BFS_PREDATOR: return "Wall-aware BFS predator";
 		case BRAIN_IDS_PREDATOR:            return "IDS predator";
 		case BRAIN_BFS_PREDATOR:            return "BFS predator";
+#endif // !EXCLUDE_SLOW_AGENTS
 		case BRAIN_ASTAR_PREDATOR:          return "A* predator";
 		case BRAIN_MINIMAX_PREY:            return "Minimax prey";
 		case COUNT_PLAYERBRAINTYPE: break;
@@ -309,6 +311,7 @@ std::shared_ptr<IPlayerInput> GameSetupController::playerBotToPlayerInput(
 			botAgent = AIPlayerAgentFactory
 				::createWallAwarePreyAIPlayerAgent(playerId);
 			break;
+#ifndef EXCLUDE_SLOW_AGENTS
 		case BRAIN_WALL_AWARE_BFS_PREDATOR:
 			botAgent = AIPlayerAgentFactory
 				::createWallAwareBFSPredatorAIPlayerAgent(playerId);
@@ -321,6 +324,7 @@ std::shared_ptr<IPlayerInput> GameSetupController::playerBotToPlayerInput(
 			botAgent = AIPlayerAgentFactory
 				::createBFSPredatorAIPlayerAgent(playerId);
 			break;
+#endif // !EXCLUDE_SLOW_AGENTS
 		case BRAIN_ASTAR_PREDATOR:
 			botAgent = AIPlayerAgentFactory
 				::createAstarPredatorAIPlayerAgent(playerId);

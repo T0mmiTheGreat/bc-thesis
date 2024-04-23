@@ -9,7 +9,7 @@
  * 
  */
 
-#define DO_LOG_BFS
+//#define DO_LOG_BFS
 
 #include "aiplayeragent/BFSPredatorAIPlayerAgent.hpp"
 
