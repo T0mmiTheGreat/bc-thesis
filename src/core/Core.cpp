@@ -336,8 +336,8 @@ CoreActionPtr Core::changePlayerHp(PlayerId id,
 	}
 
 	// Don't grow if that would make you collide with an obstacle
-	if (m_stageObstacles->playerHasCollision(player.pos, getPlayerSize(
-		player.hp + hpDelta)))
+	if ((hpDelta > 0.0) && m_stageObstacles->playerHasCollision(player.pos,
+		getPlayerSize(player.hp + hpDelta)))
 	{
 		hpDelta = 0.0;
 	}
