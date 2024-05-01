@@ -44,6 +44,9 @@ public:
 	 * @brief Returns an object representing the obstacles on the stage.
 	 */
 	virtual const StageObstacles& getObstacles() const = 0;
+	/**
+	 * @brief Returns the grid-like model of the stage.
+	 */
 	virtual const StageGridModel& getStageGridModel() const = 0;
 	/**
 	 * @brief Calculates the increment in X and Y coordinate of a player based

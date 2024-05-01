@@ -20,6 +20,9 @@
 #include "core/Common.hpp"
 #include "core/geometry/Geometry.hpp"
 
+/**
+ * @brief Grid-like model of the stage.
+ */
 class StageGridModel {
 private:
 	typedef Point CellKey;
@@ -43,29 +46,66 @@ private:
 		// Stored by rows
 		std::vector<CellValue> m_cells;
 
+		/**
+		 * @brief Creates initial value for the `m_size` variable.
+		 */
 		static Size2d initSize(const std::vector<StageObstacle>& obstacles,
 			const Size2d& stageSize);
+		/**
+		 * @brief Creates initial value for the `m_cells` variable.
+		 */
 		static std::vector<StageGridModel::CellValue> initCells(
 			const std::vector<StageObstacle>& obstacles,
 			const Size2d& stageSize);
+		/**
+		 * @brief Calcualtes the position of a cell with the given `key`.
+		 */
 		static Point_2 getCellPosition(const CellKey& key);
+		/**
+		 * @brief Calcualtes the square of the shortest distance between an
+		 *        obstacle and a cell with the given `key`.
+		 */
 		static double getCellNearestObstacleDistance(const CellKey& key,
 			const std::vector<StageObstacle>& obstacles,
 			const Size2d& stageSize);
+		/**
+		 * @brief Returns the index of a cell within the `m_cells` variable.
+		 */
 		size_t keyToIdx(const CellKey& key) const;
 	public:
 		GridInternal(const std::vector<StageObstacle>& obstacles,
 			const Size2d& stageSize);
+		/**
+		 * @brief Checks if a cell with the given `key` exists.
+		 * 
+		 * @details The cell exists iff its center is within the stage bounds
+		 *          and it does not overlap with an obstacle.
+		 */
 		bool isCellAt(const StageGridModel::CellKey& key) const;
+		/**
+		 * @brief Returns the cell with the given `key`.
+		 * 
+		 * @remark UB if `!isCellAt(key)`.
+		 */
 		const StageGridModel::CellValue& at(
 			const StageGridModel::CellKey& key) const;
+		/**
+		 * @brief Returns key of the cell within which's bounds lies the
+		 *        `p` point.
+		 */
 		StageGridModel::CellKey getCellAtPos(const Point_2& p) const;
 	};
 public:
 	friend class Cell;
+	/**
+	 * @brief Cell of the stage grid model.
+	 */
 	class Cell {
 	public:
 		friend struct Hash;
+		/**
+		 * @brief Hash function object for the cell.
+		 */
 		struct Hash {
 			size_t operator()(const Cell& key) const {
 				return Point::Hash()(key.m_value.key);
@@ -75,6 +115,9 @@ public:
 		const StageGridModel::GridInternal& m_gridInternal;
 		const CellValue& m_value;
 
+		/**
+		 * @brief Returns key of the neighbor cell.
+		 */
 		StageGridModel::CellKey getNeighKey(Direction8 neighDir) const {
 			switch (neighDir) {
 				case DIR8_NONE: return StageGridModel::CellKey(
@@ -105,14 +148,26 @@ public:
 			: m_gridInternal{gridInternal}
 			, m_value{m_gridInternal.at(key)}
 		{}
+		/**
+		 * @brief Returns the position of the center of the cell.
+		 */
 		Point_2 getPosition() const { return m_value.position; }
+		/**
+		 * @brief Returns the *squared* distance from the nearest obstacle.
+		 */
 		double getNearestObstacleDistance() const {
 			return m_value.nearestObstacleDistance;
 		}
+		/**
+		 * @brief Checks if there is a neighbor cell in the given direction.
+		 */
 		bool hasNeighbor(Direction8 neighDir) const {
 			CellKey neighKey = getNeighKey(neighDir);
 			return m_gridInternal.isCellAt(neighKey);
 		}
+		/**
+		 * @brief Returns the neighbor cell in the given direction.
+		 */
 		Cell getNeighbor(Direction8 neighDir) const {
 			CellKey neighKey = getNeighKey(neighDir);
 			Cell res(m_gridInternal, neighKey);
@@ -131,6 +186,9 @@ private:
 public:
 	StageGridModel(const std::vector<StageObstacle>& obstacles,
 		const Size2d& stageSize);
+	/**
+	 * @brief Returns the cell within which's bounds lies the `p` point.
+	 */
 	StageGridModel::Cell getCellAt(const Point_2& p) const;
 };
 
