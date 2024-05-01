@@ -13,7 +13,7 @@
 
 #include <cassert>
 
-#ifdef USE_THREADS
+#ifdef USE_THREADS_FOR_AGENTS
 
 void AIPlayerAgentBase::threadMain()
 {
@@ -39,10 +39,10 @@ void AIPlayerAgentBase::threadMain()
 	}
 }
 
-#endif // USE_THREADS
+#endif // USE_THREADS_FOR_AGENTS
 
 AIPlayerAgentBase::AIPlayerAgentBase(PlayerId myId_)
-#ifdef USE_THREADS
+#ifdef USE_THREADS_FOR_AGENTS
 	: m_thr(&threadMain, this)
 	, m_isThreadFinished{false}
 
@@ -56,11 +56,11 @@ AIPlayerAgentBase::AIPlayerAgentBase(PlayerId myId_)
 
 	, gsProxy{nullptr}
 	, myId{myId_}
-#else // !USE_THREADS
+#else // !USE_THREADS_FOR_AGENTS
 	: m_isThreadFinished{false}
 	, gsProxy{nullptr}
 	, myId{myId_}
-#endif // !USE_THREADS
+#endif // !USE_THREADS_FOR_AGENTS
 {}
 
 const GameStateAgentProxy::PlayerState& AIPlayerAgentBase::getMyState() const
@@ -95,7 +95,7 @@ AIPlayerAgentBase::~AIPlayerAgentBase()
 
 PlayerInputFlags AIPlayerAgentBase::getPlayerInput()
 {
-#ifdef USE_THREADS
+#ifdef USE_THREADS_FOR_AGENTS
 	// Wait until the input is ready.
 	// Ideally, there should be no waiting; the planning should be finished by
 	// the time this method is called, but there might be a case that the thread
@@ -103,14 +103,14 @@ PlayerInputFlags AIPlayerAgentBase::getPlayerInput()
 	// planning now.
 	waitForCondition(m_mutexIsPlanning, m_cvIsPlanning,
 		[this](){ return !this->m_isPlanning; });
-#endif // USE_THREADS
+#endif // USE_THREADS_FOR_AGENTS
 
 	return doGetPlayerInput();
 }
 
 void AIPlayerAgentBase::plan()
 {
-#ifdef USE_THREADS
+#ifdef USE_THREADS_FOR_AGENTS
 	// Wait until the previous planning is finished
 	waitForCondition(m_mutexIsPlanning, m_cvIsPlanning,
 		[this](){ return !this->m_isPlanning; });
@@ -120,19 +120,19 @@ void AIPlayerAgentBase::plan()
 	// Wait until it actually starts planning
 	waitForCondition(m_mutexIsPlanning, m_cvIsPlanning,
 		[this](){ return this->m_isPlanning; });
-#else // !USE_THREADS
+#else // !USE_THREADS_FOR_AGENTS
 	assert(gsProxy != nullptr);
 	if (gsProxy->getPlayers().find(myId) != gsProxy->getPlayers().end()) {
 		doPlan();
 	}
-#endif // !USE_THREADS
+#endif // !USE_THREADS_FOR_AGENTS
 }
 
 void AIPlayerAgentBase::assignProxy(GameStateAgentProxyP value)
 {
-#ifndef USE_THREADS
+#ifndef USE_THREADS_FOR_AGENTS
 	gsProxy = value;
-#else // USE_THREADS
+#else // USE_THREADS_FOR_AGENTS
 #	error Implement the game state proxy usage.
 #endif
 }
@@ -141,12 +141,12 @@ void AIPlayerAgentBase::kill()
 {
 	m_isThreadFinished = true;
 
-#ifdef USE_THREADS
+#ifdef USE_THREADS_FOR_AGENTS
 	// Allow the agent thread to check if it is alive
 	updateCondition(m_mutexIsPlanNotify, m_cvIsPlanNotify,
 		[this](){ this->m_isPlanNotify = true; });
 
 	// Stop the thread
 	m_thr.join();
-#endif // USE_THREADS
+#endif // USE_THREADS_FOR_AGENTS
 }

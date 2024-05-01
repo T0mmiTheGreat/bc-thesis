@@ -12,27 +12,27 @@
 #ifndef AIPLAYERAGENTBASE_HPP
 #define AIPLAYERAGENTBASE_HPP
 
-//#define USE_THREADS
+//#define USE_THREADS_FOR_AGENTS
 
-#ifdef USE_THREADS
+#ifdef USE_THREADS_FOR_AGENTS
 #include <condition_variable>
 #include <mutex>
 #include <thread>
-#endif // USE_THREADS
+#endif // USE_THREADS_FOR_AGENTS
 
 #include "aiplayeragent/IAIPlayerAgent.hpp"
 #include "core/Common.hpp"
 
 class AIPlayerAgentBase : public IAIPlayerAgent {
 private:
-#ifdef USE_THREADS
+#ifdef USE_THREADS_FOR_AGENTS
 	// The thread in which the agent runs
 	std::thread m_thr;
-#endif // USE_THREADS
+#endif // USE_THREADS_FOR_AGENTS
 	// Whether the `kill()` method has been called
 	bool m_isThreadFinished;
 
-#ifdef USE_THREADS
+#ifdef USE_THREADS_FOR_AGENTS
 	// True if the thread is currently inside the `doPlan()` method
 	bool m_isPlanning;
 	std::condition_variable m_cvIsPlanning;
@@ -71,7 +71,7 @@ private:
 	template <typename Predicate>
 	void updateCondition(std::mutex& m, std::condition_variable& cv,
 		Predicate pred);
-#endif // USE_THREADS
+#endif // USE_THREADS_FOR_AGENTS
 protected:
 	GameStateAgentProxyP gsProxy;
 	const PlayerId myId;
@@ -103,7 +103,7 @@ public:
 	void kill() override;
 };
 
-#ifdef USE_THREADS
+#ifdef USE_THREADS_FOR_AGENTS
 
 template<typename Predicate>
 inline void AIPlayerAgentBase::waitForCondition(std::mutex& m,
@@ -124,6 +124,6 @@ inline void AIPlayerAgentBase::updateCondition(std::mutex& m,
 	cv.notify_all();
 }
 
-#endif // USE_THREADS
+#endif // USE_THREADS_FOR_AGENTS
 
 #endif // AIPLAYERAGENTBASE_HPP
