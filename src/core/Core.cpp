@@ -15,6 +15,13 @@
 #include "core/trajectory/Trajectory.hpp"
 #include "math/Math.hpp"
 
+#ifdef INCLUDE_BENCHMARK
+#include "utilities/benchmark/Benchmark.hpp"
+
+static constexpr const char* BENCH_ID_PL_ACTIONS = "core-pl-actions";
+static constexpr const char* BENCH_ID_UPDATE_GSPROXY = "core-update-gsproxy";
+#endif // INCLUDE_BENCHMARK
+
 Core::Core(const GameSetupData& gsdata)
 	: m_isInitialized{false}
 	, m_isOver{false}
@@ -406,7 +413,13 @@ void Core::resetBonusTimer()
 
 void Core::notifyAgents()
 {
+#ifdef INCLUDE_BENCHMARK
+	Benchmark::get().beginMeasure(BENCH_ID_UPDATE_GSPROXY);
+#endif // INCLUDE_BENCHMARK
 	m_gsAgentProxy->update();
+#ifdef INCLUDE_BENCHMARK
+	Benchmark::get().endMeasure(BENCH_ID_UPDATE_GSPROXY);
+#endif // INCLUDE_BENCHMARK
 
 	for (auto& agent : m_aiAgents) {
 		agent->plan();
@@ -599,7 +612,13 @@ CoreActionPtr Core::initializeStageAiAgents()
 
 CoreActionPtr Core::tick()
 {
+#ifdef INCLUDE_BENCHMARK
+	Benchmark::get().beginMeasure(BENCH_ID_PL_ACTIONS);
+#endif // INCLUDE_BENCHMARK
 	auto res = playersActions();
+#ifdef INCLUDE_BENCHMARK
+	Benchmark::get().endMeasure(BENCH_ID_PL_ACTIONS);
+#endif // INCLUDE_BENCHMARK
 	notifyAgents();
 	return res;
 }

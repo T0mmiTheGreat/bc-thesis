@@ -17,6 +17,12 @@
 #include "core/Core.hpp"
 #include "playerinput/PlayerInputFactory.hpp"
 
+#ifdef INCLUDE_BENCHMARK
+#include "utilities/benchmark/Benchmark.hpp"
+
+static constexpr const char* BENCH_ID_ON_PAINT = "ingame-on-paint";
+#endif // INCLUDE_BENCHMARK
+
 InGameController::InGameController(std::shared_ptr<ISysProxy> sysProxy,
 	const GameSetupData& gsdata)
 	: GeneralControllerBase(sysProxy)
@@ -507,6 +513,10 @@ void InGameController::onMouseBtnDown(MouseBtn btn, int x, int y)
 void InGameController::onPaint(std::shared_ptr<ICanvas> canvas,
 	const Rect& invalidRect)
 {
+#ifdef INCLUDE_BENCHMARK
+	Benchmark::get().beginMeasure(BENCH_ID_ON_PAINT);
+#endif // INCLUDE_BENCHMARK
+
 	for (auto& [id, spr] : m_playerSprites) {
 		spr->repaint(canvas, invalidRect);
 	}
@@ -538,4 +548,8 @@ void InGameController::onPaint(std::shared_ptr<ICanvas> canvas,
 	}
 
 	m_exitBtnSprite->repaint(canvas, invalidRect);
+
+#ifdef INCLUDE_BENCHMARK
+	Benchmark::get().endMeasure(BENCH_ID_ON_PAINT);
+#endif // INCLUDE_BENCHMARK
 }

@@ -25,6 +25,9 @@ include_directories(. ../imgui/)
 # game setup screen.
 add_compile_definitions(EXCLUDE_SLOW_AGENTS)
 
+set(INCLUDE_BENCHMARK TRUE)
+#set(INCLUDE_BENCHMARK FALSE)
+
 
 # Sources (*.cpp)
 set(SOURCE_FILES
@@ -231,6 +234,12 @@ set(HEADER_FILES
 	#aiplayeragent/searchalgos/Common.hpp
 	#aiplayeragent/searchalgos/BreadthFirstSearch.hpp
 )
+
+if (INCLUDE_BENCHMARK)
+	add_compile_definitions(INCLUDE_BENCHMARK)
+	list(APPEND SOURCE_FILES utilities/benchmark/Benchmark.cpp)
+	list(APPEND HEADER_FILES utilities/benchmark/Benchmark.hpp)
+endif ()
 
 # Imgui files
 file (GLOB IMGUI_SOURCES
