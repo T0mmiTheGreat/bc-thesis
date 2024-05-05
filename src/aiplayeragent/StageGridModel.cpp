@@ -11,6 +11,8 @@
 
 #include "aiplayeragent/StageGridModel.hpp"
 
+#include <algorithm>
+
 //#define LOG_CELLS
 
 #ifdef LOG_CELLS
@@ -106,7 +108,7 @@ double StageGridModel::GridInternal::getCellNearestObstacleDistance(
 	double bSqdist = sqr(stageSize.h - pos.y());
 
 	// Result is first initialized as the minimum distance from the stage bounds
-	double res = min({lSqdist, tSqdist, rSqdist, bSqdist});
+	double res = std::min({lSqdist, tSqdist, rSqdist, bSqdist});
 
 	for (const auto& obstacle : obstacles) {
 		auto obstTrg = toCgalTriangle(obstacle);
