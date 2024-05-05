@@ -31,6 +31,9 @@ public:
 		virtual ~IParent() {}
 		/**
 		 * @brief Replaces the current child with `replacement`.
+		 * 
+		 * @param replacement The controller to replace with, or `nullptr` to
+		 *                    resume a paused controller.
 		 */
 		virtual void replaceController(
 			std::shared_ptr<IControllerChild> replacement) = 0;

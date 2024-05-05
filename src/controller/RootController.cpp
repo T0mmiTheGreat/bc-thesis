@@ -87,12 +87,20 @@ void RootController::replaceController(
 	std::shared_ptr<IControllerChild> replacement)
 {
 	if (replacement == nullptr) {
+		// Resume paused controller
+
 		if (!m_pausedControllers.empty()) {
+			// "m_childController = m_pausedControllers.pop()"
 			m_childController = std::move(m_pausedControllers.back());
 			m_pausedControllers.pop_back();
+
 			m_childController->resumedEvent();
 		}
 	} else {
+		// Just replace
+
+		// Well, this doesn't make much sense, does it? I wouldn't risk and
+		// touch it, though...
 		m_childController = replacement;
 		setChildController(replacement);
 	}
