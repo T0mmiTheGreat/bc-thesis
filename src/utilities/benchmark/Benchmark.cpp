@@ -1,7 +1,7 @@
 /**
  * @file Benchmark.cpp
  * @author Tomáš Ludrovan
- * @brief Benchmark class
+ * @brief Classes for benchmarking
  * @version 0.1
  * @date 2024-05-01
  * 

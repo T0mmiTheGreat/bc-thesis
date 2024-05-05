@@ -13,6 +13,15 @@
 
 #include <cassert>
 
+#ifdef INCLUDE_BENCHMARK
+#include <sstream>
+#include <string>
+
+#include "utilities/benchmark/Benchmark.hpp"
+
+static constexpr const char* BENCH_ID_PLAN = "agent-plan-";
+#endif // INCLUDE_BENCHMARK
+
 #ifdef USE_THREADS_FOR_AGENTS
 
 void AIPlayerAgentBase::threadMain()
@@ -110,6 +119,12 @@ PlayerInputFlags AIPlayerAgentBase::getPlayerInput()
 
 void AIPlayerAgentBase::plan()
 {
+#ifdef INCLUDE_BENCHMARK
+	std::stringstream ss;
+	ss << BENCH_ID_PLAN << static_cast<const void*>(this);
+	Benchmark::get().beginMeasure(ss.str());
+#endif // INCLUDE_BENCHMARK
+
 #ifdef USE_THREADS_FOR_AGENTS
 	// Wait until the previous planning is finished
 	waitForCondition(m_mutexIsPlanning, m_cvIsPlanning,
@@ -122,10 +137,15 @@ void AIPlayerAgentBase::plan()
 		[this](){ return this->m_isPlanning; });
 #else // !USE_THREADS_FOR_AGENTS
 	assert(gsProxy != nullptr);
+	// If I am still alive
 	if (gsProxy->getPlayers().find(myId) != gsProxy->getPlayers().end()) {
 		doPlan();
 	}
 #endif // !USE_THREADS_FOR_AGENTS
+
+#ifdef INCLUDE_BENCHMARK
+	Benchmark::get().endMeasure(ss.str());
+#endif // INCLUDE_BENCHMARK
 }
 
 void AIPlayerAgentBase::assignProxy(GameStateAgentProxyP value)

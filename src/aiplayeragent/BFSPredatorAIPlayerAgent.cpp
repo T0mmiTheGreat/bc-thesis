@@ -9,39 +9,25 @@
  * 
  */
 
-//#define DO_LOG_BFS
+#ifdef INCLUDE_BENCHMARK
+#define DO_LOG_BFS
+#endif // INCLUDE_BENCHMARK
 
 #include "aiplayeragent/BFSPredatorAIPlayerAgent.hpp"
 
 #ifdef DO_LOG_BFS
-#include <chrono>
-#include <fstream>
-#include <iostream>
-#include <stack>
-#include <unordered_set>
+#include "utilities/benchmark/Benchmark.hpp"
 
-static std::ofstream logFile("bfs.log");
-
-class ExecTimeMeasure {
-private:
-	std::chrono::time_point<std::chrono::high_resolution_clock> m_t0;
-public:
-	ExecTimeMeasure()
-		: m_t0{std::chrono::high_resolution_clock::now()}
-	{}
-	void output() {
-		auto t1 = std::chrono::high_resolution_clock::now();
-		std::chrono::duration<double, std::milli> ms = t1 - m_t0;
-		logFile << "Time taken: " << ms.count() << " ms" << std::endl;
-	}
-};
+static constexpr const char* BENCH_ID = "agent-bfs";
 #endif // DO_LOG_BFS
 
 PlayerInputFlags BFSPredatorAIPlayerAgent::chooseNextAction(
 	const GameStateAgentProxy::PlayerState* victim)
 {
 #ifdef DO_LOG_BFS
-	ExecTimeMeasure tmes;
+	AutoLogger_NodesSqdist sqdistLogger(BENCH_ID, CGAL::squared_distance(
+		getMyState().pos, victim->pos));
+	AutoLogger_Measure measureLogger(BENCH_ID);
 #endif // DO_LOG_BFS
 
 	// Quick access
@@ -73,12 +59,9 @@ PlayerInputFlags BFSPredatorAIPlayerAgent::chooseNextAction(
 		nullptr             // prev
 	});
 	bfsOpen.push(idsStart);
-
-#ifdef DO_LOG_BFS
-	logFile << "BREADTH FIRST SEARCH" << std::endl;
-		int generated = 1;
-		int explored = 1;
-#endif // DO_LOG_BFS
+#ifdef INCLUDE_BENCHMARK
+	sqdistLogger.incNodeCount();
+#endif // INCLUDE_BENCHMARK
 
 	// When OPEN is empty, it is unsuccessful search.
 	while (!bfsOpen.empty()) {
@@ -99,20 +82,13 @@ PlayerInputFlags BFSPredatorAIPlayerAgent::chooseNextAction(
 					currNode.get()                         // prev
 				});
 #ifdef DO_LOG_BFS
-				generated++;
+				sqdistLogger.incNodeCount();
 #endif // DO_LOG_BFS
 
 				// The cell must be accessible by the player.
 				if (bfsSucc->cell.getNearestObstacleDistance() > mySqsize) {
 					if (bfsSucc->cell == sGoal) {
 						// Found path
-
-#ifdef DO_LOG_BFS
-						logFile << "  Generated: " << generated << std::endl;
-						logFile << "  Explored: " << explored << std::endl;
-						logFile << "  ----------------" << std::endl;
-						tmes.output();
-#endif // DO_LOG_BFS
 
 						auto goalPtr = bfsSucc.get();
 
@@ -130,10 +106,6 @@ PlayerInputFlags BFSPredatorAIPlayerAgent::chooseNextAction(
 						// Brand new state
 
 						bfsOpen.push(bfsSucc);
-#ifdef DO_LOG_BFS
-						explored++;
-#endif // DO_LOG_BFS
-
 					}
 				}
 			}

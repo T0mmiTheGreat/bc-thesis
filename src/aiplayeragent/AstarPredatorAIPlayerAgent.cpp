@@ -14,8 +14,20 @@
 PlayerInputFlags AstarPredatorAIPlayerAgent::chooseNextAction(
 	const GameStateAgentProxy::PlayerState* victim)
 {
+#ifdef DO_LOG_ASTAR_PREDATOR
+	AutoLogger_NodesSqdist sqdistLogger(BENCH_ID, CGAL::squared_distance(
+		getMyState().pos, victim->pos));
+	AutoLogger_Measure measureLogger(BENCH_ID);
+#endif // DO_LOG_ASTAR_PREDATOR
+
 	auto d = astarDataCreate(victim);
 	astarDataInit(d);
+
+#ifdef DO_LOG_ASTAR_PREDATOR
+	d.sqdistLogger = &sqdistLogger;
+	d.measureLogger = &measureLogger;
+	sqdistLogger.incNodeCount(); // Initial node
+#endif // DO_LOG_ASTAR_PREDATOR
 
 	// Already in goal?
 	if (d.sStart == d.sGoal) return PlayerInputFlags();
@@ -64,6 +76,10 @@ AstarPredatorAIPlayerAgent::AstarData AstarPredatorAIPlayerAgent::astarDataCreat
 #if ASTAR_PREDATOR_VERSION == 3
 		nullptr,            // nearestNode
 #endif // ASTAR_PREDATOR_VERSION == 3
+#ifdef DO_LOG_ASTAR_PREDATOR
+		nullptr,            // sqdistLogger
+		nullptr,            // measureLogger
+#endif // DO_LOG_ASTAR_PREDATOR
 	};
 	return res;
 }
@@ -119,6 +135,10 @@ void AstarPredatorAIPlayerAgent::astarExpandNode(AstarData& d,
 			auto astarSucc = getSucc(n, astarAction, d.sGoal);
 			d.generatedNodes++;
 
+#ifdef DO_LOG_ASTAR_PREDATOR
+			d.sqdistLogger->incNodeCount();
+#endif // DO_LOG_ASTAR_PREDATOR
+
 			if (astarSucc->cell.getNearestObstacleDistance() > d.mySqsize) {
 				// The node can be reached by the agent's bubble
 
@@ -154,7 +174,7 @@ PlayerInputFlags AstarPredatorAIPlayerAgent::astarGetBestInput(
 	AstarData& d) const
 {
 #if ASTAR_PREDATOR_VERSION == 1
-	return PlayerInputFlags(currNode->direction);
+	return PlayerInputFlags(d.astarOpen.top()->direction);
 #elif ASTAR_PREDATOR_VERSION >= 2
 #	if ASTAR_PREDATOR_VERSION == 2
 	// Node at the top of the OPEN

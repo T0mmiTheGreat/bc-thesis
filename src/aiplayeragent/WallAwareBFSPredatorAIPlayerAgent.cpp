@@ -11,9 +11,21 @@
 
 #include "aiplayeragent/WallAwareBFSPredatorAIPlayerAgent.hpp"
 
+#ifdef INCLUDE_BENCHMARK
+#include "utilities/benchmark/Benchmark.hpp"
+
+static constexpr const char* BENCH_ID = "agent-wall-aware-bfs";
+#endif // INCLUDE_BENCHMARK
+
 PlayerInputFlags WallAwareBFSPredatorAIPlayerAgent::chooseNextAction(
 	const GameStateAgentProxy::PlayerState* victim)
 {
+#ifdef INCLUDE_BENCHMARK
+	AutoLogger_Measure measureLogger(BENCH_ID);
+	AutoLogger_NodesSqdist sqdistLogger(BENCH_ID, CGAL::squared_distance(
+		getMyState().pos, victim->pos));
+#endif // INCLUDE_BENCHMARK
+
 	const auto& me = getMyState();
 
 	if (CGAL::squared_distance(me.pos, victim->pos) <= sqr(me.size + victim->size)) {
@@ -32,6 +44,9 @@ PlayerInputFlags WallAwareBFSPredatorAIPlayerAgent::chooseNextAction(
 		nullptr             // prev
 	});
 	bfsOpen.push(bfsInitial);
+#ifdef INCLUDE_BENCHMARK
+	sqdistLogger.incNodeCount();
+#endif // INCLUDE_BENCHMARK
 
 	bool isSolutionFound = false;
 	BFSNodeP goalNodePtr = nullptr;
@@ -46,6 +61,9 @@ PlayerInputFlags WallAwareBFSPredatorAIPlayerAgent::chooseNextAction(
 		// Expand
 		for (const auto& bfsAction : bfsActions) {
 			auto succ = bfsCreateSucc(currNode, bfsAction, me);
+#ifdef INCLUDE_BENCHMARK
+			sqdistLogger.incNodeCount();
+#endif // INCLUDE_BENCHMARK
 
 			if (bfsGoalTest(succ, me, victim)) {
 				// Found the goal node

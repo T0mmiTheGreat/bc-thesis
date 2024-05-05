@@ -11,9 +11,23 @@
 
 #include "aiplayeragent/MinimaxPreyAIPlayerAgent.hpp"
 
+#ifdef INCLUDE_BENCHMARK
+#define DO_LOG_MINIMAX_PREY
+#endif // INCLUDE_BENCHMARK
+
+#ifdef DO_LOG_MINIMAX_PREY
+#include "utilities/benchmark/Benchmark.hpp"
+
+static constexpr const char* BENCH_ID = "agent-minimax-prey";
+#endif // DO_LOG_MINIMAX_PREY
+
 PlayerInputFlags MinimaxPreyAIPlayerAgent::chooseNextAction(
 	const GameStateAgentProxy::PlayerState* attacker)
 {
+#ifdef DO_LOG_MINIMAX_PREY
+	AutoLogger_Measure measureLogger(BENCH_ID);
+#endif // DO_LOG_MINIMAX_PREY
+
 	// Quick access
 
 	const auto& me = getMyState();

@@ -39,6 +39,16 @@
 #include "aiplayeragent/PredatorAIPlayerAgentBase.hpp"
 #include "aiplayeragent/StageGridModel.hpp"
 
+#ifdef INCLUDE_BENCHMARK
+#define DO_LOG_ASTAR_PREDATOR
+#endif // INCLUDE_BENCHMARK
+
+#ifdef DO_LOG_ASTAR_PREDATOR
+#include "utilities/benchmark/Benchmark.hpp"
+
+static constexpr const char* BENCH_ID = "agent-astar";
+#endif // DO_LOG_ASTAR_PREDATOR
+
 class AstarPredatorAIPlayerAgent : public PredatorAIPlayerAgentBase {
 private:
 	typedef double NodeEval;
@@ -197,7 +207,7 @@ private:
 		
 		// The maximum number of nodes generated per search. When this value is
 		// exceeded, the search must stop.
-		static constexpr int MAX_GENERATED_NODES = 2200;
+		static constexpr int MAX_GENERATED_NODES = 5000;
 		// The number of nodes generated during this search
 		int generatedNodes;
 
@@ -210,6 +220,10 @@ private:
 		// The node which has been nearest to the goal during this search
 		AstarNodeP nearestNode;
 #endif // ASTAR_PREDATOR_VERSION == 3
+#ifdef DO_LOG_ASTAR_PREDATOR
+		AutoLogger_NodesSqdist* sqdistLogger;
+		AutoLogger_Measure* measureLogger;
+#endif // DO_LOG_ASTAR_PREDATOR
 	};
 private:
 	// Possible actions

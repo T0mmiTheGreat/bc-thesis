@@ -1,0 +1,10 @@
+stage:
+  title: Enormous stage (together)
+  width: 2800
+  height: 1700
+  players:
+    - [1700, 1000]
+    - [1600, 600]
+  obstacles: []
+  positionRules:
+    - [0, 1]

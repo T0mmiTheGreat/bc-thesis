@@ -1,0 +1,11 @@
+stage:
+  title: Enormous stage (locked)
+  width: 1000
+  height: 750
+  players:
+    - [50, 50]
+    - [800, 600]
+  obstacles:
+    - [[40, 140], [140, 60], [140, 140]]
+  positionRules:
+    - [0, 1]

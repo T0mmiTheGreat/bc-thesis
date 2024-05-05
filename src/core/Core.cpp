@@ -413,13 +413,7 @@ void Core::resetBonusTimer()
 
 void Core::notifyAgents()
 {
-#ifdef INCLUDE_BENCHMARK
-	Benchmark::get().beginMeasure(BENCH_ID_UPDATE_GSPROXY);
-#endif // INCLUDE_BENCHMARK
 	m_gsAgentProxy->update();
-#ifdef INCLUDE_BENCHMARK
-	Benchmark::get().endMeasure(BENCH_ID_UPDATE_GSPROXY);
-#endif // INCLUDE_BENCHMARK
 
 	for (auto& agent : m_aiAgents) {
 		agent->plan();

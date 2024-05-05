@@ -9,40 +9,28 @@
  * 
  */
 
-//#define DO_LOG_IDS
-#define USE_CLOSED_LIST
+#ifdef INCLUDE_BENCHMARK
+#define DO_LOG_IDS
+#endif // INCLUDE_BENCHMARK
+
+
+//#define USE_CLOSED_LIST
 
 #include "aiplayeragent/IDSPredatorAIPlayerAgent.hpp"
 
 #ifdef DO_LOG_IDS
-#include <chrono>
-#include <fstream>
-#include <iostream>
-#include <stack>
-#include <unordered_set>
+#include "utilities/benchmark/Benchmark.hpp"
 
-static std::ofstream logFile("ids.log");
-
-class ExecTimeMeasure {
-private:
-	std::chrono::time_point<std::chrono::high_resolution_clock> m_t0;
-public:
-	ExecTimeMeasure()
-		: m_t0{std::chrono::high_resolution_clock::now()}
-	{}
-	~ExecTimeMeasure() {
-		auto t1 = std::chrono::high_resolution_clock::now();
-		std::chrono::duration<double, std::milli> ms = t1 - m_t0;
-		logFile << "Time taken: " << ms.count() << " ms" << std::endl;
-	}
-};
+static constexpr const char* BENCH_ID = "agent-ids";
 #endif // DO_LOG_IDS
 
 PlayerInputFlags IDSPredatorAIPlayerAgent::chooseNextAction(
 	const GameStateAgentProxy::PlayerState* victim)
 {
 #ifdef DO_LOG_IDS
-	ExecTimeMeasure tmes;
+	AutoLogger_NodesSqdist sqdistLogger(BENCH_ID, CGAL::squared_distance(
+		getMyState().pos, victim->pos));
+	AutoLogger_Measure measureLogger(BENCH_ID);
 #endif // DO_LOG_IDS
 
 	// Quick access
@@ -75,9 +63,8 @@ PlayerInputFlags IDSPredatorAIPlayerAgent::chooseNextAction(
 		0,                  // actionIdx
 	});
 	// Do not add the start node to the OPEN yet!
-
 #ifdef DO_LOG_IDS
-	logFile << "ITERATIVE DEEPENING SEARCH" << std::endl;
+	sqdistLogger.incNodeCount(); // Is not added, but is generated
 #endif // DO_LOG_IDS
 
 	bool reachedMaxDepth = true;
@@ -89,11 +76,6 @@ PlayerInputFlags IDSPredatorAIPlayerAgent::chooseNextAction(
 #ifdef USE_CLOSED_LIST
 		idsClosed.clear();
 #endif // USE_CLOSED_LIST
-
-#ifdef DO_LOG_IDS
-		int generated = 1;
-		int explored = 1;
-#endif // DO_LOG_IDS
 
 		while (!idsOpen.empty()) {
 			auto currNode = idsOpen.top();
@@ -117,7 +99,7 @@ PlayerInputFlags IDSPredatorAIPlayerAgent::chooseNextAction(
 						0,                                  // actionIdx
 					});
 #ifdef DO_LOG_IDS
-					generated++;
+					sqdistLogger.incNodeCount();
 #endif // DO_LOG_IDS
 
 					if (idsSucc->cell.getNearestObstacleDistance() > sqr(me.size))
@@ -127,10 +109,6 @@ PlayerInputFlags IDSPredatorAIPlayerAgent::chooseNextAction(
 #endif // USE_CLOSED_LIST
 					) {
 						// The node is not a duplicate of another one.
-
-#ifdef DO_LOG_IDS
-						explored++;
-#endif // DO_LOG_IDS
 
 						if (idsSucc->cell == sGoal) {
 							// Found the path
@@ -156,13 +134,6 @@ PlayerInputFlags IDSPredatorAIPlayerAgent::chooseNextAction(
 				}
 			}
 		}
-
-#ifdef DO_LOG_IDS
-		logFile << "  Depth = " << maxDepth << std::endl;
-		logFile << "  Generated: " << generated << std::endl;
-		logFile << "  Explored: " << explored << std::endl;
-		logFile << "  ----------------" << std::endl;
-#endif // DO_LOG_IDS
 	}
 
 	return PlayerInputFlags();
