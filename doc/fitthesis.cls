@@ -1246,6 +1246,16 @@ Management}{\@fit@EN}%
 \ifczech
   \usepackage{ae}
 \fi
+\usepackage[export]{adjustbox}
+
+\usepackage[indLines=false]{algpseudocodex}
+% \algrenewcommand\algorithmicif{\textbf{pokud}}
+% \algrenewcommand\algorithmicthen{\textbf{pak}}
+% \algrenewcommand\algorithmicelse{\textbf{jinak}}
+% \algrenewcommand\algorithmicprocedure{\textbf{procedura}}
+% \algrenewcommand\algorithmicfunction{\textbf{funkce}}
+% \algrenewcommand\algorithmicreturn{\textbf{vrať}}
+% \algrenewcommand\algorithmicloop{\textbf{opakuj}}
 
 %--------------------------------------------------------
 % Oprava pro Čechy a Slováky -- vyžaduje aktuální balíčky!
@@ -1373,6 +1383,16 @@ Management}{\@fit@EN}%
 % Sloupec zarovnaný vlevo s pevnou šířkou
 % Left aligned column with a fixed width
 \newcolumntype{L}[1]{>{\RaggedRight\hspace{0pt}}p{#1}}
+
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, decorations.pathreplacing}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{pgf-pie}
+
+\definecolor{fskGsk}{RGB}{0,177,244}
+\definecolor{fskHsk}{RGB}{192,0,0}
 
 
 \endinput

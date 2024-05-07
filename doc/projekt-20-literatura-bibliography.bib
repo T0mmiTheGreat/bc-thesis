@@ -7,10 +7,219 @@
     isbn = "0-13-461099-7"
 }
 
+@book{AI_Ertel,
+    author = "Wolfgang Ertel",
+    title = "Introduction to Artificial Intelligence",
+    edition = "2",
+    contributory = "Přeložil Nathanael T. Black",
+    publisher = "Springer International Publishing",
+    year = "2018",
+    series = "Undergraduate Topics in Computer Science",
+    isbn = "9783319584874"
+}
+
 @book{AI_games_Yannakakis_Togelius,
     author = "Georgios N. Yannakakis and Julian Togelius",
     title = "Artificial Intelligence and Games",
     publisher = "Springer International Publishing",
     year = "2018",
     isbn = "9783319635194"
+}
+
+% Citation generated at https://dl.acm.org/doi/10.1145/3828.3830
+@article{A_star_optimality,
+    author = {Dechter, Rina and Pearl, Judea},
+    title = {Generalized Best-First Search Strategies and the Optimality of A*},
+    year = {1985},
+    issue_date = {July 1985},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    volume = {32},
+    number = {3},
+    issn = {0004-5411},
+    url = {https://doi.org/10.1145/3828.3830},
+    doi = {10.1145/3828.3830},
+    abstract = {This paper reports several properties of heuristic best-first search strategies whose scoring functions undefined depend on all the information available from each candidate path, not merely on the current cost g and the estimated completion cost h. It is shown that several known properties of A* retain their form (with the minmax of f playing the role of the optimal cost), which helps establish general tests of admissibility and general conditions for node expansion for these strategies. On the basis of this framework the computational optimality of A*, in the sense of never expanding a node that can be skipped by some other algorithm having access to the same heuristic information that A* uses, is examined. A hierarchy of four optimality types is defined and three classes of algorithms and four domains of problem instances are considered. Computational performances relative to these algorithms and domains are appraised. For each class-domain combination, we then identify the strongest type of optimality that exists and the algorithm for achieving it. The main results of this paper relate to the class of algorithms that, like A*, return optimal solutions (i.e., admissible) when all cost estimates are optimistic (i.e., h ≤ h*). On this class, A* is shown to be not optimal and it is also shown that no optimal algorithm exists, but if the performance tests are confirmed to cases in which the estimates are also consistent, then A* is indeed optimal. Additionally, A* is also shown to be optimal over a subset of the latter class containing all best-first algorithms that are guided by path-dependent evaluation functions.},
+    journal = {J. ACM},
+    month = {jul},
+    pages = {505–536},
+    numpages = {32},
+    cited = {2024-01-17}
+}
+
+% Citation generated at https://dl.acm.org/doi/abs/10.5555/777092.777167
+% `howpublished`, `cited`, and `url` fields added by Tomáš Ludrovan
+@inproceedings{D_star_lite,
+    author = {Koenig, Sven and Likhachev, Maxim},
+    title = {D*lite},
+    year = {2002},
+    isbn = {0262511290},
+    publisher = {American Association for Artificial Intelligence},
+    address = {USA},
+    abstract = {Incremental heuristic search methods use heuristics to focus their search and reuse information from previous searches to find solutions to series of similar search tasks much faster than is possible by solving each search task from scratch. In this paper, we apply Lifelong Planning A* to robot navigation in unknown terrain, including goal-directed navigation in unknown terrain and mapping of unknown terrain. The resulting D* Lite algorithm is easy to understand and analyze. It implements the same behavior as Stentz' Focussed Dynamic A* but is algorithmically different. We prove properties about D* Lite and demonstrate experimentally the advantages of combining incremental and heuristic search for the applications studied. We believe that these results provide a strong foundation for further research on fast replanning methods in artificial intelligence and robotics.},
+    booktitle = {Eighteenth National Conference on Artificial Intelligence},
+    pages = {476–483},
+    numpages = {8},
+    location = {Edmonton, Alberta, Canada},
+    howpublished = "online",
+    cited = "2024-01-17",
+    url = "https://aaai.org/papers/00476-aaai02-072-d-lite/"
+}
+
+% Citation generated at https://dl.acm.org/doi/10.5555/2981345.2981441
+% `editor`, `isbn` and `url` acquired from https://dblp.org/db/conf/nips/nips2003.html
+% `howpublished` and `cited` fields added by Tomáš Ludrovan
+@inproceedings{ARA_star,
+    author = {Likhachev, Maxim and Gordon, Geoff and Thrun, Sebastian},
+    title = {ARA*: anytime A* with provable bounds on sub-optimality},
+    year = {2003},
+    publisher = {MIT Press},
+    address = {Cambridge, MA, USA},
+    abstract = {In real world planning problems, time for deliberation is often limited. Anytime planners are well suited for these problems: they find a feasible solution quickly and then continually work on improving it until time runs out. In this paper we propose an anytime heuristic search, ARA*, which tunes its performance bound based on available search time. It starts by finding a suboptimal solution quickly using a loose bound, then tightens the bound progressively as time allows. Given enough time it finds a provably optimal solution. While improving its bound, ARA* reuses previous search efforts and, as a result, is significantly more efficient than other anytime search methods. In addition to our theoretical analysis, we demonstrate the practical utility of ARA* with experiments on a simulated robot kinematic arm and a dynamic path planning problem for an outdoor rover.},
+    booktitle = {Proceedings of the 16th International Conference on Neural Information Processing Systems},
+    pages = {767–774},
+    numpages = {8},
+    location = {Whistler, British Columbia, Canada},
+    series = {NIPS'03},
+    howpublished = "online",
+    cited = "2024-03-24",
+    editor = {Sebastian Thrun and Lawrence K. Saul and Bernhard Sch{\"{o}}lkopf},
+    isbn = {0-262-20152-6},
+    url = {https://proceedings.neurips.cc/paper/2003/hash/ee8fe9093fbbb687bef15a38facc44d2-Abstract.html}
+}
+
+% Citation generated at https://dl.acm.org/doi/10.5555/2887770.2887795
+@inproceedings{Maxn,
+    author = {Luckhardt, Carol A. and Irani, Keki B.},
+    title = {An algorithmic solution of N-person games},
+    year = {1986},
+    publisher = {AAAI Press},
+    abstract = {Two-person, perfect information, constant sum games have been studied in Artificial Intelligence. This paper opens up the issue of playing n-person games and proposes a procedure for constant sum or non-constant sum games. It is proved that a procedure, maxn, locates an equilibrium point given the entire game tree. The minimax procedure for 2-person games using look ahead finds a saddle point of approximations, while maxn finds an equilibrium point of the values of the evaluation function for n-person games using look ahead. Maxn is further analyzed with respect to some pruning schemes.},
+    booktitle = {Proceedings of the Fifth AAAI National Conference on Artificial Intelligence},
+    pages = {158–162},
+    numpages = {5},
+    location = {Philadelphia, Pennsylvania},
+    series = {AAAI'86}
+}
+
+% Citation generated at https://www.researchgate.net/publication/259655439_Search_Policies_in_Multi-Player_Games
+@article{Search_policies_in_multiplayer_games_Nijssen_Winands,
+    author = {Nijssen, J.A.M. and Winands, Mark},
+    year = {2013},
+    month = {03},
+    pages = {3-21},
+    title = {Search Policies in Multi-Player Games},
+    volume = {36},
+    journal = {ICGA journal},
+    doi = {10.3233/ICG-2013-36102},
+    howpublished = {online},
+    url = {https://www.researchgate.net/publication/259655439_Search_Policies_in_Multi-Player_Games},
+    cited = {2024-04-06}
+}
+
+@misc{ab_pruning,
+    author = "{Wikipedia}",
+    title = "Alpha--beta pruning",
+    year = "2024",
+    howpublished = "online",
+    cited = "2024-04-04",
+    url = "https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning"
+}
+
+@misc{Likachev_astar_weighted_astar,
+    author = "Maxim Likhachev",
+    title = "A* and Weighted A* Search",
+    year = "2013",
+    month = "9",
+    howpublished = "online",
+    cited = "2024-04-24",
+    url = "https://www.cs.cmu.edu/~motionplanning/lecture/Asearch_v8.pdf"
+}
+
+@misc{MIT_OpenCourseWare:Incremental_Path_Planning,
+    author = "{MIT OpenCourseWare}",
+    title = "Advanced 1. Incremental Path Planning",
+    year = "2018",
+    month = "10",
+    day = "26",
+    organization = "YouTube",
+    howpublished = "online",
+    url = "https://youtu.be/_4u9W1xOuts?t=4622",
+    cited = "2024-04-24"
+}
+
+@manual{INM_opora,
+    author = "Břetislav Fajmon and Irena Hlavičková and Michal Novák and Jiří Vítovec",
+    title = "Numerická matematika a pravděpodobnost (Informační technologie)",
+    address = "Brno",
+    organization = "Ústav matematiky FEKT VUT v Brně",
+    month = "9",
+    year = "2017",
+    howpublished = "online",
+    url = "https://www.umat.fekt.vut.cz/~hlinena/IMA1/Prednasky/NumMet.pdf",
+    cited = "2024-04-28"
+}
+
+@misc{CGAL_Exact_Computation_paradigm,
+    author = {{The CGAL Project}},
+    title = {The Exact Computation Paradigm},
+    year = {2024},
+    howpublished = {online},
+    url = {https://www.cgal.org/exact.html},
+    cited = {2024-04-29}
+}
+
+@book{Probability:Papoulis:2002,
+    author = {Athanasios Papoulis and S. Unnikrishna Pillai},
+    title = {Probability, Random Variables, and Stochastic Processes},
+    edition = {4},
+    address = {New York},
+    publisher = {McGraw-Hill},
+    year = {2002},
+    series={McGraw-Hill series in electrical and computer engineering},
+    isbn={0-07-366011-6},
+}
+
+% Citation generated at: https://iopscience.iop.org/article/10.1088/1757-899X/1084/1/012061
+% `howpublished' and `cited' added by Tomáš Ludrovan
+%article{Priya_2021,
+    doi = {10.1088/1757-899X/1084/1/012061},
+    url = {https://dx.doi.org/10.1088/1757-899X/1084/1/012061},
+    year = {2021},
+    month = {mar},
+    publisher = {IOP Publishing},
+    volume = {1084},
+    number = {1},
+    pages = {012061},
+    author = {K Hema Priya and L Arulmurugan and S Praveen Kumar and R Ramesh},
+    title = {Design And Optimization Of Floating Point Division And Square Root Using Minimal Device Latency},
+    journal = {IOP Conference Series: Materials Science and Engineering},
+    abstract = {New microprocessors have become a compulsory feature of floating-point support. In recent years, multiple generations of floating-point units (FPU’s) have been seen by leading architectures. Although the introduction of addition and multiplication has been increasingly effective, the support of division as well as square root will have remained uneven. The types of algorithms employed, as well as the quality and efficiency of the implementations, are drastically different. Here a floating-point division and square root unit is provided that implements a radix-64 floating-point division and a radix-16 floating-point squareroot. Here a floating-point division and square root unit is provided that implements a radix-64 floating-point division and aradix-16 floating-point squareroot. Speculation between successive radix-4 incarnations is used to achieve a reduced timing. In digit-recurrence implementations, there are three separate components: initialization, digital repeats, and rounding. The repetition of the digit is the iterative component and for multiple loops it follows the same logic. The initialization and rounding steps are partly shared by the division and square root, although each has a separate logic for digital iterations. The result is a floating-point divider and square root with low latency, requiring double, single S and half-precision division of standardized operandsand 11, 6, and 4 result cycles, and 15, 8, and 5 cycles of square root cycles. One or two additional cycles are required in the case S of subnormal operand(s) or result},
+    howpublished = {online},
+    cited = {2024-04-29}
+}
+
+
+%misc{Solomonoff_2023,
+    title={The meeting of the minds that launched AI},
+    url={https://spectrum.ieee.org/dartmouth-ai-workshop},
+    journal={IEEE Spectrum},
+    publisher={IEEE Spectrum},
+    author={Solomonoff, Grace},
+    year={2023},
+    month={May}
+}
+
+%inbook{Digital_Computers_Turing,
+    author = {Alan Turing},
+    title = {Digital computers applied to games},
+    editor = {Bertram Vivian Bowden},
+    booktitle = {Faster Than Thought},
+    booksubtitle = {A Symposium on Digital Computing Machines},
+    address = {London},
+    publisher = {Pitman},
+    year = {1953},
+    chapter = {25},
+    pages = {286-310},
+    isbn = {9780273315803}
 }
