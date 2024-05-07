@@ -25,8 +25,8 @@ include_directories(. ../imgui/)
 # game setup screen.
 add_compile_definitions(EXCLUDE_SLOW_AGENTS)
 
-set(INCLUDE_BENCHMARK TRUE)
-#set(INCLUDE_BENCHMARK FALSE)
+#set(INCLUDE_BENCHMARK TRUE)
+set(INCLUDE_BENCHMARK FALSE)
 
 
 # Sources (*.cpp)
