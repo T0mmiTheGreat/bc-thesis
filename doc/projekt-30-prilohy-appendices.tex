@@ -44,7 +44,7 @@ K~tomu použijete tyto příkazy:
     pacman -S mingw-w64-x86_64-cgal
 \end{verbatim}
 
-Nyní by mělo být vše připraveno k~sestavení. Adresář \texttt{source/} přesuňte z~paměťového média do některého z~adresářů prostředí \emph{MSYS2} (například do \verb|/home/<vaše-jméno>/|) a~v~aplikaci \emph{MSYS2~MINGW64} přejděte do adresáře \texttt{source/src/}. V~tomto adresáři zadejte tyto 2~příkazy:
+Nyní by mělo být vše připraveno k~sestavení. Adresář \texttt{source/} přesuňte z~paměťového média do některého z~adresářů prostředí \emph{MSYS2} (například do \verb|/home/<vaše-jméno>/|) a~v~aplikaci \emph{MSYS2~MINGW64} přejděte příkazem \texttt{cd} do adresáře \texttt{source/src/}. V~tomto adresáři zadejte tyto 2~příkazy:
 \begin{verbatim}
     cmake .
     cmake --build . --config Release
@@ -375,64 +375,140 @@ V~této příloze se nachází otázky z~dotazníku o~aplikaci \emph{Bubble Braw
 % Tato posloupnost je zobrazena na obrázku~\ref{fig:wa-bfs-predator-infinite}. Nyní předpokládejme, že tato posloupnost nekonečná \emph{není}. V~tom případě v~této posloupnosti existují 2~shodné stavy.
 
 
-\chapter{Algoritmus pro výpočet trajektorií hráčů}
-\label{app:vypocet-trajektorii-hracu}
+% \chapter{Algoritmus pro výpočet trajektorií hráčů}
+% \label{app:vypocet-trajektorii-hracu}
 
-V~této příloze je popsán nepoužitý algoritmus pro výpočet trajektorií pohybu hráčů. Tento algoritmus nebyl použit, protože se nepovedlo přijít s~implementací, která by byla dostatečně výkonná. Nicméně je zde uveden pro případ, kdyby se povedlo výkon algoritmu optimalizovat.
+% V~této příloze je popsán nepoužitý algoritmus pro výpočet trajektorií pohybu hráčů. Tento algoritmus nebyl použit, protože se nepovedlo přijít s~implementací, která by byla dostatečně výkonná. Nicméně je zde uveden pro případ, kdyby se povedlo výkon algoritmu optimalizovat.
 
-Algoritmus se snaží na herní ploše simulovat působení sil na entity hráčů. Stisk klávesy simuluje sílu působící na entitu požadovaným směrem. Při kolizi s~překážkou na entitu působí síla kolmá k~povrchu překážky. Tím pádem při nárazu do překážky entita dále pokračuje v~pohybu podél překážky, avšak s~menší rychlostí, a~pohyb tak působí přirozeně.
+% Algoritmus se snaží na herní ploše simulovat působení sil na entity hráčů. Stisk klávesy simuluje sílu působící na entitu požadovaným směrem. Při kolizi s~překážkou na entitu působí síla kolmá k~povrchu překážky. Tím pádem při nárazu do překážky entita dále pokračuje v~pohybu podél překážky, avšak s~menší rychlostí, a~pohyb tak působí přirozeně.
 
-Algoritmus si interně vytváří model plochy, který se liší od způsobu, jakým je plocha prezentována na obrazovce. Zatímco překážky jsou vykreslovány jako mnohoúhelníky a~entity hráčů jako kruhy, interně jsou tyto tvary upraveny tak, aby se s~nimi lépe pracovalo. Stěny překážek jsou posunuty o~vzdálenost rovnu poloměru kruhu entity hráče, ve směru kolmém k této stěně. Rohy překážek ze změní v~kružnice se středem v~daném rohu a~poloměru stejném jako má entita hráče. Pak entita samotná se změní na pouhý bod v~rovině, který leží na stejných souřadnicích, jako střed kruhu entity hráče. Ukázka tohoto interního modelu je na obrázku~\ref{fig:stage-logical}.
+% \begin{figure}[ht]
+%     \centering
+%     \includegraphics[width=0.9\textwidth]{doc/obrazky-figures/stage-logical.pdf}
+%     \caption{Interní reprezentace herní plochy pro hledání kolizí s~překážkami. Vlevo je ukázka herní plochy tak, jak je prezentována uživateli, vpravo je převedena na interní reprezentaci.}
+%     \label{fig:stage-logical}
+% \end{figure}
 
-\begin{figure}[ht]
-    \centering
-    \includegraphics{doc/obrazky-figures/stage-logical.png}
-    \caption{Interní reprezentace herní plochy pro hledání kolizí s~překážkami. Vlevo je ukázka herní plochy tak, jak je prezentována hráčům, vpravo je převedena na interní reprezentaci.}
-    \label{fig:stage-logical}
-\end{figure}
+% Algoritmus si interně vytváří model plochy, který se liší od způsobu, jakým je plocha prezentována na obrazovce. Zatímco překážky jsou vykreslovány jako mnohoúhelníky a~entity hráčů jako kruhy, interně jsou tyto tvary upraveny tak, aby se s~nimi lépe pracovalo. Všechny překážky jsou nejdříve upraveny tak, aby jejich vrcholy byly uspořádány proti směru hodinových ručiček. Stěny překážek jsou posunuty o~vzdálenost rovnu poloměru kruhu entity hráče, ve směru kolmém k této stěně. Rohy překážek ze změní v~kružnice se středem v~daném rohu a~poloměru stejném jako má entita hráče. Pak entita samotná se změní na pouhý bod v~rovině, který leží na stejných souřadnicích, jako střed kruhu entity hráče. Ukázka tohoto interního modelu je na obrázku~\ref{fig:stage-logical}.
 
-V~algoritmu je použito několik datových struktur. Jelikož algoritmus pracuje ve velké míře s~výpočty z~oblasti analytické a~výpočetní geometrie, mezi použité struktury patří bod, vektor, přímka, úsečka, kružnice a~kruhový oblouk.
+% V~algoritmu je použito několik datových struktur. Jelikož algoritmus pracuje ve velké míře s~výpočty z~oblasti analytické a~výpočetní geometrie, mezi použité struktury patří \emph{bod}, \emph{vektor}, \emph{přímka}, \emph{úsečka}, \emph{kružnice} a~\emph{kruhový oblouk}. Krajní body \emph{úsečky} i~\emph{kruhového oblouku} jsou uspořádané, tedy jeden z~nich je vždy \emph{počáteční} a~druhý \emph{koncový}. \emph{Kruhový oblouk} může mít maximálně $180^\circ$ (avšak v~praxi nikdy nepřesáhne $90^\circ$). Další strukturou je \emph{úsek trajektorie}, který představuje buď \emph{úsečku}, nebo \emph{kruhový oblouk} (možná implementace v~jazyce \emph{C} by byla pomocí \emph{unie}). Také \emph{kolize s~překážkou} nebo \emph{hráč} jsou datové struktury. Jaké členy tyto struktury obsahují by mělo být zřejmé z~popisu algoritmu.
 
-Další strukturou je úsek trajektorie, který představuje buď úsečku, nebo kruhový oblouk. Také na entitu hráče se nahlíží jako na datovou strukturu skládající se z~bodu, ve kterém se hráč nachází, a~vektoru hráčova pohybu.
+% Algoritmus dále pracuje s několika proměnnými:
+% \begin{itemize}
+%     \item $Traj$\,--\,seznam úseků trajektorie, představující celou trajektorii hráče,
+%     \item $Tail$\,--\,zbývající úsek trajektorie po opuštění kolizní zóny s~překážkou (viz obrázek~\ref{fig:traj-tail}),
+%     \item $MoveEnd$\,--\,přímka; hranice, kde končí hráčův pohyb,
+%     \item $Flexible$\,--\,ohebnost posledního úseku trajektorie proměnné $Traj$. Může nabývat hodnot $CW$ (po směru hodinových ručiček\,--\,\emph{clockwise}), $CCW$ (proti směru hodinových ručiček\,--\,\emph{counterclockwise}) nebo $BOTH$ (ohebnost oběma směry), viz obázek~\ref{fig:flexible-both-cw},
+%     \item $Coll$\,--\,informace o~poslední nalezené kolizi.
+% \end{itemize}
 
-Níže je popsána procedura \textsc{Initialize}, která nastavuje výchozí hodnoty proměnných. Za zmínku stojí způsob, jakým je inicializována přímka $MoveEnd$ na řádku~\ref{alg:traj_old:line:init_MoveEnd}. Nezáleží totiž na její směrnici; přímka pouze nesmí být rovnoběžná s~vektorem pohybu hráče a~musí procházet bodem $MoveEndPt$. V~hlavním těle algoritmu bude počítán průsečík této přímky s~přímkou, po níž se pohybuje hráč, a~je nezbytně nutné, aby tento průsečík ležel právě v~bodě $MoveEndPt$.
+% \begin{figure}[ht]
+%     \centering
+%     \includegraphics{doc/obrazky-figures/traj-tail.pdf}
+%     \caption{Stav proměnných $Traj$ a~$Tail$ po vyhodnocení kolize s~rohem překážky. Při další iteraci hledání kolizí se z~$Tail$ stane $Traj[2]$.}
+%     \label{fig:traj-tail}
+% \end{figure}
 
-\begin{minipage}{\textwidth}
-\begin{algorithmic}[1]
-    \Procedure{Initialize}{$Traj$, $Tail$, $MoveEnd$, $Flexible$}
-        \State $Traj \gets \emptyset$
-        \State $Tail \gets NULL$
-        \State $MoveEndPt \gets Player.Position + Player.MovementVector$
-        \State $MoveEnd \gets$ \Call{Line}{$MoveEnd \perp Player.MovementVector \wedge MoveEndPt \in MoveEnd$} \label{alg:traj_old:line:init_MoveEnd}
-        \State $Flexible \gets BOTH$
-        \State $Segment0.Type \gets LINE\_SEGMENT$
-        \State $Segment0.PStart \gets Player.Position$
-        \State $Segment0.PEnd \gets MoveEndPt$
-        \State $Traj.$\Call{Push}{$Segment0$}
-    \EndProcedure
-\end{algorithmic}
-\end{minipage}
+% \begin{figure}[ht]
+%     \centering
+%     \includegraphics{doc/obrazky-figures/flexible-both.pdf}
+%     \hspace{1cm}
+%     \includegraphics{doc/obrazky-figures/flexible-cw.pdf}
+%     \caption{Hodnota proměnné $Flexible$ ve vztahu k~vybraným úsekům trajektorie. Vlevo je úsek ohebný oběma směry, vpravo pouze jedním směrem\,--\,po směru hodinových ručiček (\emph{clockwise}, \emph{CW}). Ohebnost úseku je v~obou případech také znázorněna zelenou šipkou.}
+%     \label{fig:flexible-both-cw}
+% \end{figure}
 
-\begin{minipage}{\textwidth}
-\begin{algorithmic}[1]
-    \Procedure{Main}{}
-        \State \Call{Initialize}{$Traj$, $Tail$, $MoveEnd$, $Flexible$}
-        \Loop
-            \State find the nearest $Collision$ of $Traj.Last$ with obstacles
-            \If{no $Collision$ was found}
-                \If{$Tail = NULL$}
-                    \State \Return $Traj$
-                \Else
-                    \State $Traj.$\Call{Push}{$Tail$}
-                    \State $Flexible \gets BOTH$
-                    \State $Tail \gets NULL$
-                \EndIf
-            \Else
-            \EndIf
-        \EndLoop
-    \EndProcedure
-\end{algorithmic}
-\end{minipage}
+% Následuje samotný algoritmus popsaný sekvencí kroků. Jelikož tento algoritmus obsahuje poměrně velké množství kroků, byl rozdělen na několik částí. V~některých částech jsou některé kroky uzavřeny v~kulatých závorkách, což značí, že daný krok má být dále rozvinut v~jiné části algoritmu.
+
+% \begin{enumerate}
+%     \item Inicializuj:
+%     \begin{itemize}
+%         \item $Segment0$ jako úsek trajektorie představující požadovaný hráčův pohyb (úsečka vedoucí od aktuální pozice hráče ke koncovému bodu hráčova pohybu),
+%         \item $Traj$ jako seznam obsahující pouze 1 položku\,--\,$Segment0$,
+%         \item $Tail$ bez hodnoty,
+%         \item $MoveEnd$ jako přímku kolmou na vektor hráčova pohybu, procházející bodem, kde končí hráčův pohyb,
+%         \item $Flexible$ hodnotou $BOTH$ (ohebnost oběma směry).
+%     \end{itemize}
+%     \item \label{itm:trajectory-algo-1:begin-loop} Najdi kolizi $Coll$ posledního prvku seznamu $Traj$ s~překážkami.
+%     \item Pokud nebyla nalezena žádná kolize, pak:
+%     \begin{enumerate}
+%         \item Pokud proměnná $Tail$ neobsahuje žádnou hodnotu, vrať $Traj$ jako výsledek; algoritmus končí.
+%         \item Pokud proměnná $Tail$ obsahuje hodnotu (úsek trajektorie), připoj tuto hodnotu na konec seznamu $Traj$, nastav $Flexible$ na $BOTH$ a~vrať se na bod~\ref{itm:trajectory-algo-1:begin-loop}. Jinak pokračuj.
+%     \end{enumerate}
+%     \item \label{itm:trajectory-algo-1:call-process-coll} (Uprav hodnoty proměnných podle nalezené kolize $Coll$.)
+%     \item Vrať se na bod~\ref{itm:trajectory-algo-1:begin-loop}.
+% \end{enumerate}
+
+% Výše je popsána základní část algoritmu, v~níž je provedena inicializace proměnných a~za ní následuje cyklus hledání kolizí. Je důležité si ujasnit, co je vnímáno jako \emph{kolize}: je to situace, kdy se kruh hráče překrývá s~překážkou. To znamená, že pokud se hráč pohybuje podél zdi nebo jeho pohyb končí nebo začíná těsně vedle zdi (přičemž během pohybu nedošlo k~překrytí s~překážkou), jedná se pouze o~\emph{dotek}, a~nikoliv o~\emph{kolizi}.
+
+% Následuje část algoritmu vzniklá rozvinutím bodu~\ref{itm:trajectory-algo-1:call-process-coll} v~části algoritmu popsané výše:
+% \begin{enumerate}
+%     \item Nastav proměnnou $Tail$ do stavu bez hodnoty.
+%     \item Nastav \emph{koncový bod} posledního prvku seznamu $Traj$ do bodu, kde nastala kolize.
+%     \item Inicializuj nový úsek trajektorie $NewSegment$ podle kolize:
+%     \begin{enumerate}
+%         \item Pokud kolize nastala se stěnou překážky, pak $NewSegment$ bude \emph{úsečka}.
+%         \item Pokud kolize nastala s~rohem překážky, pak $NewSegment$ bude \emph{kruhový oblouk} se středem stejným, jako je střed tohoto rohu.
+%         \item \emph{Počáteční bod} bude v~obou případech v~bodě kolize. \emph{Koncový bod} zatím není znám.
+%     \end{enumerate}
+%     \item Urči přímku $Refl$, která je tečnou překážky v~bodě kolize.
+%     \item Pokud je přímka $Refl$ kolmá na vektor hráčova pohybu, nastav koncový bod úseku $NewSegment$ do bodu kolize (bude to segment s~nulovou délkou), připoj jej na konec $Traj$ a~vrať $Traj$ jako výsledek; algoritmus končí (jedná se o~přímý náraz do překážky). Jinak pokračuj.
+%     \item \label{itm:trajectory-algo-2:newsegment-flex} Urči ohebnost úseku $NewSegment$.
+%     \item Pokud ohebnost úseku $NewSegment$ neodpovídá ohebnosti $Flexible$ (jsou různé a~zároveň $Flexible$ není $BOTH$), nastav koncový bod úseku $NewSegment$ do bodu kolize (bude to segment s~nulovou délkou), připoj jej na konec $Traj$ a~vrať $Traj$ jako výsledek; algoritmus končí (hráč se snaží projít příliš úzkým průchodem mezi překážkami). Jinak pokračuj.
+%     \item Přepiš $Flexible$ hodnotou ohebnosti úseku $NewSegment$.
+%     \item \label{itm:trajectory-algo-2:call-newsegment-endpoint} (Najdi \emph{koncový bod} úseku $NewSegment$.)
+% \end{enumerate}
+
+% Ohebnost úseku $NewSegment$ (bodě~\ref{itm:trajectory-algo-2:newsegment-flex}) se určí podle vztahu mezi vektorem pohybu hráče a~překážkou, jak je naznačeno na obrázku~\ref{fig:newsegment-wall-corner-flexible}. Pokud kolize nastala se stěnou překážky a~vektor pohybu hráče s~vektorem stěny svírají ostrý úhel (vektorem stěny je vektor z~\emph{počátečního} do \emph{koncového bodu} stěny), ohebnost je $CW$ (po směru hodinových ručiček). Pokud svírají tupý úhel, ohebnost je $CCW$ (proti směru hodinových ručiček). V~případě kolize s~rohem překážky 
+
+% \begin{figure}
+%     \centering
+%     \includegraphics{doc/obrazky-figures/newsegment-wall-flexible.pdf}
+%     \includegraphics{doc/obrazky-figures/newsegment-corner-flexible.pdf}
+%     \caption{Určení ohebnosti nového úseku trajektorie. Černá lomená čára ukazuje trajektorii pohybu hráče, červená šipka směr hráčova pohybu, zelená určenou ohebnost.}
+%     \label{fig:newsegment-wall-corner-flexible}
+% \end{figure}
+
+% Další strukturou je úsek trajektorie, který představuje buď úsečku, nebo kruhový oblouk. Také na entitu hráče se nahlíží jako na datovou strukturu skládající se z~bodu, ve kterém se hráč nachází, a~vektoru hráčova pohybu.
+
+% Níže je popsána procedura \textsc{Initialize}, která nastavuje výchozí hodnoty proměnných. Za zmínku stojí způsob, jakým je inicializována přímka $MoveEnd$ na řádku~\ref{alg:traj_old:line:init_MoveEnd}. Nezáleží totiž na její směrnici; přímka pouze nesmí být rovnoběžná s~vektorem pohybu hráče a~musí procházet bodem $MoveEndPt$. V~hlavním těle algoritmu bude počítán průsečík této přímky s~přímkou, po níž se pohybuje hráč, a~je nezbytně nutné, aby tento průsečík ležel právě v~bodě $MoveEndPt$.
+
+% \begin{minipage}{\textwidth}
+% \begin{algorithmic}[1]
+%     \Procedure{Initialize}{$Traj$, $Tail$, $MoveEnd$, $Flexible$}
+%         \State $Traj \gets \emptyset$
+%         \State $Tail \gets NULL$
+%         \State $MoveEndPt \gets Player.Position + Player.MovementVector$
+%         \State $MoveEnd \gets$ \Call{Line}{$MoveEnd \perp Player.MovementVector \wedge MoveEndPt \in MoveEnd$} \label{alg:traj_old:line:init_MoveEnd}
+%         \State $Flexible \gets BOTH$
+%         \State $Segment0.Type \gets LINE\_SEGMENT$
+%         \State $Segment0.PStart \gets Player.Position$
+%         \State $Segment0.PEnd \gets MoveEndPt$
+%         \State $Traj.$\Call{Push}{$Segment0$}
+%     \EndProcedure
+% \end{algorithmic}
+% \end{minipage}
+
+% \begin{minipage}{\textwidth}
+% \begin{algorithmic}[1]
+%     \Procedure{Main}{}
+%         \State \Call{Initialize}{$Traj$, $Tail$, $MoveEnd$, $Flexible$}
+%         \Loop
+%             \State find the nearest $Collision$ of $Traj.Last$ with obstacles
+%             \If{no $Collision$ was found}
+%                 \If{$Tail = NULL$}
+%                     \State \Return $Traj$
+%                 \Else
+%                     \State $Traj.$\Call{Push}{$Tail$}
+%                     \State $Flexible \gets BOTH$
+%                     \State $Tail \gets NULL$
+%                 \EndIf
+%             \Else
+%             \EndIf
+%         \EndLoop
+%     \EndProcedure
+% \end{algorithmic}
+% \end{minipage}
 
 
 % Pro kompilaci po částech (viz projekt.tex) nutno odkomentovat

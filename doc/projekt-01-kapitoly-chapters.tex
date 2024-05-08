@@ -27,7 +27,7 @@ a~jiné. Zaměřením této práce je především \uv{řešení úloh}.
 \section{Řešení úloh}
 \label{sec:reseni-uloh}
 
-V~oblasti umělé inteligence je řešením úlohy nalezení posloupnosti kroků od počátečního stavu k~cílovému stavu \cite{AI_Russel_Norvig}. Cílové stavy mohou být popsány explicitně (např. v~případě \uv{Hanojských věží}) nebo podmínkami, které musí být splněny (např. \uv{šach mat} ve hře Šachy).
+V~oblasti umělé inteligence je řešením úlohy nalezení posloupnosti kroků od počátečního stavu k~cílovému stavu \cite{AI_Russel_Norvig}. Cílové stavy mohou být popsány explicitně (např. v~případě \emph{Hanojských věží}) nebo podmínkami, které musí být splněny (např. \emph{šach mat} ve hře \emph{Šachy}).
 
 \subsection*{Úloha}
 
@@ -37,13 +37,13 @@ V~oblasti umělé inteligence je řešením úlohy nalezení posloupnosti kroků
     \item Množina operátorů, které slouží pro přechod mezi stavy úlohy. U~některých úloh nelze v~každém stavu aplikovat kterýkoliv operátor.
     \item Množina následníků jednotlivých stavů, kterých lze dosáhnout aplikací určitých operátorů. Jedná se o~funkci se 2~operandy: ${Succ(s, a)}$. Jejím výsledkem je stav, do něhož se přejde po aplikaci operátoru $a$ na stav $s$.
     \item Množina cílových stavů. Jak bylo zmíněno, lze je popsat explicitním výčtem cílových stavů nebo pomocí omezujících podmínek.
-    \item Nezáporné ceny přechodů mezi stavy. Tato komponenta je opět funkce -- ${c(s, a, s')}$, jejíž výsledkem je cena vykonání přechodu ze stavu $s$ do stavu $s'$ pomocí operátoru $a$. Některé metody řešení úloh tuto cenu nezohledňují. Zpravidla platí, že čím nižší cena, tím kvalitnější řešení.
+    \item Nezáporné ceny přechodů mezi stavy. Tato komponenta je opět funkce\,--\,${c(s, a, s')}$, jejíž výsledkem je cena vykonání přechodu ze stavu $s$ do stavu $s'$ pomocí operátoru $a$. Některé metody řešení úloh tuto cenu nezohledňují. Zpravidla platí, že čím nižší cena, tím kvalitnější řešení.
 \end{itemize}
 Pomocí této formální definice lze pak řešení definovat jako nalezení posloupnosti operátorů, jejichž postupnou aplikací se z~počátečního stavu dosáhne jednoho z~množiny cílových stavů.
 
 \subsection*{Agent}
 
-Pojem \emph{agent} představuje systém, který dokáže vnímat okolní prostředí a~dokáže toto prostředí měnit svými akcemi \cite{AI_Ertel, AI_Russel_Norvig}. \emph{Agent} může být hardwarového typu -- autonomní robot -- nebo softwarového typu. \emph{Softwarový agent} pak může například ovládat entitu hráče. V~tomto případě není \emph{agentem} entita hráče a~není jím ani počítač; je to konkrétní část programu, která se o~řízení entity stará.
+Pojem \emph{agent} představuje systém, který dokáže vnímat okolní prostředí a~dokáže toto prostředí měnit svými akcemi \cite{AI_Ertel, AI_Russel_Norvig}. \emph{Agent} může být hardwarového typu\,--\,autonomní robot\,--\,nebo softwarového typu. \emph{Softwarový agent} pak může například ovládat entitu hráče. V~tomto případě není \emph{agentem} entita hráče a~není jím ani počítač; je to konkrétní část programu, která se o~řízení entity stará.
 
 \subsection*{Prostředí úlohy}
 
@@ -65,7 +65,7 @@ Pokud následující stav úlohy závisí výhradně na jejím aktuálním stavu
 
 \subsubsection*{Návaznost akcí}
 
-Prostředí lze kategorizovat podle toho, zda mezi akcemi vykonanými agentem existují nějaké návaznosti, na \emph{epizodické} a~\emph{sekvenční} \cite{AI_Russel_Norvig}. V~\emph{epizodickém} prostředí je každá akce součástí jedné atomické epizody. Žádná z~následujících epizod nijak nezávisí na dříve vykonaných akcích. Do této kategorie spadají především úlohy klasifikačního typu (například hledání vad u~součástek na výrobní lince -- nalezení vady na jedné součástce nijak neovlivní proces hledání vady na následující součástce). Častější jsou prostředí \emph{sekvenčního} typu. U~tohoto typu úloh mohou mít akce dlouhodobé následky a~výrazně ovlivnit následné rozhodování.
+Prostředí lze kategorizovat podle toho, zda mezi akcemi vykonanými agentem existují nějaké návaznosti, na \emph{epizodické} a~\emph{sekvenční} \cite{AI_Russel_Norvig}. V~\emph{epizodickém} prostředí je každá akce součástí jedné atomické epizody. Žádná z~následujících epizod nijak nezávisí na dříve vykonaných akcích. Do této kategorie spadají především úlohy klasifikačního typu (například hledání vad u~součástek na výrobní lince\,--\,nalezení vady na jedné součástce nijak neovlivní proces hledání vady na následující součástce). Častější jsou prostředí \emph{sekvenčního} typu. U~tohoto typu úloh mohou mít akce dlouhodobé následky a~výrazně ovlivnit následné rozhodování.
 
 \subsubsection*{Proměnlivost}
 
@@ -93,13 +93,13 @@ Jsou úlohy, u~kterých není relevantní kvalita řešení, ale pouze splnění
 % Citation pages: 80
 Úlohy jsou hodnoceny podle těchto kritérií \cite{AI_Russel_Norvig}:
 \begin{itemize}
-    \item Úplnost -- Pokud má daná úloha řešení, pak ho metoda vždy najde.
-    \item Optimálnost -- Pokud existuje více řešení dané úlohy, pak metoda najde vždy to nejlepší.
-    \item Časová náročnost -- Jak bude růst čas hledání řešení s~rostoucí komplexností zadání.
-    \item Prostorová náročnost -- Jak se budou zvyšovat požadavky na paměť s~rostoucí komplexností zadání.
+    \item Úplnost\,--\,Pokud má daná úloha řešení, pak ho metoda vždy najde.
+    \item Optimálnost\,--\,Pokud existuje více řešení dané úlohy, pak metoda najde vždy to nejlepší.
+    \item Časová náročnost\,--\,Jak bude růst čas hledání řešení s~rostoucí komplexností zadání.
+    \item Prostorová náročnost\,--\,Jak se budou zvyšovat požadavky na paměť s~rostoucí komplexností zadání.
 \end{itemize}
 
-Pro reprezentaci časové a prostorové náročnosti se většinou používá Landauova notace (notace omikron). V~ní často figuruje hloubka stromu $d$ a~tzv. \uv{faktor větvení} $b$, což je průměrný počet bezprostředních následníků při expanzi uzlu.
+Pro zápis časové a prostorové náročnosti se většinou používá Landauova notace (notace omikron). V~ní často figuruje hloubka stromu $d$ a~tzv. \uv{faktor větvení} $b$, což je průměrný počet bezprostředních následníků při expanzi uzlu.
 
 
 \section{Prohledávání stavového prostoru}
@@ -110,33 +110,33 @@ Prohledávání stavového prostoru je jedním z~několika přístupů k~řešen
 Častým problémem těchto vyhledávacích stromů je opakování stavů \cite{AI_Russel_Norvig}. Jelikož u~některých úloh je možné dosáhnout stavu, který se již ve vyhledávacím stromu nachází, může pak nastat situace, že se některé stavy budou opakovat stále dokola. V~takovém případě je daný strom nekonečný. Spousta metod však dokáže s~takovými stromy pracovat a~nebo generují strom tak, aby opakování stavů předešly.
 
 % Citation pages: 75-76
-Při řešení úlohy není nutné konstruovat celé stromy a~pak v~nich hledat cesty od kořene k~cílovým stavům. Algoritmu většinou stačí prozkoumat jen část stavového prostoru, aby nalezl cílový stav. Postup řešení většinou začíná u~stromu, který má pouze 1 uzel --- počáteční stav --- a~ten se následně \emph{expanduje} \cite{AI_Russel_Norvig}. \emph{Expanzí} se myslí vygenerování nových stavů pro každý operátor aplikovatelný na daný stav. Nově vygenerované uzly se dále expandují do té doby, než je nalezen cílový stav. (Nutno podotknout, že může nastat i~situace, kdy cílový stav bude sám stav počáteční, a~tedy k~žádné expanzi nedojde.)
+Při řešení úlohy není nutné konstruovat celé stromy a~pak v~nich hledat cesty od kořene k~cílovým stavům. Algoritmu většinou stačí prozkoumat jen část stavového prostoru, aby nalezl cílový stav. Postup řešení většinou začíná u~stromu, který má pouze 1 uzel\,--\,počáteční stav\,--\,a~ten se následně \emph{expanduje} \cite{AI_Russel_Norvig}. \emph{Expanzí} se myslí vygenerování nových stavů pro každý operátor aplikovatelný na daný stav. Nově vygenerované uzly se dále expandují do té doby, než je nalezen cílový stav. (Nutno podotknout, že může nastat i~situace, kdy cílový stav bude sám stav počáteční, a~tedy k~žádné expanzi nedojde.)
 
 % Citation pages: 77
-Základem metod, které využívají přístupu prohledávání stavového prostoru, je algoritmus \emph{Tree search} \cite{AI_Russel_Norvig}. Samotné metody se pak většinou liší pouze ve strategii výběru uzlu pro expanzi. Algoritmus využívá kolekci\footnote{Literatura \cite{AI_Russel_Norvig} zde používá pojem \uv{frontier}, jehož český překlad zní \uv{hranice} (např. státní). Tento pojem se v~českém jazyce příliš nehodí k~popisovanému datovému typu. Pojmenování \uv{kolekce} bylo převzato z~programovacího jazyka C\#, kde rozhraní \texttt{ICollection} definuje operace vkládání, čtení a~odstraňování nad položkami stejného typu. V~jakém pořadí budou položky do kolekce vkládány a~v~jakém odstraňovány záleží na konkrétní implementaci rozhraní.} \emph{OPEN} pro uchování uzlů určených k~expanzi. Princip fungování algoritmu lze popsat pomocí pseudokódu:
+Základem metod, které využívají přístupu prohledávání stavového prostoru, je algoritmus \emph{Tree search} \cite{AI_Russel_Norvig}. Samotné metody se pak většinou liší pouze ve strategii výběru uzlu pro expanzi. Algoritmus využívá kolekci\footnote{Literatura \cite{AI_Russel_Norvig} zde používá pojem \uv{frontier}, jehož český překlad zní \uv{hranice} (např. státní). Tento pojem se v~českém jazyce příliš nehodí k~popisovanému datovému typu. Pojmenování \uv{kolekce} bylo převzato z~programovacího jazyka \emph{C\#}, kde rozhraní \texttt{ICollection} definuje operace vkládání, čtení a~odstraňování nad položkami stejného typu. V~jakém pořadí budou položky do kolekce vkládány a~v~jakém odstraňovány záleží na konkrétní implementaci rozhraní.} \emph{OPEN} pro uchování uzlů určených k~expanzi. Princip fungování algoritmu lze popsat pomocí pseudokódu:
 \begin{enumerate}
     \item Inicializuj kolekci \emph{OPEN}, aby obsahovala pouze počáteční uzel.
-    \item Pokud je kolekce \emph{OPEN} prázdná, ukonči prohledávání jako \emph{neúspěšné}. Jinak pokračuj na další bod.
+    \item \label{itm:tree-search:begin-loop} Pokud je kolekce \emph{OPEN} prázdná, ukonči prohledávání jako \emph{neúspěšné}. Jinak pokračuj na další bod.
     \item Vyber a~vyjmi jeden uzel z~kolekce \emph{OPEN}.
     \item Pokud je vybraný uzel uzlem cílovým, ukonči prohledávání jako \emph{úspěšné}. Jinak pokračuj na další bod.
-    \item Expanduj vybraný uzel -- všechny jeho bezprostřední následníky vlož do kolekce \emph{OPEN}.
-    \item Vrať se na bod 2.
+    \item Expanduj vybraný uzel\,--\,všechny jeho bezprostřední následníky vlož do kolekce \emph{OPEN}.
+    \item Vrať se na bod~\ref{itm:tree-search:begin-loop}.
 \end{enumerate}
 
 % Citation pages: 77
-Jak bylo zmíněno, ve vyhledávacích stromech se často opakují stejné stavy, což má za důsledek nekonečné stromy. V~takovém případě by mohlo nastat, že algoritmus \emph{Tree search} se nikdy nezastaví. Tento problém lze vyřešit drobnou úpravou algoritmu \cite{AI_Russel_Norvig}. Upravený algoritmus bude využívat ještě jednu kolekci --- kolekci \emph{CLOSED} --- do níž se budou vkládat uzly, které již byly expandovány. Pseudokód pro \emph{Tree search} s~kolekcí \emph{CLOSED} vypadá pak takto (nově přidané části jsou zvýrazněny tučně):
+Jak bylo zmíněno, ve vyhledávacích stromech se často opakují stejné stavy, což má za důsledek nekonečné stromy. V~takovém případě by mohlo nastat, že algoritmus \emph{Tree search} se nikdy nezastaví. Tento problém lze vyřešit drobnou úpravou algoritmu \cite{AI_Russel_Norvig}. Upravený algoritmus bude využívat ještě jednu kolekci\,--\,kolekci \emph{CLOSED}\,--\,do níž se budou vkládat uzly, které již byly expandovány. Pseudokód pro \emph{Tree search} s~kolekcí \emph{CLOSED} vypadá pak takto (nově přidané části jsou zvýrazněny tučně):
 \begin{enumerate}
     \item Inicializuj kolekci \emph{OPEN}, aby obsahovala pouze počáteční uzel.
     \textbf{\item Inicializuj kolekci \emph{CLOSED} jako prázdnou}.
-    \item Pokud je kolekce \emph{OPEN} prázdná, ukonči prohledávání jako \emph{neúspěšné}. Jinak pokračuj na další bod.
+    \item \label{itm:tree-search-closed:begin-loop} Pokud je kolekce \emph{OPEN} prázdná, ukonči prohledávání jako \emph{neúspěšné}. Jinak pokračuj na další bod.
     \item Vyber a~vyjmi jeden uzel z~kolekce \emph{OPEN} \textbf{a~vlož jej do kolekce \emph{CLOSED}}.
     \item Pokud je vybraný uzel uzlem cílovým, ukonči prohledávání jako \emph{úspěšné}. Jinak pokračuj na další bod.
-    \item Expanduj vybraný uzel -- všechny jeho bezprostřední následníky, \textbf{kteří nejsou v~kolekci \emph{OPEN} ani \emph{CLOSED},} vlož do kolekce \emph{OPEN}.
-    \item Vrať se na bod 3.
+    \item Expanduj vybraný uzel\,--\,všechny jeho bezprostřední následníky, \textbf{kteří nejsou v~kolekci \emph{OPEN} ani \emph{CLOSED},} vlož do kolekce \emph{OPEN}.
+    \item Vrať se na bod~\ref{itm:tree-search-closed:begin-loop}.
 \end{enumerate}
-Kromě přidání nové kolekce se rozšířila i~funkce kolekce \emph{OPEN} -- obě dvě nyní plní funkci množiny všech stavů, které jsou součástí aktuální podoby stavového prostoru (kolekce \emph{OPEN} však stále plní funkci uchovávání stavů určených k~expanzi).
+Kromě přidání nové kolekce se rozšířila i~funkce kolekce \emph{OPEN}\,--\,obě dvě nyní plní funkci množiny všech stavů, které jsou součástí aktuální podoby stavového prostoru (kolekce \emph{OPEN} však stále plní funkci uchovávání stavů určených k~expanzi).
 
-Pokud nestačí pouze najít cílový stav, ale také posloupnost kroků, která k~němu vedou, je nutná rekonstrukce cesty. U~\emph{Tree search} je rekonstrukce cesty poměrně jednoduchá -- stačí si u~každého uzlu uložit jeho bezprostředního předchůdce. Po nalezení cílového stavu se pak rekonstrukce provede tak, že se rekurzivně budou hledat předchůdci cílového uzlu v~kolekci \emph{CLOSED}, dokud není nalezen počáteční stav.
+Pokud nestačí pouze najít cílový stav, ale také posloupnost kroků, která k~němu vedou, je nutná rekonstrukce cesty. U~\emph{Tree search} je rekonstrukce cesty poměrně jednoduchá\,--\,stačí si u~každého uzlu uložit jeho bezprostředního předchůdce. Po nalezení cílového stavu se pak rekonstrukce provede tak, že se rekurzivně budou hledat předchůdci cílového uzlu v~kolekci \emph{CLOSED}, dokud není nalezen počáteční stav.
 
 Základní rozdělení metod, které řeší úlohy prohledáváním stavového prostoru, je rozdělení na neinformované a informované \cite{AI_Russel_Norvig}.
 
@@ -147,15 +147,15 @@ Neinformované metody prohledávání stavového prostoru nemají žádnou infor
 \subsubsection*{Metoda slepého prohledávání do šířky}
 
 % Citation page: 81
-Metoda slepého prohledávání do šířky (\emph{Breadth-First Search} -- \emph{BFS}) \cite{AI_Russel_Norvig} prochází vyhledávací strom po jednotlivých vrstvách. Je odvozena z~algoritmu \emph{Tree search}, kde kolekce \emph{OPEN} je typu fronta. Znamená to tedy, že pro expanzi jsou vždy vybírány ty uzly, které byly generovány nejdříve. Metodu lze modifikovat testováním cílového stavu již při vygenerování uzlu, což umožní rychlejší nalezení řešení.
+Metoda slepého prohledávání do šířky (\emph{Breadth-First Search}\,--\,\emph{BFS}) \cite{AI_Russel_Norvig} prochází vyhledávací strom po jednotlivých vrstvách. Je odvozena z~algoritmu \emph{Tree search}, kde kolekce \emph{OPEN} je typu fronta. Znamená to tedy, že pro expanzi jsou vždy vybírány ty uzly, které byly generovány nejdříve. Metodu lze modifikovat testováním cílového stavu již při vygenerování uzlu, což umožní rychlejší nalezení řešení.
 
 % Citation page: 98
-Metoda je úplná -- pokud se cílový uzel nachází v~nějaké konečné hloubce $d$, pak ho metoda vždy najde, jelikož metoda kompletně prochází každou vrstvu vyhledávacího stromu, a~tedy i~k~vrstvě s~hloubkou $d$ dorazí v~konečném čase \cite{AI_Ertel}. Metoda je také optimální, ale pouze za předpokladu, že ceny všech přechodů jsou stejné. Jak časová, tak prostorová složitost jsou exponenciální. Pro faktor větvení $b$ a~hloubku stromu $d$ jsou obě složitosti $O(b^d)$. Především kvůli této prostorové složitosti je metoda aplikovatelná pouze na ty nejjednodušší úlohy.
+Metoda je úplná\,--\,pokud se cílový uzel nachází v~nějaké konečné hloubce $d$, pak ho metoda vždy najde, jelikož metoda kompletně prochází každou vrstvu vyhledávacího stromu, a~tedy i~k~vrstvě s~hloubkou $d$ dorazí v~konečném čase \cite{AI_Ertel}. Metoda je také optimální, ale pouze za předpokladu, že ceny všech přechodů jsou stejné. Jak časová, tak prostorová složitost jsou exponenciální. Pro faktor větvení $b$ a~hloubku stromu $d$ jsou obě složitosti $O(b^d)$. Především kvůli této prostorové složitosti je metoda aplikovatelná pouze na ty nejjednodušší úlohy.
 
 \subsubsection*{Metoda slepého prohledávání do hloubky}
 
 % Citation pages: 85 - 87
-Metoda slepého prohledávání do hloubky (\emph{Depth-First Search} -- \emph{DFS}) \cite{AI_Russel_Norvig} prochází vyhledávací strom po jednotlivých větvích. Expandovány jsou vždy ty uzly, které jsou v~rámci vyhledávacího stromu nejhlouběji. Podobně jako \emph{BFS} je i~\emph{DFS} odvozena z~algoritmu \emph{Tree search}, ale kolekce \emph{OPEN} je tentokrát typu zásobník. Pro expanzi jsou vybírány uzly, které byly generovány nejpozději.
+Metoda slepého prohledávání do hloubky (\emph{Depth-First Search}\,--\,\emph{DFS}) \cite{AI_Russel_Norvig} prochází vyhledávací strom po jednotlivých větvích. Expandovány jsou vždy ty uzly, které jsou v~rámci vyhledávacího stromu nejhlouběji. Podobně jako \emph{BFS} je i~\emph{DFS} odvozena z~algoritmu \emph{Tree search}, ale kolekce \emph{OPEN} je tentokrát typu zásobník. Pro expanzi jsou vybírány uzly, které byly generovány nejpozději.
 
 Ohodnocení této metody je podmíněno výběrem varianty \emph{Tree search}. Varianta s~kolekcí \emph{CLOSED} je úplná, avšak její prostorová složitost je stejně jako v~případě \emph{BFS} exponenciální. Naopak varianta bez kolekce \emph{CLOSED} má lineární prostorovou složitost, ale není úplná, jelikož může opakovaně generovat stejné posloupnosti uzlů. Existuje však ještě třetí varianta, která eliminuje nevýhody obou. Tato varianta nevyužívá kolekci \emph{CLOSED} a~generuje pouze ty stavy, které neleží na cestě od kořene k~aktuálnímu uzlu.
 
@@ -165,25 +165,25 @@ Tato varianta \emph{DFS} je úplná, avšak pouze pro konečné stavové prostor
 
 Metoda zpětného navracení (\emph{Backtracking}) \cite{AI_Russel_Norvig} je speciální metodou \emph{DFS} s~tím rozdílem, že se při expanzi uzlu místo generování všech jeho následníků generuje pouze jeden a~pouze pokud ten selže, generuje se další. U~každého uzlu je nutné si pamatovat, který bezprostřední následník se má generovat jako další. Toho lze docílit určením pořadí, v~jakém budou operátory na jednotlivé stavy aplikovány, a~následně si pouze pamatovat, který operátor byl na daný stav aplikován jako poslední.
 
-Stejně jako v~případě \emph{DFS} není základní varianta úplná, ale také má modifikovanou variantu. Modifikace opět spočívá v~tom, že se generují pouze ty uzly, které neleží na cestě od kořene k~aktuálnímu uzlu. Výhodou je, že všechny tyto uzly jsou uloženy v~kolekci \emph{OPEN}. To také následně usnadňuje rekonstrukci cesty od počátečního k~cílovému uzlu -- jelikož je kolekce \emph{OPEN} typu zásobník, postupným odebíráním uzlů z~jeho vrcholu získáváme cestu od cíle k~výchozímu stavu.
+Stejně jako v~případě \emph{DFS} není základní varianta úplná, ale také má modifikovanou variantu. Modifikace opět spočívá v~tom, že se generují pouze ty uzly, které neleží na cestě od kořene k~aktuálnímu uzlu. Výhodou je, že všechny tyto uzly jsou uloženy v~kolekci \emph{OPEN}. To také následně usnadňuje rekonstrukci cesty od počátečního k~cílovému uzlu\,--\,jelikož je kolekce \emph{OPEN} typu zásobník, postupným odebíráním uzlů z~jeho vrcholu získáváme cestu od cíle k~výchozímu stavu.
 
 Výhodou této metody oproti \emph{DFS} je další snížení prostorové složitosti na $O(m)$. Úplnost, optimálnost, ani časová složitost se nemění; modifikovaná varianta je úplná, není optimální a časová složitost je $O(b^m)$.
 
 \subsubsection*{Metoda omezeného prohledávání do hloubky}
 
-Metoda omezeného prohledávání do hloubky (\emph{Depth-Limited Search} -- \emph{DLS}) \cite{AI_Russel_Norvig} vychází z~metody \emph{DFS}, kde expandujeme pouze ty uzly, které jsou v menší hloubce, než předem stanovená hodnota $l$. Tuto metodu je vhodné použít, pokud dopředu víme, v~jaké maximální hloubce může ležet cílový uzel.
+Metoda omezeného prohledávání do hloubky (\emph{Depth-Limited Search}\,--\,\emph{DLS}) \cite{AI_Russel_Norvig} vychází z~metody \emph{DFS}, kde expandujeme pouze ty uzly, které jsou v menší hloubce, než předem stanovená hodnota $l$. Tuto metodu je vhodné použít, pokud dopředu víme, v~jaké maximální hloubce může ležet cílový uzel.
 
 Metoda není úplná, pokud $l < d$, tedy pokud stanovená maximální hloubka stromu je menší než hloubka, v~níž leží cílový stav. Stejně tak metoda není optimální, pokud $l > d$. Úplnosti a~optimálnosti lze tedy dosáhnout pouze tehdy, pokud $l = d$, tedy pouze pokud přesně víme, v~jaké hloubce se nachází řešení úlohy. Časová i~prostorová složitost jsou podobné jako u~metody \emph{DFS}: časová složitost je $O(b^l)$, prostorová složitost je $O(b \cdot l)$.
 
 \subsubsection*{Metoda postupného zanořování do hloubky}
 
-Princip metody postupného zanořování do hloubky (\emph{Iterative Deepening Search} -- \emph{IDS}) \cite{AI_Russel_Norvig} je opakované volání metody \emph{DLS} s~postupným zvyšováním maximální hloubky $l$. Začíná se s~$l = 1$, pokud nebylo nalezeno řešení, opakuje se \emph{IDS} s~hodnotou $l = 2$ atd. Hledání je neúspěšné, pokud během iterace nebylo dosaženo žádného uzlu nacházejícího se v~maximální hloubce stromu.
+Princip metody postupného zanořování do hloubky (\emph{Iterative Deepening Search}\,--\,\emph{IDS}) \cite{AI_Russel_Norvig} je opakované volání metody \emph{DLS} s~postupným zvyšováním maximální hloubky $l$. Začíná se s~$l = 1$, pokud nebylo nalezeno řešení, opakuje se \emph{IDS} s~hodnotou $l = 2$ atd. Hledání je neúspěšné, pokud během iterace nebylo dosaženo žádného uzlu nacházejícího se v~maximální hloubce stromu.
 
 Metoda kombinuje výhody \emph{BFS} a~\emph{DFS}. Podobně jako u~\emph{DFS} je prostorová složitost lineární: $O(b \cdot d)$. Stejně jako \emph{BFS} je metoda úplná i~optimální (optimální opět pouze tehdy, když ceny všech přechodů jsou stejné). Ačkoliv je nutné opakovaně generovat uzly ve vyšších úrovních stromu kvůli opakovanému volání metody \emph{DLS}, časová složitost zůstává stále exponenciální: $O(b^d)$. Je to z~toho důvodu, že úrovně s~nejvyššími počty uzlů nejsou generovány příliš často oproti úrovním s~malými počty uzlů.
 
 \subsubsection*{Metoda stejných cen}
 
-Metodu stejných cen (\emph{Uniform Cost Search} -- \emph{UCS}) \cite{AI_Russel_Norvig} lze použít i~v~případě, že ceny přechodů mezi stavy jsou různé, na rozdíl od dříve zmíněných metod. Její princip fungování se podobá metodě \emph{BFS} s~několika rozdíly. Místo fronty \emph{OPEN} se využívá \emph{prioritní} fronta \emph{OPEN}, v~níž priorita uzlu je dána cenou cesty od počátečního k~danému uzlu, tedy součtem cen všech přechodů nutných k~dosažení daného uzlu (nižší ceny mají vyšší prioritu). Při vkládání uzlu do prioritní fronty \emph{OPEN} se zkontroluje, zda se v~ní stejný uzel již nenachází. Pokud ano, pak se pouze případně upraví cena cesty k~němu tak, aby byla co nejnižší.
+Metodu stejných cen (\emph{Uniform Cost Search}\,--\,\emph{UCS}) \cite{AI_Russel_Norvig} lze použít i~v~případě, že ceny přechodů mezi stavy jsou různé, na rozdíl od dříve zmíněných metod. Její princip fungování se podobá metodě \emph{BFS} s~několika rozdíly. Místo fronty \emph{OPEN} se využívá \emph{prioritní} fronta \emph{OPEN}, v~níž priorita uzlu je dána cenou cesty od počátečního k~danému uzlu, tedy součtem cen všech přechodů nutných k~dosažení daného uzlu (nižší ceny mají vyšší prioritu). Při vkládání uzlu do prioritní fronty \emph{OPEN} se zkontroluje, zda se v~ní stejný uzel již nenachází. Pokud ano, pak se pouze případně upraví cena cesty k~němu tak, aby byla co nejnižší.
 
 Na rozdíl od \emph{BFS} nelze tuto metodu modifikovat testováním cílového stavu již při vygenerování uzlu. Důvodem je, že vygenerovaný uzel nemusí nutně ležet na optimální cestě; dalším prohledáváním by se mohlo narazit na lepší řešení.
 
@@ -196,15 +196,15 @@ Informované metody mají k~dispozici informace o~cílovém stavu a~dokážou s~
 \begin{enumerate}
     \item Inicializuj kolekci \emph{OPEN}, aby obsahovala pouze počáteční uzel.
     \item Inicializuj kolekci \emph{CLOSED} jako prázdnou.
-    \item Pokud je kolekce \emph{OPEN} prázdná, ukonči prohledávání jako \emph{neúspěšné}. Jinak pokračuj na další bod.
+    \item \label{itm:bestfs:begin-loop} Pokud je kolekce \emph{OPEN} prázdná, ukonči prohledávání jako \emph{neúspěšné}. Jinak pokračuj na další bod.
     \item Vyber a vyjmi uzel ${s_k}$ s~nejnižším ohodnocením $f(s_k)$ z~kolekce \emph{OPEN} a~vlož jej do kolekce \emph{CLOSED}.
     \item Pokud je vybraný uzel uzlem cílovým, ukonči prohledávání jako \emph{úspěšné}. Jinak pokračuj na další bod.
-    \item Expanduj vybraný uzel -- všechny jeho bezprostřední následníky, kteří nejsou v~kolekci \emph{CLOSED}, vlož do kolekce \emph{OPEN}. Pokud se nějaký uzel vyskytuje v~\emph{OPEN} vícekrát, ponech pouze ten, který má nižší ohodnocení.
-    \item Vrať se na bod 3.
+    \item Expanduj vybraný uzel\,--\,všechny jeho bezprostřední následníky, kteří nejsou v~kolekci \emph{CLOSED}, vlož do kolekce \emph{OPEN}. Pokud se nějaký uzel vyskytuje v~\emph{OPEN} vícekrát, ponech pouze ten, který má nižší ohodnocení.
+    \item Vrať se na bod~\ref{itm:bestfs:begin-loop}.
 \end{enumerate}
 
 % Citation pages: 92
-Konkrétní metody se pak liší v~tom, jakým způsobem se vypočítá hodnota ${f(s_k)}$ \cite{AI_Russel_Norvig}. Ve~výpočtech vždy figuruje tzv. heuristická funkce ${h(s_k)}$ -- odhad ceny nejlevnější cesty z~uzlu ${s_k}$ k~cílovému uzlu. Výpočet ${h(s_k)}$ se neváže ke konkrétní metodě; metody samotné pouze mohou definovat podmínky, které tato funkce musí splňovat. Jedinou podmínkou, která musí platit vždy, je, že pokud $s_k$ je cílový uzel, pak ${h(s_k) = 0}$. Příklad heuristické funkce lze vidět na obrázku~\ref{fig:informed-heuristic-example}.
+Konkrétní metody se pak liší v~tom, jakým způsobem se vypočítá hodnota ${f(s_k)}$ \cite{AI_Russel_Norvig}. Ve~výpočtech vždy figuruje tzv. heuristická funkce ${h(s_k)}$\,--\,odhad ceny nejlevnější cesty z~uzlu ${s_k}$ k~cílovému uzlu. Výpočet ${h(s_k)}$ se neváže ke konkrétní metodě; metody samotné pouze mohou definovat podmínky, které tato funkce musí splňovat. Jedinou podmínkou, která musí platit vždy, je, že pokud $s_k$ je cílový uzel, pak ${h(s_k) = 0}$. Příklad heuristické funkce lze vidět na obrázku~\ref{fig:informed-heuristic-example}.
 
 \begin{figure}
     \centering
@@ -298,7 +298,7 @@ Příklad výpočtu hodnoty $f(s_k)$ je znázorněn na obrázku~\ref{fig:astar-f
         % h(s_{k+1})
         \draw[very thick, draw=fskHsk, -{Stealth[length=3mm]}] (3.5,5.5) -- (7.5,2.5) node[midway, below=10pt, left] {\color{fskHsk} $h(s_{k+1})$};
     \end{tikzpicture}
-    \caption{Heuristika $h$ je konzistentní, jelikož platí trojúhelníková nerovnost -- součet délek kterýchkoliv dvou stran musí být větší nebo roven délce strany třetí. Stranami jsou zde ${h(s_k)}$, ${c(s_k, a, s_{k+1})}$ a~${h(s_{k+1})}$.}
+    \caption{Heuristika $h$ je konzistentní, jelikož platí trojúhelníková nerovnost\,--\,součet délek kterýchkoliv dvou stran musí být větší nebo roven délce strany třetí. Stranami jsou zde ${h(s_k)}$, ${c(s_k, a, s_{k+1})}$ a~${h(s_{k+1})}$.}
     \label{fig:astar-heuristic-consistency}
 \end{figure}
 
@@ -326,7 +326,7 @@ Expandování uzlů se opakuje, dokud platí alespoň jedna z~těchto 2 podmíne
 
 \subsubsection*{Metoda D* Lite}
 
-Metoda \emph{D* Lite} \cite{D_star_lite} slouží pro nalezení cesty vyhledávacím stromem, ve kterém se mohou změnit ceny přechodů mezi stavy v~průběhu řešení úlohy. (Změna ceny může také znamenat úplné odstranění přechodu, tj. nastavení jeho ceny na hodnotu $\infty$.) Základní myšlenkou metody je hledání cesty v~opačném směru -- od cílového uzlu k~počátečnímu -- přičemž počátečním uzlem se při každé změně ceny přechodu stane aktuální uzel. Hledání cesty je založeno na metodě \emph{LPA*} s~několika úpravami.
+Metoda \emph{D* Lite} \cite{D_star_lite} slouží pro nalezení cesty vyhledávacím stromem, ve kterém se mohou změnit ceny přechodů mezi stavy v~průběhu řešení úlohy. (Změna ceny může také znamenat úplné odstranění přechodu, tj. nastavení jeho ceny na hodnotu $\infty$.) Základní myšlenkou metody je hledání cesty v~opačném směru\,--\,od cílového uzlu k~počátečnímu\,--\,přičemž počátečním uzlem se při každé změně ceny přechodu stane aktuální uzel. Hledání cesty je založeno na metodě \emph{LPA*} s~několika úpravami.
 
 Protože hledání probíhá v~opačném směru, je nutné změnit význam některých hodnot. Pro libovolný uzel $s$ jsou hodnoty $g(s)$ a~$rhs(s)$ odhady ceny cesty od cílového uzlu k~uzlu $s$ a~hodnota $h(s)$ je odhadovaná cena cesty od uzlu $s$ k~uzlu, ve kterém skončilo předchozí hledání (tedy k~uzlu, který je nyní počáteční).
 
@@ -374,7 +374,7 @@ Metodu \emph{Minimax} \cite{AI_Russel_Norvig} lze použít pouze při hře 2 hr�
 
 Podobně jako u~ostatních metod řešení úloh, i~zde se na stavový prostor hry (úlohy) nahlíží jako na vyhledávací strom, kdy kořenem je aktuální stav hry, hrany jsou akce vykonané hráčem a~listové uzly jsou konečné stavy hry, tj. výhra, prohra nebo remíza. U~většiny her by však bylo příliš náročné procházet celý stavový prostor a~hledat optimální řešení. Proto je typickou úpravou metody omezení maximální hloubky stromu. Listovým uzlem pak mohou být navíc uzly, které se nachází v~maximální hloubce.
 
-Základem metody je funkce \emph{Minimax}, které je předán uzel $n$ a~funkce spočítá jeho ohodnocení. Hráč na tahu ji zavolá pro všechny možné stavy, do kterých se může z~aktuálního stavu dostat, a~poté vykoná akci, která vede do stavu s~nejvyšším ohodnocením. Funkce vypadá následovně:
+Základem metody je funkce \emph{Minimax}, které je předán uzel $n$ a~funkce spočítá jeho ohodnocení. Hráč na tahu ji zavolá pro všechny možné stavy, do kterých se může z~aktuálního stavu dostat, a~poté vykoná akci, která vede do stavu s~nejvyšším ohodnocením. Funkce vypadá následovně:\enlargethispage{-1\baselineskip} % Keep the list items together
 \begin{enumerate}
     \item Pokud je uzel $n$ listem, vrať ohodnocení tohoto uzlu.
     \item Pokud je na tahu hráč \emph{Max}, zavolej rekurzivně \emph{Minimax} pro všechny bezprostřední následníky uzlu $n$ a~vrať \emph{nejvyšší} ze získaných ohodnocení.
@@ -466,7 +466,7 @@ Pro odvození tohoto vztahu viz \cite{Maxn}. Účinnost metody je znázorněna n
 \chapter{Představení hry}
 \label{ch:predstaveni-hry}
 
-Tato kapitola se věnuje popisu výsledné aplikace. Obsahuje popis samotné hry \emph{Bubble Brawl} a~její pravidla. Dále je zde uvedena interakce mezi uživatelem a~aplikací -- ovládání, navigace mezi pohledy. Také je zde představen vestavěný editor herní plochy.
+Tato kapitola se věnuje popisu výsledné aplikace. Obsahuje popis samotné hry \emph{Bubble Brawl} a~její pravidla. Dále je zde uvedena interakce mezi uživatelem a~aplikací\,--\,ovládání, navigace mezi pohledy. Také je zde představen vestavěný editor herní plochy.
 
 \section{Pravidla}
 
@@ -476,9 +476,9 @@ Hra umožňuje hráčům svislý, vodorovný i~diagonální pohyb. Překážky v
 
 Hráči začínají s~určitým množstvím bodů života a~zůstávají ve hře, dokud je toto množství větší než 0. Když se 2 a~více hráčů dotýká, všichni dotýkající se hráči ztrácí body života. Kromě toho na této veličině závisí několik dalších vlastností hráče:
 \begin{itemize}
-    \item Velikost -- poloměr hráčovy bubliny (přímo úměrně),
+    \item Velikost\,--\,poloměr hráčovy bubliny (přímo úměrně),
     \item Rychlost pohybu (nepřímo úměrně),
-    \item Síla -- kolik bodů života ubírá hráč svým protivníkům.
+    \item Síla\,--\,kolik bodů života ubírá hráč svým protivníkům (přímo úměrně).
 \end{itemize}
 
 V~průběhu hry se v~náhodných intervalech objevují na herní ploše bonusy ve tvaru kruhu, které hráčům doplňují body života. Aby byl bonus na hráče aplikován, musí se bonus s~bublinou hráče navzájem dotýkat. Následkem toho tento bonus zmizí a~žádný jiný hráč ho poté už nemůže použít. Místo, kde se bonus objeví je náhodné. Nikdy však nemůže kolidovat s~překážkou. Navíc, v~jeden okamžik může být na herní ploše pouze jeden bonus. Množství života získané z~bonusu je také náhodně vybráno ze 4~možných hodnot relativních vůči počátečnímu množství života: $25\,\%$, $50\,\%$, $75\,\%$ a~$100\,\%$.
@@ -511,12 +511,12 @@ Pokud bylo vše vyplněno správně, je možné tlačítkem \uv{OK} spustit hru.
 
 \subsection*{Probíhající hra}
 
-Plocha, na níž je zobrazen aktuální stav hry, je rozdělena na 2 části: herní plochu a~boční panel (viz obrázek~\ref{fig:in-game}). Herní plocha zobrazuje 2D reprezentaci aktuálního stavu hry -- hráče, překážky a~bonusy. Hráči jsou na herní ploše vyznačeni pomocí barevných kruhů, přičemž každému hráči patří jiná barva. Překážky včetně ohraničení herní plochy jsou reprezentovány šedými polygony. Bonusy jsou světle modré kruhy s~červeným ohraničením a~červeným symbolem \uv{plus} uprostřed. Po sebrání se bonus změní na text informující o~tom, jaké množství života hráč z~bonusu získal.
+Plocha, na níž je zobrazen aktuální stav hry, je rozdělena na 2 části: herní plochu a~boční panel (viz obrázek~\ref{fig:in-game}). Herní plocha zobrazuje aktuální stav hry\,--\,hráče, překážky a~bonusy. Hráči jsou na herní ploše vyznačeni pomocí barevných kruhů, přičemž každému hráči patří jiná barva. Překážky včetně ohraničení herní plochy jsou znázorněny šedými polygony. Bonusy jsou světle modré kruhy s~červeným ohraničením a~červeným symbolem \uv{plus} uprostřed. Po sebrání se bonus změní na text informující o~tom, jaké množství života hráč z~bonusu získal.
 
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{doc/obrazky-figures/in-game.pdf}
-    \caption{Plocha s~probíhající hrou. Plocha je rozdělena na herní plochu (1) a~boční panel (2). Na herní ploše se zobrazují herní objekty -- hráči (3), překážky (4) a~bonusy (5). V~bočním panelu se nachází počítadla množství života hráčů (6) a~tlačítko pro ukončení hry (7).}
+    \caption{Plocha s~probíhající hrou. Plocha je rozdělena na herní plochu (1) a~boční panel (2). Na herní ploše se zobrazují herní objekty\,--\,hráči (3), překážky (4) a~bonusy (5). V~bočním panelu se nachází počítadla množství života hráčů (6) a~tlačítko pro ukončení hry (7).}
     \label{fig:in-game}
 \end{figure}
 
@@ -529,7 +529,7 @@ Jakmile zůstal ve hře pouze 1 hráč, zobrazí se uprostřed herní plochy ná
 
 Uživatel má možnost vytvářet vlastní herní plochy pomocí vestavěného editoru. Editor lze spustit z~hlavního menu tlačítkem \uv{Stage editor}.
 
-Editor herní plochy se skládá z~menu, panelu nástrojů a~pracovní plochy, viz obrázek~\ref{fig:stage-editor}. V~menu se nachází tlačítka pro načítání a~ukládání herní plochy, dále tlačítka pro krok zpět a~vpřed (\uv{Undo} a~\uv{Redo}) a~vpravo tlačítko pro návrat do hlavního menu. Panel nástrojů obsahuje nástroje, které slouží pro výběr objektů pro vkládání na herní plochu. Pracovní plocha slouží pro samotné sestavování herní plochy.
+Editor herní plochy se skládá z~menu, panelu nástrojů a~pracovní plochy, viz obrázek~\ref{fig:stage-editor}. V~menu se nachází tlačítka pro načítání a~ukládání herní plochy, dále tlačítka pro krok zpět a~vpřed (\uv{Undo} a~\uv{Redo}) a~vpravo tlačítko pro návrat do hlavního menu. Panel nástrojů obsahuje nástroje, které slouží pro manipulaci s~objekty na herní ploše. Pracovní plocha slouží pro samotné sestavování herní plochy.
 
 \begin{figure}[ht]
     \centering
@@ -545,7 +545,7 @@ Editor herní plochy se skládá z~menu, panelu nástrojů a~pracovní plochy, v
 %  #3 Button description
 \newcommand{\describeeditorbutton}[3]{
 \noindent\begin{tabularx}{\textwidth}{lX}
-    \scalebox{2}{\includegraphics[valign=b]{#2}} & \textbf{#1} -- #3 \\
+    \scalebox{2}{\includegraphics[valign=b]{#2}} & \textbf{#1}\,--\,#3 \\
     \\
 \end{tabularx}
 }
@@ -566,9 +566,9 @@ Následují vysvětlivky jednotlivých tlačítek. Obrázky tlačítek byly pře
 
 \describeeditorbutton{Select tool}{doc/obrazky-figures/select-tool.png}{Umožňuje přesouvat a~upravovat již existující objekty na herní ploše. Objekt je nejdříve nutné vybrat kliknutím. Lze také vybrat více objektů přidržením klávesy \texttt{Shift} a~následně přesunout všechny vybrané objekty najednou. Při přesouvání je nutné dodržovat pravidla uvedená u~jednotlivých nástrojů pro objekty níže, jinak nebude přesun proveden.}
 
-\describeeditorbutton{Player tool}{doc/obrazky-figures/player-tool.png}{Umožňuje přidávat na herní plochu objekty hráčů. Přidané objekty nesmí kolidovat s~objekty překážek, jiných hráčů, ani nesmí zasahovat mimo hranice herní plochy, jinak nebude objekt na herní plochu přidán. Také není možné umístit na herní plochu více než 8 objektů hráčů. Pokud je vybrán tento nástroj, zobrazí se na pozici kurzoru myši bílá přerušovaná kružnice. Není-li možné na danou pozici objekt hráče umístit, kružnice zčervená.}
+\describeeditorbutton{Player tool}{doc/obrazky-figures/player-tool.png}{Umožňuje přidávat na herní plochu objekty hráčů. Přidané objekty nesmí kolidovat s~objekty překážek, jiných hráčů, ani nesmí zasahovat mimo hranice herní plochy, jinak nebude objekt na herní plochu přidán. Pokud je vybrán tento nástroj, zobrazí se na pozici kurzoru myši bílá přerušovaná kružnice. Není-li možné na danou pozici objekt hráče umístit, kružnice zčervená.}
 
-\describeeditorbutton{Obstacle tool}{doc/obrazky-figures/obstacle-tool.png}{Umožňuje konstruovat objekty překážek na herní ploše. Konstrukce překážky probíhá přidáváním jednotlivých vrcholů na herní plochu a~následným uzavřením objektu stiskem pravého tlačítka myši. Nově přidané hrany se nesmí překrývat s~existujícími hranami konstruovaného objektu, ani s~objekty hráčů. Nicméně, dvě a~více překážek se smí překrývat. Pokud byl na pracovní plochu umístěn alespoň jeden vrchol a~překážka zatím nebyla uzavřena, zobrazí se mezi všemi propojenými body plná šedá čára a~mezi posledním bodem a~kurzorem myši čára přerušovaná. Není-li možné na danou pozici umístit vrchol, přerušovaná čára zčervená. Kliknutí mimo pracovní plochu během konstruování překážky způsobí jeho přerušení.}
+\describeeditorbutton{Obstacle tool}{doc/obrazky-figures/obstacle-tool.png}{Umožňuje konstruovat objekty překážek na herní ploše. Konstrukce překážky probíhá přidáváním jednotlivých vrcholů na herní plochu a~následným uzavřením objektu stiskem pravého tlačítka myši. Nově přidané hrany se nesmí překrývat s~existujícími hranami konstruovaného objektu, ani s~objekty hráčů. Nicméně, dvě a~více překážek se smí překrývat. Pokud byl na pracovní plochu umístěn alespoň jeden vrchol a~překážka zatím nebyla uzavřena, zobrazí se mezi všemi propojenými body plná šedá čára a~mezi posledním bodem a~kurzorem myši čára přerušovaná. Není-li možné na danou pozici umístit vrchol, přerušovaná čára zčervená. Změna aktivního nástroje během konstruování překážky způsobí přerušení konstruování.}
 
 \describeeditorbutton{Delete tool}{doc/obrazky-figures/trash-can.png}{Umožňuje mazat objekty na herní ploše. Pokud byly nějaké objekty vybrány pomocí nástroje \uv{Select tool}, pak při kliknutí na některý z~vybraných objektů budou odstraněny všechny vybrané objekty. Pokud není vybrán žádný objekt, odstraní se pouze ten, na který uživatel klikl.}
 
@@ -578,21 +578,21 @@ Uživatel nemá možnost vybírat si název souboru s~herní plochou. Soubory js
 \begin{enumerate}
     \item Všechna velká písmena se změní na malá. Všechny mezery se změní na podtržítka.
     \item Vyjmou se všechny nealfanumerické znaky, které nejsou podtržítka.
-    \item Pokud název přesahuje 28 znaků, zkrátí se.
+    \item Pokud název přesahuje 28 znaků, přebývající znaky na konci řetězce se odstraní.
     \item Pokud je název prázdný řetězec, použije se výchozí \uv{stage}.
-    \item Pokud již v~adresáři \uv{\texttt{stage/}} existuje soubor se stejným názvem, připojí se na konec souboru znak \uv{1}. Pokud i~tento soubor již existuje, číslo se zvyšuje do té doby, než je nalezen unikátní název.
+    \item Pokud již v~adresáři \texttt{stage/} existuje soubor se stejným názvem, připojí se na konec názvu souboru číslo \uv{1}. Pokud i~tento soubor již existuje, číslo se zvyšuje do té doby, než je nalezen unikátní název.
 \end{enumerate}
 Soubor je následně možné manuálně přejmenovat; tedy není nutné, aby název souboru a~herní plochy navzájem dodržovaly výše zmíněná pravidla.
 
 Pracovní plochu lze přiblížit nebo oddálit přidržením klávesy \texttt{Ctrl} a~otáčením kolečka myši. Lze se také po ní posouvat pohybem myši za přidržení jejího kolečka.
 
-Uvnitř herní plochy se zobrazuje mřížka přerušovaných čar, která pomáhá pozicovat jednotlivé objekty. Mřížka má různé úrovně hustoty dle přiblížení herní plochy. Při konstrukci objektů jsou body přichytávány k~průsečíkům čar. Tuto funkci je možné deaktivovat přidržením klávesy \texttt{Alt}, což zaručí, že jednotlivé body se budou přichytávat pouze ke kurzoru myši.
+Uvnitř herní plochy se zobrazuje mřížka přerušovaných čar, která pomáhá s~umísťováním objektů. Mřížka má různé úrovně hustoty dle přiblížení herní plochy. Při konstrukci objektů jsou body přichytávány k~průsečíkům čar. Tuto funkci je možné deaktivovat přidržením klávesy \texttt{Alt}, což zaručí, že jednotlivé body se budou přichytávat pouze ke kurzoru myši.
 
 \subsection*{Pravidla pro výchozí pozice hráčů}
 
 Pravidla pro výchozí pozice hráčů je prvek aplikace, který byl původně součástí návrhu, avšak do výsledné aplikace se nedostal, neboť se jej nepovedlo implementovat. Ačkoliv je součástí souborů s~herní plochou (viz níže), editor herní plochy neumožňuje tuto informaci upravovat a~samotné jádro hry tuto informaci ignoruje. Přesto je zde popsán, aby bylo v~budoucnu možné se pokusit o~jeho implementaci.
 
-Pravidla pro výchozí pozice hráčů určují pozice, na které budou hráči umístěni na začátku hry. Pravidel může být několik. Při spuštění hry se pak dle počtu hráčů vybere z~vyhovujících pravidel to nejvíce omezující. Příklad: k~dispozici jsou možnosti pro 2 nebo 4 hráče, hru budou hrát 3 hráči. Vybere se tedy pravidlo pro 4 hráče a~využijí se pozice prvních 3 hráčů. Tímto je navíc určen maximální počet hráčů pro danou plochu -- zde 4.
+Pravidla pro výchozí pozice hráčů určují pozice, na které budou hráči umístěni na začátku hry. Pravidel může být několik. Při spuštění hry se pak dle počtu hráčů vybere z~vyhovujících pravidel to nejvíce omezující. Příklad: k~dispozici jsou možnosti pro 2 nebo 4 hráče, hru budou hrát 3 hráči. Vybere se tedy pravidlo pro 4 hráče a~využijí se pozice prvních 3 hráčů. Tímto je navíc určen maximální počet hráčů pro danou plochu\,--\,zde 4.
 
 \subsection*{Ukládání vytvořené herní plochy}
 
@@ -643,16 +643,16 @@ stage:
 \chapter{Implementace}
 \label{ch:implementace}
 
-V~této kapitole jsou popsány důležité části implementace aplikace. Kód aplikace je psán v jazyce C++, standard C++20, a~skripty pro překlad a~sestavení jsou v jazyce CMake. Při vývoji byl použit verzovací nástroj Git a~samotný repozitář projektu je veřejně dostupný na platformě GitHub\footnote{\url{https://github.com/T0mmiTheGreat/bc-thesis}}.
+V~této kapitole jsou popsány důležité části implementace aplikace. Kód aplikace je psán v jazyce \emph{C++}, standard \emph{C++20}, a~skripty pro překlad a~sestavení jsou v jazyce \emph{CMake}. Při vývoji byl použit verzovací nástroj \emph{Git} a~samotný repozitář projektu je veřejně dostupný na platformě \emph{GitHub}\footnote{\url{https://github.com/T0mmiTheGreat/bc-thesis}}.
 
 
 \section{Použité knihovny}
 
 \subsection*{Simple DirectMedia Layer}
 
-\emph{SDL}\footnote{\url{https://www.libsdl.org/}} (\emph{Simple DirectMedia Layer}) je multiplatformní knihovna, která poskytuje nízkoúrovňový přístup ke vstupu z~klávesnice, myši, joysticku, výstupu zvuku a~grafiky. Je napsána v~jazyce C a~funguje nativně i~v~C++. Oficiálně podporuje platformy Windows, macOS, Linux, Android a~iOS. V~projektu je použita verze 2 této knihovny (\emph{SDL2}), která byla v~době psaní práce nejnovější stabilní verzí.
+\emph{SDL}\footnote{\url{https://www.libsdl.org/}} (\emph{Simple DirectMedia Layer}) je multiplatformní knihovna, která poskytuje nízkoúrovňový přístup ke vstupu z~klávesnice, myši, joysticku, výstupu zvuku a~grafiky. Je napsána v~jazyce \emph{C} a~funguje nativně i~v~jazyce \emph{C++}. Oficiálně podporuje platformy Windows, macOS, Linux, Android a~iOS. V~projektu je použita verze~2 této knihovny (\emph{SDL2}), která byla v~době psaní práce nejnovější stabilní verzí.
 
-Knihovna \emph{SDL} umožňuje vykreslovat 2D i~3D grafiku. Využívá akcelerovaná API, jako například \emph{OpenGL} nebo \emph{Direct3D}. Běžné je také použití \emph{SDL} v~kombinaci s~knihovnou \emph{OpenGL}, kdy \emph{OpenGL} je využito pro větší akceleraci vykreslování a~\emph{SDL} pro vše ostatní -- vytváření oken, uživatelský vstup, audio apod.
+Knihovna \emph{SDL} umožňuje vykreslovat 2D i~3D grafiku. Využívá akcelerovaná API, jako například \emph{OpenGL} nebo \emph{Direct3D}. Běžné je také použití \emph{SDL} v~kombinaci s~knihovnou \emph{OpenGL}, kdy \emph{OpenGL} je využito pro větší akceleraci vykreslování a~\emph{SDL} pro vše ostatní\,--\,vytváření oken, uživatelský vstup, audio apod.
 
 \emph{SDL} má také několik přidružených knihoven, které rozšiřují její funkcionalitu. V~projektu jsou použity knihovny \emph{SDL\_Image} a~\emph{SDL\_TTF}.
 
@@ -664,13 +664,13 @@ Všechny tři knihovny jsou distribuovány pod licencí \emph{zlib}.
 
 \subsection*{libSDL2pp}
 
-Knihovna \emph{libSDL2pp}\footnote{\url{https://sdl2pp.amdmi3.ru/}} slouží pro reprezentaci \emph{SDL2} a~přidružených knihoven pomocí objektového modelu jazyka C++. Důležitým prvkem knihovny je zabalení objektů knihovny \emph{SDL} do objektů jazyka C++, což umožňuje jejich správu pomocí \emph{RAII}. Dále je užitečné také využití výjimek místo návratových kódů pro hlášení chyb, nebo přetížení některých funkcí a~metod.
+Knihovna \emph{libSDL2pp}\footnote{\url{https://sdl2pp.amdmi3.ru/}} slouží pro zastoupení knihovny \emph{SDL2} a~přidružených knihoven pomocí objektového modelu jazyka \emph{C++}. Důležitým prvkem knihovny je zabalení objektů knihovny \emph{SDL} do objektů jazyka \emph{C++}, což umožňuje jejich správu technikou \emph{RAII}. Dále je užitečné také využití výjimek místo návratových kódů pro hlášení chyb, nebo přetížení některých funkcí a~metod.
 
 \emph{libSDL2pp} není kompletní; existuje řada funkcí z~knihovny \emph{SDL}, které v~\emph{libSDL2pp} nemají ekvivalent a~je nutné volat přímo ty z~\emph{SDL}. Jedná se většinou o~ty, které nemohou skončit chybou a~není tedy nutné pro ně ekvivalent v~této knihovně vytvářet. Knihovna se vyvíjí především dle potřeb jejího autora. Nicméně, do veřejného repozitáře této knihovny na platformě \emph{GitHub} přispívá i~spousta jiných vývojářů. Knihovna je distribuována pod licencí \emph{zlib}.
 
 \subsection*{SDL\_gfx}
 
-Knihovna \emph{SDL\_gfx}\footnote{\url{https://www.ferzkopp.net/wordpress/2016/01/02/sdl_gfx-sdl2_gfx/}} slouží pro vykreslení některých základních geometrických tvarů, které \emph{SDL} v~základu nepodporuje, jako jsou například křivky a~elipsy. Je napsána v~jazyce C a~funguje nativně i~v~C++.
+Knihovna \emph{SDL\_gfx}\footnote{\url{https://www.ferzkopp.net/wordpress/2016/01/02/sdl_gfx-sdl2_gfx/}} slouží pro vykreslení některých základních geometrických tvarů, které \emph{SDL} v~základu nepodporuje, jako jsou například křivky a~elipsy. Je napsána v~jazyce \emph{C} a~funguje nativně i~v~\emph{C++}.
 
 Samotná knihovna \emph{SDL} dokáže vykreslovat úsečky, body, mnohoúhelníky a textury. Specializované funkce pro kreslení elips nebo křivek v~\emph{SDL} chybí. \emph{SDL\_gfx} implementuje tyto chybějící funkce s~použitím funkcí, které \emph{SDL} poskytuje.
 
@@ -678,7 +678,7 @@ Knihovna je distribuována pod licencí \emph{zlib}.
 
 \subsection*{Dear ImGui}
 
-\emph{Dear ImGui}\footnote{\url{https://github.com/ocornut/imgui}} je knihovna pro tvorbu grafických uživatelských rozhraní v~jazyce C++. Je rychlá, přenositelná a~nevyžaduje žádné další knihovny.
+\emph{Dear ImGui}\footnote{\url{https://github.com/ocornut/imgui}} je knihovna pro tvorbu grafických uživatelských rozhraní v~jazyce \emph{C++}. Je rychlá, přenositelná a~nevyžaduje žádné další knihovny.
 
 Účelem knihovny je především umožnit vytváření nástrojů pro tvorbu obsahu, vizualizaci nebo ladění, a~nezaměřuje se přímo na tvorbu kompletních uživatelských rozhraní. Proto postrádá některé prvky, které se běžně vyskytují v~knihovnách pro tvorbu uživatelských rozhraní (jako například rozšířené možnosti rozmisťování komponent).
 
@@ -688,7 +688,7 @@ Knihovna je distribuována pod licencí \emph{MIT license}.
 
 \subsection*{Computational Geometry Algorithms Library}
 
-\emph{Computational Geometry Algorithms Library}\footnote{\url{https://www.cgal.org/}} (\emph{CGAL}) je knihovna pro jazyk C++, která poskytuje efektivní a~spolehlivé algoritmy z~oblasti výpočetní geometrie. Využívána je v~mnoha oblastech vyžadujících geometrické výpočty, mezi které patří například geografické informační systémy (\emph{GIS}), počítačem podporované projektování (\emph{CAD}), molekulární biologie, zobrazovací metody v~lékařství, počítačová grafika, nebo robotika.
+\emph{Computational Geometry Algorithms Library}\footnote{\url{https://www.cgal.org/}} (\emph{CGAL}) je knihovna pro jazyk \emph{C++}, která poskytuje efektivní a~spolehlivé algoritmy z~oblasti výpočetní geometrie. Využívána je v~mnoha oblastech vyžadujících geometrické výpočty, mezi které patří například geografické informační systémy (\emph{GIS}), počítačem podporované projektování (\emph{CAD}), molekulární biologie, zobrazovací metody v~lékařství, počítačová grafika, nebo robotika.
 
 Knihovna poskytuje rozsáhlé množství struktur a~algoritmů. Kromě základních n-roz\-měr\-ných geometrických útvarů a~operací nad nimi nabízí knihovna také triangulace, polygonové sítě, konvexní obaly, Voroného diagramy a~spoustu dalších.
 
@@ -698,29 +698,29 @@ Knihovna používá duální licencování. Je dostupná pod otevřenou (\emph{o
 
 \subsection*{yaml-cpp}
 
-\emph{yaml-cpp}\footnote{\url{https://github.com/jbeder/yaml-cpp}} je otevřená (\emph{open source}) knihovna pro jazyk C++, která umožňuje číst a~vytvářet data serializovaná pomocí jazyka \emph{YAML}.
+\emph{yaml-cpp}\footnote{\url{https://github.com/jbeder/yaml-cpp}} je otevřená (\emph{open source}) knihovna pro jazyk \emph{C++}, která umožňuje číst a~vytvářet data serializovaná pomocí jazyka \emph{YAML}.
 
 \emph{yaml-cpp} dokáže načíst a~zpracovat data ve formátu \emph{YAML} ze souboru nebo z~řetězce. Výsledkem zpracování dat knihovnou je stromová struktura uzlů různých datových typů. Výsledný strom je následně možné dále modifikovat připojováním, odstraňováním nebo přepisováním uzlů. Při čtení je následně možné převádět jak listové uzly do nativních datových typů (\texttt{int}, \texttt{double}, \texttt{std::string} aj.), tak celé podstromy do strukturovaných datových typů (\texttt{std::vector}, \texttt{std::list} a~\texttt{std::map}). Knihovna také umožňuje vytvářet vlastní konverze pro jiné datové typy (vestavěné i~uživatelem definované).
 
-Generování \emph{YAML} probíhá v~\emph{yaml-cpp} podobným způsobem jako zapisování do \emph{streamů} v~jazyce C++ -- hodnoty se zapisují do \uv{\emph{emitoru YAML}} použitím operátoru \uv{\texttt{<{}<}}. \emph{Emitor} dokáže zpracovat literály (číselné, řetězcové) i~struktury (\texttt{std::vector}, \texttt{std::list} a~\texttt{std::map}). Stejně jako při čtení \emph{YAML}, lze i~pro generování definovat vlastní pravidla pro jiné datové typy.
+Generování \emph{YAML} probíhá v~\emph{yaml-cpp} podobným způsobem jako zapisování do \emph{streamů} v~jazyce \emph{C++}\,--\,hodnoty se zapisují do \uv{\emph{emitoru YAML}} použitím operátoru \uv{\texttt{<{}<}}. \emph{Emitor} dokáže zpracovat literály (číselné, řetězcové) i~struktury (\texttt{std::vector}, \texttt{std::list} a~\texttt{std::map}). Stejně jako při čtení \emph{YAML}, lze i~pro generování definovat vlastní pravidla pro jiné datové typy.
 
 Knihovna je distribuována pod licencí \emph{MIT license}.
 
 
 \section{Architektura programu}
 
-Program je postaven na architektonickém vzoru \emph{Model-View-Controller} (\emph{MVC}) s~drobným rozdílem: mezi vrstvami \emph{View} a~\emph{Model} je pouze tenká vazba. Data z~vrstvy \emph{Model} nejsou zobrazována přímo, ale jsou předávána skrze vrstvu \emph{Controller}. Tato vrstva rozhodne o~tom, jakým způsobem budou data z~\emph{Modelu} reprezentována a~\emph{View} následně dle této reprezentace určí, jakým způsobem je zobrazí. Stejně jako u~\emph{MVC}, \emph{Controller} je hlavní komponentou programu a~řídí jeho tok -- přijímá události, jako napříkald stisk klávesy či pohyb myši, a~předává je vrstvě \emph{Model} a~také se stará o~změny hodnot atributů ve \emph{View}.
+Program je postaven na architektonickém vzoru \emph{Model-View-Controller} (\emph{MVC}) s~drobným rozdílem: mezi vrstvami \emph{View} a~\emph{Model} je pouze tenká vazba. Data z~vrstvy \emph{Model} nejsou zobrazována přímo, ale jsou předávána skrze vrstvu \emph{Controller}. Tato vrstva rozhodne o~tom, jakým způsobem budou data z~\emph{Modelu} interpretována a~\emph{View} následně dle této interpretace určí, jakým způsobem je zobrazí. Stejně jako u~\emph{MVC}, \emph{Controller} je hlavní komponentou programu a~řídí jeho tok\,--\,přijímá události, jako napříkald stisk klávesy či pohyb myši, a~předává je vrstvě \emph{Model} a~také se stará o~změny hodnot atributů ve \emph{View}.
 
-Vrstva \emph{View} je reprezentována třídami implementujícími rozhraní \texttt{ISprite}. Jsou to v~podstatě dvourozměrné obrázky nacházející se na daných souřadnicích na obrazovce. Kromě pozice mají konkrétní \emph{sprity} další atributy, jako například (v~případě hráče) barva, velikost, nebo (v~případě tlačítka v~menu) \emph{kostým}\footnote{Pojmenování \uv{kostým} bylo převzato z programovacího jazyka \emph{Scratch}: \url{https://scratch.mit.edu/}.}, což je pojmenovaný vzhled \emph{spritu}.
+Vrstva \emph{View} je zastoupena třídami implementujícími rozhraní \texttt{ISprite}. Jsou to v~podstatě dvourozměrné obrázky nacházející se na daných souřadnicích na obrazovce. Kromě pozice mají konkrétní \emph{sprity} další atributy, jako například (v~případě hráče) barva, velikost, nebo (v~případě tlačítka v~menu) \emph{kostým}\footnote{Pojmenování \uv{kostým} bylo převzato z programovacího jazyka \emph{Scratch}: \url{https://scratch.mit.edu/}.}, což je pojmenovaný vzhled \emph{spritu}.
 
-Vrstva \emph{Controller} je reprezentována třídami označovanými jako \texttt{Controller}. Jsou 2 druhy této třídy s~různými rozhraními: \texttt{RootController} a \texttt{ChildController}. \texttt{Root\-Con\-trol\-ler} je pouze jeden; uchovává právě aktivní \texttt{ChildController} a~přeposílá mu události. Tříd druhu \texttt{ChildController} je několik a~představují různé části aplikace. Například, existuje jeden pro hlavní menu, jiný pro probíhající hru, jiný pro editor herní plochy apod. Jelikož je vrstva \emph{Controller} ústřední součástí architektury programu, třídy \texttt{ChildController} vytváří, uchovávají a~nakonec také odstraňují třídy představující \emph{View} a~\emph{Model}. Dále také vybírají \texttt{ChildController}y, které je v~\texttt{RootController}u mají nahradit; například, hlavní menu při stisku tlačítka vytvoří a~\texttt{RootController}u předá \texttt{ChildController} pro editor herní plochy.
+Vrstva \emph{Controller} je zastoupena třídami označovanými jako \texttt{Controller}. Jsou 2 druhy této třídy s~různými rozhraními: \texttt{RootController} a \texttt{ChildController}. \texttt{Root\-Con\-trol\-ler} je pouze jeden; uchovává právě aktivní \texttt{ChildController} a~přeposílá mu události. Tříd druhu \texttt{ChildController} je několik a~představují různé části aplikace. Například, existuje jeden pro hlavní menu, jiný pro probíhající hru, jiný pro editor herní plochy apod. Jelikož je vrstva \emph{Controller} ústřední součástí architektury programu, třídy \texttt{ChildController} vytváří, uchovávají a~nakonec také odstraňují třídy představující \emph{View} a~\emph{Model}. Dále také vybírají \texttt{ChildController}y, které je v~\texttt{RootController}u mají nahradit; například, hlavní menu při stisku tlačítka vytvoří a~\texttt{RootController}u předá \texttt{ChildController} pro editor herní plochy.
 
-Třídy reprezentující vrstvu \emph{Model} vzoru \emph{MVC} mají různá pojmenování a~nemají jednotné rozhraní. Vztahují se vždy přímo k~jedné třídě \texttt{Controller}, avšak ne každá třída \texttt{Controller} má svoji třídu z~vrstvy \emph{Model}. Například hlavní menu slouží pouze pro navigaci, kterou je vhodné řešit na vrstvě \emph{Controller}, a~tudíž nemá žádný \emph{Model}.
+Třídy zastupující vrstvu \emph{Model} vzoru \emph{MVC} mají různá pojmenování a~nemají jednotné rozhraní. Vztahují se vždy přímo k~jedné třídě \texttt{Controller}, avšak ne každá třída \texttt{Controller} má svoji třídu z~vrstvy \emph{Model}. Například hlavní menu slouží pouze pro navigaci, kterou je vhodné řešit na vrstvě \emph{Controller}, a~tudíž nemá žádný \emph{Model}.
 
 
 \section{Přenositelnost}
 
-Program byl psán s~cílem, aby byl co nejvíce přenositelný na různé platformy. Samotný programovací jazyk C++ je přeložitelný na spoustě různých platforem a~dokonce i~vestavěných systémů. Volba knihovny \emph{SDL} limituje přenositelnost na nejpoužívanější desktopové a~mobilní operační systémy -- Windows, macOS, Linux, Android, iOS. Nicméně, struktura programu je konstruována tak, aby bylo možné tuto knihovnu nahradit knihovnami nativními pro dané platformy.
+Program byl psán s~cílem, aby byl co nejvíce přenositelný na různé platformy. Samotný programovací jazyk \emph{C++} je přeložitelný na spoustě různých platforem a~dokonce i~vestavěných systémů. Volba knihovny \emph{SDL} limituje přenositelnost na nejpoužívanější desktopové a~mobilní operační systémy\,--\,Windows, macOS, Linux, Android, iOS. Nicméně, struktura programu je konstruována tak, aby bylo možné tuto knihovnu nahradit knihovnami nativními pro dané platformy.
 
 Části aplikace, které jsou určeny čistě pro použití s~knihovnou \emph{SDL}, mají většinou slovo \uv{SDL} v~názvu. Jedná se o~soubory v~adresářích \texttt{sdlmanager/}, \texttt{sdlsubscriber/} a~pomocné knihovny \texttt{SDL2\_gfxPrimitives} a~\texttt{libSDL2pp}. Tyto je možné na nepodporovaných platformách vypustit ze sestavování (ze souboru \texttt{CMakeLists.txt}) a~případně nahradit. Dále je nutné vytvořit nové implementace některých rozhraní. Jde o~rozhraní \texttt{ICanvas} a~\texttt{ISysProxy}. Tyto rozhraní jsou instanciovány pomocí odpovídající \uv{abstraktní továrny}, tudíž je nutné přidat nové metody či upravit stávající v~těchto třídách.
 
@@ -738,9 +738,9 @@ Třída \texttt{StageObstacles} uchovává informace o~překážkách na herní 
     \item \texttt{playerHasCollision()}, která pouze zkontroluje, zda hráč na zadané pozici a~se zadaným poloměrem má kolizi s~překážkou.
 \end{itemize}
 
-Pro výpočet trajektorií hráčů byly vytvořeny 2 algoritmy. Jelikož první vyvinutý algoritmus pracoval příliš pomalu, bylo nutné přijít s~výkonnějším řešením. Popis prvního algoritmu se nachází v~příloze~\ref{app:vypocet-trajektorii-hracu}. Tato sekce se věnuje použitému řešení.
+%Pro výpočet trajektorií hráčů byly vytvořeny 2 algoritmy. Jelikož první vyvinutý algoritmus pracoval příliš pomalu, bylo nutné přijít s~výkonnějším řešením. Popis prvního algoritmu se nachází v~příloze~\ref{app:vypocet-trajektorii-hracu}. Tato sekce se věnuje použitému řešení.
 
-Algoritmus je založen na \emph{půlení intervalů} \cite{INM_opora}. Nejdříve se vyhledá překážka, která leží nejblíže hráči a~se kterou má hráč kolizi. Poté se pomocí zmíněné metody \emph{půlení intervalů} nalezne přibližná pozice bodu, kde ke kolizi došlo. Tento bod se nakonec vrátí jako koncový bod trajektorie (úsečky) hráčova pohybu.
+Algoritmus pro výpočet trajektorií je založen na \emph{půlení intervalů} \cite{INM_opora}. Nejdříve se vyhledá překážka, která leží nejblíže hráči a~se kterou má hráč kolizi. Poté se pomocí zmíněné metody \emph{půlení intervalů} nalezne přibližná pozice bodu, kde ke kolizi došlo. Tento bod se nakonec vrátí jako koncový bod trajektorie (úsečky) hráčova pohybu.
 
 Zda nastala kolize mezi hráčem a~překážkou se určí podle její vzdálenosti od trajektorie pohybu hráče. Trajektorie je úsečka, překážka je trojúhelník, takže se počítá vzdálenost mezi těmito dvěma geometrickými útvary. Pokud je spočítaná vzdálenost menší než poloměr kruhu entity hráče, pak kolize nastala.
 
@@ -754,7 +754,7 @@ Třída \texttt{StageBonuses} zprostředkovává generování bonusů na herní 
 
 Třída si interně uchovává množinu platných pozic pro umístění bonusu. Tato množina je inicializována jako mřížka s~šířkou i~výškou buňky 5~jednotek délky a~posunuta zleva i~shora o~náhodný počet jednotek délky v~intervalu $\left<0,5\right)$. Z~množiny jsou následně odstraněny buňky, které se překrývají s~překážkami. To znamená, že jedna hra má omezený počet pozic, na které mohou být umístěny bonusy, ale napříč více hrami jsou tyto pozice různé.
 
-Při generování bonusu je z~výše uvedené množiny náhodně vybrána pozice bonusu s~rovnoměrným rozložením pravděpodobnosti. Množství života doplněného generovaným bonusem je taktéž náhodné -- jeho pravděpodobnostní funkce je znázorněna v~tabulce~\ref{tab:hp-recovery-prob}.
+Při generování bonusu je z~výše uvedené množiny náhodně vybrána pozice bonusu s~rovnoměrným rozložením pravděpodobnosti. Množství života doplněného generovaným bonusem je taktéž náhodné\,--\,jeho pravděpodobnostní funkce je znázorněna v~tabulce~\ref{tab:hp-recovery-prob}.
 
 Úkolem této třídy při generování bonusu je výběr pozice bonusu, výběr množství života doplněného bonusem, ale nikoliv kontrola uplynutí časového intervalu pro vygenerování nového bonusu. Třída pouze poskytuje metodu \texttt{generateBonus()}, která má být po uplynutí časového intervalu zavolána. Správu časovače a~následné volání této metody má na starosti instance třídy \texttt{Core}, jak je popsáno dále v~kapitole~\ref{sec:herni-cyklus}.
 
@@ -774,7 +774,7 @@ Rozhraní \texttt{CoreAction} a~třídy implementující toto rozhraní slouží
 
 \subsection*{Core}
 
-Účelem třídy \texttt{Core} je především řízení herních cyklů, které jsou popsány v~kapitole~\ref{sec:herni-cyklus}. Kromě toho také uchovává informace o~hrajících hráčích -- jejich pozici, množství života a~aktivní efekty bonusů. Společně s~pomocnými třídami popsanými výše implementuje vrstvu \emph{Model} pro \texttt{InGameController}.
+Účelem třídy \texttt{Core} je především řízení herních cyklů, které jsou popsány v~kapitole~\ref{sec:herni-cyklus}. Kromě toho také uchovává informace o~hrajících hráčích\,--\,jejich pozici, množství života a~aktivní efekty bonusů. Společně s~pomocnými třídami popsanými výše implementuje vrstvu \emph{Model} pro \texttt{InGameController}.
 
 V~této třídě také probíhají výpočty některých vlastností hráče odvozené z~jeho množství života:
 \begin{equation}
@@ -794,7 +794,7 @@ Výše uvedené rovnice ukazují funkce pro výpočet poloměru $r_p(p)$, rychlo
 
 \subsection*{Trajectory}
 
-Třída \texttt{Trajectory} představuje trajektorii pohybu hráče. Instance této třídy je vracena metodou \texttt{getPlayerTrajectory()} třídy \texttt{StageObstacles}, jak bylo zmíněno výše. Třída obsahuje metody pro zjištění koncového bodu trajektorie (\texttt{end()}) a~pro výpočet nejkratší vzdálenosti mezi dvěma trajektoriemi (\texttt{minSqdist()} -- vrací \emph{druhou mocninu} nejkratší vzdálenosti).
+Třída \texttt{Trajectory} představuje trajektorii pohybu hráče. Instance této třídy je vracena metodou \texttt{getPlayerTrajectory()} třídy \texttt{StageObstacles}, jak bylo zmíněno výše. Třída obsahuje metody pro zjištění koncového bodu trajektorie (\texttt{end()}) a~pro výpočet nejkratší vzdálenosti mezi dvěma trajektoriemi (\texttt{minSqdist()}\,--\,vrací \emph{druhou mocninu} nejkratší vzdálenosti).
 
 
 \section{Herní cyklus}
@@ -806,7 +806,7 @@ Jeden herní cyklus se skládá z těchto fází:
 \begin{enumerate}
     \item aplikace efektů aktivních bonusů,
     \item určení trajektorií pohybu hráčů,
-    \item nalezení kolizí hráčů s~hráči a~bonusy,
+    \item nalezení a~aplikace kolizí s~hráči a~bonusy,
     \item změna stavu hráčů,
     \item kontrola konce hry,
     \item odstranění posbíraných bonusů,
@@ -859,263 +859,8 @@ Tato fáze nemá žádný viditelný výstup a~pouze sbírá informace pro násl
 %     \item Vrať se na bod 2.
 % \end{enumerate}
 
-% Tento algoritmus využívá strukturu \uv{TrajectorySegment}, což je jeden úsek trajektorie pohybu hráče a~může to být buď úsečka (pohyb přímo), nebo kruhový oblouk (pohyb okolo rohu překážky). Dále využívá tyto proměnné:
-% \begin{itemize}
-%     \item Proměnná \textit{Traj} je seznam hodnot typu \uv{TrajectorySegment} a~představuje trajektorii celého jednoho tahu hráče.
-    
-%     \item Proměnná \textit{Tail} typu \uv{TrajectorySegment} a~představuje pohyb v~požadovaném směru poté, co se bublina dostane z~\uv{kolizní zóny} překážky (může být i~\uv{NULL}).
-
-%     \item 3 proměnné typu přímka: \textit{Refl}, \textit{Stop1} a~\textit{Stop2}, jejichž význam bude zřejmý z~jejich použití v~algoritmu.
-
-%     \item 2 proměnné typu bod: \textit{CollLeave} a~\textit{Stop}, jejichž význam bude zřejmý z~jejich použití v~algoritmu.
-% \end{itemize}
-
-% Algoritmus pro pohyb hráče:
-% \begin{enumerate}
-%     \item Inicializuj \textit{Traj} jako prázdnou a~vlož do ní jednu úsečku \uv{TrajectorySegment} s~výchozím bodem na aktuální pozici hráče, směrem podle hráčem požadované akce a~délkou podle množství hráčova života. Inicializuj \textit{Tail} na \uv{NULL} (bez hodnoty).
-
-%     \item Najdi všechny kolize posledního prvku z~\textit{Traj} s~překážkami.
-
-%     \item Pokud nebyla nalezena žádná kolize a~\textit{Tail} = \uv{NULL}, pak trajektorie hráčova pohybu \textit{Traj} je kompletní a~algoritmus končí. Jinak pokračuj.
-
-%     \item Pokud nebyla nalezena žádná kolize, ale \textit{Tail} $\neq$ \uv{NULL}, přidej na konec seznamu \textit{Traj} hodnotu \textit{Tail}, nastav proměnnou \textit{Tail} na \uv{NULL} a~vrať se na bod 2. Jinak pokračuj.
-
-%     \item Ze všech nalezených kolizí vyber tu, která se v~rámci posledního prvku z~\textit{Traj} vyskytuje jako první.
-
-%     \item Urči přímku \textit{Refl}. Pokud je nalezená kolize kolizí se stěnou překážky, \textit{Refl} je přímka, na níž leží daná stěna. Jinak pokud je nalezená kolize kolizí s~rohem překážky, \textit{Refl} je tečna daného rohu, která prochází bodem kolize.
-
-%     \item Pokud je přímka \textit{Refl} kolmá na směr pohybu hráče, přidej na konec \textit{Traj} úsečku začínající i~končící v bodě kolize (úsečka s~nulovou délkou) a~vrať se na bod 2. Jinak pokračuj.
-
-%     \item Urči bod \textit{CollLeave}. Pokud je nalezená kolize kolizí se stěnou překážky, je to krajní bod této stěny \todo{který?}. Jinak pokud je nalezená kolize kolizí s~rohem překážky, je to bod dotyku tečny tohoto rohu, která je rovnoběžná s~přímkou pohybu hráče. \todo{takové tečny jsou 2}.
-
-%     \item Urči přímky \textit{Stop1} a~\textit{Stop2}. Obě jsou kolmé na \textit{Refl}. \textit{Stop1} prochází koncovým bodem posledního prvku z~\textit{Traj}. \textit{Stop2} prochází bodem \textit{CollLeave}.
-
-%     \item Přemísti koncový bod posledního prvku z~\textit{Traj} do bodu, kde nastala kolize.
-
-%     \item Zjisti, který z~průsečíků přímky \textit{Refl} s~přímkami \textit{Stop1} a~\textit{Stop2} leží blíže bodu kolize a~ulož ho do proměnné \textit{Stop}.
-
-%     \item Vlož na konec seznamu \textit{Traj} nový \uv{TrajectorySegment} podle typu kolize (úsečka pro stěnu překážky, kruhový oblouk pro roh překážky), začínající v~bodě kolize a~končící v~bodě \textit{Stop}.
-
-%     \item Pokud leží bod \textit{Stop} na přímce \textit{Stop1}, vrať se na bod 2. Jinak pokračuj.
-
-%     \item Do proměnné \textit{Tail} vlož úsečku \uv{TrajectorySegment} s~počátkem v~bodě \textit{Stop}, směrem podle hráčova pohybu a~délkou rovnou vzdálenosti mezi průsečíky přímky \textit{Refl} s~přímkami \textit{Stop1} a~\textit{Stop2}.
-
-%     \item Vrať se na bod 2.
-% \end{enumerate}
-
 % Výše popsaný algoritmus funguje pouze teoreticky; předpokládá neomezenou přesnost desetinných míst, neomezenou paměť počítače a~nulovou dobu vykonávání instrukcí. První problém nastane v~momentě, kdy se hráč bude pohybovat podél překážky, která není rovnoběžná s~žádnou ze souřadnicových os. Může se stát, že kvůli zaokrouhlování reálných čísel skončí hráčův pohyb uvnitř překážky. To má za důsledek 2 problémy: hráč získá možnost procházet skrze překážky. Než však tuto možnost dostane, program nejspíš skončí v~nekonečné smyčce, jelikož tento průchod bude opakovaně vyhodnocován jako kolize, a~dojde mu paměť, protože tyto kolize budou generovat nové prvky v~seznamu \textit{Traj}. Dalším problémem je, pokud se hráč dostane do rohu mezi stěnami překážek, které na sebe nebudou kolmé. Jedna překážka se jej bude snažit přesměrovat skrze stěnu druhé a~naopak, trajektorie bude čím dál kratší, ale nikdy nedosáhne délky 0.
 
-% \begin{algorithmic}[1]
-%     \Procedure{Main}{}
-%         \State $Traj \gets \varnothing$
-%         \State $Tail \gets NULL$
-%         \State $MoveEndPt \gets Player.Position + Player.MovementVector$
-%         \LComment{The direction of the line may be any arbitrary direction as long as it is not parallel ($\implies$ collinear) with the player movement. The more important thing about it is that it must cross through the MoveEndPt point.}
-%         \State $MoveEnd \gets$ \Call{Line}{$MoveEnd \perp Player.MovementVecotr \wedge MoveEndPt \in MoveEnd$}
-%         \State $Flexible \gets BOTH$
-%         \State $Segment0.Type \gets LINE\_SEGMENT$
-%         \State $Segment0.PStart \gets Player.Position$
-%         \State $Segment0.PEnd \gets MoveEndPt$
-%         \State $Traj.$\Call{Push}{$Segment0$}
-%         \Loop
-%             \State $Collisions \gets$ all collisions of $Traj.Last$ with obstacles
-%             \If{$Collisions = \varnothing$}
-%                 \If{$Tail = NULL$}
-%                     \State \Return $Traj$
-%                 \Else
-%                     \State $Traj.$\Call{Push}{$Tail$}
-%                     \State $Flexible \gets BOTH$
-%                     \State $Tail \gets NULL$
-%                 \EndIf
-%             \Else
-%                 \State $Tail \gets NULL$
-%                 \State $Coll \gets$ nearest collision from $Collisions$
-%                 \State $Traj.Last.PEnd \gets Coll.Point$
-%                 \If{$Traj.Last.Type = LINE\_SEGMENT \And Coll.Type = WALL$}
-%                     \State $NewSegment.Type \gets LINE\_SEGMENT$
-%                     \State $NewSegment.PStart \gets Coll.Point$
-%                     \State $Refl \gets Coll.Wall.SupportingLine$
-%                     \If{$Refl \perp Player.MovementVector$}
-%                         \State $NewSegment.PEnd \gets Coll.Point$
-%                         \State $Traj.$\Call{Push}{$NewSegment$}
-%                         \State \Return $Traj$
-%                     \Else
-%                         \If{\Call{Angle}{$Coll.Wall.Vector$, $Player.MovementVector$}$.IsAcute$}
-%                             \State $WallEnd \gets Coll.Wall.PEnd$
-%                             \State $NewFlexible \gets CLOCKWISE$
-%                         \Else \Comment{The angle is obtuse.}
-%                             \State $WallEnd \gets Coll.Wall.PStart$
-%                             \State $NewFlexible \gets COUNTERCLOCKWISE$
-%                         \EndIf
-%                         \If{$Flexible \neq BOTH \wedge NewFlexible \neq Flexible$}
-%                             \State $NewSegment.PEnd \gets Coll.Point$
-%                             \State $Traj.$\Call{Push}{$NewSegment$}
-%                             \State \Return $Traj$
-%                         \EndIf
-%                         \State $Flexible \gets NewFlexible$
-%                         \LComment{The next three lines calculate the new $MoveEnd$.}
-%                         \State $L1 \gets$ \Call{Line}{$L1 \parallel Player.MovementVector \wedge Coll.Point \in L1$}
-%                         \State $MoveEndPt \gets L1 \cap MoveEnd$
-%                         \State $MoveEnd \gets$ \Call{Line}{$MoveEnd \perp Refl \wedge MoveEndPt \in MoveEnd$}
-%                         \State $P1 \gets MoveEnd \cap Refl$
-%                         \If{\Call{Distance}{$P1$, $Coll.Point$} $\leq$ \Call{Distance}{$WallEnd$, $Coll.Point$}}
-%                             \State $NewSegment.PEnd \gets P1$
-%                             \State $Traj.$\Call{Push}{$NewSegment$}
-%                         \Else
-%                             \State $NewSegment.PEnd \gets WallEnd$
-%                             \State $Traj.$\Call{Push}{$NewSegment$}
-%                             \State $L2 \gets$ \Call{Line}{$L2 \parallel Player.MovementVector \wedge WallEnd \in L2$}
-%                             \State $Tail.Type \gets LINE\_SEGMENT$
-%                             \State $Tail.PStart \gets WallEnd$
-%                             \State $Tail.PEnd \gets L2 \cap MoveEnd$
-%                         \EndIf
-%                     \EndIf
-%                 \ElsIf{$Traj.Last.Type = LINE\_SEGMENT \And Coll.Type = CORNER$}
-%                     \State $NewSegment.Type \gets ARC$
-%                     \State $NewSegment.ArcCenter \gets Coll.Corner.Center$
-%                     \State $NewSegment.PStart \gets Coll.Point$
-%                     \State $Refl \gets Coll.Corner.Tangent$
-%                     \If{$Refl \perp Player.MovementVector$}
-%                         \State $NewSegment.PEnd \gets Coll.Point$
-%                         \State $Traj.$\Call{Push}{$NewSegment$}
-%                         \State \Return $Traj$
-%                     \Else
-%                         \State $MoveLine \gets$ \Call{Line}{$Coll.Point$, $Player.MovementVector$}
-%                         \LComment{Note the minus sign---it has opposite direction!}
-%                         \State $NewFlexible \gets -MoveLine.$\Call{Direction}{$Coll.Corner.Center$}
-%                         \If{$Flexible \neq BOTH \wedge NewFlexible \neq Flexible$}
-%                             \State $NewSegment.PEnd \gets Coll.Point$
-%                             \State $Traj.$\Call{Push}{$NewSegment$}
-%                             \State \Return $Traj$
-%                         \EndIf
-%                         \State $Flexible \gets NewFlexible$
-%                         \State $Diameter \gets$ \Call{Line}{$Diameter \perp Player.MovementVector \wedge Coll.Corner.Center \in Diameter$}
-%                         \LComment{Diameter line is a secant, so there are 2 intersections with the circle.}
-%                         \State $CornerEnd1, CornerEnd2 \gets Diameter \cap Coll.Corner$
-%                         \If{\Call{Angle}{$Coll.Point$, $Coll.Corner.Center$, $CornerEnd1$}$.IsAcute$}
-%                             \State $CornerEnd \gets CornerEnd1$
-%                         \Else \Comment{\Call{Angle}{$Coll.Point$, $Coll.Corner.Center$, $CornerEnd2$}$.IsAcute$}
-%                             \State $CornerEnd \gets CornerEnd2$
-%                         \EndIf
-%                         \LComment{The next three lines calculate the new $MoveEnd$.}
-%                         \State $L1 \gets$ \Call{Line}{$L1 \parallel Player.MovementVector \wedge Coll.Point \in L1$}
-%                         \State $MoveEndPt \gets L1 \cap MoveEnd$
-%                         \State $MoveEnd \gets$ \Call{Line}{$MoveEnd \perp Refl \wedge MoveEndPt \in MoveEnd$}
-%                         \State $L2 \gets$ \Call{Line}{$L2 \perp Refl \wedge CornerEnd \in L2$}
-%                         \State $P1 \gets MoveEnd \cap Refl$
-%                         \State $P2 \gets L2 \cap Refl$
-%                         \If{\Call{Distance}{$P1$, $Coll.Point$} $\leq$ \Call{Distance}{$P2$, $Coll.Point$}}
-%                             \State $PEnd1, PEnd2 \gets MoveEnd \cap Coll.Corner$
-%                             \If{\Call{Distance}{$PEnd1$, $P1$} $<$ \Call{Distance}{$PEnd2$, $P1$}}
-%                                 \State $NewSegment.PEnd \gets PEnd1$
-%                             \Else
-%                                 \State $NewSegment.PEnd \gets PEnd2$
-%                             \EndIf
-%                             \State $Traj.$\Call{Push}{$NewSegment$}
-%                         \Else
-%                             \State $NewSegment.PEnd \gets CornerEnd$
-%                             \State $Traj.$\Call{Push}{$NewSegment$}
-%                             \State $L3 \gets$ \Call{Line}{$L3 \perp Diameter \wedge CornerEnd \in L3$}
-%                             \State $Tail.Type \gets LINE\_SEGMENT$
-%                             \State $Tail.PStart \gets CornerEnd$
-%                             \State $Tail.PEnd \gets L3 \cap MoveEnd$
-%                         \EndIf
-%                     \EndIf
-%                 \ElsIf{$Traj.Last.Type = ARC \And Coll.Type = WALL$}
-%                     \State $NewSegment.Type \gets LINE\_SEGMENT$
-%                     \State $NewSegment.PStart \gets Coll.Point$
-%                     \State $Refl \gets Coll.Wall.SupportingLine$
-%                     \If{$Refl \perp Player.MovementVector$}
-%                         \State $NewSegment.PEnd \gets Coll.Point$
-%                         \State $Traj.$\Call{Push}{$NewSegment$}
-%                         \State \Return $Traj$
-%                     \Else
-%                         \If{\Call{Angle}{$Coll.Wall.Vector$, $Player.MovementVector$}$.IsAcute$}
-%                             \State $WallEnd \gets Coll.Wall.PEnd$
-%                             \State $NewFlexible \gets CLOCKWISE$
-%                         \Else \Comment{The angle is obtuse.}
-%                             \State $WallEnd \gets Coll.Wall.PStart$
-%                             \State $NewFlexible \gets COUNTERCLOCKWISE$
-%                         \EndIf
-%                         \If{$Flexible \neq BOTH \wedge NewFlexible \neq Flexible$}
-%                             \State $NewSegment.PEnd \gets Coll.Point$
-%                             \State $Traj.$\Call{Push}{$NewSegment$}
-%                             \State \Return $Traj$
-%                         \EndIf
-%                         \State $Flexible \gets NewFlexible$
-%                         \LComment{The next three lines calculate the new $MoveEnd$.}
-%                         \State $L1 \gets$ \Call{Line}{$L1 \parallel Player.MovementVector \wedge Coll.Point \in L1$}
-%                         \State $MoveEndPt \gets L1 \cap MoveEnd$
-%                         \State $MoveEnd \gets$ \Call{Line}{$MoveEnd \perp Refl \wedge MoveEndPt \in MoveEnd$}
-%                         \State $P1 \gets MoveEnd \cap Refl$
-%                         \If{\Call{Distance}{$P1$, $Coll.Point$} $\leq$ \Call{Distance}{$WallEnd$, $Coll.Point$}}
-%                             \State $NewSegment.PEnd \gets P1$
-%                             \State $Traj.$\Call{Push}{$NewSegment$}
-%                         \Else
-%                             \State $NewSegment.PEnd \gets WallEnd$
-%                             \State $Traj.$\Call{Push}{$NewSegment$}
-%                             \State $L2 \gets$ \Call{Line}{$L2 \parallel Player.MovementVector \wedge WallEnd \in L2$}
-%                             \State $Tail.Type \gets LINE\_SEGMENT$
-%                             \State $Tail.PStart \gets WallEnd$
-%                             \State $Tail.PEnd \gets L2 \cap MoveEnd$
-%                         \EndIf
-%                     \EndIf
-%                 \ElsIf{$Traj.Last.Type = ARC \And Coll.Type = CORNER$}
-%                     \State $NewSegment.Type \gets ARC$
-%                     \State $NewSegment.ArcCenter \gets Coll.Corner.Center$
-%                     \State $NewSegment.PStart \gets Coll.Point$
-%                     \State $Refl \gets Coll.Corner.Tangent$
-%                     \If{$Refl \perp Player.MovementVector$}
-%                         \State $NewSegment.PEnd \gets Coll.Point$
-%                         \State $Traj.$\Call{Push}{$NewSegment$}
-%                         \State \Return $Traj$
-%                     \Else
-%                         \State $MoveLine \gets$ \Call{Line}{$Coll.Point$, $Player.MovementVector$}
-%                         \LComment{Note the minus sign---it has opposite direction!}
-%                         \State $NewFlexible \gets - MoveLine.$\Call{Direction}{$Coll.Corner.Center$}
-%                         \If{$Flexible \neq BOTH \wedge NewFlexible \neq Flexible$}
-%                             \State $NewSegment.PEnd \gets Coll.Point$
-%                             \State $Traj.$\Call{Push}{$NewSegment$}
-%                             \State \Return $Traj$
-%                         \EndIf
-%                         \State $Flexible \gets NewFlexible$
-%                         \State $Diameter \gets$ \Call{Line}{$Diameter \perp Player.MovementVector \wedge Coll.Corner.Center \in Diameter$}
-%                         \LComment{Diameter line is a secant, so theer are 2 intersections with the circle.}
-%                         \State $CornerEnd1, CornerEnd2 \gets Diameter \cap Coll.Corner$
-%                         \If{\Call{Angle}{$Coll.Point$, $Coll.Corner.Center$, $CornerEnd1$}$.IsAcute$}
-%                             \State $CornerEnd \gets CornerEnd1$
-%                         \Else \Comment{\Call{Angle}{$Coll.Point$, $Coll.Corner.Center$, $CornerEnd2$}$.IsAcute$}
-%                             \State $CornerEnd \gets CornerEnd2$
-%                         \EndIf
-%                         \LComment{The next three lines calculate the new $MoveEnd$.}
-%                         \State $L1 \gets$ \Call{Line}{$L1 \parallel Player.MovementVector \wedge Coll.Point \in L1$}
-%                         \State $MoveEndPt \gets L1 \cap MoveEnd$
-%                         \State $MoveEnd \gets$ \Call{Line}{$MoveEnd \perp Refl \wedge MoveEndPt \in MoveEnd$}
-%                         \State $L2 \gets$ \Call{Line}{$L2 \perp Refl \wedge CornerEnd \in L2$}
-%                         \State $P1 \gets MoveEnd \cap Refl$
-%                         \State $P2 \gets L2 \cap Refl$
-%                         \If{\Call{Distance}{$P1$, $Coll.Point$} $\leq$ \Call{Distance}{$P2$, $Coll.Point$}}
-%                             \State $PEnd1, PEnd2 \gets MoveEnd \cap Coll.Corner$
-%                             \If{\Call{Distance}{$PEnd1$, $P1$} $<$ \Call{Distance}{$PEnd2$, $P1$}}
-%                                 \State $NewSegment.PEnd \gets PEnd1$
-%                             \Else
-%                                 \State $NewSegment.PEnd \gets PEnd2$
-%                             \EndIf
-%                             \State $Traj.$\Call{Push}{$NewSegment$}
-%                         \Else
-%                             \State $NewSegment.PEnd \gets CornerEnd$
-%                             \State $Traj.$\Call{Push}{$NewSegment$}
-%                             \State $L3 \gets$ \Call{Line}{$L3 \perp Diameter \wedge CornerEnd \in L3$}
-%                             \State $Tail.Type \gets LINE\_SEGMENT$
-%                             \State $Tail.PStart \gets CornerEnd$
-%                             \State $Tail.PEnd \gets L3 \cap MoveEnd$
-%                         \EndIf
-%                     \EndIf
-%                 \EndIf
-%             \EndIf
-%         \EndLoop
-%     \EndProcedure
-% \end{algorithmic}
 
 % \begin{algorithmic}[1]
 %     \Function{MovementDirection}{$TrajSeg$, $Pt$}
@@ -1298,7 +1043,7 @@ Tato fáze nemá žádný viditelný výstup a~pouze sbírá informace pro násl
 % \end{algorithmic}
 
 
-\subsection*{Nalezení a~aplikace kolizí s~hráči a~bonusy}
+\subsection*{Nalezení a aplikace kolizí s hráči a bonusy}
 
 V~této fázi se pro každého hráče zjistí, se kterými jinými hráči a~bonusy přišel během svého tahu do styku. Samotná aplikace těchto kolizí je pak pouhé uložení informací o~nich; jejich efekt se uplatní v~jiných fázích tahu.
 
@@ -1316,13 +1061,13 @@ Tato fáze nemá žádný viditelný výstup a~pouze sbírá informace pro násl
 
 V~této fázi se informace o~změnách stavu hráčů získané v~předešlých fázích aplikují na hráče. Změny stavu zahrnují změnu pozice hráče, změnu množství hráčova života a~přidělení efektů posbíraných bonusů. Nutno poznamenat, že pořadí těchto změn je pevně dané; především změnu pozice a~množství života nelze zaměnit.
 
-Každému hráči byla během předchozích fází tahu přiřazena trajektorie, po níž se tento tah pohyboval. Změna pozice je pouhé nastavení pozice entity hráče do bodu, kde jeho trajektorie pohybu končí.
+Každému hráči byla během předchozích fází tahu přiřazena trajektorie, po níž se v~tomto tahu pohyboval. Změna pozice je pouhé nastavení pozice entity hráče do bodu, kde jeho trajektorie pohybu končí.
 
 Změna množství hráčova života se skládá z~několika akcí s~pevně daným pořadím. Nejdříve se určí množství života, které hráč ztratí po kolizi s~jinými hráči. Poté se spočítá množství života získaného z~aktivních efektů bonusů. Dále se určí množství života ztraceného akcí \emph{manuálního zmenšení}. Toto množství bude 0, pokud by mělo způsobit pokles množství života pod hodnotu 0, a~tedy prohru hráče. Tyto 3 hodnoty se sečtou a~určí se tak kladné nebo záporné množství života, které hráč v~tomto tahu získal. Vedlejším účinkem zvýšení množství života je zvětšení entity hráče. Pokud by toto zvětšení způsobilo, že se hráč bude překrývat s~překážkami, změna množství života neproběhne. Pokud naopak při změně množství života klesne toto množství pod 0, hráč je v~ten moment vyřazen ze hry.
 
 Fáze \emph{nalezení a~aplikace kolizí s~hráči a~bonusy} zaznamenala kolize hráčů s~bonusy. Nyní se vytvoří \emph{efekty bonusů}, se kterými hráč přišel do styku a~přidají se do \emph{kolekce aktivních bonusů} tohoto hráče.
 
-Viditelným výstupem této fáze je také změna velikosti a~pozice hráčů na obrazovce a~odstranění vyřazených hráčů z~herní plochy. Také počítadla množství života hráčů se změní na novou hodnotu, nebo případně odstraní, pokud byl hráč ze hry vyřazen.
+Viditelným výstupem této fáze je změna velikosti a~pozice hráčů na obrazovce a~odstranění vyřazených hráčů z~herní plochy. Také počítadla množství života hráčů se změní na novou hodnotu, nebo případně odstraní, pokud byl hráč ze hry vyřazen.
 
 \subsection*{Kontrola konce hry}
 
@@ -1345,7 +1090,7 @@ V~této rovnici jsou $\alpha$ a~$\beta$ volitelné parametry, pro které musí p
 \begin{equation}
     \Gamma(\alpha) = \int_0^\infty x^{\alpha - 1}\mathrm{e}^{-x}\,\mathrm{d}x
 \end{equation}
-Pro parametry $\alpha$ a~$\beta$ byly zvoleny hodnoty $\alpha = 10{,}95$ a~$\beta = 0{,}95$. Graf tohoto rozdělení je na obrázku~\ref{fig:probability-bonus-countdown}. Důvodem výběru právě tohoto rozdělení bylo chování tohoto rozdělení -- graf rychle stoupá a~pomaleji klesá. Díky tomu se velmi nízké hodnoty budou objevovat méně často a~vyšší hodnoty častěji. Hodnoty parametrů byly vybrány tak, aby časy mezi 8\,s a~12\,s měly přibližně 50\% pravděpodobnost.
+Pro parametry $\alpha$ a~$\beta$ byly zvoleny hodnoty $\alpha = 10{,}95$ a~$\beta = 0{,}95$. Graf tohoto rozdělení je na obrázku~\ref{fig:probability-bonus-countdown}. Důvodem výběru právě tohoto rozdělení bylo chování tohoto rozdělení\,--\,graf rychle stoupá a~pomaleji klesá. Díky tomu se velmi nízké hodnoty budou objevovat méně často a~vyšší hodnoty častěji. Hodnoty parametrů byly vybrány tak, aby časy mezi 8\,s a~12\,s měly přibližně 50\% pravděpodobnost.
 
 Vizuálním výstupem této fáze je odstranění bonusu z~herní plochy a~jeho nahrazení textem \uv{+~\%d~HP}, kde \uv{\%d} představuje doplněné množství života (např. \uv{+~50~HP}).
 
@@ -1374,7 +1119,7 @@ V~kapitole~\ref{sec:reseni-uloh} byly popsány různé vlastnosti, podle kterýc
 
 \subsubsection*{Pozorovatelnost}
 
-Prostředí hry \emph{Bubble Brawl} má velmi blízko \emph{plné pozorovatelnosti}, avšak zařazení hry do této kategorie brání bonusy. U~bonusů hráči nemohou zjistit, jaké množství života jim bude při sebrání doplněno. Také časovač pro generování bonusů běží na pozadí a~hráči tak nemohou zjistit, za jakou dlouhou dobu bude vygenerován další bonus. Proto prostředí této hry spadá spíše do kategorie \emph{částečně pozorovatelných}.
+Prostředí hry \emph{Bubble Brawl} má velmi blízko \emph{plné pozorovatelnosti}, avšak zařazení hry do této kategorie brání bonusy. U~bonusů hráči nemohou zjistit, jaké množství života jim bude při sebrání doplněno. Také časovač pro generování bonusů běží na pozadí a~hráči tak nemohou zjistit, za jak dlouhou dobu bude vygenerován další bonus. Proto prostředí této hry spadá spíše do kategorie \emph{částečně pozorovatelných}.
 
 Hovořilo se však o~tom, že u~\emph{plně pozorovatelných} prostředí má každý hráč přehled o~všech \emph{relevantních} aspektech stavu hry. Hráče nemusí při plánování akcí zajímat, jaké množství života mu bonus doplní. Co se týče generování bonusů, hráč nemusí vědět o~tom, že nějaký časovač existuje a~generování chápat jako čistě náhodnou událost. V~takovém případě nemusí hráč nahlížet na generování bonusů jako na \emph{nepozorovatelný} aspekt, ale na čistě \emph{stochastický}. Pokud tyto 2 zmíněné aspekty přestanou být pro hráče relevantní, pak může na prostředí hry nahlížet jako na \emph{plně pozorovatelné}.
 
@@ -1384,7 +1129,7 @@ Je jasné, že prostředí hry \emph{Bubble Brawl} je \emph{multiagentní}. Otá
 
 \subsubsection*{Determinizmus}
 
-Prostředí hry \emph{Bubble Brawl} je \emph{stochastický}; opět kvůli bonusům. Ačkoliv velká část následujícího stavu hry závisí na aktuálním stavu, generování bonusu i~určení množství života získaného z~bonusu jsou stochastické jevy. Nicméně, žádný z~aktuálně implementovaných agentů nebere na tyto jevy zřetel právě kvůli tomu, jak velkou část následujícího stavu lze odvodit ze stavu aktuálního.
+Prostředí hry \emph{Bubble Brawl} je \emph{stochastické}; opět kvůli bonusům. Ačkoliv velká část následujícího stavu hry závisí na aktuálním stavu, generování bonusu i~určení množství života získaného z~bonusu jsou stochastické jevy. Nicméně, žádný z~aktuálně implementovaných agentů nebere na tyto jevy zřetel právě kvůli tomu, jak velkou část následujícího stavu lze odvodit ze stavu aktuálního.
 
 \subsubsection*{Návaznost akcí}
 
@@ -1396,7 +1141,7 @@ Ačkoliv se na první pohled může zdát, že prostředí hry \emph{Bubble Braw
 
 \subsubsection*{Diskrétní a spojité prostředí}
 
-Stavový prostor hry je teoreticky spojitý -- omezený pouze přesností reálných čísel v~procesoru. Někteří agenti si však tento prostor navzorkují \cite{MIT_OpenCourseWare:Incremental_Path_Planning} za účelem optimalizace hledání cesty v~tomto prostoru, a~prohledávají tedy \emph{diskrétní} stavový prostor. Jakým způsobem vzorkování probíhá je popsáno v~kapitole~\ref{sec:entity-rizene-pocitacem:tridy}.
+Stavový prostor hry je teoreticky spojitý\,--\,omezený pouze přesností reálných čísel v~procesoru. Někteří agenti si však tento prostor navzorkují \cite{MIT_OpenCourseWare:Incremental_Path_Planning} za účelem optimalizace hledání cesty v~tomto prostoru, a~prohledávají tedy \emph{diskrétní} stavový prostor. Jakým způsobem vzorkování probíhá je popsáno v~kapitole~\ref{sec:entity-rizene-pocitacem:tridy}.
 
 Podle ostatních aspektů by prostředí mělo být \emph{diskrétní}. Čas se mění skokově (přibližně $60\times$ za sekundu) a~množina akcí, které agent může v~jednom okamžiku vykonat, je konečná.
 
@@ -1407,15 +1152,15 @@ Z~pohledu téměř všech agentů se dá říci, že prostředí hry \emph{Bubbl
 \subsection{Třídy}
 \label{sec:entity-rizene-pocitacem:tridy}
 
-V~programu je obsaženo několik tříd, které zajišťují fungování umělé inteligence ve hře. Největší skupinou tříd jsou ty, které řídí chování entit -- \emph{agenti} (pojem \emph{agent} byl popsán v~kapitole~\ref{sec:reseni-uloh}). Existují však také další třídy, které tito \emph{agenti} využívají pro své fungování.
+V~programu je obsaženo několik tříd, které zajišťují fungování umělé inteligence ve hře. Největší skupinou tříd jsou ty, které řídí chování entit\,--\,\emph{agenti} (pojem \emph{agent} byl popsán v~kapitole~\ref{sec:reseni-uloh}). Existují však také další třídy, které tito \emph{agenti} využívají pro své fungování.
 
 Velmi důležité pro \emph{agenty} je rozhraní \texttt{GameStateAgentProxy}\footnote{Na rozdíl od většiny ostatních rozhraní v~programu nemá předponu \uv{\texttt{I}}. Důvodem je jednoduše přehlédnutí během návrhu, které se nakonec dostalo i~do implementace.}. Jeho účelem je umožnit \textbf{přístup k~aktuálnímu stavu hry}. Mimoto také obsahuje několik pomocných metod, jako například výpočet nové pozice hráče po vykonání akce. Konkrétní implementaci tohoto rozhraní poskytuje samotné jádro hry (třída \texttt{Core}). Rozhraní poskytuje následující metody:
 \begin{itemize}
-    \item \texttt{getPlayers()} -- Tato metoda vrací informace o~všech hráčích ve hře. Je to asociativní pole (\texttt{std::unordered\_map}), kde klíče jsou unikátní identifikátory hráčů. Informace, které jsou o~hráčích poskytovány, jsou: pozice, množství života, rychlost, síla a~velikost.
-    \item \texttt{getObstacles()} -- Poskytuje přístup k~překážkám na herní ploše. Návratovou hodnotou \emph{není} seznam překážek, ale objekt typu \texttt{StageObstacles}, který přímo zprostředkovává interakci mezi hráči a~překážkami (viz kapitola~\ref{sec:jadro-hry}).
-    \item \texttt{getStageGridModel()} -- Poskytuje přístup k~\emph{mřížovému modelu} herní plochy, viz dále.
-    \item \texttt{getPlayerMovementVector()} -- Vypočítá vektor hráčova pohybu na základě jeho aktuální pozice, rychlosti a~požadované akce.
-    \item \texttt{calculateNewPlayerPos()} -- Určí novou pozici hráče na základě jeho pozice, rychlosti, požadované akce a~překážek na herní ploše.
+    \item \texttt{getPlayers()}\,--\,Tato metoda vrací informace o~všech hráčích ve hře. Je to asociativní pole (\texttt{std::unordered\_map}), kde klíče jsou unikátní identifikátory hráčů. Informace, které jsou o~hráčích poskytovány, jsou: pozice, množství života, rychlost, síla a~velikost.
+    \item \texttt{getObstacles()}\,--\,Poskytuje přístup k~překážkám na herní ploše. Návratovou hodnotou \emph{není} seznam překážek, ale objekt typu \texttt{StageObstacles}, který přímo zprostředkovává interakci mezi hráči a~překážkami (viz kapitola~\ref{sec:jadro-hry}).
+    \item \texttt{getStageGridModel()}\,--\,Poskytuje přístup k~\emph{mřížovému modelu} herní plochy, viz dále.
+    \item \texttt{getPlayerMovementVector()}\,--\,Vypočítá vektor hráčova pohybu na základě jeho aktuální pozice, rychlosti a~požadované akce.
+    \item \texttt{calculateNewPlayerPos()}\,--\,Určí novou pozici hráče na základě jeho pozice, rychlosti, požadované akce a~překážek na herní ploše.
 \end{itemize}
 
 Spousta agentů využívá třídu \texttt{StageGridModel}, která představuje \textbf{diskrétní model herní plochy} \cite{MIT_OpenCourseWare:Incremental_Path_Planning}. Při vytváření instance této třídy je konstruktoru předána množina všech překážek na herní ploše a~velikost herní plochy. Podle těchto informací je herní plocha navzorkována. Vzniká mřížka čtvercových buněk s~délkou strany 17~jednotek délky (tato délka odpovídá maximální délce posunu hráče během jednoho herního cyklu). Z~této mřížky jsou následně odstraněny buňky, které se překrývají s~překážkami.
@@ -1424,10 +1169,10 @@ U~každé buňky je možné zjistit souřadnice jejího středu, vzdálenost st�
 
 Nejdůležitější pro implementaci \textbf{agentů} je rozhraní \texttt{IAIPlayerAgent}. Toto rozhraní obsahuje 4~metody:
 \begin{itemize}
-    \item \texttt{plan()} -- Znamení agentovi, že může začít plánovat další akci.
-    \item \texttt{assignProxy()} -- Poskytne agentovi přístup k~aktuálnímu stavu hry (instanci rozhraní \texttt{GameStateAgentProxy}). Agent nemá možnost plánovat akce, dokud nemá možnost zjišťovat stav hry, a~proto musí být tato metoda zavolána před voláním \texttt{plan()}.
-    \item \texttt{kill()} -- Ukončení činnosti agenta. Pokud agent funguje na principu \emph{vláken}, jsou všechna \emph{vlákna} ukončena.
-    \item \texttt{getPlayerInput()} -- Vrací agentem naplánovanou akci.
+    \item \texttt{plan()}\,--\,Znamení agentovi, že může začít plánovat další akci.
+    \item \texttt{assignProxy()}\,--\,Poskytne agentovi přístup k~aktuálnímu stavu hry (instanci rozhraní \texttt{GameStateAgentProxy}). Agent nemá možnost plánovat akce, dokud nemá možnost zjišťovat stav hry, a~proto musí být tato metoda zavolána před prvním voláním \texttt{plan()}.
+    \item \texttt{kill()}\,--\,Ukončení činnosti agenta. Pokud agent funguje na principu \emph{vláken}, jsou všechna \emph{vlákna} ukončena.
+    \item \texttt{getPlayerInput()}\,--\,Vrací agentem naplánovanou akci.
 \end{itemize}
 
 Rozhraní \texttt{IAIPlayerAgent} implementuje abstraktní třída \texttt{AIPlayerAgentBase}, ze které jsou odvozeny všechny další třídy implementující chování agentů. Tato třída byla navržena tak, aby plánování každého agenta využívalo paralelní zpracování pomocí \emph{vláken}. Nepovedlo se však implementovat funkční řešení tohoto návrhu, a~tedy veškeré plánování běží sériově.
@@ -1440,6 +1185,7 @@ Program obsahuje několik typů entit řízených počítačem, které se liší
 Entity lze dle dílčích cílů rozdělit na 3 základní typy: \emph{predátoři}, kteří se snaží pouze útočit, \emph{kořisti}, které se snaží pouze utíkat, a~\emph{beruška}, která zdánlivě nemá cíl žádný. Entit stejných typů bylo implementováno více. Cílem bylo nahradit dříve implementované entity vylepšenými verzemi. Přesto však starší verze entit zůstaly v~aplikaci, aby lidé, kteří si hru zkusili zahrát, mohli posoudit, zda se vylepšení dané entity opravdu povedlo, nebo zda původní verze dokázala hrát hru lépe.
 
 \emph{Predátoři} a~\emph{kořisti} jsou entity založené na ohodnocování hráčů. V~každém herním cyklu ohodnotí všechny soupeře podle jejich síly a~vzdálenosti mezi sebou a~daným soupeřem a~na základě získaných ohodnocení činí rozhodnutí. Všechny varianty \emph{predátorů} mají stejný postup ohodnocování soupeřů, a~sice:
+
 \begin{eqnarray}
     \label{eq:opponent-health-predator}
     f_h(p) & = & 10 \cdot \frac{1}{h(p)} \\
@@ -1520,15 +1266,15 @@ Doba plánování entity je sice kratší, nicméně stále není dostatečně k
 
 Implementace chování entity \emph{BFS predator} je ve většině ohledů stejná, jako implementace chování entity \emph{IDS predator}. Jediný rozdíl je použití metody \emph{slepého prohledávání do šířky s~kolekcí CLOSED} (\emph{BFS s~kolekcí CLOSED}) místo metody \emph{IDS}.
 
-Díky velkému snížení počtu generování uzlů se také mnohonásobně zkrátila doba plánování, jak je ukázáno v~kapitole~\ref{sec:vykonnostni-testovani}. Tato optimalizace téměř stačí na to, aby byla entita považována za začlenitelnou do hry. Problémem však stále zůstává, že entita není \emph{stabilní}. Doba plánování entity není omezena, a~proto na větších herních plochách může stále zpomalovat běh programu.
+Díky velkému snížení počtu generování uzlů se mnohonásobně zkrátila doba plánování, jak je ukázáno v~kapitole~\ref{sec:vykonnostni-testovani}. Tato optimalizace téměř stačí na to, aby byla entita považována za začlenitelnou do hry. Problémem však stále zůstává, že entita není \emph{stabilní}. Doba plánování entity není omezena, a~proto na větších herních plochách může stále zpomalovat běh programu.
 
 \subsubsection*{A* predator}
 
 Entita \emph{A* predator} se stále implementačně podobá entitám \emph{IDS predator} a~\emph{BFS predator}. Základní algoritmus je téměř stejný, pouze s~obměnou metody \emph{IDS}/\emph{BFS} za metodu \emph{A*}. Nastalo však několik dalších změn.
 
-Tato entita hledá cestu ke svojí oběti, ale přestane hledat poté, co vygeneruje 5\,000. uzel. Tato změna zaručuje, že plánování agenta bude \emph{stabilní}, tady ani na příliš velkých herních plochách by neměla zpomalovat běh programu. Číslo 5\,000 bylo vybráno na základě testování tak, aby při hře 8~hráčů tohoto typu běžela aplikace dostatečně rychle i~na méně výkonných počítačích. Po vygenerování tohoto množství uzlů však není prohledávání rovnou ukončeno jako neúspěšné. Jak se má postupovat dále je určeno verzí entity.
+Tato entita hledá cestu ke svojí oběti, ale přestane hledat, jakmile vygeneruje 5\,000.~uzel. Tato změna zaručuje, že plánování agenta bude \emph{stabilní}, tady ani na příliš velkých herních plochách by neměla zpomalovat běh programu. Číslo 5\,000 bylo vybráno na základě testování tak, aby při hře 8~hráčů tohoto typu běžela aplikace dostatečně rychle i~na méně výkonných počítačích. Po vygenerování tohoto množství uzlů však není prohledávání rovnou ukončeno jako neúspěšné. Jak se má postupovat dále je určeno verzí entity.
 
-Entita \emph{A* predator} byla několikrát vylepšena, ale předchozí implementace v~kódu zůstaly. Jejich aktivace je možná nastavením hodnoty makra \texttt{ASTAR\_PREDATOR\_VERSION} v~souboru \texttt{AstarPredatorAIPlayerAgent.hpp}. Verze 1~entity po dosažení maximálního počtu vygenerovaných uzlů zvolí entita uzel na vrcholu kolekce \emph{OPEN} jako cílový uzel. To samé činí i~verze~2 této entity. Vylepšení v~této verzi naopak spočívá ve výběru akce po dokončení hledání cesty. Entita \uv{vyzkouší} vykonat všech 8~možných pohybů a~vybere si ten, který ji dostane nejblíže k~bezprostřednímu následníku kořenového uzlu. Poslední, 3. verze entity opět mění způsob výběru cílového uzlu po vygenerování maximálního počtu uzlů. Vybrán je ten, jehož ohodnocení heuristikou $h(s_k)$ je ze všech uzlů v~kolekci \emph{CLOSED} nejnižší (jinými slovy, jehož vzdálenost od cílového uzlu je nejnižší).
+Entita \emph{A* predator} byla několikrát vylepšena, ale předchozí implementace v~kódu zůstaly. Jejich aktivace je možná nastavením hodnoty makra \texttt{ASTAR\_PREDATOR\_VERSION} v~souboru \texttt{AstarPredatorAIPlayerAgent.hpp}. Verze 1~entity po dosažení maximálního počtu vygenerovaných uzlů zvolí uzel na vrcholu kolekce \emph{OPEN} jako cílový uzel. To samé činí i~verze~2 této entity. Vylepšení v~této verzi naopak spočívá ve výběru akce po dokončení hledání cesty. Entita \uv{vyzkouší} vykonat všech 8~možných pohybů a~vybere si ten, který ji dostane nejblíže k~bezprostřednímu následníku kořenového uzlu. Poslední, 3. verze entity opět mění způsob výběru cílového uzlu po vygenerování maximálního počtu uzlů. Vybrán je ten, jehož ohodnocení heuristikou $h(s_k)$ je ze všech uzlů v~kolekci \emph{CLOSED} nejnižší (jinými slovy, jehož vzdálenost od cílového uzlu je nejnižší).
 
 Entita je velmi schopná v~plnění svého cíle, tedy v~pronásledování svojí oběti. I~přes omezení počtu vygenerovaných uzlů má velkou šanci zvolit správnou cestu v~případě, že po dosažení tohoto limitu nedorazí do cílového uzlu. Také doba plánování této entity je velmi uspokojivá. Ovšem nevýhodou je velmi malá šance na přežití. Jelikož se entita snaží pouze útočit a~nevyhledává bonusy, je jednoduché ji velice brzy vyřadit ze hry.
 
@@ -1537,11 +1283,11 @@ Entita je velmi schopná v~plnění svého cíle, tedy v~pronásledování svoj�
 Entita \emph{Minimax prey} se snaží hledat optimální stav pomocí metody \emph{Minimax}. Vybírá si soupeře, který ji nejvíce ohrožuje, jako útočníka. Následně se snaží předpovědět jeho chování, a~podle toho pak hledat optimální stav. Entita opět používá diskrétní model herní plochy pro plánování. Popis implementace chování entity je následující:
 \begin{enumerate}
     \item Spočítej ohodnocení všech svých soupeřů pro aktuální stav a~vyber soupeře s~nejhorším ohodnocením jako svého \emph{útočníka}.
-    \item Pomocí metody \emph{Minimax} najdi nejvíce optimální stav. Hráč \emph{Max} jsi ty, hráč \emph{Min} je tvůj \emph{útočník}.
+    \item Pomocí metody \emph{Minimax} najdi optimální stav. Hráč \emph{Max} jsi ty, hráč \emph{Min} je tvůj \emph{útočník}.
     \item Urči bezprostředního následníka kořenového uzlu, který leží na cestě k~nalezenému optimálnímu stavu. Vykonej pohyb, který tě k~tomuto následníku dostane nejblíže.
 \end{enumerate}
 
-Opět bylo vyvinuto několik verzí této entity -- konkrétně 2. Nastavit jinou lze změnou hodnoty makra \texttt{MINIMAX\_PREY\_VERSION} v~souboru \texttt{MinimaxPreyAIPlayerAgent.hpp}. Tyto verze se liší pouze v~použité metodě hledání cesty. První verze používá obyčejnou metodu \emph{Minimax}, verze~2 pak metodu \emph{Alfa-beta řezů}.
+Opět bylo vyvinuto několik verzí této entity\,--\,konkrétně 2. Nastavit jinou lze změnou hodnoty makra \texttt{MINIMAX\_PREY\_VERSION} v~souboru \texttt{MinimaxPreyAIPlayerAgent.hpp}. Tyto verze se liší pouze v~použité metodě hledání cesty. První verze používá obyčejnou metodu \emph{Minimax}, verze~2 pak metodu \emph{Alfa-beta řezů}.
 
 Ačkoliv je metoda \emph{Minimax} určena především pro hry, kde se hráči na tahu střídají, povedlo se ji implementovat i~pro tuto hru. Aby však plánování netrvalo příliš dlouho musela být maximální hloubka vyhledávacího stromu stanovena na velmi malé číslo. Verze~1, která používá obyčejnou metodu \emph{Minimax}, má nastavenou maximální hloubku 6, druhá verze, která využívá \emph{Alfa-beta řezy}, má nastavenou maximální hloubku 8. Jak je ukázáno v~kapitole~\ref{sec:vykonnostni-testovani}, větší hodnoty hloubky by mohly zpomalovat běh programu. Kvůli nízké hloubce vyhledávacího stromu nemá tato entita o~mnoho lepší schopnosti, než \uv{slepá} entita \emph{Wall-aware prey}.
 
@@ -1574,7 +1320,7 @@ Na pozadí běžely další procesy, jako například antivirus, internetový pr
 
 \subsection*{Hra bez umělých hráčů}
 
-Tabulka~\ref{tab:benchmark-basics} ukazuje průměrnou dobu trvání vykonání všech kroků herního cyklu (řádek \uv{Změna stavu hry}) a~vizuální výstup těchto změn (řádek \uv{Výstup na obrazovku}). Ve hře bylo vždy 8 hráčů a~každá průměrná hodnota byla vypočítána z~přibližně 300 záznamů měření (přibližně 5,1\,s běhu programu). Pro testování byly použity tyto 2 herní plochy: \emph{Too many players} a~\emph{Shattered glass}. Důvodem výběru těchto 2 herních ploch je počet překážek -- zatímco \emph{Too many players} nemá překážku žádnou, \emph{Shattered glass} jich má 51. Díky tomuto lze dobře porovnat vliv množství překážek na výkon aplikace. Tabulka se na tyto herní plochy neodkazuje jejich jménem, ale přímo počtem překážek.
+Tabulka~\ref{tab:benchmark-basics} ukazuje průměrnou dobu trvání vykonání všech kroků herního cyklu (řádek \uv{Změna stavu hry}) a~vizuální výstup těchto změn (řádek \uv{Výstup na obrazovku}). Ve hře bylo vždy 8 hráčů a~každá průměrná hodnota byla vypočítána z~přibližně 300 záznamů měření (přibližně 5,1\,s běhu programu). Pro testování byly použity tyto 2 herní plochy: \emph{Too many players} a~\emph{Shattered glass}. Důvodem výběru těchto 2 herních ploch je počet překážek\,--\,zatímco \emph{Too many players} nemá překážku žádnou, \emph{Shattered glass} jich má 51. Díky tomuto lze dobře porovnat vliv množství překážek na výkon aplikace. Tabulka se na tyto herní plochy neodkazuje jejich jménem, ale přímo počtem překážek.
 
 \begin{table}[ht]
     \centering
@@ -1587,7 +1333,7 @@ Tabulka~\ref{tab:benchmark-basics} ukazuje průměrnou dobu trvání vykonání 
     \label{tab:benchmark-basics}
 \end{table}
 
-Z~testu lze vypozorovat, že herní cyklus samotný není příliš výkonnostně náročný, a~to ani při rostoucím množství překážek. Naopak, zobrazení stavu hry na obrazovce zabere poměrně výraznou část doby mezi herními cykly -- více než 20\,\%. S~přidáním většího množství překážek také poměrně výrazně vzrostla doba zpracování -- přibližně o~10\,\% doby mezi herními cykly.
+Z~testu lze vypozorovat, že herní cyklus samotný není příliš výkonnostně náročný, a~to ani při rostoucím množství překážek. Naopak, zobrazení stavu hry na obrazovce zabere poměrně výraznou část doby mezi herními cykly\,--\,více než 20\,\%. S~přidáním většího množství překážek také poměrně výrazně vzrostla doba zpracování\,--\,přibližně o~10\,\% doby mezi herními cykly.
 
 Pokud entita řízená počítačem má být použita v~aplikaci, pak doba, kterou stráví plánováním, by měla být menší než $11{,}673\text{\,ms} = 17\text{\,ms} - 5{,}327\text{\,ms}$. Tuto dobu může entita strávit plánováním, pokud bude ve hře pouze 1. Maximální počet hráčů ve hře je však 8, a~proto, pokud by mělo být zapojeno 8~entit daného typu, měla by být doba plánování maximálně $1{,}46\text{\,ms} = 11{,}673\text{\,ms} : 8$. Tyto časy jsou shrnuty v~tabulce~\ref{tab:times-summary}.
 
@@ -1641,7 +1387,7 @@ Pro testování byly použity tyto herní plochy \emph{Too many players} a~\emph
 
 \subsection*{Wall-aware BFS predator}
 
-Tabulka~\ref{tab:benchmark-wall-aware-bfs-predator} obsahuje část výsledků měření výkonnosti agenta \emph{Wall-aware BFS predator}. Chování tohoto agenta je mírně odlišné od dosud testovaných agentů -- zatímco předchozí agenti plánovali pouze jeden krok dopředu, \emph{Wall-aware BFS predator} plánuje celou cestu až ke své oběti. Proto nemělo cenu měřit průměrnou dobu plánování, jelikož každý proces plánování může trvat různě dlouhou dobu. Tabulka obsahuje 3 sloupce: hodnoty v~prvním sloupci představují vzdálenost mezi \emph{kružnicemi} hráčů, v~druhém sloupci počet vygenerovaných uzlů metodou \emph{BFS} a~ve třetím čas v~milisekundách strávený plánováním. Testování probíhalo pouze na herní ploše \emph{Too many players}; na ploše \emph{Shattered glass} nedokázal agent učinit rozhodnutí ani po 10~minutách plánování, a~testování tím pádem nedávalo příliš smysl (celkově, agent, který nedokáže učinit rozhodnutí ani do oněch 17\,ms času mezi herními cykly, je prakticky nepoužitelný).
+Tabulka~\ref{tab:benchmark-wall-aware-bfs-predator} obsahuje část výsledků měření výkonnosti agenta \emph{Wall-aware BFS predator}. Chování tohoto agenta je mírně odlišné od dosud testovaných agentů\,--\,zatímco předchozí agenti plánovali pouze jeden krok dopředu, \emph{Wall-aware BFS predator} plánuje celou cestu až ke své oběti. Proto nemělo cenu měřit průměrnou dobu plánování, jelikož každý proces plánování může trvat různě dlouhou dobu. Tabulka obsahuje 3 sloupce: hodnoty v~prvním sloupci představují vzdálenost mezi \emph{kružnicemi} hráčů, v~druhém sloupci počet vygenerovaných uzlů metodou \emph{BFS} a~ve třetím čas v~milisekundách strávený plánováním. Testování probíhalo pouze na herní ploše \emph{Too many players}; na ploše \emph{Shattered glass} nedokázal agent učinit rozhodnutí ani po 10~minutách plánování, a~testování tím pádem nedávalo příliš smysl (celkově, agent, který nedokáže učinit rozhodnutí ani do oněch 17\,ms času mezi herními cykly, je prakticky nepoužitelný).
 
 \begin{table}[ht]
     \centering
@@ -1660,7 +1406,7 @@ Záznamy měření v~tabulce byly vybrány systematicky podle délky trvání. P
 
 Už podle prvního záznamu lze usoudit, že tento agent není prakticky použitelný pro běžné hraní. Hráči od sebe mohou být na herní ploše vzdálení až 1000 jednotek vzdálenosti a~tento agent již při pouhých 84 jednotkách plánuje celých 11,5~sekundy.
 
-Za povšimnutí stojí také rozdíl vzdálenosti a~počtu uzlů mezi prvním a~druhým záznamem. Zatímco vzdálenost je přibližně 2\texttimes{} nižší, počet uzlů klesl téměř o 9násobek. Zde se projevuje časová složitost metody \emph{BFS} -- se zvyšující se hloubkou vyhledávacího stromu, v~níž se nachází cílový uzel, roste počet generovaných uzlů exponenciálně.
+Za povšimnutí stojí také rozdíl vzdálenosti a~počtu uzlů mezi prvním a~druhým záznamem. Zatímco vzdálenost je přibližně 2\texttimes{} nižší, počet uzlů klesl téměř o 9násobek. Zde se projevuje časová složitost metody \emph{BFS}\,--\,se zvyšující se hloubkou vyhledávacího stromu, v~níž se nachází cílový uzel, roste počet generovaných uzlů exponenciálně.
 
 Tento test ukázal, že není výhodné provádět plánování opakovaným zkoušením vstupů z~klávesnice. Proto další agenti začali používat diskrétní model herní plochy, který pracuje efektivněji.
 
@@ -1691,11 +1437,11 @@ Je patrné, že tento agent plánuje mnohem rychleji, než \emph{Wall-aware BFS 
 
 Dále je také vidět, že díky použití diskrétního modelu není doba výpočtu ovlivněna počtem překážek na herní ploše. Vzdálenosti všech buněk od překážek byly vypočítány před začátkem hry, a~agent nyní pouze porovnává svůj poloměr s~konkrétními hodnotami.
 
-Test ukázal, že použití diskrétního modelu při plánování je velmi výhodné z~hlediska rychlosti plánování. Zároveň ukázal, že při použití tohoto modelu jsou požadavky na paměť daleko menší oproti požadavkům na dobu plánování -- za přijatelnou dobu je možné vygenerovat přibližně 16\,000 uzlů. Proto nedává smysl používat metody, které jsou navrženy tak, aby šetřily paměť (a~mezi něž patří i~metoda \emph{IDS}).
+Test ukázal, že použití diskrétního modelu při plánování je velmi výhodné z~hlediska rychlosti plánování. Zároveň ukázal, že při použití tohoto modelu jsou požadavky na paměť daleko menší oproti požadavkům na dobu plánování\,--\,za přijatelnou dobu je možné vygenerovat přibližně 16\,000 uzlů. Proto nedává smysl používat metody, které jsou navrženy tak, aby šetřily paměť (a~mezi něž patří i~metoda \emph{IDS}).
 
 \subsection*{BFS predator}
 
-Agent \emph{BFS predator} využívá při plánování diskrétní model herní plochy a~plánuje celou cestu až ke své oběti pomocí metody \emph{BFS s~kolekcí CLOSED}. Tabulka~\ref{tab:benchmark-bfs-predator-compare-ids} ukazuje část výsledků měření jeho výkonnosti, jejíž sloupce obsahují vzdálenost od vybrané oběti, počet uzlů vygenerovaných metodou \emph{BFS} a~čas strávený plánováním v~tomto pořadí. Tento test probíhal pouze na herní ploše \emph{Too many players}. Tabulka~\ref{tab:benchmark-bfs-predator-limits} také ukazuje část výsledků měření výkonnosti tohoto agenta, ale první sloupec tentokrát obsahuje rozměry herní plochy, na níž probíhalo testování. Test probíhal na herní ploše \emph{Enormous stage} s~upravenými rozměry.
+Agent \emph{BFS predator} využívá při plánování diskrétní model herní plochy a~plánuje celou cestu až ke své oběti pomocí metody \emph{BFS s~kolekcí CLOSED}. Tabulka~\ref{tab:benchmark-bfs-predator-compare-ids} ukazuje část výsledků měření jeho výkonnosti, jejíž sloupce obsahují vzdálenost od vybrané oběti, počet uzlů vygenerovaných metodou \emph{BFS} a~čas strávený plánováním v~tomto pořadí. Test probíhal pouze na herní ploše \emph{Too many players}. Tabulka~\ref{tab:benchmark-bfs-predator-limits} také ukazuje část výsledků měření výkonnosti tohoto agenta, ale první sloupec tentokrát obsahuje rozměry herní plochy, na níž probíhalo testování. Tento test probíhal na herní ploše \emph{Enormous stage} s~upravenými rozměry.
 
 \begin{table}[ht]
     \centering
@@ -1724,7 +1470,7 @@ Agent \emph{BFS predator} využívá při plánování diskrétní model herní 
 
 Záznamy pro první tabulku byly vybírány tak, aby vzdálenosti v~levém sloupci odpovídaly vzdálenostem v~první části tabulky~\ref{tab:benchmark-ids-predator}. Je zde totiž vidět markantní snížení počtu generovaných uzlů a~doby plánování. Metoda \emph{BFS} úplně předchází opakovanému generování uzlů díky použití kolekce (množiny) \emph{CLOSED}. Naopak metoda \emph{IDS} generuje většinu uzlů víckrát. K~tomu dochází nejen z~důvodu opakovaného volání metody \emph{DLS} a~absence kolekce \emph{CLOSED}, ale~navíc také kvůli způsobu implementace metody \emph{IDS} v~chování agenta \emph{IDS predator}. Typická implementace metody \emph{IDS} opakovaně volá metodu \emph{DLS} vycházející z~metody \emph{DFS}. Avšak kvůli snaze snížit paměťovou náročnost byla v~implementaci tohoto agenta využita varianta metody \emph{DLS} vycházející z~metody \emph{Backtracking}. Důsledkem této volby je to, že kolekce \emph{OPEN} obsahuje velmi malé množství uzlů, a~spousta uzlů je kvůli tomu generována i~přesto, že dříve již generovány byly.
 
-Záznamy pro druhou tabulku byly vybírány -- podobně jako u~předchozích agentů -- tak, aby čas představoval vybrané limitní hodnoty. Konkrétně, první řádek představuje plánování s~dobou trvání mírně pod 1~sekundou, druhý řádek plánování s~dobou přípustnou pro maximálně jednoho agenta typu \emph{BFS predator} a~třetí řádek plánování dostatečně krátké pro hru 8~agentů tohoto typu (limity pro druhý a~třetí řádek jsou stanoveny v~tabulce~\ref{tab:times-summary}). Při testování byly hledány rozměry herní plochy takové, aby průměrná doba plánování agenta splňovala výše uvedené požadavky. Během testu bylo zaručeno, že agent nebude schopen najít svého soupeře, a~tím pádem prohledá celý stavový prostor. Z~měření je patrné, že doba zpracování připadající na 1~uzel je delší u~tohoto agenta než u~agenta \emph{IDS predator}. Agent \emph{BFS predator} totiž oproti agentovi \emph{IDS predator} používá navíc kolekci \emph{CLOSED} a~také kolekce \emph{OPEN} během plánování dosáhne většího počtu uzlů. To způsobí několik realokací těchto kolekcí. Avšak v~porovnání s~ušetřeným množstvím generování uzlů touto metodou je toto mírné prodloužení výpočtu na uzel zanedbatelné.
+Záznamy pro druhou tabulku byly vybírány\,--\,podobně jako u~předchozích agentů\,--\,tak, aby čas představoval vybrané limitní hodnoty. Konkrétně, první řádek představuje plánování s~dobou trvání mírně pod 1~sekundou, druhý řádek plánování s~dobou přípustnou pro maximálně jednoho agenta typu \emph{BFS predator} a~třetí řádek plánování dostatečně krátké pro hru 8~agentů tohoto typu (limity pro druhý a~třetí řádek jsou stanoveny v~tabulce~\ref{tab:times-summary}). Při testování byly hledány rozměry herní plochy takové, aby průměrná doba plánování agenta splňovala výše uvedené požadavky. Během testu bylo zaručeno, že agent nebude schopen najít svého soupeře, a~tím pádem prohledá celý stavový prostor. Z~měření je patrné, že doba zpracování připadající na 1~uzel je delší u~tohoto agenta než u~agenta \emph{IDS predator}. Agent \emph{BFS predator} totiž oproti agentovi \emph{IDS predator} používá navíc kolekci \emph{CLOSED} a~také kolekce \emph{OPEN} během plánování dosáhne většího počtu uzlů. To způsobí několik realokací těchto kolekcí. Avšak v~porovnání s~ušetřeným množstvím generování uzlů touto metodou je toto mírné prodloužení výpočtu na uzel zanedbatelné.
 
 Testování ukázalo, že kolekce \emph{CLOSED} velmi výrazně pomáhá zkrátit dobu plánování. Problémem však stále zůstává, že na průměrně velkých herních plochách může být doba plánování v~některých případech nepřijatelně dlouhá.
 
@@ -1796,7 +1542,7 @@ Uživatelům přišla hra poměrně velmi zábavná. Většině z~nich nedělalo
 
 Názor uživatelů na umělou inteligenci ve hře byl pro tuto práci nejdůležitější. Více než 50\,\% uživatelů hodnotilo hru jako zábavnější při zapojení umělé inteligence a~pouze 9,1\,\% uživatelů (1~uživatel z~11) hodnotilo hru zábavnější bez zapojení umělé inteligence. Ostatním přišel zážitek s~umělou inteligencí i~bez ní srovnatelný. Názor na to, jak entity řízené počítačem napodobují chování skutečných hráčů, byl neutrální. Uživatelům nepřišlo jejich chování ani velmi přesvědčivé, ani málo přesvědčivé.
 
-Uživatelé také měli možnost hlasovat, které entity jim přišli nejschopnější, které nejslabší a~proti kterým bylo nejzábavnější hrát. Nejschopnější ve hře byla podle uživatelů entita \emph{A* predator}. Poněkud zdrcující je, že entita \emph{Ladybug}, jejíž chování je zcela náhodné, se umístila na 2.~místě (ačkoliv s~polovičním počtem hlasů), zatímco entita \emph{Minimax prey}, která používá při plánování metodu \emph{Minimax}, nezískala hlas žádný. Jako nejslabší entity označili uživatelé shodně entity \emph{Ladybug} a~\emph{Blind prey}. Entita \emph{Minimax prey} ani v~této anketě příliš neuspěla -- s~polovičním počtem hlasů oproti prvním dvěma entitám skončila na 3.~místě. Jako entita, proti které bylo nejzábavnější hrát, byla zvolena opět entita \emph{A* predator}. Entita \emph{Minimax prey} si tentokrát vedla mírně lépe a~skončila na 2.~místě, ovšem společně s~entitami \emph{Ladybug} a~\emph{Blind prey}.
+Uživatelé také měli možnost hlasovat, které entity jim přišli nejschopnější, které nejslabší a~proti kterým bylo nejzábavnější hrát. Nejschopnější ve hře byla podle uživatelů entita \emph{A* predator}. Poněkud zdrcující je, že entita \emph{Ladybug}, jejíž chování je zcela náhodné, se umístila na 2.~místě (ačkoliv s~polovičním počtem hlasů), zatímco entita \emph{Minimax prey}, která používá při plánování metodu \emph{Minimax}, nezískala hlas žádný. Jako nejslabší entity označili uživatelé shodně entity \emph{Ladybug} a~\emph{Blind prey}. Entita \emph{Minimax prey} ani v~této anketě příliš neuspěla\,--\,s~polovičním počtem hlasů oproti prvním dvěma entitám skončila na 3.~místě. Jako entita, proti které bylo nejzábavnější hrát, byla zvolena opět entita \emph{A* predator}. Entita \emph{Minimax prey} si tentokrát vedla mírně lépe a~skončila na 2.~místě, ovšem společně s~entitami \emph{Ladybug} a~\emph{Blind prey}.
 
 \subsection*{Editor herní plochy}
 
@@ -1809,7 +1555,7 @@ Uživatelé měli také za úkol u~některých aspektů hry hodnotit, zda u~nich
 
 \chapter{Závěr}
 
-Cílem práce bylo vytvořit zábavnou hru pro více hráčů a~implementovat pro tuto hru entity řízené počítačem. Ačkoliv hra i~umělá inteligence v~této hře mají své nedostatky, povedlo se vytvořit poměrně kvalitní aplikaci, která splňuje všechny stanovené cíle.
+Cílem práce bylo vytvořit zábavnou hru pro více hráčů a~implementovat pro tuto hru entity řízené počítačem. Ačkoliv hra i~umělá inteligence v~této hře mají své nedostatky, povedlo se mi vytvořit poměrně kvalitní aplikaci, která splňuje všechny stanovené cíle.
 
 Před začátkem vypracovávání projektu i~během něj jsem studoval problematiku algoritmů umělé inteligence a~naučil se způsoby jejich využití pro implementaci umělých hráčů v~počítačových hrách. Také jsem narazil na několik zajímavých vědeckých prací popisující nové algoritmy umělé inteligence. Tyto algoritmy se mi sice nepovedlo využít pro implementaci chování umělých hráčů, ale popsal jsem je v~této práci. Tento popis by mohl v~budoucnu pomoci při implementaci chování nových typů umělých hráčů ve hře.
 
@@ -1821,4 +1567,4 @@ Mezi nejpovedenější části práce bych zařadil implementaci chování entit
 
 Výsledná aplikace splňuje všechny zadané požadavky, nicméně ani zdaleka nelze říci, že je hotová. Aplikace nabízí spoustu možností pro rozšíření, avšak realizaci těchto možností není možné stihnout v~rámci jednoho bakalářského projektu. Mezi možná rozšíření, která se ihned nabízí u~her pro více hráčů, je umožnit hráčům hrát na více zařízeních prostřednictvím síťového připojení. V~případě této konkrétní aplikace by bylo vhodné také vylepšit audiovizuální stránku aplikace, jelikož práce se této stránce příliš nevěnovala. Pokud jde o~hru samotnou, možností rozšíření je velká spousta: nové typy bonusů, \uv{náhlá smrt} (zásah do hry po uplynutí stanoveného časového limitu za účelem uspíšení konce hry), speciální schopnosti hráčů apod. Vhodné by také bylo implementovat prvky, které byly původně v~plánu, jako jsou například \uv{pravidla pro výchozí pozice hráčů}, a~také zajímavé nápady navržené uživateli prostřednictvím dotazníků.
 
-Co se týče umělé inteligence, možnosti rozšíření jsou neomezené. Aktuální stav umělé inteligence ve hře slouží především jako základ, na kterém mohou stavět nové implementace umělých hráčů. Prvním krokem při rozšíření by mělo být vylepšení entity typu \emph{prey}. V~budoucím vývoji by stálo se zamyslet například nad možnostmi využití metody \emph{Monte Carlo} pro implementaci chování této entity. Dalšími kroky by mohly být entity, které se snaží sbírat bonusy, a~\uv{kombinované} entity, které kombinují chování ostatních typů. Velmi zajímavé by také mohlo být využití strojového učení v~implementaci chování entit řízených počítačem. Úplným vrcholem využití umělé inteligence v~této hře by pak měla být entita, která je svým chováním k~nerozeznání od skutečného hráče a~u~níž lze libovolně nastavovat obtížnost.
+Co se týče umělé inteligence, možnosti rozšíření jsou takřka neomezené. Aktuální stav umělé inteligence ve hře slouží především jako základ, na kterém mohou stavět nové implementace umělých hráčů. Prvním krokem při rozšíření by mělo být vylepšení entity typu \emph{prey}. V~budoucím vývoji by stálo se zamyslet například nad možnostmi využití metody \emph{Monte Carlo} pro implementaci chování této entity. Dalšími kroky by mohly být entity, které se snaží sbírat bonusy, a~\uv{kombinované} entity, které kombinují chování ostatních typů. Velmi zajímavé by také mohlo být využití strojového učení v~implementaci chování entit řízených počítačem. Úplným vrcholem využití umělé inteligence v~této hře by pak měla být entita, která je svým chováním k~nerozeznání od skutečného hráče a~u~níž lze libovolně nastavovat obtížnost.
