@@ -28,6 +28,7 @@ Na operačním systému \emph{Windows} doporučuji používat systém \emph{MSYS
 Pomocí nástroje \texttt{pacman} určeného pro správu balíčků se provede aktualizace všech balíčků. Poté z~aplikace \emph{MSYS2~MINGW64} nainstalujte tyto balíčky:
 \begin{itemize}
     \item překladač \emph{GCC}/\emph{G++},
+    \item nástroj \emph{Git},
     \item nástroj \emph{Make},
     \item nástroj \emph{CMake},
     \item knihovny \emph{SDL2}, \emph{SDL2\_image} a~\emph{SDL2\_ttf},
@@ -36,6 +37,7 @@ Pomocí nástroje \texttt{pacman} určeného pro správu balíčků se provede a
 K~tomu použijete tyto příkazy:
 \begin{verbatim}
     pacman -S mingw-w64-x86_64-gcc
+    pacman -S git
     pacman -S make
     pacman -S mingw-w64-x86_64-cmake
     pacman -S mingw-w64-x86_64-SDL2
@@ -44,7 +46,11 @@ K~tomu použijete tyto příkazy:
     pacman -S mingw-w64-x86_64-cgal
 \end{verbatim}
 
-Nyní by mělo být vše připraveno k~sestavení. Adresář \texttt{source/} přesuňte z~paměťového média do některého z~adresářů prostředí \emph{MSYS2} (například do \verb|/home/<vaše-jméno>/|) a~v~aplikaci \emph{MSYS2~MINGW64} přejděte příkazem \texttt{cd} do adresáře \texttt{source/src/}. V~tomto adresáři zadejte tyto 2~příkazy:
+Adresář \texttt{source/} přesuňte z~paměťového média do některého z~adresářů prostředí\linebreak \emph{MSYS2} (například do \verb|/home/<vaše-jméno>/|) a~v~aplikaci \emph{MSYS2~MINGW64} přejděte příkazem \texttt{cd} do adresáře \texttt{source/}. Zde zadejte tento příkaz:
+\begin{verbatim}
+    git submodule update
+\end{verbatim}
+Z~\emph{GitHubu} se stáhnou knihovny \emph{libSDL2pp}, \emph{yaml-cpp} a~\emph{ImGui}. Nyní by mělo být vše připraveno k~sestavení. Přejděte do adresáře \texttt{source/src/} a~zadejte tyto 2~příkazy:
 \begin{verbatim}
     cmake .
     cmake --build . --config Release
@@ -56,11 +62,16 @@ Poté, co se tyto příkazy úspěšně dokončí, bude v~adresáři \texttt{sou
 Sestavení na operačním systému \emph{Linux} probíhá obdobným způsobem jako na operačním systému \emph{Windows}. Tentokrát však není třeba instalovat žádný pomocný systém. Pomocí správce balíčků vaší distribuce \emph{Linuxu} nainstalujte balíčky:
 \begin{itemize}
     \item překladač \emph{GCC}/\emph{G++},
+    \item nástroj \emph{Git},
     \item nástroj \emph{Make},
     \item nástroj \emph{CMake}\footnote{V~některých distribucích může mít správce balíčku verzi nástroje \emph{CMake}, která není nejnovější. Proto doporučuji jej stáhnout přímo z~oficiálních stránek a~nainstalovat manuálně podle přiloženého souboru \texttt{README}: \url{https://cmake.org/download}},
     \item knihovny \emph{SDL2}, \emph{SDL2\_image} a~\emph{SDL2\_ttf},
     \item knihovnu \emph{CGAL}.
 \end{itemize}
+Poté přejděte do adresáře \texttt{source/} a~stáhněte si další potřebné knihovny pomocí tohoto příkazu:
+\begin{verbatim}
+    git submodule update
+\end{verbatim}
 
 Pokud vše proběhlo úspěšně, mělo by být nyní možné program sestavit. Přejděte do adresáře \texttt{source/src/} a~zadejte tyto příkazy:
 \begin{verbatim}

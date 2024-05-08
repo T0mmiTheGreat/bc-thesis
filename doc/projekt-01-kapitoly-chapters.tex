@@ -218,10 +218,10 @@ Konkrétní metody se pak liší v~tom, jakým způsobem se vypočítá hodnota 
             \filldraw[fill=black!50, draw=black!50] (\x,\y) rectangle ++(1,1);
         
         % Person icon
-        \node at (3.5,5.5) {\includegraphics[width=0.9cm]{doc/obrazky-figures/person-icon.pdf}};
+        \node at (3.5,5.5) {\includegraphics[width=0.9cm]{obrazky-figures/person-icon.pdf}};
         
         % Flag icon
-        \node at (7.5,2.5) {\includegraphics[width=0.6cm]{doc/obrazky-figures/flag-icon.pdf}};
+        \node at (7.5,2.5) {\includegraphics[width=0.6cm]{obrazky-figures/flag-icon.pdf}};
         
         % Arrow and curly bracket
         \draw[very thick, -{Stealth[length=5mm]}] (3.5,5.5) -- (7.5,2.5);
@@ -251,10 +251,10 @@ Příklad výpočtu hodnoty $f(s_k)$ je znázorněn na obrázku~\ref{fig:astar-f
             \filldraw[fill=black!50, draw=black!50] (\x,\y) rectangle ++(1,1);
         
         % Person icon
-        \node at (3.5,5.5) {\includegraphics[width=0.9cm]{doc/obrazky-figures/person-icon.pdf}};
+        \node at (3.5,5.5) {\includegraphics[width=0.9cm]{obrazky-figures/person-icon.pdf}};
         
         % Flag icon
-        \node at (7.5,2.5) {\includegraphics[width=0.6cm]{doc/obrazky-figures/flag-icon.pdf}};
+        \node at (7.5,2.5) {\includegraphics[width=0.6cm]{obrazky-figures/flag-icon.pdf}};
         
         % g(s_k)
         \draw[very thick, draw=fskGsk, -{Stealth[length=2mm]}] (0.5,7.5) -- (1.5,7.5);
@@ -284,10 +284,10 @@ Příklad výpočtu hodnoty $f(s_k)$ je znázorněn na obrázku~\ref{fig:astar-f
             \filldraw[fill=black!50, draw=black!50] (\x,\y) rectangle ++(1,1);
         
         % Person icon
-        \node at (4.5,6.5) {\includegraphics[width=0.9cm]{doc/obrazky-figures/person-icon.pdf}};
+        \node at (4.5,6.5) {\includegraphics[width=0.9cm]{obrazky-figures/person-icon.pdf}};
         
         % Flag icon
-        \node at (7.5,2.5) {\includegraphics[width=0.6cm]{doc/obrazky-figures/flag-icon.pdf}};
+        \node at (7.5,2.5) {\includegraphics[width=0.6cm]{obrazky-figures/flag-icon.pdf}};
         
         % Cost
         \draw[very thick, draw=fskGsk, -{Stealth[length=2mm]}] (4.5,6.5) -- (3.5,5.5) node[midway, left=30pt, above] {\color{fskGsk} $c(s_k, a, s_{k+1})$};
@@ -344,11 +344,11 @@ Důsledkem této úpravy je, že metoda již není optimální, protože heurist
 
 \begin{figure}[ht]
     \begin{center}
-        \includegraphics[width=0.8\textwidth]{doc/obrazky-figures/astar-search-space.pdf}
+        \includegraphics[width=0.8\textwidth]{obrazky-figures/astar-search-space.pdf}
         \medskip
         \rule{0.8\textwidth}{0.4pt}
         \medskip
-        \includegraphics[width=0.8\textwidth]{doc/obrazky-figures/weighted-astar-search-space.pdf}
+        \includegraphics[width=0.8\textwidth]{obrazky-figures/weighted-astar-search-space.pdf}
     \end{center}
     \caption{Porovnání prohledávaných částí stavového prostoru při použití metod \emph{A*} (nahoře) a~\emph{Weighted A*} (dole) \cite{Likachev_astar_weighted_astar}. Oranžová plocha symbolizuje prohledané stavy, zelená šipka nalezenou cestu, červená křivka překážku.}
     \label{fig:astar-wighted-astar-search-space}
@@ -391,7 +391,7 @@ Příklad takových zbytečně vyšetřovaných uzlů je ukázán na obrázku~\r
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.8\textwidth]{doc/obrazky-figures/ab-pruning.pdf}
+    \includegraphics[width=0.8\textwidth]{obrazky-figures/ab-pruning.pdf}
     \caption{Příklad vyhledávacího stromu \cite{ab_pruning} sestaveného metodou \emph{Minimax}. Čísla v~uzlech udávají jejich ohodnocení. Šedě zbarvené uzly jsou vyšetřovány zbytečně.}
     \label{fig:alpha-beta-pruning}
 \end{figure}
@@ -428,7 +428,7 @@ Příklad průběhu metody je znázorněn na obrázku~\ref{fig:maxn}.
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.8\textwidth]{doc/obrazky-figures/maxn.pdf}
+    \includegraphics[width=0.8\textwidth]{obrazky-figures/maxn.pdf}
     \caption{Příklad použití metody \emph{Max\textsuperscript{n}}. Čísla v~uzlech představují ohodnocení stavu pro hráče A, B a~C v~tomto pořadí. Podtržená čísla jsou ohodnocení, která jsou porovnávána při výběru nejlepšího uzlu. Příklad byl převzat z~\cite{Maxn}.}
     \label{fig:maxn}
 \end{figure}
@@ -457,7 +457,7 @@ Pro odvození tohoto vztahu viz \cite{Maxn}. Účinnost metody je znázorněna n
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.8\textwidth]{doc/obrazky-figures/maxn-shallow-pruning.pdf}
+    \includegraphics[width=0.8\textwidth]{obrazky-figures/maxn-shallow-pruning.pdf}
     \caption{Ukázka účinnosti metody \emph{Shallow pruning} \cite{Maxn}. Stavový prostor je stejný, jako na obrázku~\ref{fig:maxn}, ale šedě zbarvená ohodnocení byla metodou \uv{ořezána}. (Ořezání je uvedeno pouze v~nejnižší vrstvě; ačkoliv metoda provádí výpočty i~ve vyšších vrstvách, jsou de facto prováděny pouze nad listovými uzly a~do vyšších vrstev se pouze propagují.)}
     \label{fig:maxn-shallow-pruning}
 \end{figure}
@@ -496,7 +496,7 @@ Uživatel musí před spuštěním hry provést nastavení hry (viz obrázek~\re
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.8\textwidth]{doc/obrazky-figures/game-setup.pdf}
+    \includegraphics[width=0.8\textwidth]{obrazky-figures/game-setup.pdf}
     \caption{Plocha pro nastavení hry. Tlačítko (1) umožňuje výběr herní plochy. Textové pole (2) umožňuje nastavit počet hráčů. Panel (3) seskupuje nastavení týkající se konkrétního hráče a~obsahuje přepínače (4) pro výběr typu hráče a~rozbalovací seznam (5) pro výběr ovládání hráče. Pomocí tlačítek (6) lze spustit hru nebo vrátit se zpět na hlavní nabídku.}
     \label{fig:game-setup}
 \end{figure}
@@ -515,7 +515,7 @@ Plocha, na níž je zobrazen aktuální stav hry, je rozdělena na 2 části: he
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.8\textwidth]{doc/obrazky-figures/in-game.pdf}
+    \includegraphics[width=0.8\textwidth]{obrazky-figures/in-game.pdf}
     \caption{Plocha s~probíhající hrou. Plocha je rozdělena na herní plochu (1) a~boční panel (2). Na herní ploše se zobrazují herní objekty\,--\,hráči (3), překážky (4) a~bonusy (5). V~bočním panelu se nachází počítadla množství života hráčů (6) a~tlačítko pro ukončení hry (7).}
     \label{fig:in-game}
 \end{figure}
@@ -533,7 +533,7 @@ Editor herní plochy se skládá z~menu, panelu nástrojů a~pracovní plochy, v
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.8\textwidth]{doc/obrazky-figures/stage-editor.pdf}
+    \includegraphics[width=0.8\textwidth]{obrazky-figures/stage-editor.pdf}
     \caption{Editor herní plochy. Skládá se z~menu (1), panelu nástrojů (2) a~pracovní plochy (3).}
     \label{fig:stage-editor}
 \end{figure}
@@ -552,27 +552,27 @@ Editor herní plochy se skládá z~menu, panelu nástrojů a~pracovní plochy, v
 
 Následují vysvětlivky jednotlivých tlačítek. Obrázky tlačítek byly převzaty přímo z~výsledné aplikace.\\
 
-\describeeditorbutton{New}{doc/obrazky-figures/new.png}{Vytvoří novou, prázdnou herní plochu.}
+\describeeditorbutton{New}{obrazky-figures/new.png}{Vytvoří novou, prázdnou herní plochu.}
 
-\describeeditorbutton{Open}{doc/obrazky-figures/open.png}{Zobrazí seznam existujících herních ploch. Po kliknutí na některou z~položek tohoto seznamu nahraje vybranou herní plochu ze souboru.}
+\describeeditorbutton{Open}{obrazky-figures/open.png}{Zobrazí seznam existujících herních ploch. Po kliknutí na některou z~položek tohoto seznamu nahraje vybranou herní plochu ze souboru.}
 
-\describeeditorbutton{Save}{doc/obrazky-figures/save.png}{Uloží rozpracovanou herní plochu do souboru. Pokud k této ploše není přiřazen žádný soubor (nebyla načtena ze souboru a ani zatím nebyla ukládána), vytvoří se nový soubor. Jeho název bude vybrán podle pravidel popsaných níže.}
+\describeeditorbutton{Save}{obrazky-figures/save.png}{Uloží rozpracovanou herní plochu do souboru. Pokud k této ploše není přiřazen žádný soubor (nebyla načtena ze souboru a ani zatím nebyla ukládána), vytvoří se nový soubor. Jeho název bude vybrán podle pravidel popsaných níže.}
 
-\describeeditorbutton{Undo}{doc/obrazky-figures/undo.png}{Vrátí se zpět do stavu před poslední vykonanou akcí. Opakovaným stiskem tohoto tlačítka se lze vrátit do stavu před vykonáním více než jedné akce.}
+\describeeditorbutton{Undo}{obrazky-figures/undo.png}{Vrátí se zpět do stavu před poslední vykonanou akcí. Opakovaným stiskem tohoto tlačítka se lze vrátit do stavu před vykonáním více než jedné akce.}
 
-\describeeditorbutton{Redo}{doc/obrazky-figures/redo.png}{Opakuje poslední akci vrácenou pomocí tlačítka \uv{Undo}. Pokud zatím nebylo provedeno \uv{undo}, nebo od jeho posledního vykonání byla provedena jiná akce, nestane se nic. Opakovaným stiskem tohoto tlačítka lze opakovat více než jednu vrácenou akci.}
+\describeeditorbutton{Redo}{obrazky-figures/redo.png}{Opakuje poslední akci vrácenou pomocí tlačítka \uv{Undo}. Pokud zatím nebylo provedeno \uv{undo}, nebo od jeho posledního vykonání byla provedena jiná akce, nestane se nic. Opakovaným stiskem tohoto tlačítka lze opakovat více než jednu vrácenou akci.}
 
-\describeeditorbutton{Stage properties}{doc/obrazky-figures/cogwheel.png}{Umožňuje změnit vlastnosti týkající se herní plochy. Zobrazí se okno s~textovou kolonkou, kde má uživatel možnost změnit název herní plochy. Pod kolonkou je zobrazen název souboru, do kterého bude herní plocha uložena při dalším stisku tlačítka \uv{Save}.}
+\describeeditorbutton{Stage properties}{obrazky-figures/cogwheel.png}{Umožňuje změnit vlastnosti týkající se herní plochy. Zobrazí se okno s~textovou kolonkou, kde má uživatel možnost změnit název herní plochy. Pod kolonkou je zobrazen název souboru, do kterého bude herní plocha uložena při dalším stisku tlačítka \uv{Save}.}
 
-\describeeditorbutton{Select tool}{doc/obrazky-figures/select-tool.png}{Umožňuje přesouvat a~upravovat již existující objekty na herní ploše. Objekt je nejdříve nutné vybrat kliknutím. Lze také vybrat více objektů přidržením klávesy \texttt{Shift} a~následně přesunout všechny vybrané objekty najednou. Při přesouvání je nutné dodržovat pravidla uvedená u~jednotlivých nástrojů pro objekty níže, jinak nebude přesun proveden.}
+\describeeditorbutton{Select tool}{obrazky-figures/select-tool.png}{Umožňuje přesouvat a~upravovat již existující objekty na herní ploše. Objekt je nejdříve nutné vybrat kliknutím. Lze také vybrat více objektů přidržením klávesy \texttt{Shift} a~následně přesunout všechny vybrané objekty najednou. Při přesouvání je nutné dodržovat pravidla uvedená u~jednotlivých nástrojů pro objekty níže, jinak nebude přesun proveden.}
 
-\describeeditorbutton{Player tool}{doc/obrazky-figures/player-tool.png}{Umožňuje přidávat na herní plochu objekty hráčů. Přidané objekty nesmí kolidovat s~objekty překážek, jiných hráčů, ani nesmí zasahovat mimo hranice herní plochy, jinak nebude objekt na herní plochu přidán. Pokud je vybrán tento nástroj, zobrazí se na pozici kurzoru myši bílá přerušovaná kružnice. Není-li možné na danou pozici objekt hráče umístit, kružnice zčervená.}
+\describeeditorbutton{Player tool}{obrazky-figures/player-tool.png}{Umožňuje přidávat na herní plochu objekty hráčů. Přidané objekty nesmí kolidovat s~objekty překážek, jiných hráčů, ani nesmí zasahovat mimo hranice herní plochy, jinak nebude objekt na herní plochu přidán. Pokud je vybrán tento nástroj, zobrazí se na pozici kurzoru myši bílá přerušovaná kružnice. Není-li možné na danou pozici objekt hráče umístit, kružnice zčervená.}
 
-\describeeditorbutton{Obstacle tool}{doc/obrazky-figures/obstacle-tool.png}{Umožňuje konstruovat objekty překážek na herní ploše. Konstrukce překážky probíhá přidáváním jednotlivých vrcholů na herní plochu a~následným uzavřením objektu stiskem pravého tlačítka myši. Nově přidané hrany se nesmí překrývat s~existujícími hranami konstruovaného objektu, ani s~objekty hráčů. Nicméně, dvě a~více překážek se smí překrývat. Pokud byl na pracovní plochu umístěn alespoň jeden vrchol a~překážka zatím nebyla uzavřena, zobrazí se mezi všemi propojenými body plná šedá čára a~mezi posledním bodem a~kurzorem myši čára přerušovaná. Není-li možné na danou pozici umístit vrchol, přerušovaná čára zčervená. Změna aktivního nástroje během konstruování překážky způsobí přerušení konstruování.}
+\describeeditorbutton{Obstacle tool}{obrazky-figures/obstacle-tool.png}{Umožňuje konstruovat objekty překážek na herní ploše. Konstrukce překážky probíhá přidáváním jednotlivých vrcholů na herní plochu a~následným uzavřením objektu stiskem pravého tlačítka myši. Nově přidané hrany se nesmí překrývat s~existujícími hranami konstruovaného objektu, ani s~objekty hráčů. Nicméně, dvě a~více překážek se smí překrývat. Pokud byl na pracovní plochu umístěn alespoň jeden vrchol a~překážka zatím nebyla uzavřena, zobrazí se mezi všemi propojenými body plná šedá čára a~mezi posledním bodem a~kurzorem myši čára přerušovaná. Není-li možné na danou pozici umístit vrchol, přerušovaná čára zčervená. Změna aktivního nástroje během konstruování překážky způsobí přerušení konstruování.}
 
-\describeeditorbutton{Delete tool}{doc/obrazky-figures/trash-can.png}{Umožňuje mazat objekty na herní ploše. Pokud byly nějaké objekty vybrány pomocí nástroje \uv{Select tool}, pak při kliknutí na některý z~vybraných objektů budou odstraněny všechny vybrané objekty. Pokud není vybrán žádný objekt, odstraní se pouze ten, na který uživatel klikl.}
+\describeeditorbutton{Delete tool}{obrazky-figures/trash-can.png}{Umožňuje mazat objekty na herní ploše. Pokud byly nějaké objekty vybrány pomocí nástroje \uv{Select tool}, pak při kliknutí na některý z~vybraných objektů budou odstraněny všechny vybrané objekty. Pokud není vybrán žádný objekt, odstraní se pouze ten, na který uživatel klikl.}
 
-\describeeditorbutton{Resize stage tool}{doc/obrazky-figures/resize.png}{Umožňuje měnit velikost herní plochy přetažením jejího pravého dolního rohu. Při změně velikosti nesmí dojít k~tomu, aby některý z~hráčů zasahoval mimo hranice herní plochy, jinak nebude změna provedena.}
+\describeeditorbutton{Resize stage tool}{obrazky-figures/resize.png}{Umožňuje měnit velikost herní plochy přetažením jejího pravého dolního rohu. Při změně velikosti nesmí dojít k~tomu, aby některý z~hráčů zasahoval mimo hranice herní plochy, jinak nebude změna provedena.}
 
 Uživatel nemá možnost vybírat si název souboru s~herní plochou. Soubory jsou vždy ukládány do adresáře \uv{\texttt{stage/}}. Pokud nebyla herní plocha načtena ze souboru, název souboru je vygenerován podle názvu herní plochy tímto způsobem:
 \begin{enumerate}
@@ -1096,7 +1096,7 @@ Vizuálním výstupem této fáze je odstranění bonusu z~herní plochy a~jeho 
 
 \begin{figure}[ht]
     \centering
-    \includegraphics{doc/obrazky-figures/gamma_distribution.pdf}
+    \includegraphics{obrazky-figures/gamma_distribution.pdf}
     \caption{Pravděpodobnostní rozdělení gama s~parametry $\alpha = 10{,}95$ a~$\beta = 0{,}95$. Toto rozdělení bylo použito pro výběr doby trvání mezi sebráním bonusu a~vygenerováním dalšího bonusu.}
     \label{fig:probability-bonus-countdown}
 \end{figure}
